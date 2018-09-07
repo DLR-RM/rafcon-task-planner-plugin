@@ -55,6 +55,7 @@ class Mapper():
                         action_state_map[action_name] = state
                 else:
                     logger.warning("State "+ state + "is not associated with any PDDL Action!" )
+
         if not action_state_map:
             logger.warning("No States with semantic PDDL_Action data found!")
 
@@ -64,5 +65,31 @@ class Mapper():
 
     def generate_state_action_map(self):
 
+        if self.__datastore.get_action_state_map() is None:
+            self.generate_action_state_map()
+        action_state_map = self.__datastore.get_action_state_map()
+
+        state_action_map = {}
+
+        for action in action_state_map.keys():
+            c_state = action_state_map(action)
+
+            if c_state in state_action_map:
+                logger.warning("Multiple associations of state " + str(c_state)
+                               + " associated with actions: " + str(state_action-map[c_state])
+                               + " and " +str(c_state))
+            else:
+                state_action_map[c_state] = action
+
+            if not state_action_map:
+                logger.warning("could not generate state_action_map, action_state_map was empty!")
+        self.__datastore.set_state_action_map(state_action_map)
+
+
 
     def generate_available_actions(self):
+        if self.__datastore.get_action_state_map() is None:
+            self.generate_action_state_map()
+        action_state_map = self.__datastore.get_action_state_map()
+
+        self.__datastore.set_available_actions(action_state_map.keys())
