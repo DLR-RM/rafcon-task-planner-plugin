@@ -24,7 +24,7 @@ class Datastore(Singelton):
 
 
 
-    def __init(self, state_pools, action_pools,sm_save_dir,
+    def __init__(self, state_pools, action_pools,sm_save_dir,
                facts_path,type_db_path,keep_related_files, file_save_dir=os.path.join(os.getcwd(),'related_files')):
         #validate state_pools
         for dir in state_pools:
