@@ -1,28 +1,11 @@
 import os
 import path
-from rafcon.source.utils.singelton import Singelton
 from rafcon.utils import log
 
 logger = log.get_logger(__name__)
 
 
-class Datastore(Singelton):
-
-    __state_pools = None
-    __action_pools = None
-    __file_save_dir = None
-    __sm_save_dir = None
-    __domain_path = None
-    __facts_path = None
-    __type_db_path = None
-    __planner_argv = None
-    __action_state_map = None
-    __state_action_map = None
-    __available_actions = None
-    __plan = None
-    __keep_related_files = False
-
-
+class Datastore:
 
     def __init__(self, state_pools, action_pools,sm_save_dir,
                facts_path,type_db_path,keep_related_files, file_save_dir=os.path.join(os.getcwd(),'related_files')):
@@ -60,6 +43,24 @@ class Datastore(Singelton):
         self.__keep_related_files = keep_related_files
         self.__file_save_dir = file_save_dir
         self.__planner_argv = []
+
+    __state_pools = None
+    __action_pools = None
+    __file_save_dir = None
+    __sm_save_dir = None
+    __domain_path = None
+    __facts_path = None
+    __type_db_path = None
+    __planner_argv = None
+    __action_state_map = None
+    __state_action_map = None
+    __available_actions = None
+    __plan = None
+    __keep_related_files = False
+
+
+
+
 
     def get_state_pools(self):
         return self.__state_pools
@@ -138,8 +139,3 @@ class Datastore(Singelton):
 
 
 
-
-
-
-    class Logger(object):
-        __metaclass__ = Singleton
