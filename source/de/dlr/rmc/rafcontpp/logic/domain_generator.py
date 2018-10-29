@@ -1,7 +1,10 @@
 import os
-import datastore
+import json
+from de.dlr.rmc.rafcontpp.model.datastore import Datastore
+from de.dlr.rmc.rafcontpp.model.type_tree import TypeTree
+from de.dlr.rmc.rafcontpp.model.pddl_action_representation import PddlActionRepresentation
 from rafcon.utils import log
-from typetree import TypeTree
+
 logger = log.get_logger(__name__)
 
 class DomainGenerator:
@@ -15,18 +18,55 @@ class DomainGenerator:
 
         self.__datastore = datastore
 
+    def generate_domain(self):
+        """
+        generateDomain generates a domain and returns its path.
+        :param domain_name: the name of the domain, mentioned in the facts file.
+        :param pddl_actions: a list of pddl acitons as PddlActionRepresentation.
+        :param type_dict: a type dictionary, with type:parent entries.
+        :param domain_dir: the location to save the generated domain file at.
+        :return: the path of the generated domain file
+        """
+        domain_name = self.__parse_domain_name()
+        type_dict = self.__dict_to_upper(json.load(open(self.__datastore.get_type_db_path(), "r")))
+        pddl_actions = self.__get_pddl_actions_from_file()
+        domain_path = os.path.abspath(os.path.join(self.__datastore.get_file_save_dir(), domain_name + ".pddl"))
+        merged_preds = self.__merge_predicates(pddl_actions)
+        merged_requirs = self.__merge_requirements(pddl_actions)
+        merged_types = self.__merge_types(pddl_actions, type_dict)
+        domain_file = open(domain_path, "w")
+        domain_file.write(self.__get_head(domain_name) + "\r\n")
+        domain_file.write(self.__get_requirements(merged_requirs) + "\r\n")
+        domain_file.write(self.__get_types(merged_types) + "\r\n")
+        domain_file.write(self.__get_predicates(merged_preds) + "\r\n")
+        domain_file.write(self.__get_actions(pddl_actions) + "\r\n")
+        domain_file.write(")")
+        domain_file.flush()
+        domain_file.close()
+        self.__datastore.set_domain_path(domain_path)
+        self.__datastore.add_generated_file(domain_name+'.pddl')
+        return domain_path
+
+
+
+
     def __parse_domain_name(self):
         facts_file = self.__datastore.get_facts_path()
         input = ""
         c_char = 'a'
         facts = open(facts_file,'r')
-        while c_char != ')':
+        bracket_counter = 0
+        while bracket_counter < 2:
             c_char = facts.read(1)
             input = input + c_char
+            if c_char == ')':
+                bracket_counter+=1
+
 
         input = input.upper()
-        input = input[(input.index('PROBLEM')+7):-1]
+        input = input[(input.index(':DOMAIN')+7):-1]
         domain_name = input.replace(' ','').replace('\r','').replace('\n','').replace('\t','')
+        self.__datastore.set_domain_name(domain_name.lower())
         return domain_name
 
     def __get_head(self, domain_name):
@@ -129,15 +169,8 @@ class DomainGenerator:
             actions = actions + c_action + "\r\n"
         return actions
 
-    def __dict_to_upper(self, dict):
-        upper_dict = dict
 
-        if dict:
-            upper_dict = {}
 
-            for key, value in dict.iteritems():
-                upper_dict[key.upper()] = value.upper()
-        return upper_dict
 
     def __get_pddl_actions_from_file(self):
         """
@@ -147,10 +180,13 @@ class DomainGenerator:
         :param action_names: the name of the actions needed.
         :return: a list of needed actions in PlanActionRepresentation format.
         """
-        # TODO change for multi action pools!
-        ac_dict = json.load(open(self.__datastore.get_action_db_path(), "r"))
+        ac_dict = {}
+        for action_pool_path in self.__datastore.get_action_pools():
+            raw_ac_dict = json.load(open(action_pool_path, "r"))
+            for key in raw_ac_dict.keys():
+                ac_dict[key.upper()] = raw_ac_dict[key]
         pddl_actions = []
-        for action_name in action_names:
+        for action_name in self.__datastore.get_available_actions():
             if action_name in ac_dict:
                 raw_action = ac_dict[action_name]
                 pddl_actions.append(self.__action_to_upper(PddlActionRepresentation(raw_action["name"],
@@ -162,31 +198,25 @@ class DomainGenerator:
                 logger.error("No action found in database for action called: \"" + action_name + "\"")
         return pddl_actions
 
+    def __action_to_upper(self, action):
 
-    def generate_domain(self):
-        """
-        generateDomain generates a domain and returns its path.
-        :param domain_name: the name of the domain, mentioned in the facts file.
-        :param pddl_actions: a list of pddl acitons as PddlActionRepresentation.
-        :param type_dict: a type dictionary, with type:parent entries.
-        :param domain_dir: the location to save the generated domain file at.
-        :return: the path of the generated domain file
-        """
-        domain_name = self.__parse_domain_name()
-        type_dict = self.__dict_to_upper(json.load(open(self.__datastore.get_type_db_path, "r")))
-        domain_path = os.path.abspath(os.path.join(self.__datastore.get_domain_path(), domain_name + ".pddl"))
-        merged_preds = self.__merge_predicates(pddl_actions)#TODO
-        merged_requirs = self.__merge_requirements(pddl_actions)
-        merged_types = self.__merge_types(pddl_actions, type_dict)
-        domain_file = open(domain_path, "w")
-        domain_file.write(self.__get_head(domain_name) + "\r\n")
-        domain_file.write(self.__get_requirements(merged_requirs) + "\r\n")
-        domain_file.write(self.__get_types(merged_types) + "\r\n")
-        domain_file.write(self.__get_predicates(merged_preds) + "\r\n")
-        domain_file.write(self.__get_actions(pddl_actions) + "\r\n")
-        domain_file.write(")")
-        domain_file.flush()
-        domain_file.close()
-        return domain_path
+        if action:
+            upper_types = []
+            action.types = [type.upper() for type in action.types]
+            action.predicates = [pred.upper() for pred in action.predicates]
+            action.requirements = [req.upper() for req in action.requirements]
+            action.action = [act.upper() for act in action.action]
+
+        return action
+
+    def __dict_to_upper(self, dict): #TODO find better solution and delete method here, use method in mapper.py
+        upper_dict = dict
+
+        if dict:
+            upper_dict = {}
+
+            for key, value in dict.iteritems():
+                upper_dict[key.upper()] = value.upper()
+        return upper_dict
 
 

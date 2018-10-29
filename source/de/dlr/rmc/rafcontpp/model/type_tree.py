@@ -1,3 +1,5 @@
+
+
 class TypeTree:
     """ A class that helps to create a pddl-type-tree
     TypeTree is a datastructure that helps to create a pddl-type-tree out of

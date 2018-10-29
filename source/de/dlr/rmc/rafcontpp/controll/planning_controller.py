@@ -1,6 +1,6 @@
 import inspect
-import DynamicImporter
-from de.dlr.rmc.rafcontpp.model.datastore import DataStore
+import importlib
+from de.dlr.rmc.rafcontpp.model.datastore import Datastore
 from de.dlr.rmc.rafcontpp.model.planning_report import PlanningReport
 from rafcon.utils import log
 
@@ -14,17 +14,19 @@ class PlanningController:
 
     def execute_planning(self):
 
-        planning_successfull = False
+        planning_successful = False
         planner_choice = self.__datastore.get_planner()
-        to_import = self.__get_built_in(planner_choice)
+        to_import = self.__get_built_in_script(planner_choice)
         if to_import is None:
             to_import = self.__discover_class(planner_choice)
 
         if to_import is None:
             raise ImportError("Couldn't Import "+planner_choice)
 
-        module = __import__(to_import[0])
-        PlannerModule = getattr(module,to_import[1])
+        script_import = __import__(to_import[0],fromlist=(to_import[1]))
+        print "script: "+str(script_import)
+        print to_import[1]
+        PlannerModule = getattr(script_import,to_import[1])
 
         planner = PlannerModule()
         planning_report = planner.plan_scenario(self.__datastore.get_domain_path(),
@@ -34,12 +36,14 @@ class PlanningController:
 
         if planning_report.planning_successful():
             self.__datastore.set_plan(planning_report.get_plan())
-            planning_successfull = True
+            planning_successful = True
             logger.info("Planning Successfull! Plan has length: "+str(len(planning_report.get_plan())))
         else:
             logger.error("Planning failed! ::"+planning_report.get_error_message())
 
-        return planning_successfull
+        self.__datastore.add_generated_file(planning_report.get_generated_files())
+
+        return planning_successful
 
 
 
@@ -50,10 +54,11 @@ class PlanningController:
 
     def __discover_class(self, script):
         class_name = None
-        for cname, some_obj in inspect.getmembers(script):
-            if inspect.isclass(some_obj) & cname != 'PlannerInterface':
+        script_import = __import__(script)
+        for cname, some_obj in inspect.getmembers(script_import):
+            if inspect.isclass(some_obj) and cname != 'PlannerInterface':
                 for me_name, class_obj in inspect.getmembers(some_obj):
-                    if inspect.ismethod(class_obj) & me_name == 'plan_scenario':
+                    if inspect.ismethod(class_obj) and me_name == 'plan_scenario':
                         class_name = cname
                         break;
         return (script, class_name)
@@ -61,7 +66,7 @@ class PlanningController:
 
 
     def __get_built_in_script(self, shortcut):
-        build_in_planner = self.__datastore.get_built_in_planners()
+        built_in_planner = self.__datastore.get_built_in_planners()
 
         planner = None
         if shortcut in built_in_planner:

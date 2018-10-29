@@ -1,4 +1,4 @@
-import datastore
+import source.de.dlr.rmc.rafcontpp.model.datastore
 import os
 import path
 from rafcon.core.storage import storage
@@ -7,6 +7,7 @@ from rafcon.core.state_machine import StateMachine
 from rafcon.core.config import global_config
 from rafcon.core.states.hierarchy_state import HierarchyState
 from rafcon.utils import log
+from de.dlr.rmc.rafcontpp.model.datastore import Datastore
 
 logger = log.get_logger(__name__)
 
@@ -43,22 +44,21 @@ class Mapper():
             state_pool = library_manager.libraries[lib_name]
             for state in state_pool:
                 lib_state = library_manager.get_library_instance(lib_name, state)
-                sem_data = lib_state.state_copy_semantic_data
+                sem_data = lib_state.state_copy.semantic_data
 
                 if 'PDDL_Action' in sem_data:
                     action_name = sem_data['PDDL_Action']
                     if action_name in action_state_map:
                         logger.warning("Multiple association of action "+ str(action_name)
-                                       + " associated with states " + str(action-state_map[action_name])
+                                       + " associated with states " + str(action_state_map[action_name])
                                        + " and " + str(state))
                     else:
-                        action_state_map[action_name] = state
+                        action_state_map[action_name.upper()] = state
                 else:
                     logger.warning("State "+ state + "is not associated with any PDDL Action!" )
 
         if not action_state_map:
             logger.warning("No States with semantic PDDL_Action data found!")
-
         self.__datastore.set_action_state_map(action_state_map)
 
 
@@ -72,7 +72,7 @@ class Mapper():
         state_action_map = {}
 
         for action in action_state_map.keys():
-            c_state = action_state_map(action)
+            c_state = action_state_map[action]
 
             if c_state in state_action_map:
                 logger.warning("Multiple associations of state " + str(c_state)
@@ -93,3 +93,4 @@ class Mapper():
         action_state_map = self.__datastore.get_action_state_map()
 
         self.__datastore.set_available_actions(action_state_map.keys())
+

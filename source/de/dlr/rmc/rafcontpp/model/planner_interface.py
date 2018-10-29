@@ -1,8 +1,9 @@
-import rafcon.utils.log
-from de.dlr.rmc.rafcontpp.model.planningreport import PlanningReport
-from de.dlr.rmc.rafcontpp.model.planstep import PlanStep
 
-class PlanerInterface:
+from de.dlr.rmc.rafcontpp.model.planning_report import PlanningReport
+from de.dlr.rmc.rafcontpp.model.plan_step import PlanStep
+
+
+class PlannerInterface:
 
 
 
