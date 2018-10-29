@@ -38,14 +38,14 @@ class ExecutionController:
                 #now open sm!
 
             else:
-                print "TODO raise error"
+                logger.warning("No Plan was found, therefore no state machine was generated!")
 
         finally:
 
             if not self.__datastore.keep_related_files():
                 for file_name in self.__datastore.get_generated_files():
                     file = os.path.join(self.__datastore.get_file_save_dir(), file_name)
-                    logger.info('removed file: '+str(file))
+                    logger.info('Successfully removed file: '+str(file))
                     if os.path.isfile(file):
                         os.remove(file)
                     else:

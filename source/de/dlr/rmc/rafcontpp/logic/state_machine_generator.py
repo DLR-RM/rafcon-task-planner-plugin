@@ -22,7 +22,8 @@ from de.dlr.rmc.rafcontpp.model.datastore import Datastore
 
 logger = log.get_logger(__name__)
 
-
+#TODO: executing this, removes all other libraries from rafcon, thats bad, fix this problem, also it updates
+#the libraries for several times.
 
 class StateMachineGenerator:
 

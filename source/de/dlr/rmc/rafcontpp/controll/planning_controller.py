@@ -1,5 +1,4 @@
 import inspect
-import importlib
 from de.dlr.rmc.rafcontpp.model.datastore import Datastore
 from de.dlr.rmc.rafcontpp.model.planning_report import PlanningReport
 from rafcon.utils import log
@@ -24,8 +23,6 @@ class PlanningController:
             raise ImportError("Couldn't Import "+planner_choice)
 
         script_import = __import__(to_import[0],fromlist=(to_import[1]))
-        print "script: "+str(script_import)
-        print to_import[1]
         PlannerModule = getattr(script_import,to_import[1])
 
         planner = PlannerModule()
@@ -37,9 +34,12 @@ class PlanningController:
         if planning_report.planning_successful():
             self.__datastore.set_plan(planning_report.get_plan())
             planning_successful = True
-            logger.info("Planning Successfull! Plan has length: "+str(len(planning_report.get_plan())))
+            if len(planning_report.get_plan()) >0:
+                logger.info("Planning Successful! Plan has length: "+str(len(planning_report.get_plan())))
+            else:
+                logger.info("Planning Successful, but no Plan was found! ")
         else:
-            logger.error("Planning failed! ::"+planning_report.get_error_message())
+            logger.error("Planning failed! :: "+planning_report.get_error_message())
 
         self.__datastore.add_generated_file(planning_report.get_generated_files())
 
