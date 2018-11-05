@@ -1,4 +1,6 @@
 import inspect
+import os
+import sys
 from de.dlr.rmc.rafcontpp.model.datastore import Datastore
 from de.dlr.rmc.rafcontpp.model.planning_report import PlanningReport
 from rafcon.utils import log
@@ -17,6 +19,7 @@ class PlanningController:
         planner_choice = self.__datastore.get_planner()
         to_import = self.__get_built_in_script(planner_choice)
         if to_import is None:
+            planner_choice = self.__split_and_add_to_path(planner_choice)
             to_import = self.__discover_class(planner_choice)
 
         if to_import is None:
@@ -26,11 +29,12 @@ class PlanningController:
         PlannerModule = getattr(script_import,to_import[1])
 
         planner = PlannerModule()
+        logger.info("Planning...")
         planning_report = planner.plan_scenario(self.__datastore.get_domain_path(),
                                                 self.__datastore.get_facts_path(),
                                                 self.__datastore.get_planner_argv(),
                                                 self.__datastore.get_file_save_dir())
-
+        logger.info("finished planning.")
         if planning_report.planning_successful():
             self.__datastore.set_plan(planning_report.get_plan())
             planning_successful = True
@@ -50,7 +54,15 @@ class PlanningController:
 
 
 
+    def __split_and_add_to_path(self,script_path):
+        path = os.path.dirname(script_path)
+        script_name = os.path.basename(script_path)
+        #remove file extension
+        if '.' in script_name:
+            script_name = script_name.split('.')[0]
 
+        sys.path.append(path)
+        return script_name
 
     def __discover_class(self, script):
         class_name = None

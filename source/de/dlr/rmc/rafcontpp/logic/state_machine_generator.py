@@ -31,7 +31,8 @@ class StateMachineGenerator:
         self.__datastore = datastore
 
     def generate_state_machine(self):
-        sm_name = self.__datastore.get_domain_name()+'_sm'
+        logger.info('Creating Statemachine...')
+        sm_name = self.__datastore.get_domain_name()+'_statemachine'
         sm_path = os.path.abspath(os.path.join(self.__datastore.get_sm_save_dir(), sm_name))
         a_s_map = self.__datastore.get_action_state_map()
         root_state = HierarchyState(sm_name)

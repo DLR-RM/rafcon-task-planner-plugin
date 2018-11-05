@@ -17,8 +17,6 @@ class ExecutionController:
 
     def on_execute(self):
         try:
-            #TODO read inputs first!
-
             #pipeline, after input reading...
             #prepare dicts
             mapper = Mapper(self.__datastore)

@@ -1,9 +1,38 @@
 import os
-import path
+import json
 from de.dlr.rmc.rafcontpp.model.plan_step import PlanStep
 from rafcon.utils import log
 
 logger = log.get_logger(__name__)
+
+built_in_planners = {
+    'Fast Downward Planning System': ('de.dlr.rmc.rafcontpp.planner.fdintegration', 'FdIntegration')
+}
+
+
+def datastore_from_file(file_path):
+    ds = None
+    if not os.path.isfile(file_path):
+        logger.warning("Can't restore datastore from: " + str(file_path))
+        logger.info("Creating default datastore...")
+        default_dir = str(os.getcwd())
+        ds = Datastore([str(os.getcwd())], [default_dir], default_dir, built_in_planners.keys()[0], [], default_dir,
+                  default_dir, False)
+
+    else:
+        data = json.load(open(file_path, "r"))
+        ds = Datastore(data['state_pools'],
+                     data['action_pools'],
+                     data['sm_save_dir'],
+                     data['planner'],
+                     data['planner_argv'],
+                     data['facts_path'],
+                     data['type_db_path'],
+                     data['keep_related_files'],
+                     data['file_save_dir'])
+        ds.validate_ds()
+        logger.info("successfully restored datastore!")
+    return ds
 
 
 class Datastore:
@@ -23,38 +52,11 @@ class Datastore:
     #a list with the name of all files, generated during the pipeline execution.
     __generated_files = []
     #a dict containing the shortcuts of the build in planner scripts.
-    __built_in_planners = {
-        'Fast Downward Planning System': ('de.dlr.rmc.rafcontpp.planner.fdintegration', 'FdIntegration')
-    }
+
 
     def __init__(self, state_pools, action_pools,sm_save_dir, planner, planner_argv,
-               facts_path,type_db_path,keep_related_files, file_save_dir=os.path.join(os.getcwd(),'related_files')):
-        #validate state_pools
-        for dir in state_pools:
-            if not os.path.isdir(dir):
-                logger.error("state pool directory not found: " + str(dir))
-                raise ValueError('Is not a directory: '+ str(dir))
-        #validate action_pools
-        for dir in action_pools:
-            if not os.path.isfile(dir):
-                logger.error("action pool file not found: " + str(dir))
-                raise ValueError('Is not a file: '+ str(dir))
-        #validate sm_save_dir
-        if not os.path.isdir(sm_save_dir):
-            logger.error("state machine save dir: directory not found! " + str(sm_save_dir))
-            raise ValueError('Is not a directory: ' + str(sm_save_dir))
-        #validate facts_file
-        if not os.path.isfile(facts_path):
-            logger.error("No facts file : " + str(facts_path))
-            raise ValueError('Is not a file: ' + str(facts_path))
-        #validate type_db_path
-        if not os.path.isfile(type_db_path):
-            logger.error("No type database : " + str(type_db_path))
-            raise ValueError('Is not a file: ' + str(type_db_path))
-        #validate file_save_dir
-        if keep_related_files and (not os.path.isdir(file_save_dir)):
-            logger.error("file save dir is not a directory: " + str(file_save_dir))
-            raise ValueError('Is not a directory: ' + str(file_save_dir))
+               facts_path,type_db_path,keep_related_files, file_save_dir=os.path.join(os.getcwd(), 'related_files')):
+
         #a list of directories, containing states with pddl notation.
         self.__state_pools = state_pools
         #a list of action_db files
@@ -77,7 +79,34 @@ class Datastore:
 
 
 
+    def validate_ds(self): #TODO validate everything!
 
+        # validate state_pools
+        for dir in self.__state_pools:
+            if not os.path.isdir(dir):
+                logger.error("state pool directory not found: " + str(dir))
+                raise ValueError('Is not a directory: ' + str(dir))
+        # validate action_pools
+        for dir in self.__action_pools:
+            if not os.path.isfile(dir):
+                logger.error("action pool file not found: " + str(dir))
+                raise ValueError('Is not a file: ' + str(dir))
+        # validate sm_save_dir
+        if not os.path.isdir(self.__sm_save_dir):
+            logger.error("state machine save dir: directory not found! " + str(self.__sm_save_dir))
+            raise ValueError('Is not a directory: ' + str(self.__sm_save_dir))
+        # validate facts_file
+        if not os.path.isfile(self.__facts_path):
+            logger.error("No facts file : " + str(self.__facts_path))
+            raise ValueError('Is not a file: ' + str(self.__facts_path))
+        # validate type_db_path
+        if not os.path.isfile(self.__type_db_path):
+            logger.error("No type database : " + str(self.__type_db_path))
+            raise ValueError('Is not a file: ' + str(self.__type_db_path))
+        # validate file_save_dir
+        if self.__keep_related_files and (not os.path.isdir(self.__file_save_dir)):
+            logger.error("file save dir is not a directory: " + str(self.__file_save_dir))
+            raise ValueError('Is not a directory: ' + str(self.__file_save_dir))
 
 
 
@@ -86,14 +115,38 @@ class Datastore:
     def get_state_pools(self):
         return self.__state_pools
 
+    def set_state_pools(self,state_pools):
+        if not state_pools:
+            logger.error("state_pools can't be None")
+            raise ValueError("state_pools can't be None")
+        self.__state_pools = state_pools
+
     def get_action_pools(self):
         return self.__action_pools
+
+    def set_action_pools(self,action_pools):
+        if not action_pools:
+            logger.error("action_pools can't be None")
+            raise ValueError("action_pools can't be None")
+        self.__action_pools = action_pools
 
     def get_file_save_dir(self):
         return self.__file_save_dir
 
+    def set_file_save_dir(self,file_save_dir):
+        if not os.path.isdir(file_save_dir):
+            logger.error('file_save_dir must be a directory')
+            raise ValueError('Is not a directory: '+str(file_save_dir))
+        self.__file_save_dir = file_save_dir
+
     def get_sm_save_dir(self):
         return self.__sm_save_dir
+
+    def set_sm_save_dir(self, sm_save_dir):
+        if not os.path.isdir(sm_save_dir):
+            logger.error('state machine save directory must be a directory!')
+            raise ValueError('Is not a direcotry: '+str(sm_save_dir))
+        self.__sm_save_dir = sm_save_dir
 
     def get_domain_path(self):
             return self.__domain_path
@@ -104,29 +157,46 @@ class Datastore:
             raise ValueError('Is not a file: ' + str(domain_path))
         self.__domain_path = domain_path
 
-    def set_domain_name(self,domain_name):
-        self.__domain_name = domain_name
-
     def get_domain_name(self):
         return str(self.__domain_name)
+
+    def set_domain_name(self,domain_name):
+        self.__domain_name = domain_name
 
     def get_facts_path(self):
         return self.__facts_path
 
+    def set_facts_path(self, facts_path):
+        if not os.path.isfile(facts_path):
+            logger.error('No facts file: '+str(facts_path))
+            raise ValueError('Is not a File: '+str(facts_path))
+        self.__facts_path = facts_path
+
     def get_type_db_path(self):
         return self.__type_db_path
 
+    def set_type_db_path(self,type_db):
+        if not os.path.isfile(type_db):
+            logger.error('No type db found at: '+ str(type_db))
+            raise ValueError('Is not a File: '+str(type_db))
+        self.__type_db_path = type_db
+
     def get_planner_argv(self):
         return self.__planner_argv
-
-    def get_planner(self):
-        return self.__planner
 
     def set_planner_argv(self,planner_argv):
         if planner_argv is None:
             logger.error("can't set None value as planner_argv")
             raise ValueError("can't set None value as planner_argv")
         self.__planner_argv = planner_argv
+
+    def get_planner(self):
+        return self.__planner
+
+    def set_planner(self, planner):
+        self.__planner = planner
+        #TODO dynamically add script path to pythonpath
+
 
     def get_action_state_map(self):
         return self.__action_state_map
@@ -170,8 +240,11 @@ class Datastore:
     def keep_related_files(self):
         return self.__keep_related_files
 
+    def set_keep_related_files(self,keep_related_files):
+        self.__keep_related_files = keep_related_files
+
     def get_built_in_planners(self):
-        return self.__built_in_planners
+        return built_in_planners
 
     def add_generated_file(self,file_name):
         if file_name and isinstance(file_name,str):
@@ -182,6 +255,26 @@ class Datastore:
 
     def get_generated_files(self):
         return self.__generated_files
+
+
+
+    def save_datastore_parts_in_file(self, file_path): #TODO error handling
+        data_to_save = {
+            'state_pools': self.__state_pools,
+            'action_pools': self.__action_pools,
+            'type_db_path': self.__type_db_path,
+            'planner' : self.__planner,
+            'planner_argv': self.__planner_argv,
+            'facts_path': self.__facts_path,
+            'sm_save_dir': self.__sm_save_dir,
+            'keep_related_files': self.__keep_related_files,
+            'file_save_dir': self.__file_save_dir
+        }
+
+        conf_file = open(file_path, "w")
+        conf_file.write(json.dumps(data_to_save))
+        conf_file.flush()
+        conf_file.close()
 
 
 

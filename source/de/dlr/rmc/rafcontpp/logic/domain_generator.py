@@ -28,6 +28,7 @@ class DomainGenerator:
         :return: the path of the generated domain file
         """
         domain_name = self.__parse_domain_name()
+        self.__datastore.set_domain_name(domain_name.lower())
         type_dict = self.__dict_to_upper(json.load(open(self.__datastore.get_type_db_path(), "r")))
         pddl_actions = self.__get_pddl_actions_from_file()
         domain_path = os.path.abspath(os.path.join(self.__datastore.get_file_save_dir(), domain_name + ".pddl"))
@@ -66,7 +67,6 @@ class DomainGenerator:
         input = input.upper()
         input = input[(input.index(':DOMAIN')+7):-1]
         domain_name = input.replace(' ','').replace('\r','').replace('\n','').replace('\t','')
-        self.__datastore.set_domain_name(domain_name.lower())
         return domain_name
 
     def __get_head(self, domain_name):
@@ -209,7 +209,7 @@ class DomainGenerator:
 
         return action
 
-    def __dict_to_upper(self, dict): #TODO find better solution and delete method here, use method in mapper.py
+    def __dict_to_upper(self, dict):
         upper_dict = dict
 
         if dict:
