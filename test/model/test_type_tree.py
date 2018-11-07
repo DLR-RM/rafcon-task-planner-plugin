@@ -1,6 +1,5 @@
 import pytest
-import os
-from de.dlr.rmc.rafcontpp.model.type_tree import TypeTree
+from rafcontpp.model.type_tree import TypeTree
 
 
 #Test TypeTree

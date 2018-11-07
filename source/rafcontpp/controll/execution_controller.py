@@ -1,9 +1,8 @@
 import os
-from de.dlr.rmc.rafcontpp.model.datastore import Datastore
-from de.dlr.rmc.rafcontpp.logic.mapper import Mapper
-from de.dlr.rmc.rafcontpp.logic.domain_generator import DomainGenerator
-from de.dlr.rmc.rafcontpp.logic.state_machine_generator import StateMachineGenerator
-from de.dlr.rmc.rafcontpp.controll.planning_controller import PlanningController
+from rafcontpp.logic.mapper import Mapper
+from rafcontpp.logic.domain_generator import DomainGenerator
+from rafcontpp.logic.state_machine_generator import StateMachineGenerator
+from rafcontpp.controll.planning_controller import PlanningController
 from rafcon.utils import log
 
 logger = log.get_logger(__name__)

@@ -1,26 +1,28 @@
 import os
 import json
-from de.dlr.rmc.rafcontpp.model.plan_step import PlanStep
+from rafcontpp.model.plan_step import PlanStep
 from rafcon.utils import log
 
 logger = log.get_logger(__name__)
 
 built_in_planners = {
-    'Fast Downward Planning System': ('de.dlr.rmc.rafcontpp.planner.fdintegration', 'FdIntegration')
+    'Fast Downward Planning System': ('rafcontpp.planner.fdintegration', 'FdIntegration')
 }
 
+DATASTORE_STORAGE_PATH = os.path.join(os.path.expanduser('~'), os.path.normpath('.config/rafcon/rafcontpp_conf.json'))
 
 def datastore_from_file(file_path):
     ds = None
     if not os.path.isfile(file_path):
-        logger.warning("Can't restore datastore from: " + str(file_path))
-        logger.info("Creating default datastore...")
+        logger.warning("Can't restore Configuration from: " + str(file_path))
+        logger.info("Creating default Configuration...")
         default_dir = str(os.getcwd())
         ds = Datastore([str(os.getcwd())], [default_dir], default_dir, built_in_planners.keys()[0], [], default_dir,
                   default_dir, False)
 
     else:
         data = json.load(open(file_path, "r"))
+        logger.info('Loading Configuration form: '+file_path)
         ds = Datastore(data['state_pools'],
                      data['action_pools'],
                      data['sm_save_dir'],
@@ -110,25 +112,34 @@ class Datastore:
 
 
 
-
-
     def get_state_pools(self):
         return self.__state_pools
 
-    def set_state_pools(self,state_pools):
+    def add_state_pools(self,state_pools):
         if not state_pools:
             logger.error("state_pools can't be None")
             raise ValueError("state_pools can't be None")
-        self.__state_pools = state_pools
+        if state_pools and isinstance(state_pools,str):
+            if state_pools not in self.__state_pools:
+                self.__state_pools.append(state_pools)
+        elif state_pools:
+            for state_pool in state_pools:
+                self.add_state_pools(state_pool)
 
     def get_action_pools(self):
         return self.__action_pools
 
-    def set_action_pools(self,action_pools):
+    def add_action_pools(self,action_pools):
         if not action_pools:
             logger.error("action_pools can't be None")
             raise ValueError("action_pools can't be None")
-        self.__action_pools = action_pools
+        if action_pools and isinstance(action_pools, str):
+            if action_pools not in self.__action_pools:
+                self.__action_pools.append(action_pools)
+        elif action_pools:
+            for action_pool in action_pools:
+                self.add_action_pools(action_pool)
+
 
     def get_file_save_dir(self):
         return self.__file_save_dir
@@ -270,7 +281,7 @@ class Datastore:
             'keep_related_files': self.__keep_related_files,
             'file_save_dir': self.__file_save_dir
         }
-
+        logger.info('Writing Configuration to path: '+file_path)
         conf_file = open(file_path, "w")
         conf_file.write(json.dumps(data_to_save))
         conf_file.flush()

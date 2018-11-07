@@ -1,5 +1,5 @@
 import os
-from de.dlr.rmc.rafcontpp.view import planning_button
+from rafcontpp.view import planning_button
 from rafcon.utils import log
 logger = log.get_logger(__name__)
 

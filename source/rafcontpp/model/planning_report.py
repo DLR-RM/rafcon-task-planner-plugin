@@ -1,4 +1,4 @@
-from de.dlr.rmc.rafcontpp.model.plan_step import PlanStep
+from rafcontpp.model.plan_step import PlanStep
 
 class PlanningReport:
 

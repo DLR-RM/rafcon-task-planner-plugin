@@ -1,8 +1,6 @@
 import inspect
 import os
 import sys
-from de.dlr.rmc.rafcontpp.model.datastore import Datastore
-from de.dlr.rmc.rafcontpp.model.planning_report import PlanningReport
 from rafcon.utils import log
 
 logger = log.get_logger(__name__)
@@ -27,7 +25,7 @@ class PlanningController:
 
         script_import = __import__(to_import[0],fromlist=(to_import[1]))
         PlannerModule = getattr(script_import,to_import[1])
-
+        logger.info('Using Planner script: '+str(to_import[0]))
         planner = PlannerModule()
         logger.info("Planning...")
         planning_report = planner.plan_scenario(self.__datastore.get_domain_path(),
@@ -60,7 +58,7 @@ class PlanningController:
         #remove file extension
         if '.' in script_name:
             script_name = script_name.split('.')[0]
-
+        #add path to PYTHONPATH
         sys.path.append(path)
         return script_name
 
@@ -81,7 +79,7 @@ class PlanningController:
         built_in_planner = self.__datastore.get_built_in_planners()
 
         planner = None
-        if shortcut in built_in_planner:
+        if shortcut in built_in_planner.keys():
             planner = built_in_planner[shortcut]
 
         return planner

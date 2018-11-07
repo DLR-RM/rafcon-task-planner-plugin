@@ -1,8 +1,8 @@
 import os
 import subprocess
-from de.dlr.rmc.rafcontpp.model.planner_interface import PlannerInterface
-from de.dlr.rmc.rafcontpp.model.planning_report import PlanningReport
-from de.dlr.rmc.rafcontpp.model.plan_step import PlanStep
+from rafcontpp.model.planner_interface import PlannerInterface
+from rafcontpp.model.planning_report import PlanningReport
+from rafcontpp.model.plan_step import PlanStep
 
 
 

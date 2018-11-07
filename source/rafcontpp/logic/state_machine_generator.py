@@ -13,12 +13,10 @@
 import os
 from rafcon.core.storage import storage
 from rafcon.core.singleton import library_manager
+from rafcon.core.singleton import state_machine_manager
 from rafcon.core.state_machine import StateMachine
-from rafcon.core.config import global_config
 from rafcon.core.states.hierarchy_state import HierarchyState
 from rafcon.utils import log
-from de.dlr.rmc.rafcontpp.model.plan_step import PlanStep
-from de.dlr.rmc.rafcontpp.model.datastore import Datastore
 
 logger = log.get_logger(__name__)
 
@@ -42,10 +40,10 @@ class StateMachineGenerator:
                 #load and prepare state
                 current_state = self.__load_state(a_s_map[action.name])
                 #fill dataport default value with params of action
-                if current_state.input_data_ports:
+                if current_state.input_data_port_runtime_values:
                     for index, param in enumerate(action.parameter):
-                        if index in current_state.input_data_ports:
-                            current_state.input_data_ports[index].default_value = param
+                        if index in current_state.input_data_port_runtime_values:
+                            current_state.input_data_port_runtime_values[str(index)] = param
 
                 #add state to state machine
                 root_state.add_state(current_state)
@@ -61,8 +59,17 @@ class StateMachineGenerator:
         # everything connected, create statemachine object and save.
         state_machine = StateMachine(root_state=root_state)
         storage.save_state_machine_to_path(state_machine, sm_path)
+        library_manager.refresh_libraries()
         logger.info("State machine " + sm_name + " created. It contains " + str(
             len(self.__datastore.get_plan())) + " states.")
+        #open state machine
+
+        logger.info('Opening state machine...')
+        if state_machine_manager.is_state_machine_open(state_machine.file_system_path):
+            state_machine_manager.remove_state_machine(state_machine.state_machine_id)
+        state_machine_manager.add_state_machine(state_machine)
+
+
 
 
     def __load_state(self, wanted_state):
@@ -76,9 +83,6 @@ class StateMachineGenerator:
             lib_names.append(lib_name)
             libraries[lib_name] = os.path.abspath(pool)
 
-        global_config.load()
-        global_config.set_config_value("LIBRARY_PATHS", libraries)
-        library_manager.initialize()
         for lib_name in lib_names:
             state_pool = library_manager.libraries[lib_name]
             if wanted_state in state_pool:

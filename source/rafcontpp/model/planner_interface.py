@@ -1,8 +1,3 @@
-
-from de.dlr.rmc.rafcontpp.model.planning_report import PlanningReport
-from de.dlr.rmc.rafcontpp.model.plan_step import PlanStep
-
-
 class PlannerInterface:
 
 

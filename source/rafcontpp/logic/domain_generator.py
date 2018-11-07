@@ -1,8 +1,7 @@
 import os
 import json
-from de.dlr.rmc.rafcontpp.model.datastore import Datastore
-from de.dlr.rmc.rafcontpp.model.type_tree import TypeTree
-from de.dlr.rmc.rafcontpp.model.pddl_action_representation import PddlActionRepresentation
+from rafcontpp.model.type_tree import TypeTree
+from rafcontpp.model.pddl_action_representation import PddlActionRepresentation
 from rafcon.utils import log
 
 logger = log.get_logger(__name__)
