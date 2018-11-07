@@ -4,21 +4,28 @@ from rafcontpp.model.plan_step import PlanStep
 from rafcon.utils import log
 
 logger = log.get_logger(__name__)
-
+# a map containing all built in planners e.g. planners with integration script.
 built_in_planners = {
     'Fast Downward Planning System': ('rafcontpp.planner.fdintegration', 'FdIntegration')
 }
-
+#the storage path of the config file.
 DATASTORE_STORAGE_PATH = os.path.join(os.path.expanduser('~'), os.path.normpath('.config/rafcon/rafcontpp_conf.json'))
 
 def datastore_from_file(file_path):
+    ''' datastore_from_file
+    datastore_from_file tries to create a partial datastore (just input values, no clculated ones)
+    from a .json file e.g. config file. if there is no config file present, it returns a datastore with default values
+    :param file_path: the path to the config file
+    :return: a partial initialized datastore, or a datastore with default values.
+    '''
     ds = None
     if not os.path.isfile(file_path):
-        logger.warning("Can't restore Configuration from: " + str(file_path))
-        logger.info("Creating default Configuration...")
+        logger.warning("Can't restore configuration from: " + str(file_path))
+        logger.info("Creating default configuration...")
         default_dir = str(os.getcwd())
         ds = Datastore([str(os.getcwd())], [default_dir], default_dir, built_in_planners.keys()[0], [], default_dir,
                   default_dir, False)
+        ds.set_planner_script_path(default_dir)
 
     else:
         data = json.load(open(file_path, "r"))
@@ -32,12 +39,18 @@ def datastore_from_file(file_path):
                      data['type_db_path'],
                      data['keep_related_files'],
                      data['file_save_dir'])
+        ds.set_planner_script_path(data['planner_script_path'])
         ds.validate_ds()
-        logger.info("successfully restored datastore!")
+        logger.info("Red configuration successfully!")
     return ds
 
 
 class Datastore:
+    ''' Datastore
+    Datastore is a datastore, which holds all data of the plugin. Every module can get, and store its data here.
+    '''
+
+
 
     #the complete path of the domain file (e.g. /home/domain.pddl).
     __domain_path = None
@@ -53,7 +66,9 @@ class Datastore:
     __plan = None
     #a list with the name of all files, generated during the pipeline execution.
     __generated_files = []
-    #a dict containing the shortcuts of the build in planner scripts.
+    #the path of a custom planner script. this variable is not really useful for the plugin, and its not used, BUT:
+    #its useful or usability, to be able to save the script path persistent.
+    __planner_script_path = None
 
 
     def __init__(self, state_pools, action_pools,sm_save_dir, planner, planner_argv,
@@ -206,7 +221,6 @@ class Datastore:
 
     def set_planner(self, planner):
         self.__planner = planner
-        #TODO dynamically add script path to pythonpath
 
 
     def get_action_state_map(self):
@@ -267,14 +281,28 @@ class Datastore:
     def get_generated_files(self):
         return self.__generated_files
 
+    def get_planner_script_path(self):
+        return self.__planner_script_path
+
+    def set_planner_script_path(self,psp):
+        self.__planner_script_path = psp
 
 
-    def save_datastore_parts_in_file(self, file_path): #TODO error handling
+
+
+    def save_datastore_parts_in_file(self, file_path):
+        ''' save_datastore_parts_in_file
+        save_datastore_parts_in_file saves all plugin inputs, which are present in the datastore in a file.
+        :param self:
+        :param file_path: the path of the configuration file
+        :return: nothing
+        '''
         data_to_save = {
             'state_pools': self.__state_pools,
             'action_pools': self.__action_pools,
             'type_db_path': self.__type_db_path,
             'planner' : self.__planner,
+            'planner_script_path': self.__planner_script_path,
             'planner_argv': self.__planner_argv,
             'facts_path': self.__facts_path,
             'sm_save_dir': self.__sm_save_dir,

@@ -20,15 +20,22 @@ from rafcon.utils import log
 
 logger = log.get_logger(__name__)
 
-#TODO: executing this, removes all other libraries from rafcon, thats bad, fix this problem, also it updates
-#the libraries for several times.
 
 class StateMachineGenerator:
+    '''StateMachineGenerator
+    The StateMachineGenerator takes the plan from the datastore and molds a state machine out of it.
 
-    def __init__(self,datastore):
-        self.__datastore = datastore
+    '''
+
+    def __init__(self, datastore):
+            self.__datastore = datastore
 
     def generate_state_machine(self):
+        ''' generate_state_machine
+        generate_state_machine generates a state machine, fills the data ports and opens the state machine in rafcon.
+        :param self:
+        :return: nothing
+        '''
         logger.info('Creating Statemachine...')
         sm_name = self.__datastore.get_domain_name()+'_statemachine'
         sm_path = os.path.abspath(os.path.join(self.__datastore.get_sm_save_dir(), sm_name))
@@ -63,17 +70,21 @@ class StateMachineGenerator:
         logger.info("State machine " + sm_name + " created. It contains " + str(
             len(self.__datastore.get_plan())) + " states.")
         #open state machine
-
         logger.info('Opening state machine...')
         if state_machine_manager.is_state_machine_open(state_machine.file_system_path):
-            state_machine_manager.remove_state_machine(state_machine.state_machine_id)
+            old_sm = state_machine_manager.get_open_state_machine_of_file_system_path(state_machine.file_system_path)
+            state_machine_manager.remove_state_machine(old_sm.state_machine_id)
         state_machine_manager.add_state_machine(state_machine)
 
 
 
-
     def __load_state(self, wanted_state):
-
+        '''load_state
+        load_state gets a state and loads it from the libraries.
+        :param self:
+        :param wanted_state: a state that should be loaded
+        :return: the loaded state
+        '''
         state_libs = self.__datastore.get_state_pools()
         libraries = {}
         lib_names = []

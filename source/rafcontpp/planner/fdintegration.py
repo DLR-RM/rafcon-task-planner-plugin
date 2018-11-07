@@ -12,18 +12,20 @@ class FdIntegration(PlannerInterface):
 
     def plan_scenario(self, domain_path, facts_path, planner_argv, storage_path):
 
-        command ='fast-downward '+domain_path+' '+facts_path
+        command ='fast-downward '+domain_path+' '+facts_path+' '
         plan_path = os.path.abspath(os.path.join(os.curdir, "sas_plan"))
         outsas = os.path.abspath(os.path.join(os.curdir, "output.sas"))
         plan = []
         if len(planner_argv) == 0:
-            command += ' --search \"astar(blind())\"'
+            command += '--search \"astar(blind())\"'
+        else:
+            for arg in planner_argv:
+                command +=arg+' '
+            command = command.rstrip()
 
         # run Fast-downward
-        #logger.debug("Fast-Downward starts with command: " + command)
         fd_process = subprocess.Popen([command], stdout=subprocess.PIPE, shell=True)
         (out, err) = fd_process.communicate()
-        #logger.info("Fast-Downward is finish.")
         fd_exit = fd_process.returncode
 
         # read plan, if possible
@@ -36,7 +38,7 @@ class FdIntegration(PlannerInterface):
                               plan,
                               ['sas_plan', 'output.sas'],
                               str(fd_exit)
-                              + ': ' + self.__translate_fd_exit_code(fd_exit))
+                              + ': ' + self.__translate_fd_exit_code(fd_exit) +" used command was: "+command)
 
     def __parse_raw_plan(self,plan_path):
         '''

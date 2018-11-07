@@ -7,7 +7,9 @@ from rafcon.utils import log
 logger = log.get_logger(__name__)
 
 class DomainGenerator:
-
+    '''DomainGenerator
+    The DomainGenerator uses the data, provided by the datastore to generate a domain.pddl file for the planner.
+    '''
     __datastore = None
 
     def __init__(self, datastore):
@@ -34,6 +36,7 @@ class DomainGenerator:
         merged_preds = self.__merge_predicates(pddl_actions)
         merged_requirs = self.__merge_requirements(pddl_actions)
         merged_types = self.__merge_types(pddl_actions, type_dict)
+        logger.debug('writing domain file to: '+str(domain_path))
         domain_file = open(domain_path, "w")
         domain_file.write(self.__get_head(domain_name) + "\r\n")
         domain_file.write(self.__get_requirements(merged_requirs) + "\r\n")
@@ -51,6 +54,10 @@ class DomainGenerator:
 
 
     def __parse_domain_name(self):
+        '''parse_domain_name
+        parse_domain_name parses the domain name out of the given facts file.
+        :return: the domain name
+        '''
         facts_file = self.__datastore.get_facts_path()
         input = ""
         c_char = 'a'
@@ -66,6 +73,7 @@ class DomainGenerator:
         input = input.upper()
         input = input[(input.index(':DOMAIN')+7):-1]
         domain_name = input.replace(' ','').replace('\r','').replace('\n','').replace('\t','')
+        logger.info('Parsed domain name, name is: '+domain_name)
         return domain_name
 
     def __get_head(self, domain_name):
@@ -198,6 +206,11 @@ class DomainGenerator:
         return pddl_actions
 
     def __action_to_upper(self, action):
+        '''
+         action to upper receives a action in pddl_action_representation, and retuns it in upper case
+        :param action: a action in PddlActionRepresentation
+        :return: the action as upper case
+        '''
 
         if action:
             upper_types = []
@@ -209,6 +222,11 @@ class DomainGenerator:
         return action
 
     def __dict_to_upper(self, dict):
+        '''
+         receives a dict of string:string and returns it in upper case
+        :param dict: a string:string dict
+        :return: a new dict in upper case.
+        '''
         upper_dict = dict
 
         if dict:

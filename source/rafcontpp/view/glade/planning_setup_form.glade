@@ -23,6 +23,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
+                <property name="tooltip_text" translatable="yes">Starts the process, reads all input, plans the sceario and generates a state machine.</property>
                 <property name="margin_right">10</property>
                 <property name="margin_bottom">5</property>
               </object>
@@ -38,6 +39,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
+                <property name="tooltip_text" translatable="yes">cancels the process.</property>
                 <property name="margin_right">10</property>
                 <property name="margin_bottom">5</property>
                 <property name="use_stock">True</property>
@@ -64,7 +66,8 @@
               <object class="GtkLabel" id="state_pools_label">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">state_pools</property>
+                <property name="tooltip_text" translatable="yes">some state pools.</property>
+                <property name="label" translatable="yes">state pools</property>
               </object>
               <packing>
                 <property name="left_attach">0</property>
@@ -75,7 +78,8 @@
               <object class="GtkLabel" id="action_pools_label">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">action_pools</property>
+                <property name="tooltip_text" translatable="yes">some action pools.</property>
+                <property name="label" translatable="yes">action pools</property>
               </object>
               <packing>
                 <property name="left_attach">0</property>
@@ -86,6 +90,7 @@
               <object class="GtkLabel" id="planner_label">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="tooltip_text" translatable="yes">The planner, which should be used to plan the given scenario. Use the names for built in planners, or other, if you want to use your own integrated planner.</property>
                 <property name="label" translatable="yes">Planner</property>
               </object>
               <packing>
@@ -97,7 +102,8 @@
               <object class="GtkLabel" id="script_path_label">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">scrip_path</property>
+                <property name="tooltip_text" translatable="yes">For other, not built in planners.</property>
+                <property name="label" translatable="yes">Planner script location </property>
               </object>
               <packing>
                 <property name="left_attach">0</property>
@@ -108,7 +114,8 @@
               <object class="GtkLabel" id="planner_argv_label">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">planner_argv</property>
+                <property name="tooltip_text" translatable="yes">some additional args, a planner could use. so in this field a planner can be configured.</property>
+                <property name="label" translatable="yes">planner argv</property>
               </object>
               <packing>
                 <property name="left_attach">0</property>
@@ -119,7 +126,8 @@
               <object class="GtkLabel" id="facts_file_label">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">facts_file</property>
+                <property name="tooltip_text" translatable="yes">The path of the facts.pddl file.</property>
+                <property name="label" translatable="yes">Open facts</property>
               </object>
               <packing>
                 <property name="left_attach">0</property>
@@ -210,7 +218,8 @@
               <object class="GtkLabel" id="sm_save_dir_label">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">sm_save_dir</property>
+                <property name="tooltip_text" translatable="yes">The directory, where to save the state machine in.</property>
+                <property name="label" translatable="yes">Save state machine in</property>
               </object>
               <packing>
                 <property name="left_attach">0</property>
@@ -221,7 +230,8 @@
               <object class="GtkLabel" id="type_db_label">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">type_db</property>
+                <property name="tooltip_text" translatable="yes">The path of the type_db.json file, where your type hierarcy is defined.</property>
+                <property name="label" translatable="yes">Open type db</property>
               </object>
               <packing>
                 <property name="left_attach">0</property>
@@ -264,7 +274,8 @@
               <object class="GtkLabel" id="file_save_dir_label">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">file_save_dir</property>
+                <property name="tooltip_text" translatable="yes">All files, which are generated by the plugin (except the state machine) are stored here, if keep files is enabled.</property>
+                <property name="label" translatable="yes">Save files in </property>
               </object>
               <packing>
                 <property name="left_attach">0</property>
@@ -275,9 +286,11 @@
               <object class="GtkLabel" id="keep_produced_files_label">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="tooltip_text" translatable="yes">enable to keep all generated files,
+disable to delete all additional files, when the state machine is generated.</property>
                 <property name="margin_left">10</property>
                 <property name="margin_right">5</property>
-                <property name="label" translatable="yes">keep produced files</property>
+                <property name="label" translatable="yes">keep files</property>
               </object>
               <packing>
                 <property name="left_attach">0</property>
