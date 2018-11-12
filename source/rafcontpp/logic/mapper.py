@@ -58,7 +58,7 @@ class Mapper:
 
         if not action_state_map:
             logger.warning("No States with semantic PDDL_Action data found!")
-        logger.debug('action_state_map has '+str(len(action_state_map.keys())) + 'entires.')
+        logger.debug('action_state_map has '+str(len(action_state_map.keys())) + ' entires.')
         self.__datastore.set_action_state_map(action_state_map)
 
 
@@ -101,6 +101,6 @@ class Mapper:
         if self.__datastore.get_action_state_map() is None:
             self.generate_action_state_map()
         action_state_map = self.__datastore.get_action_state_map()
-        logger.debug('list of available actions has '+str(len(action_state_map.keys())) + 'entires.')
+        logger.debug('list of available actions has '+str(len(action_state_map.keys())) + ' entires.')
         self.__datastore.set_available_actions(action_state_map.keys())
 

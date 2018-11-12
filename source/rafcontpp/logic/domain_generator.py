@@ -1,6 +1,7 @@
 import os
 import json
 from rafcontpp.model.type_tree import TypeTree
+from rafcontpp.logic.predicate_merger import PredicateMerger
 from rafcontpp.model.pddl_action_representation import PddlActionRepresentation
 from rafcon.utils import log
 
@@ -33,14 +34,14 @@ class DomainGenerator:
         type_dict = self.__dict_to_upper(json.load(open(self.__datastore.get_type_db_path(), "r")))
         pddl_actions = self.__get_pddl_actions_from_file()
         domain_path = os.path.abspath(os.path.join(self.__datastore.get_file_save_dir(), domain_name + ".pddl"))
-        merged_preds = self.__merge_predicates(pddl_actions)
+        type_tree = self.__merge_types(pddl_actions, type_dict)
+        merged_preds = self.__merge_predicates(pddl_actions,type_tree)
         merged_requirs = self.__merge_requirements(pddl_actions)
-        merged_types = self.__merge_types(pddl_actions, type_dict)
         logger.debug('writing domain file to: '+str(domain_path))
         domain_file = open(domain_path, "w")
         domain_file.write(self.__get_head(domain_name) + "\r\n")
         domain_file.write(self.__get_requirements(merged_requirs) + "\r\n")
-        domain_file.write(self.__get_types(merged_types) + "\r\n")
+        domain_file.write(self.__get_types(type_tree) + "\r\n")
         domain_file.write(self.__get_predicates(merged_preds) + "\r\n")
         domain_file.write(self.__get_actions(pddl_actions) + "\r\n")
         domain_file.write(")")
@@ -73,7 +74,7 @@ class DomainGenerator:
         input = input.upper()
         input = input[(input.index(':DOMAIN')+7):-1]
         domain_name = input.replace(' ','').replace('\r','').replace('\n','').replace('\t','')
-        logger.info('Parsed domain name, name is: '+domain_name)
+        logger.debug('Parsed domain name, name is: '+domain_name)
         return domain_name
 
     def __get_head(self, domain_name):
@@ -86,6 +87,7 @@ class DomainGenerator:
         :return: all pddl-requirements without dublicates.
         """
         requirements = []
+
         for action in pddl_actions:
             for requirement in action.requirements:
                 if requirement not in requirements:
@@ -137,18 +139,21 @@ class DomainGenerator:
             types_in_pddl = types + merged_types.get_as_string() + ")"
         return types_in_pddl
 
-    def __merge_predicates(self, pddl_actions):
+    def __merge_predicates(self, pddl_actions,type_tree):
         """
         mergePredicates takes all predicates mentioned in the PddlActionRepresentations, and removes dublicates.
         :param pddl_actions: a list of PddlActionRepresentations.
         :return: a list of predicates, without dublicates.
         """
-
+        #pre merge predicates
         predicates = []
         for action in pddl_actions:
             for predicate in action.predicates:
                 if predicate not in predicates:
                     predicates.append(predicate)
+
+        merger = PredicateMerger(type_tree)
+        predicates = merger.merge_predicates(predicates)
         return predicates
 
     def __get_predicates(self, predicates):

@@ -28,16 +28,44 @@ class TypeTree:
         :param type_name: the name of the type to search
         :return: true if the tree contains the type, else false.
         """
-        is_in = False
+        return self.get_sub_tree(type_to_search) is not None
+
+    def get_sub_tree(self,type_to_search):
+        ''' get_sub_tree
+        get_sub_tree gets a type, and returns the subtree, with the type as root.
+        :param type_to_search: the root of the subtree to get
+        :return: a sub tree, or none if the type is not in the tree.
+        '''
+        sub_tree = None
         if self.type_name == type_to_search:
-            is_in = True
+            sub_tree = self
         else:
             for child in self.children:
-                is_in = child.is_in_tree(type_to_search)
+                sub_tree = child.get_sub_tree(type_to_search)
 
-                if is_in:
+                if sub_tree is not None:
                     break
-        return is_in
+        return sub_tree
+
+
+    def is_parent_of(self,parent,child):
+        ''' is_parent_of
+        is_parent_of receives two types, and returns true,
+        if the first type it the parent of the second type.
+        :param parent: the maybe parent type
+        :param child: the maybe child type
+        :return: true, if the parent is really the parent of the child, false otherwhise
+        '''
+
+        is_parent = False
+        if parent != child:
+            sub_tree = self.get_sub_tree(parent)
+
+            if sub_tree is not None:
+                is_parent = sub_tree.is_in_tree(child)
+
+        return is_parent
+
 
     def add_type_branch(self, type_name, type_dict):
         """

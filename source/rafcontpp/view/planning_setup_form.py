@@ -9,7 +9,7 @@ from rafcon.utils import log
 
 logger = log.get_logger(__name__)
 OTHER = 'Other...'
-SEL_PLANER = '--select planner--'
+SEL_PLANNER = '--select planner--'
 
 class PlanningSetupForm:
 
@@ -25,7 +25,7 @@ class PlanningSetupForm:
         self.__builder.add_from_file(glade_path)
         #get items
         self.__dialog = self.__builder.get_object('plannig_setup_form_dialog')
-        self.__dialog.set_title('Rafcon Task Planner Plugin Configuration')
+        self.__dialog.set_title('Task Planner Plugin Configuration')
         self.__dialog.set_transient_for()
         state_pool_chooser = self.__builder.get_object('state_pools_chooser')
         action_pool_chooser = self.__builder.get_object('action_pools_chooser')
@@ -60,7 +60,7 @@ class PlanningSetupForm:
     def __init_drop_down(self,drop_down, script_path_chooser):
         active_index = 0
 
-        drop_down.append_text(SEL_PLANER)
+        drop_down.append_text(SEL_PLANNER)
 
         for index, planner in enumerate(self.__datastore.get_built_in_planners().keys()):
             drop_down.append_text( planner)
@@ -114,10 +114,10 @@ class PlanningSetupForm:
         script_path = self.__builder.get_object('script_path_chooser').get_filename()
         if choosen_planner == OTHER:
             choosen_planner = script_path
-        if choosen_planner == SEL_PLANER:
+        if choosen_planner == SEL_PLANNER:
             everything_filled = False
             not_filled = 'Planner'
-        if choosen_planner != SEL_PLANER:
+        if choosen_planner != SEL_PLANNER:
             self.__datastore.set_planner(choosen_planner)
         self.__datastore.set_planner_script_path(script_path)
         planner_argv_text = self.__builder.get_object('planner_argv_entry').get_text()
