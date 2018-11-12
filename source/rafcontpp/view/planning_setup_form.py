@@ -14,6 +14,7 @@ SEL_PLANNER = '--select planner--'
 class PlanningSetupForm:
 
     __dialog = None
+    __state_pool_chooser_entry = None
 
 
     def __init__(self, datastore):
@@ -28,6 +29,7 @@ class PlanningSetupForm:
         self.__dialog.set_title('Task Planner Plugin Configuration')
         self.__dialog.set_transient_for()
         state_pool_chooser = self.__builder.get_object('state_pools_chooser')
+        self.__state_pool_chooser_entry = self.__builder.get_object('state_pools_chooser_entry')
         action_pool_chooser = self.__builder.get_object('action_pools_chooser')
         type_db_chooser = self.__builder.get_object('type_db_chooser')
         planner_dropdown = self.__builder.get_object('planner_dropdown')
@@ -39,6 +41,7 @@ class PlanningSetupForm:
         file_save_dir = self.__builder.get_object('file_save_dir_chooser')
         #init items
         state_pool_chooser.set_filename(self.__datastore.get_state_pools()[0])
+        self.__state_pool_chooser_entry.set_text(self.__string_array_to_string(self.__datastore.get_state_pools()))
         action_pool_chooser.set_filename(self.__datastore.get_action_pools()[0])
         type_db_chooser.set_filename(self.__datastore.get_type_db_path())
         self.__init_drop_down(planner_dropdown, script_path_chooser)
@@ -50,6 +53,7 @@ class PlanningSetupForm:
         self.__dialog.show_all()
         self.__builder.get_object('planning_form_start_button').connect('clicked', self.__on_apply)
         self.__builder.get_object('planning_form_cancel_button').connect('clicked', self.__on_destroy)
+        state_pool_chooser.connect('file-set',self.__on_choose_state_pool)
         script_path_chooser.connect('file-set', lambda x: (planner_dropdown.set_active(len(planner_dropdown.get_model()) - 1)))
 
 
@@ -89,7 +93,7 @@ class PlanningSetupForm:
             logger.info("start pipeline...")
             ExecutionController(self.__datastore).on_execute()
         else:
-            logger.error("Field "+not_filled+" missing!")
+            logger.error(not_filled+" missing! Please select "+ not_filled)
 
 
     def __on_destroy(self, button):
@@ -99,6 +103,12 @@ class PlanningSetupForm:
         finally:
             self.__dialog.destroy()
 
+    def __on_choose_state_pool(self,chooser):
+        to_append = chooser.get_filename()
+        pools = self.__state_pool_chooser_entry.get_text()
+        if pools[len(pools)-1] != ':':
+            pools+=':'
+        self.__state_pool_chooser_entry.set_text(pools + to_append + ':')
 
 
 
@@ -106,7 +116,8 @@ class PlanningSetupForm:
     def __prepare_datastore(self):
         everything_filled = True
         not_filled = None
-        self.__datastore.add_state_pools(self.__builder.get_object('state_pools_chooser').get_filename())
+        logger.info(self.__string_to_string_array(self.__state_pool_chooser_entry.get_text()))
+        self.__datastore.add_state_pools(self.__string_to_string_array(self.__state_pool_chooser_entry.get_text()),True)
         self.__datastore.add_action_pools(self.__builder.get_object('action_pools_chooser').get_filename())
         self.__datastore.set_type_db_path(self.__builder.get_object('type_db_chooser').get_filename())
         choosen_planner = self.__builder.get_object('planner_dropdown').get_active_text()
@@ -116,7 +127,7 @@ class PlanningSetupForm:
             choosen_planner = script_path
         if choosen_planner == SEL_PLANNER:
             everything_filled = False
-            not_filled = 'Planner'
+            not_filled = 'a Planner'
         if choosen_planner != SEL_PLANNER:
             self.__datastore.set_planner(choosen_planner)
         self.__datastore.set_planner_script_path(script_path)
@@ -138,3 +149,13 @@ class PlanningSetupForm:
 
 
 
+    def __string_array_to_string(self,list):
+            toReturn = ''
+
+            for element in list:
+                toReturn += element +':'
+
+            return toReturn
+
+    def __string_to_string_array(self,string):
+        return list(filter(None,string.split(':')))

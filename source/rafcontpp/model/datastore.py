@@ -22,8 +22,8 @@ def datastore_from_file(file_path):
     if not os.path.isfile(file_path):
         logger.warning("Can't restore configuration from: " + str(file_path))
         logger.info("Creating default configuration...")
-        default_dir = str(os.getcwd())
-        ds = Datastore([str(os.getcwd())], [default_dir], default_dir, built_in_planners.keys()[0], [], default_dir,
+        default_dir = str(os.path.expanduser('~'))
+        ds = Datastore([default_dir], [default_dir], default_dir, built_in_planners.keys()[0], [], default_dir,
                   default_dir, False)
         ds.set_planner_script_path(default_dir)
 
@@ -130,16 +130,24 @@ class Datastore:
     def get_state_pools(self):
         return self.__state_pools
 
-    def add_state_pools(self,state_pools):
+    def add_state_pools(self,state_pools,set_pool):
+        '''
+
+        :param state_pools: the state pools to add
+        :param set_pool: if true, state pools are not added, but set, and old list gets lost.
+        :return: nothing
+        '''
         if not state_pools:
             logger.error("state_pools can't be None")
             raise ValueError("state_pools can't be None")
+        if set_pool:
+            self.__state_pools = []
         if state_pools and isinstance(state_pools,str):
             if state_pools not in self.__state_pools:
                 self.__state_pools.append(state_pools)
         elif state_pools:
             for state_pool in state_pools:
-                self.add_state_pools(state_pool)
+                    self.add_state_pools(state_pool,False)
 
     def get_action_pools(self):
         return self.__action_pools
@@ -160,7 +168,7 @@ class Datastore:
         return self.__file_save_dir
 
     def set_file_save_dir(self,file_save_dir):
-        if not os.path.isdir(file_save_dir):
+        if self.__keep_related_files and not os.path.isdir(file_save_dir):
             logger.error('file_save_dir must be a directory')
             raise ValueError('Is not a directory: '+str(file_save_dir))
         self.__file_save_dir = file_save_dir

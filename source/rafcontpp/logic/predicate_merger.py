@@ -37,7 +37,7 @@ class PredicateMerger:
 
 
     def __get_current_name_index(self):
-        self.__current_name_index += 1
+        #self.__current_name_index += 1
         return self.__current_name_index
 
 
