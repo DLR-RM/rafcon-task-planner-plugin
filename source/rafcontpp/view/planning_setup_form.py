@@ -3,9 +3,10 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 from gi.repository import GObject
 import os
-from rafcontpp.controll.execution_controller import ExecutionController
+from rafcontpp.control.execution_controller import ExecutionController
 from rafcontpp.model.datastore import Datastore, DATASTORE_STORAGE_PATH
 from rafcon.utils import log
+import rafcon.gui.singleton as gui_singletons
 
 logger = log.get_logger(__name__)
 OTHER = 'Other...'
@@ -18,16 +19,20 @@ class PlanningSetupForm:
 
 
     def __init__(self, datastore):
+        assert isinstance(datastore, Datastore)
         self.__datastore = datastore
         self.__builder = Gtk.Builder()
 
     def initialize(self):
         glade_path = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), "glade", "planning_setup_form.glade"))
+        print glade_path
         self.__builder.add_from_file(glade_path)
         #get items
         self.__dialog = self.__builder.get_object('plannig_setup_form_dialog')
         self.__dialog.set_title('Task Planner Plugin Configuration')
         self.__dialog.set_transient_for()
+        mc = gui_singletons.main_window_controller.view['main_window']
+        print mc
         state_pool_chooser = self.__builder.get_object('state_pools_chooser')
         self.__state_pool_chooser_entry = self.__builder.get_object('state_pools_chooser_entry')
         action_pool_chooser = self.__builder.get_object('action_pools_chooser')

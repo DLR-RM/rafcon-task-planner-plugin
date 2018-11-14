@@ -39,7 +39,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <property name="tooltip_text" translatable="yes">cancels the process.</property>
+                <property name="tooltip_text" translatable="yes">Cancels the process, BUT saves the current configuration! If you don't want to save the configuration please hit the x in the upper right corner.</property>
                 <property name="margin_right">10</property>
                 <property name="margin_bottom">5</property>
                 <property name="use_stock">True</property>

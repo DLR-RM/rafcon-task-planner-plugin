@@ -261,7 +261,7 @@
 disable to delete all additional files, when the state machine is generated.</property>
                 <property name="margin_left">10</property>
                 <property name="margin_right">5</property>
-                <property name="label" translatable="yes">keep files</property>
+                <property name="label" translatable="yes">Generated files</property>
               </object>
               <packing>
                 <property name="left_attach">0</property>
@@ -270,6 +270,7 @@ disable to delete all additional files, when the state machine is generated.</pr
             </child>
             <child>
               <object class="GtkCheckButton" id="keep_produced_files_checkbox">
+                <property name="label">gtk-save</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>

@@ -2,7 +2,7 @@ import os
 from rafcontpp.logic.mapper import Mapper
 from rafcontpp.logic.domain_generator import DomainGenerator
 from rafcontpp.logic.state_machine_generator import StateMachineGenerator
-from rafcontpp.controll.planning_controller import PlanningController
+from rafcontpp.control.planning_controller import PlanningController
 from rafcon.utils import log
 
 logger = log.get_logger(__name__)

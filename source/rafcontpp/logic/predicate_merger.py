@@ -4,6 +4,9 @@ from rafcon.utils import log
 logger = log.get_logger(__name__)
 
 class PredicateMerger:
+    '''PredicateMerger
+    PredicateMerger
+    '''
 
     __current_name_index = 0
 

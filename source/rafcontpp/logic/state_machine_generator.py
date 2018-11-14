@@ -74,7 +74,8 @@ class StateMachineGenerator:
         if state_machine_manager.is_state_machine_open(state_machine.file_system_path):
             old_sm = state_machine_manager.get_open_state_machine_of_file_system_path(state_machine.file_system_path)
             state_machine_manager.remove_state_machine(old_sm.state_machine_id)
-        state_machine_manager.add_state_machine(state_machine)
+        new_state_machine = storage.load_state_machine_from_path(sm_path)
+        state_machine_manager.add_state_machine(new_state_machine)
 
 
 
@@ -90,14 +91,14 @@ class StateMachineGenerator:
         lib_names = []
         return_state = None
         for pool in state_libs:
-            lib_name = os.path.basename(os.path.dirname(pool))
+            lib_name = os.path.basename(os.path.abspath(pool))
             lib_names.append(lib_name)
             libraries[lib_name] = os.path.abspath(pool)
 
         for lib_name in lib_names:
             state_pool = library_manager.libraries[lib_name]
             if wanted_state in state_pool:
-                return_state = library_manager.get_library_instance(lib_name,wanted_state)
+                return_state = library_manager.get_library_instance(lib_name, wanted_state)
                 break
 
         return return_state

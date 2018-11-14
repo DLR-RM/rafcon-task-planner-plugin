@@ -1,5 +1,10 @@
 import os
+import gi
+gi.require_version('Gtk', '3.0')
+from gi.repository import Gtk
 from rafcontpp.view import planning_button
+from rafcontpp.control.pddl_action_tab_controller import PddlActionTabController
+from rafcon.gui.helpers.label import create_label_widget_with_icon, create_tab_header_label
 from rafcon.utils import log
 logger = log.get_logger(__name__)
 
@@ -27,3 +32,22 @@ def post_init(*args, **kwargs):
     :return:
     """
     logger.info("Run post-initiation hook of {0} plugin".format(__file__.split(os.path.sep)[-2]))
+
+
+def post_state_editor_register_view(state_editor):
+    logger.info("############################## state_editor {}".format(str(state_editor)))
+    state_editor_view = state_editor.view
+    state_editor.model
+
+
+    glade_path = os.path.abspath(
+        os.path.join(os.path.dirname(os.path.realpath(__file__)),"view","glade", "pddl_action_tab.glade"))
+    gtk_builder = Gtk.Builder()
+    gtk_builder.add_from_file(glade_path)
+    # get items
+    tab = gtk_builder.get_object('planning_tab_box')
+    tab.show_all()
+    state_editor_view["main_notebook_2"].append_page(tab, create_label_widget_with_icon('f1ec', _(''),'PDDL Action definition'))
+    state_editor_view["main_notebook_2"].set_tab_reorderable(tab, True)
+    c_state= state_editor.model.state
+    PddlActionTabController(gtk_builder,c_state).start_control_tab()
