@@ -10,6 +10,8 @@ built_in_planners = {
 }
 #the storage path of the config file.
 DATASTORE_STORAGE_PATH = os.path.join(os.path.expanduser('~'), os.path.normpath('.config/rafcon/rafcontpp_conf.json'))
+#the name of the semantic data dict in rafcon state
+SEMANTIC_DATA_DICT_NAME = 'RAFCONTPP_PDDL_ACTION'
 
 def datastore_from_file(file_path):
     ''' datastore_from_file
@@ -150,9 +152,11 @@ class Datastore:
                     self.add_state_pools(state_pool,False)
 
     def get_action_pools(self):
+        logger.warn('WARNING: DEPRECATED METHOD!')
         return self.__action_pools
 
     def add_action_pools(self,action_pools):
+        logger.warn('WARNING: DEPRECATED METHOD!')
         if not action_pools:
             logger.error("action_pools can't be None")
             raise ValueError("action_pools can't be None")

@@ -1,8 +1,13 @@
 import os
+import unicodedata
 import json
 from rafcontpp.model.type_tree import TypeTree
+from rafcontpp.model.datastore import SEMANTIC_DATA_DICT_NAME
 from rafcontpp.logic.predicate_merger import PredicateMerger
 from rafcontpp.model.pddl_action_representation import PddlActionRepresentation
+from rafcontpp.model.pddl_action_representation import parse_action_name
+from rafcontpp.model.pddl_action_representation import action_to_upper
+from rafcon.core.singleton import library_manager
 from rafcon.utils import log
 
 logger = log.get_logger(__name__)
@@ -175,10 +180,7 @@ class DomainGenerator:
         """
         actions = ""
         for action in pddl_actions:
-            c_action = ""
-            for line in action.action:
-                c_action = c_action + line + "\r\n"
-            actions = actions + c_action + "\r\n"
+            actions += action.action + "\r\n\r\n"
         return actions
 
 
@@ -192,39 +194,57 @@ class DomainGenerator:
         :param action_names: the name of the actions needed.
         :return: a list of needed actions in PlanActionRepresentation format.
         """
-        ac_dict = {}
-        for action_pool_path in self.__datastore.get_action_pools():
-            raw_ac_dict = json.load(open(action_pool_path, "r"))
-            for key in raw_ac_dict.keys():
-                ac_dict[key.upper()] = raw_ac_dict[key]
+        state_libs = self.__datastore.get_state_pools()
+        lib_names = []
+        for pool in state_libs:
+            lib_names.append(os.path.basename(pool))
+
         pddl_actions = []
+        found_actions = []
+        for lib_name in lib_names:
+            state_pool = library_manager.libraries[lib_name]
+            for state in state_pool:
+                lib_state = library_manager.get_library_instance(lib_name, state)
+                sem_data = lib_state.state_copy.semantic_data
+
+                if SEMANTIC_DATA_DICT_NAME in sem_data:
+                    raw_action = sem_data[SEMANTIC_DATA_DICT_NAME]
+                    #parse from unicode to string r means raw
+                    r_action_name = unicodedata.normalize('NFKD', raw_action['pddl_action']).encode('utf-8','ignore')
+                    r_pred_str = unicodedata.normalize('NFKD', raw_action["pddl_predicates"]).encode('utf-8','ignore')
+                    r_action = unicodedata.normalize('NFKD', raw_action["pddl_action"]).encode('utf-8','ignore')
+                    r_types = unicodedata.normalize('NFKD', raw_action["pddl_types"]).encode('utf-8','ignore')
+
+                    action_name = parse_action_name(r_action_name.upper())
+                    found_actions.append(action_name)
+                    #construct predicate array from predicate string.
+                    predicates = []
+                    predicate_string = r_pred_str
+                    while predicate_string.find('(') < predicate_string.find(')'):
+                        start = predicate_string.find('(')
+                        end = predicate_string.find(')')+1
+                        predicates.append(predicate_string[start:end])
+                        logger.debug("parsed predicate: " + predicate_string[start:end])
+                        predicate_string = predicate_string[end:]
+                    pddl_actions.append(action_to_upper(PddlActionRepresentation(
+                                                                action_name,
+                                                                r_action,
+                                                                predicates,
+                                                                self.__parse_type_string(r_types),
+                                                                raw_action["requirements"])))
+        #just check, if all needed actions could be parsed.
         for action_name in self.__datastore.get_available_actions():
-            if action_name in ac_dict:
-                raw_action = ac_dict[action_name]
-                pddl_actions.append(self.__action_to_upper(PddlActionRepresentation(raw_action["name"],
-                                                             raw_action["action"],
-                                                             raw_action["predicates"],
-                                                             raw_action["types"],
-                                                             raw_action["requirements"])))
-            else:
-                logger.error("No action found in database for action called: \"" + action_name + "\"")
+            if action_name not in found_actions:
+                logger.error("No action found for action called: \"" + action_name + "\"")
+
         return pddl_actions
 
-    def __action_to_upper(self, action):
-        '''
-         action to upper receives a action in pddl_action_representation, and retuns it in upper case
-        :param action: a action in PddlActionRepresentation
-        :return: the action as upper case
-        '''
-
-        if action:
-            upper_types = []
-            action.types = [type.upper() for type in action.types]
-            action.predicates = [pred.upper() for pred in action.predicates]
-            action.requirements = [req.upper() for req in action.requirements]
-            action.action = [act.upper() for act in action.action]
-
-        return action
+    #parse typestring, make a list out of one string...
+    def __parse_type_string(self, type_string):
+        ts = type_string.replace(',',' ')
+        ts = ts.split(' ')
+        ts = list(filter(None,ts))
+        return ts
 
     def __dict_to_upper(self, dict):
         '''

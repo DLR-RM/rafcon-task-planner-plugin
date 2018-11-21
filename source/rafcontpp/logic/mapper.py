@@ -1,4 +1,6 @@
 import os
+from rafcontpp.model.datastore import SEMANTIC_DATA_DICT_NAME
+from rafcontpp.model.pddl_action_representation import parse_action_name
 from rafcon.core.singleton import library_manager
 from rafcon.core.config import global_config
 from rafcon.utils import log
@@ -31,28 +33,27 @@ class Mapper:
         libraries = global_config.get_config_value("LIBRARY_PATHS")
         lib_names=[]
         for pool in state_libs:
-            logger.debug(str(pool))
-            lib_name = os.path.basename(os.path.dirname(pool))
+            logger.debug("adding library path: "+str(pool))
+            lib_name = os.path.basename(pool)
             lib_names.append(lib_name)
             libraries[lib_name] = os.path.abspath(pool)
 
         global_config.set_config_value("LIBRARY_PATHS", libraries)
         library_manager.refresh_libraries()
-        action_state_map={}
+        action_state_map = {}
         for lib_name in lib_names:
             state_pool = library_manager.libraries[lib_name]
             for state in state_pool:
                 lib_state = library_manager.get_library_instance(lib_name, state)
                 sem_data = lib_state.state_copy.semantic_data
-
-                if 'PDDL_Action' in sem_data:
-                    action_name = sem_data['PDDL_Action']
+                if SEMANTIC_DATA_DICT_NAME in sem_data:
+                    action_name = parse_action_name(str(sem_data[SEMANTIC_DATA_DICT_NAME]['pddl_action']).upper())
                     if action_name in action_state_map:
                         logger.warning("Multiple association of action " + str(action_name)
                                        + " associated with states " + str(action_state_map[action_name])
                                        + " and " + str(state))
                     else:
-                        action_state_map[action_name.upper()] = state
+                        action_state_map[action_name] = state
                 else:
                     logger.warning("State " + state + "is not associated with any PDDL Action!" )
 

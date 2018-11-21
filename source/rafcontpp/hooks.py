@@ -45,7 +45,7 @@ def post_state_editor_register_view(state_editor):
     gtk_builder = Gtk.Builder()
     gtk_builder.add_from_file(glade_path)
     # get items
-    tab = gtk_builder.get_object('planning_tab_box')
+    tab = gtk_builder.get_object('rtpp_action_box')
     tab.show_all()
     state_editor_view["main_notebook_2"].append_page(tab, create_label_widget_with_icon('f1ec', _(''),'PDDL Action definition'))
     state_editor_view["main_notebook_2"].set_tab_reorderable(tab, True)
