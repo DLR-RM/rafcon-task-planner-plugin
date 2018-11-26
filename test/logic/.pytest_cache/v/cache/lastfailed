@@ -1,3 +1,6 @@
 {
-  "test_domain_generator.py": true
+  "test_domain_generator.py::test_generate_domain[actions0-type_dict0-(DEFINE (DOMAIN test_domain)\r\n(:REQUIREMENTS )\r\n\r\n(:PREDICATES\r\n)\r\n\r\n)]": true, 
+  "test_domain_generator.py::test_generate_domain[actions1-type_dict1-(DEFINE (DOMAIN test_domain)\r\n(:REQUIREMENTS :adl :strips :typing )\r\n(:TYPES \r\nLocation - Object\r\nSpot - Location\r\n)\r\n(:PREDICATES\r\n(at ?loc - Location)\r\n(in ?obj - Object)\r\n(under ?obj - Object)\r\n)\r\n(:action a1)\r\n\r\n(:action a2)\r\n\r\n(:action a3)\r\n\r\n\r\n)]": true, 
+  "test_domain_generator.py::test_generate_domain_no_type_dict": true, 
+  "test_pddl_action_parser.py::test_parse_non_action_string": true
 }

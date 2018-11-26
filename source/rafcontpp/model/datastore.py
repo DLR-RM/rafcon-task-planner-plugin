@@ -1,3 +1,8 @@
+#
+#
+# Contributors:
+# Christoph Suerig <christoph.suerig@dlr.de>
+# Version 12.11.2018
 import os
 import json
 from rafcontpp.model.plan_step import PlanStep
@@ -8,9 +13,9 @@ logger = log.get_logger(__name__)
 built_in_planners = {
     'Fast Downward Planning System': ('rafcontpp.planner.fdintegration', 'FdIntegration')
 }
-#the storage path of the config file.
+#The storage path of the config file.
 DATASTORE_STORAGE_PATH = os.path.join(os.path.expanduser('~'), os.path.normpath('.config/rafcon/rafcontpp_conf.json'))
-#the name of the semantic data dict in rafcon state
+#The name of the semantic data dict in rafcon state
 SEMANTIC_DATA_DICT_NAME = 'RAFCONTPP_PDDL_ACTION'
 
 def datastore_from_file(file_path):
@@ -25,7 +30,7 @@ def datastore_from_file(file_path):
         logger.warning("Can't restore configuration from: " + str(file_path))
         logger.info("Creating default configuration...")
         default_dir = str(os.path.expanduser('~'))
-        ds = Datastore([default_dir], [default_dir], default_dir, built_in_planners.keys()[0], [], default_dir,
+        ds = Datastore([default_dir], default_dir, built_in_planners.keys()[0], [], default_dir,
                   default_dir, False)
         ds.set_planner_script_path(default_dir)
 
@@ -33,7 +38,6 @@ def datastore_from_file(file_path):
         data = json.load(open(file_path, "r"))
         logger.info('Loading Configuration form: '+file_path)
         ds = Datastore(data['state_pools'],
-                     data['action_pools'],
                      data['sm_save_dir'],
                      data['planner'],
                      data['planner_argv'],
@@ -73,13 +77,11 @@ class Datastore:
     __planner_script_path = None
 
 
-    def __init__(self, state_pools, action_pools,sm_save_dir, planner, planner_argv,
+    def __init__(self, state_pools,sm_save_dir, planner, planner_argv,
                facts_path,type_db_path,keep_related_files, file_save_dir=os.path.join(os.getcwd(), 'related_files')):
 
         #a list of directories, containing states with pddl notation.
         self.__state_pools = state_pools
-        #a list of action_db files
-        self.__action_pools = action_pools
         #the location, to save the generated state machine in.
         self.__sm_save_dir = sm_save_dir
         #the complete path of the facts file (e.g. /home/facts.pddl).
@@ -105,11 +107,6 @@ class Datastore:
             if not os.path.isdir(dir):
                 logger.error("state pool directory not found: " + str(dir))
                 raise ValueError('Is not a directory: ' + str(dir))
-        # validate action_pools
-        for dir in self.__action_pools:
-            if not os.path.isfile(dir):
-                logger.error("action pool file not found: " + str(dir))
-                raise ValueError('Is not a file: ' + str(dir))
         # validate sm_save_dir
         if not os.path.isdir(self.__sm_save_dir):
             logger.error("state machine save dir: directory not found! " + str(self.__sm_save_dir))
@@ -150,22 +147,6 @@ class Datastore:
         elif state_pools:
             for state_pool in state_pools:
                     self.add_state_pools(state_pool,False)
-
-    def get_action_pools(self):
-        logger.warn('WARNING: DEPRECATED METHOD!')
-        return self.__action_pools
-
-    def add_action_pools(self,action_pools):
-        logger.warn('WARNING: DEPRECATED METHOD!')
-        if not action_pools:
-            logger.error("action_pools can't be None")
-            raise ValueError("action_pools can't be None")
-        if action_pools and isinstance(action_pools, str):
-            if action_pools not in self.__action_pools:
-                self.__action_pools.append(action_pools)
-        elif action_pools:
-            for action_pool in action_pools:
-                self.add_action_pools(action_pool)
 
 
     def get_file_save_dir(self):
@@ -311,7 +292,6 @@ class Datastore:
         '''
         data_to_save = {
             'state_pools': self.__state_pools,
-            'action_pools': self.__action_pools,
             'type_db_path': self.__type_db_path,
             'planner' : self.__planner,
             'planner_script_path': self.__planner_script_path,

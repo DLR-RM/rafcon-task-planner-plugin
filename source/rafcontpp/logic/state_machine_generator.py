@@ -70,7 +70,7 @@ class StateMachineGenerator:
         logger.info("State machine " + sm_name + " created. It contains " + str(
             len(self.__datastore.get_plan())) + " states.")
         #open state machine
-        logger.info('Opening state machine...')
+        logger.debug('Opening state machine...')
         if state_machine_manager.is_state_machine_open(state_machine.file_system_path):
             old_sm = state_machine_manager.get_open_state_machine_of_file_system_path(state_machine.file_system_path)
             state_machine_manager.remove_state_machine(old_sm.state_machine_id)

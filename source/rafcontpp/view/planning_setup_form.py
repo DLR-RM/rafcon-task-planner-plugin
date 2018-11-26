@@ -35,7 +35,6 @@ class PlanningSetupForm:
         print mc
         state_pool_chooser = self.__builder.get_object('state_pools_chooser')
         self.__state_pool_chooser_entry = self.__builder.get_object('state_pools_chooser_entry')
-        action_pool_chooser = self.__builder.get_object('action_pools_chooser')
         type_db_chooser = self.__builder.get_object('type_db_chooser')
         planner_dropdown = self.__builder.get_object('planner_dropdown')
         script_path_chooser = self.__builder.get_object('script_path_chooser')
@@ -47,7 +46,6 @@ class PlanningSetupForm:
         #init items
         state_pool_chooser.set_filename(self.__datastore.get_state_pools()[0])
         self.__state_pool_chooser_entry.set_text(self.__string_array_to_string(self.__datastore.get_state_pools()))
-        action_pool_chooser.set_filename(self.__datastore.get_action_pools()[0])
         type_db_chooser.set_filename(self.__datastore.get_type_db_path())
         self.__init_drop_down(planner_dropdown, script_path_chooser)
         planner_argv_entry.set_text(''.join(e+" " for e in self.__datastore.get_planner_argv()).rstrip())
@@ -72,7 +70,7 @@ class PlanningSetupForm:
         drop_down.append_text(SEL_PLANNER)
 
         for index, planner in enumerate(self.__datastore.get_built_in_planners().keys()):
-            drop_down.append_text( planner)
+            drop_down.append_text(planner)
             if planner == self.__datastore.get_planner():
                 active_index = index +1
 
@@ -123,7 +121,6 @@ class PlanningSetupForm:
         not_filled = None
         logger.info(self.__string_to_string_array(self.__state_pool_chooser_entry.get_text()))
         self.__datastore.add_state_pools(self.__string_to_string_array(self.__state_pool_chooser_entry.get_text()),True)
-        self.__datastore.add_action_pools(self.__builder.get_object('action_pools_chooser').get_filename())
         self.__datastore.set_type_db_path(self.__builder.get_object('type_db_chooser').get_filename())
         choosen_planner = self.__builder.get_object('planner_dropdown').get_active_text()
         #set planner

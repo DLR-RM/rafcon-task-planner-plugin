@@ -1,15 +1,13 @@
+# Contributors:
+# Christoph Suerig <christoph.suerig@dlr.de>
+# Version 01.11.2018
+
 import os
-import unicodedata
 import json
 from rafcontpp.model.type_tree import TypeTree
-from rafcontpp.model.datastore import SEMANTIC_DATA_DICT_NAME
 from rafcontpp.logic.predicate_merger import PredicateMerger
-from rafcontpp.model.pddl_action_representation import PddlActionRepresentation
-from rafcontpp.model.pddl_action_representation import parse_action_name
-from rafcontpp.model.pddl_action_representation import action_to_upper
-from rafcon.core.singleton import library_manager
+from rafcontpp.logic.pddl_action_loader import PddlActionLoader
 from rafcon.utils import log
-
 logger = log.get_logger(__name__)
 
 class DomainGenerator:
@@ -37,7 +35,8 @@ class DomainGenerator:
         domain_name = self.__parse_domain_name()
         self.__datastore.set_domain_name(domain_name.lower())
         type_dict = self.__dict_to_upper(json.load(open(self.__datastore.get_type_db_path(), "r")))
-        pddl_actions = self.__get_pddl_actions_from_file()
+        action_loader = PddlActionLoader(self.__datastore)
+        pddl_actions = action_loader.load_pddl_actions()
         domain_path = os.path.abspath(os.path.join(self.__datastore.get_file_save_dir(), domain_name + ".pddl"))
         type_tree = self.__merge_types(pddl_actions, type_dict)
         merged_preds = self.__merge_predicates(pddl_actions,type_tree)
@@ -83,6 +82,11 @@ class DomainGenerator:
         return domain_name
 
     def __get_head(self, domain_name):
+        ''' get_head
+        takes a domain name, and returns the head of a pddl domain
+        :param domain_name: the name of the domain
+        :return: the head of a pddl domain
+        '''
         return "(DEFINE (DOMAIN " + domain_name + ")"
 
     def __merge_requirements(self, pddl_actions):
@@ -183,68 +187,6 @@ class DomainGenerator:
             actions += action.action + "\r\n\r\n"
         return actions
 
-
-
-
-    def __get_pddl_actions_from_file(self):
-        """
-        getPddlActionsFromFile reads the actions from the pddl-action-database and
-        parses them into the internal format (PddlActionPrepresentation).
-        :param action_file_path: the path of the aciton-database
-        :param action_names: the name of the actions needed.
-        :return: a list of needed actions in PlanActionRepresentation format.
-        """
-        state_libs = self.__datastore.get_state_pools()
-        lib_names = []
-        for pool in state_libs:
-            lib_names.append(os.path.basename(pool))
-
-        pddl_actions = []
-        found_actions = []
-        for lib_name in lib_names:
-            state_pool = library_manager.libraries[lib_name]
-            for state in state_pool:
-                lib_state = library_manager.get_library_instance(lib_name, state)
-                sem_data = lib_state.state_copy.semantic_data
-
-                if SEMANTIC_DATA_DICT_NAME in sem_data:
-                    raw_action = sem_data[SEMANTIC_DATA_DICT_NAME]
-                    #parse from unicode to string r means raw
-                    r_action_name = unicodedata.normalize('NFKD', raw_action['pddl_action']).encode('utf-8','ignore')
-                    r_pred_str = unicodedata.normalize('NFKD', raw_action["pddl_predicates"]).encode('utf-8','ignore')
-                    r_action = unicodedata.normalize('NFKD', raw_action["pddl_action"]).encode('utf-8','ignore')
-                    r_types = unicodedata.normalize('NFKD', raw_action["pddl_types"]).encode('utf-8','ignore')
-
-                    action_name = parse_action_name(r_action_name.upper())
-                    found_actions.append(action_name)
-                    #construct predicate array from predicate string.
-                    predicates = []
-                    predicate_string = r_pred_str
-                    while predicate_string.find('(') < predicate_string.find(')'):
-                        start = predicate_string.find('(')
-                        end = predicate_string.find(')')+1
-                        predicates.append(predicate_string[start:end])
-                        logger.debug("parsed predicate: " + predicate_string[start:end])
-                        predicate_string = predicate_string[end:]
-                    pddl_actions.append(action_to_upper(PddlActionRepresentation(
-                                                                action_name,
-                                                                r_action,
-                                                                predicates,
-                                                                self.__parse_type_string(r_types),
-                                                                raw_action["requirements"])))
-        #just check, if all needed actions could be parsed.
-        for action_name in self.__datastore.get_available_actions():
-            if action_name not in found_actions:
-                logger.error("No action found for action called: \"" + action_name + "\"")
-
-        return pddl_actions
-
-    #parse typestring, make a list out of one string...
-    def __parse_type_string(self, type_string):
-        ts = type_string.replace(',',' ')
-        ts = ts.split(' ')
-        ts = list(filter(None,ts))
-        return ts
 
     def __dict_to_upper(self, dict):
         '''

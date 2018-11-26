@@ -1,4 +1,8 @@
-
+#
+#
+# Contributors:
+# Christoph Suerig <christoph.suerig@dlr.de>
+# Version 12.11.2018
 
 class PlanStep:
     """Intern format, to represent a pddl-plan step.

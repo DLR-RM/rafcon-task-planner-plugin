@@ -121,9 +121,6 @@ class PredicateMerger:
                     logger.error(err_str)
                     raise ValueError(err_str)
 
-        if len(predicate_list) > 1:
-            logger.warning('Predicate ' + self.__tuple_to_predicate_string(reduced_list) +
-                           ' had to be merged, so you may have inconsistencies!')
 
         return reduced_list
 

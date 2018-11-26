@@ -49,11 +49,23 @@
                 <property name="orientation">vertical</property>
                 <property name="spacing">1</property>
                 <child>
-                  <object class="GtkLabel" id="description_label">
+                  <object class="GtkBox">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="margin_bottom">5</property>
-                    <property name="label" translatable="yes">Description</property>
+                    <property name="orientation">vertical</property>
+                    <child>
+                      <object class="GtkLabel" id="description_label">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="margin_bottom">5</property>
+                        <property name="label" translatable="yes">Description</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -132,6 +144,39 @@
                   </packing>
                 </child>
                 <child>
+                  <object class="GtkGrid">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <child>
+                      <object class="GtkButton" id="rtpp_pddl_tab_auto_fill_button">
+                        <property name="label" translatable="yes">Auto Fill</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                        <property name="image_position">right</property>
+                      </object>
+                      <packing>
+                        <property name="left_attach">3</property>
+                        <property name="top_attach">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">4</property>
+                  </packing>
+                </child>
+                <child>
                   <object class="GtkLabel" id="pddl_predicates_label">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
@@ -141,7 +186,7 @@
                   <packing>
                     <property name="expand">False</property>
                     <property name="fill">True</property>
-                    <property name="position">4</property>
+                    <property name="position">5</property>
                   </packing>
                 </child>
                 <child>
@@ -164,20 +209,22 @@ e.g. predicateA predicateB</property>
                   <packing>
                     <property name="expand">True</property>
                     <property name="fill">True</property>
-                    <property name="position">5</property>
+                    <property name="position">6</property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkLabel" id="pddl_types_label">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
+                    <property name="margin_left">260</property>
+                    <property name="margin_right">174</property>
                     <property name="margin_bottom">5</property>
                     <property name="label" translatable="yes">Types</property>
                   </object>
                   <packing>
                     <property name="expand">False</property>
                     <property name="fill">True</property>
-                    <property name="position">6</property>
+                    <property name="position">7</property>
                   </packing>
                 </child>
                 <child>
@@ -189,20 +236,22 @@ e.g. predicateA predicateB</property>
                   <packing>
                     <property name="expand">False</property>
                     <property name="fill">True</property>
-                    <property name="position">7</property>
+                    <property name="position">8</property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkLabel" id="pddl_requirements_label">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
+                    <property name="margin_left">240</property>
+                    <property name="margin_right">140</property>
                     <property name="margin_bottom">5</property>
                     <property name="label" translatable="yes">Requirements</property>
                   </object>
                   <packing>
                     <property name="expand">False</property>
                     <property name="fill">True</property>
-                    <property name="position">8</property>
+                    <property name="position">9</property>
                   </packing>
                 </child>
                 <child>
@@ -227,6 +276,7 @@ e.g. predicateA predicateB</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
+                                <property name="tooltip_text" translatable="yes">Basic STRIPS-style adds and deletes</property>
                                 <property name="draw_indicator">True</property>
                               </object>
                               <packing>
@@ -240,6 +290,7 @@ e.g. predicateA predicateB</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
+                                <property name="tooltip_text" translatable="yes">= :strips + :typing + :disjunctive-preconditions + :equality + :quantified-preconditions</property>
                                 <property name="draw_indicator">True</property>
                               </object>
                               <packing>
@@ -253,6 +304,7 @@ e.g. predicateA predicateB</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
+                                <property name="tooltip_text" translatable="yes">Allow type names in declarations of variables</property>
                                 <property name="draw_indicator">True</property>
                               </object>
                               <packing>
@@ -266,6 +318,7 @@ e.g. predicateA predicateB</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
+                                <property name="tooltip_text" translatable="yes">Support = as built-in predicate</property>
                                 <property name="draw_indicator">True</property>
                               </object>
                               <packing>
@@ -288,10 +341,11 @@ e.g. predicateA predicateB</property>
                             </child>
                             <child>
                               <object class="GtkCheckButton" id="rtpp_action_dis_prec_box">
-                                <property name="label" translatable="yes">:disjunctive-predonditions</property>
+                                <property name="label" translatable="yes">:disjunctive-preconditions</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
+                                <property name="tooltip_text" translatable="yes">Allow 'or' in goal descriptions</property>
                                 <property name="draw_indicator">True</property>
                               </object>
                               <packing>
@@ -305,6 +359,7 @@ e.g. predicateA predicateB</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
+                                <property name="tooltip_text" translatable="yes">Allow exists in goal descriptions</property>
                                 <property name="draw_indicator">True</property>
                               </object>
                               <packing>
@@ -344,6 +399,7 @@ e.g. predicateA predicateB</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
+                                <property name="tooltip_text" translatable="yes">Allow Forall in goal descriptions</property>
                                 <property name="draw_indicator">True</property>
                               </object>
                               <packing>
@@ -357,6 +413,7 @@ e.g. predicateA predicateB</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
+                                <property name="tooltip_text" translatable="yes">Allow 'when' in action effects</property>
                                 <property name="draw_indicator">True</property>
                               </object>
                               <packing>
@@ -365,13 +422,89 @@ e.g. predicateA predicateB</property>
                               </packing>
                             </child>
                             <child>
-                              <placeholder/>
+                              <object class="GtkCheckButton" id="rtpp_action_quanti_precon_box">
+                                <property name="label" translatable="yes">:quantified-preconditions</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="receives_default">False</property>
+                                <property name="tooltip_text" translatable="yes">= : existential-preconditions + :universal-preconditions</property>
+                                <property name="draw_indicator">True</property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">2</property>
+                                <property name="top_attach">3</property>
+                              </packing>
                             </child>
                             <child>
-                              <placeholder/>
+                              <object class="GtkCheckButton" id="rtpp_action_action_expa_box">
+                                <property name="label" translatable="yes">:action-expansions</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="receives_default">False</property>
+                                <property name="tooltip_text" translatable="yes">Allow actions to have :expansions </property>
+                                <property name="draw_indicator">True</property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">0</property>
+                                <property name="top_attach">4</property>
+                              </packing>
                             </child>
                             <child>
-                              <placeholder/>
+                              <object class="GtkCheckButton" id="rtpp_action_foreach_expa_box">
+                                <property name="label" translatable="yes">:foreach-expansions</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="receives_default">False</property>
+                                <property name="tooltip_text" translatable="yes">Allow actions expansions to use 'foreach' </property>
+                                <property name="draw_indicator">True</property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="top_attach">4</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkCheckButton" id="rtpp_action_dag_exp_box">
+                                <property name="label" translatable="yes">:dag-expansions</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="receives_default">False</property>
+                                <property name="tooltip_text" translatable="yes">Allow labeled subactions</property>
+                                <property name="draw_indicator">True</property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">2</property>
+                                <property name="top_attach">4</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkCheckButton" id="rtpp_action_expr_eval_box">
+                                <property name="label" translatable="yes">:expression-evaluation</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="receives_default">False</property>
+                                <property name="tooltip_text" translatable="yes">Support 'eval' predicate in axioms</property>
+                                <property name="draw_indicator">True</property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">0</property>
+                                <property name="top_attach">5</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkCheckButton" id="rtpp_action_fluents_box">
+                                <property name="label" translatable="yes">:fluents</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="receives_default">False</property>
+                                <property name="tooltip_text" translatable="yes">Support type (fluent t)
+</property>
+                                <property name="draw_indicator">True</property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="top_attach">5</property>
+                              </packing>
                             </child>
                             <child>
                               <placeholder/>
@@ -384,7 +517,7 @@ e.g. predicateA predicateB</property>
                   <packing>
                     <property name="expand">True</property>
                     <property name="fill">True</property>
-                    <property name="position">9</property>
+                    <property name="position">10</property>
                   </packing>
                 </child>
                 <style>

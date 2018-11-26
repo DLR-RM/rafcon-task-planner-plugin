@@ -1,3 +1,8 @@
+#
+#
+# Contributors:
+# Christoph Suerig <christoph.suerig@dlr.de>
+# Version 12.11.2018
 class PlannerInterface:
 
 
@@ -11,7 +16,7 @@ class PlannerInterface:
         :param facts_path: The absolute path of the facts file
         :param planner_argv: Some additional planner args, optional
         :param storage_path: The location, where to save all produced artefacts (like a plan file) in.
-        :return: a PlanningReport (source.de.dlr.rmc.rafconttp.model.planningreport)
+        :return: a PlanningReport (rafcontpp.model.planning_report)
         '''
 
         raise NotImplementedError('This Method has to be overwritten!')
