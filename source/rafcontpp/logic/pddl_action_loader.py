@@ -22,19 +22,16 @@ class PddlActionLoader:
 
     def load_pddl_actions(self):
         """
-        load_pddl_actions reads the actions from the pddl-action-database and
+        load_pddl_actions reads the actions from the states and
         parses them into the internal format (PddlActionPrepresentation).
-        :param action_file_path: the path of the aciton-database
-        :param action_names: the name of the actions needed.
-        :return: a list of needed actions in PlanActionRepresentation format.
+        :return: Nothing, sets the pddl action map in datastore.
         """
         state_libs = self.__datastore.get_state_pools()
         lib_names = []
         for pool in state_libs:
             lib_names.append(os.path.basename(pool))
 
-        pddl_actions = []
-        found_actions = []
+        pddl_actions = {}
         for lib_name in lib_names:
             state_pool = library_manager.libraries[lib_name]
             for state in state_pool:
@@ -55,22 +52,29 @@ class PddlActionLoader:
                     if isinstance(raw_action["requirements"], unicode):
                         r_reqs = unicodedata.normalize('NFKD', raw_action["requirements"]).encode('utf-8', 'ignore')
 
-                    action_name = PddlActionParser(r_action.upper()).parse_action_name()
-                    found_actions.append(action_name)
+                    action_parser = PddlActionParser(r_action)
+                    action_name = action_parser.parse_action_name().upper()
 
-                    pddl_actions.append(action_to_upper(PddlActionRepresentation(
+
+                    c_action = action_to_upper(PddlActionRepresentation(
                         action_name,
                         r_action,
                         self.parse_predicate_string(r_pred_str),
                         self.parse_type_string(r_types),
-                        self.parse_requirement_string(r_reqs))))
+                        self.parse_requirement_string(r_reqs),
+                        action_parser.parse_parameters()))
+
+                    if c_action.name in pddl_actions.keys():
+                        logger.warning('Multiple definition of Action: '+c_action.name)
+
+                    pddl_actions[c_action.name] = c_action
 
         # just check, if all needed actions could be parsed.
         for action_name in self.__datastore.get_available_actions():
-            if action_name not in found_actions:
+            if action_name not in pddl_actions.keys():
                 logger.error("No action found for action called: \"" + action_name + "\"")
 
-        return pddl_actions
+        self.__datastore.set_pddl_action_map(pddl_actions)
 
         # parse typestring, make a list out of one string...
 

@@ -35,7 +35,6 @@
       <object class="GtkScrolledWindow" id="rtpp_action_scrolled_window">
         <property name="visible">True</property>
         <property name="can_focus">True</property>
-        <property name="margin_top">10</property>
         <property name="margin_bottom">10</property>
         <property name="shadow_type">in</property>
         <child>
@@ -49,23 +48,10 @@
                 <property name="orientation">vertical</property>
                 <property name="spacing">1</property>
                 <child>
-                  <object class="GtkBox">
+                  <object class="GtkLabel" id="description_label">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="orientation">vertical</property>
-                    <child>
-                      <object class="GtkLabel" id="description_label">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="margin_bottom">5</property>
-                        <property name="label" translatable="yes">Description</property>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="position">0</property>
-                      </packing>
-                    </child>
+                    <property name="label" translatable="yes">Description</property>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -75,24 +61,26 @@
                 </child>
                 <child>
                   <object class="GtkScrolledWindow">
-                    <property name="height_request">5</property>
+                    <property name="height_request">0</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <property name="border_width">1</property>
+                    <property name="border_width">0</property>
                     <property name="shadow_type">in</property>
                     <child>
                       <object class="GtkTextView" id="description_textview">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
-                        <property name="margin_bottom">5</property>
                         <property name="border_width">1</property>
                         <property name="pixels_above_lines">1</property>
                         <property name="pixels_below_lines">1</property>
                       </object>
                     </child>
+                    <style>
+                      <class name="rtpp.scrolledwindow"/>
+                    </style>
                   </object>
                   <packing>
-                    <property name="expand">True</property>
+                    <property name="expand">False</property>
                     <property name="fill">True</property>
                     <property name="position">1</property>
                   </packing>
@@ -101,7 +89,6 @@
                   <object class="GtkLabel" id="pddl_action_label">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="margin_bottom">5</property>
                     <property name="label" translatable="yes">PDDL</property>
                   </object>
                   <packing>
@@ -115,14 +102,13 @@
                     <property name="height_request">8</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <property name="border_width">1</property>
+                    <property name="border_width">0</property>
                     <property name="shadow_type">in</property>
                     <child>
                       <object class="GtkSourceView" id="pddl_action_sourceview">
                         <property name="height_request">8</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
-                        <property name="margin_bottom">5</property>
                         <property name="vexpand">True</property>
                         <property name="border_width">1</property>
                         <property name="left_margin">5</property>
@@ -144,25 +130,16 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkGrid">
+                  <object class="GtkButton" id="rtpp_pddl_tab_auto_fill_button">
+                    <property name="label" translatable="yes">Auto Fill</property>
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <child>
-                      <object class="GtkButton" id="rtpp_pddl_tab_auto_fill_button">
-                        <property name="label" translatable="yes">Auto Fill</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">True</property>
-                        <property name="image_position">right</property>
-                      </object>
-                      <packing>
-                        <property name="left_attach">1</property>
-                        <property name="top_attach">0</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <placeholder/>
-                    </child>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <property name="tooltip_text" translatable="yes">Auto Fill will try to fill the fields 'Predicates', 'Types',
+and 'Requirements'
+THERE IS NO GUARANTEE, that Auto Fill is correct or complete.</property>
+                    <property name="halign">end</property>
+                    <property name="valign">center</property>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -174,7 +151,6 @@
                   <object class="GtkLabel" id="pddl_predicates_label">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="margin_bottom">5</property>
                     <property name="label" translatable="yes">Predicates</property>
                   </object>
                   <packing>
@@ -191,12 +167,11 @@
                     <property name="shadow_type">in</property>
                     <child>
                       <object class="GtkTextView" id="pddl_predicates_textview">
-                        <property name="height_request">3</property>
+                        <property name="height_request">0</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="tooltip_text" translatable="yes">Please enter your Predicates in pddl syntax here
 e.g. predicateA predicateB</property>
-                        <property name="margin_bottom">5</property>
                       </object>
                     </child>
                   </object>
@@ -210,9 +185,6 @@ e.g. predicateA predicateB</property>
                   <object class="GtkLabel" id="pddl_types_label">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="margin_left">260</property>
-                    <property name="margin_right">174</property>
-                    <property name="margin_bottom">5</property>
                     <property name="label" translatable="yes">Types</property>
                   </object>
                   <packing>
@@ -222,10 +194,17 @@ e.g. predicateA predicateB</property>
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkTextView" id="pddl_types_textview">
+                  <object class="GtkScrolledWindow">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <property name="margin_bottom">5</property>
+                    <property name="shadow_type">in</property>
+                    <child>
+                      <object class="GtkTextView" id="pddl_types_textview">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="margin_bottom">5</property>
+                      </object>
+                    </child>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -237,10 +216,10 @@ e.g. predicateA predicateB</property>
                   <object class="GtkLabel" id="pddl_requirements_label">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="margin_left">240</property>
-                    <property name="margin_right">140</property>
-                    <property name="margin_bottom">5</property>
                     <property name="label" translatable="yes">Requirements</property>
+                    <style>
+                      <class name="rtpp.label"/>
+                    </style>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -279,6 +258,9 @@ e.g. predicateA predicateB</property>
             </child>
           </object>
         </child>
+        <style>
+          <class name="rtpp.scrolledwindow"/>
+        </style>
       </object>
       <packing>
         <property name="expand">True</property>

@@ -53,10 +53,11 @@ class PddlActionParser:
 
         self.__create_var_type_dict()
         name = self.parse_action_name()
-        predicates = self.__parse_and_normalize_predicates()
+        predicates = self.__parse_and_generalize_predicates()
         types = list(set(self.__var_type_dict.values()))
+        parameters = self.parse_parameters()
 
-        return PddlActionRepresentation(name,self.__action_string,predicates,types,[])
+        return PddlActionRepresentation(name, self.__action_string, predicates, types, [], parameters)
 
 
     def parse_action_name(self):
@@ -66,12 +67,22 @@ class PddlActionParser:
         :return: The name of the action as string
         '''
         if self.__action_string is None or len(self.__action_string) == 0:
+            logger.error('Can not parse action name from None or Empty String!')
             raise ValueError('Can not parse action name from None or Empty String!')
         parsed = re.findall(self.__action_name_pattern,self.__action_string)
         if len(parsed) == 0:
-            logger.error("Could'nt find action name in "+self.__action_string)
+            logger.error("Couldn't find action name in "+self.__action_string)
             raise ValueError("Couldn't parse action name!")
         return parsed[0]
+
+    def parse_parameters(self):
+        '''parse_parameters
+            parse_parameters parses the parameters out of an pddl action string.
+        :return: a list with parameter names
+        '''
+        params_pattern = re.compile('(\?[^\s|^\)]*)\s+-')
+        params = [param.strip('?') for param in re.findall(params_pattern,self.__action_string)]
+        return params
 
 
 
@@ -90,15 +101,16 @@ class PddlActionParser:
         return self.__var_type_dict
 
 
-
-
-    def __parse_and_normalize_predicates(self):
-        '''parse and normalize predicates
-        this method extracts all used pradicates from the action, then it normalizes them.
+    def __parse_and_generalize_predicates(self):
+        '''parse and generalize predicates
+        this method extracts all used pradicates from the action, then it generalizes them.
         e.g. add types to the variables and remove dublicats.
+        used predicate example:       (at ?a ?b)
+        generalized predicate example: (at ?a - Location ?b - Robot)
 
         :return: a list with all parsed predicates.
         '''
+        #matches used predicates
         u_pred_name_pattern = re.compile('\(([^\s]+)\s')
         used_predicates = re.findall(self.__predicate_pattern,self.__action_string)
 
@@ -110,10 +122,10 @@ class PddlActionParser:
         parsed_predicates = {}
         #iterate through all used predicates
         for used_predicate in used_predicates:
-            normalized_predicate = '('
+            generalized_predicate = '('
             c_pred_name = u_pred_name_pattern.findall(used_predicate)[0]
             c_pred_vars = self.__var_pattern.findall(used_predicate)
-            normalized_predicate += c_pred_name
+            generalized_predicate += c_pred_name
             #the last type used
             last_type = ''
             #a concatination of all types, used to produce an identifier for the predicate
@@ -126,15 +138,18 @@ class PddlActionParser:
                         last_type = c_type
                         type_concat += c_type
                     if last_type != c_type:
-                        normalized_predicate += ' - '+last_type
+                        generalized_predicate += ' - '+last_type
                         last_type = c_type
                         type_concat += c_type
-                    normalized_predicate += ' '+c_pred_var
+                    generalized_predicate += ' '+c_pred_var
                 else:
                     raise ValueError('Variable: ' + c_pred_var+' not defined!')
-            normalized_predicate += ' - ' + last_type + ')'
+            generalized_predicate += ' - ' + last_type + ')'
             #add predicate to a dictionary, to eliminate duplicats.
-            parsed_predicates[c_pred_name+type_concat] = normalized_predicate
+            #two predicates with the same name, but different types are handled as two
+            #predicates at this time. Because of unknowen type hierarchies, its not decidable
+            # at this time how to merge the predicates.
+            parsed_predicates[c_pred_name+type_concat] = generalized_predicate
         return parsed_predicates.values()
 
 

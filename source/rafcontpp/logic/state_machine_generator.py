@@ -40,18 +40,21 @@ class StateMachineGenerator:
         sm_name = self.__datastore.get_domain_name()+'_statemachine'
         sm_path = os.path.abspath(os.path.join(self.__datastore.get_sm_save_dir(), sm_name))
         a_s_map = self.__datastore.get_action_state_map()
+        #generate pddl action dict start shoud be out sourced used for nothing yet!
+        pddl_action_dict = self.__datastore.get_pddl_action_map()
+        #generate pddl action dict end
         root_state = HierarchyState(sm_name)
         last_state = None
         for action in self.__datastore.get_plan():
             if action.name in a_s_map:
                 #load and prepare state
                 current_state = self.__load_state(a_s_map[action.name])
-                #fill dataport default value with params of action
+                #OLD VERSIONfill dataport runtime value with params of action
                 if current_state.input_data_port_runtime_values:
                     for index, param in enumerate(action.parameter):
                         if index in current_state.input_data_port_runtime_values:
                             current_state.input_data_port_runtime_values[str(index)] = param
-
+                #OLD VERSION END
                 #add state to state machine
                 root_state.add_state(current_state)
                 if last_state is None:

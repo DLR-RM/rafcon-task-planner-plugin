@@ -68,8 +68,9 @@ class PddlActionTabController:
 
     def start_control_tab(self):
 
-        self.__load_from_semantic_section()
+
         if isinstance(self.__state, LibraryState):
+            self.__load_from_semantic_section(True)
             self.__description_text_view.set_editable(False)
             self.__description_text_view.set_cursor_visible(False)
             self.__pddl_action_source_view.set_editable(False)
@@ -78,10 +79,12 @@ class PddlActionTabController:
             self.__pddl_predicates_text_view.set_cursor_visible(False)
             self.__pddl_types_text_view.set_editable(False)
             self.__pddl_types_text_view.set_cursor_visible(False)
+            self.__gtk_builder.get_object('rtpp_pddl_tab_auto_fill_button').set_sensitive(False)
             #disable requirements check boxes
             for c_button in self.__requ_cb_dict.values():
-                c_button.set_enabled(False)
+                c_button.set_sensitive(False)
         else:
+            self.__load_from_semantic_section(False)
             #observe parts
             auto_fill_button = self.__gtk_builder.get_object('rtpp_pddl_tab_auto_fill_button')
             auto_fill_button.connect('clicked', self.__auto_fill)
@@ -96,13 +99,18 @@ class PddlActionTabController:
 
 
 
-    def __load_from_semantic_section(self):
-        rtpp_dict = self.__state.semantic_data[SEMANTIC_DATA_DICT_NAME]
-        self.__description_text_view.get_buffer().set_text(self.__filter_input(str(rtpp_dict['description'])))
+    def __load_from_semantic_section(self, is_library_state):
 
+        rtpp_dict = self.__state.semantic_data[SEMANTIC_DATA_DICT_NAME]
+
+        if is_library_state:
+            rtpp_dict = self.__state.state_copy.semantic_data[SEMANTIC_DATA_DICT_NAME]
+
+        self.__description_text_view.get_buffer().set_text(self.__filter_input(str(rtpp_dict['description'])))
         source_view_string = self.__filter_input(str(rtpp_dict['pddl_action']))
+
         if len(source_view_string) == 0:
-            source_view_string = '\n\n\n\n'
+            source_view_string = '\n\n\n\n\n\n'
         self.__pddl_action_source_view.get_buffer().set_text(source_view_string)
         self.__pddl_predicates_text_view.get_buffer().set_text(self.__filter_input(str(rtpp_dict['pddl_predicates'])))
         self.__pddl_types_text_view.get_buffer().set_text(self.__filter_input(str(rtpp_dict['pddl_types'])))

@@ -6,6 +6,7 @@
 import os
 import json
 from rafcontpp.model.plan_step import PlanStep
+from rafcontpp.model.pddl_action_representation import PddlActionRepresentation
 from rafcon.utils import log
 
 logger = log.get_logger(__name__)
@@ -62,10 +63,12 @@ class Datastore:
     __domain_path = None
     #the name of the domain (e.g. BlocksWorld).
     __domain_name = None
-    #a map containing pddl actions as keys, and rafcon states as values.
+    #a map containing pddl action names as keys, and rafcon states as values.
     __action_state_map = None
-    #a map containing rafcon states as keys and pddl actions as values.
+    #a map containing rafcon states as keys and pddl action names as values.
     __state_action_map = None
+    #a map containing action names as keys and pddl action representations as values
+    __pddl_action_map = None
     #a list, contining the names of all available actions.
     __available_actions = None
     #the plan, as a list of plan steps.
@@ -279,6 +282,16 @@ class Datastore:
 
     def set_planner_script_path(self,psp):
         self.__planner_script_path = psp
+
+    def get_pddl_action_map(self):
+        return self.__pddl_action_map
+
+    def set_pddl_action_map(self,action_map):
+        if action_map and isinstance(action_map.values()[0],PddlActionRepresentation):
+            self.__pddl_action_map = action_map
+        else:
+            logger.error("pddl action map has to be of type Dict{str:PddlActionRepresentation}")
+            raise TypeError("pddl action map has to be of type Dict{str:PddlActionRepresentation}")
 
 
 

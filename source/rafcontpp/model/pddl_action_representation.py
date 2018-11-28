@@ -11,12 +11,13 @@ class PddlActionRepresentation:
     """Represents a PDDL-Action.
 
     """
-    def __init__(self, name, action, predicates, types, requirements):
+    def __init__(self, name, action, predicates, types, requirements,parameters):
         self.name = name
         self.action = action
         self.predicates = predicates
         self.types = types
         self.requirements = requirements
+        self.parameters = parameters
 
     def __str__(self):
         return "name: " + self.name + "\r\naction: " + self.action + "\r\npredicates: " + str(self.predicates)

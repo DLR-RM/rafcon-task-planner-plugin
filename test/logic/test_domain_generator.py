@@ -12,13 +12,13 @@ def pddl_actions():
     return[
         PddlActionRepresentation("a1",["(:action a1)"],
                                  ["(at ?loc - Location)","(in ?obj - Object)"],
-                                 ["Object","Location"],[":adl",":strips",":typing"]),
+                                 ["Object","Location"],[":adl",":strips",":typing"], []),
         PddlActionRepresentation("a2", ["(:action a2)"],
                                  ["(at ?loc - Location)", "(under ?obj - Object)"],
-                                 ["Object", "Location"], [":strips", ":typing"]),
+                                 ["Object", "Location"], [":strips", ":typing"], []),
         PddlActionRepresentation("a3", ["(:action a3)"],
                                  ["(at ?loc - Location)", "(in ?obj - Object)","(under ?obj - Object)"],
-                                 ["Object", "Location"], [":adl", ":typing"])
+                                 ["Object", "Location"], [":adl", ":typing"], [])
         ]
 
 @pytest.fixture

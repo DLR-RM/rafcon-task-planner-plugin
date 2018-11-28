@@ -29,8 +29,12 @@ def action_name():
     return 'my_gripping_action'
 
 @pytest.fixture
-def parameters():
+def parameter_line():
     return ':parameters( ?a - Location ?b - Object ?c -  Gripper)'
+
+@pytest.fixture
+def parameters():
+    return ['a','b','c']
 
 @pytest.fixture
 def preconditions():
@@ -100,7 +104,7 @@ def test_parse_missing_name_action_string():
 
 def test_parse_missing_parameters_action_string():
     #arrange
-    parser = PddlActionParser(action_string().replace(parameters(),''))
+    parser = PddlActionParser(action_string().replace(parameter_line(), ''))
     #assert
     with pytest.raises(ValueError):
         parser.parse_action()
@@ -136,6 +140,22 @@ def test_parse_missing_effects_action_string():
     assert pddl_action.action == action_string().replace(effects(), '')
     assert pddl_action.requirements == []
 
+
+def test_parameters_parsing_action_string():
+    #arrange
+    parser = PddlActionParser(action_string())
+    # act
+    params = parser.parse_parameters()
+    # assert
+    assert params == parameters()
+
+def test_parameters_parsing_empty_action_string():
+    #arrange
+    parser = PddlActionParser('')
+    # act
+    params = parser.parse_parameters()
+    # assert
+    assert params == []
 
 
 

@@ -6,7 +6,6 @@ import os
 import json
 from rafcontpp.model.type_tree import TypeTree
 from rafcontpp.logic.predicate_merger import PredicateMerger
-from rafcontpp.logic.pddl_action_loader import PddlActionLoader
 from rafcon.utils import log
 logger = log.get_logger(__name__)
 
@@ -35,8 +34,7 @@ class DomainGenerator:
         domain_name = self.__parse_domain_name()
         self.__datastore.set_domain_name(domain_name.lower())
         type_dict = self.__dict_to_upper(json.load(open(self.__datastore.get_type_db_path(), "r")))
-        action_loader = PddlActionLoader(self.__datastore)
-        pddl_actions = action_loader.load_pddl_actions()
+        pddl_actions = self.__datastore.get_pddl_action_map().values()
         domain_path = os.path.abspath(os.path.join(self.__datastore.get_file_save_dir(), domain_name + ".pddl"))
         type_tree = self.__merge_types(pddl_actions, type_dict)
         merged_preds = self.__merge_predicates(pddl_actions,type_tree)

@@ -2,6 +2,7 @@ import os
 from rafcontpp.logic.mapper import Mapper
 from rafcontpp.logic.domain_generator import DomainGenerator
 from rafcontpp.logic.state_machine_generator import StateMachineGenerator
+from rafcontpp.logic.pddl_action_loader import PddlActionLoader
 from rafcontpp.control.planning_controller import PlanningController
 from rafcon.utils import log
 
@@ -35,6 +36,10 @@ class ExecutionController:
             mapper.generate_action_state_map()                      #--> as_map
             mapper.generate_state_action_map()                      #--> sa_map
             mapper.generate_available_actions()                     #--> available actions
+            #load actions into datastore
+            logger.debug('Handover to action loader')
+            loader = PddlActionLoader(self.__datastore)
+            loader.load_pddl_actions()
             #create domain
             logger.debug('Handover to domain generator')
             domain_generator = DomainGenerator(self.__datastore)
