@@ -1,4 +1,8 @@
 import re
+import gi
+gi.require_version('Gtk', '3.0')
+from gi.repository import Gtk
+from gi.repository import GObject
 from rafcontpp.model.datastore import SEMANTIC_DATA_DICT_NAME
 from rafcontpp.logic.pddl_action_parser import PddlActionParser
 from rafcon.core.states.library_state import LibraryState
@@ -40,6 +44,39 @@ class PddlActionTabController:
         self.__pddl_action_source_view = self.__gtk_builder.get_object('pddl_action_sourceview')
         self.__pddl_predicates_text_view = self.__gtk_builder.get_object('pddl_predicates_textview')
         self.__pddl_types_text_view = self.__gtk_builder.get_object('pddl_types_textview')
+        view_port = self.__gtk_builder.get_object('test_view_port')
+        #__requ_bb_dict contains all requirements button boxes
+        self.__requ_bb_dict = self.__add_requirements_boxes(view_port)
+
+
+    def __add_requirements_boxes(self, gtk_viewport):
+
+        button_dict = {} #key: id value: (label,checkButtonObject)
+        grid = Gtk.Grid()
+        grid.insert_row(0)
+        grid.insert_column(0)
+        grid.insert_column(0)
+
+        row_counter = 1
+        column_counter = 0
+        for key in id_requ_map:
+
+
+            check_button = Gtk.CheckButton.new_with_label(id_requ_map[key])
+            button_dict[key] = (id_requ_map[key], check_button)
+            grid.attach(check_button, column_counter % 3, row_counter - 1, 1, 1)
+            column_counter += 1
+
+            if column_counter % 3 == 0:
+                grid.insert_row(row_counter)
+                row_counter += 1
+
+
+        gtk_viewport.add(grid)
+        grid.show_all()
+        return button_dict
+
+
 
 
     def start_control_tab(self):
@@ -82,6 +119,7 @@ class PddlActionTabController:
         self.__pddl_types_text_view.get_buffer().set_text(self.__filter_input(str(rtpp_dict['pddl_types'])))
         for key in id_requ_map.keys():
             self.__gtk_builder.get_object(key).set_active(id_requ_map[key] in rtpp_dict['requirements'])
+            
 
 
     def __save_data(self, buffer, key):

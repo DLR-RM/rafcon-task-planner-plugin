@@ -161,7 +161,24 @@
                       </packing>
                     </child>
                     <child>
-                      <placeholder/>
+                      <object class="GtkScrolledWindow">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="shadow_type">in</property>
+                        <child>
+                          <object class="GtkViewport" id="test_view_port">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <child>
+                              <placeholder/>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="left_attach">0</property>
+                        <property name="top_attach">0</property>
+                      </packing>
                     </child>
                     <child>
                       <placeholder/>
@@ -262,7 +279,7 @@ e.g. predicateA predicateB</property>
                     <property name="margin_bottom">5</property>
                     <property name="shadow_type">in</property>
                     <child>
-                      <object class="GtkViewport">
+                      <object class="GtkViewport" id="requirements_viewport">
                         <property name="height_request">3</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
@@ -276,6 +293,7 @@ e.g. predicateA predicateB</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
+                                <property name="tooltip_text" translatable="yes">Basic STRIPS-style adds and deletes</property>
                                 <property name="draw_indicator">True</property>
                               </object>
                               <packing>
@@ -289,6 +307,7 @@ e.g. predicateA predicateB</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
+                                <property name="tooltip_text" translatable="yes">= :strips + :typing + :disjunctive-preconditions + :equality + :quantified-preconditions</property>
                                 <property name="draw_indicator">True</property>
                               </object>
                               <packing>
@@ -302,6 +321,7 @@ e.g. predicateA predicateB</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
+                                <property name="tooltip_text" translatable="yes">Allow type names in declarations of variables</property>
                                 <property name="draw_indicator">True</property>
                               </object>
                               <packing>
@@ -315,6 +335,7 @@ e.g. predicateA predicateB</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
+                                <property name="tooltip_text" translatable="yes">Support = as built-in predicate</property>
                                 <property name="draw_indicator">True</property>
                               </object>
                               <packing>
@@ -341,6 +362,7 @@ e.g. predicateA predicateB</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
+                                <property name="tooltip_text" translatable="yes">Allow 'or' in goal descriptions</property>
                                 <property name="draw_indicator">True</property>
                               </object>
                               <packing>
@@ -354,6 +376,7 @@ e.g. predicateA predicateB</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
+                                <property name="tooltip_text" translatable="yes">Allow exists in goal descriptions</property>
                                 <property name="draw_indicator">True</property>
                               </object>
                               <packing>
@@ -393,6 +416,7 @@ e.g. predicateA predicateB</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
+                                <property name="tooltip_text" translatable="yes">Allow Forall in goal descriptions</property>
                                 <property name="draw_indicator">True</property>
                               </object>
                               <packing>
@@ -406,6 +430,7 @@ e.g. predicateA predicateB</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
+                                <property name="tooltip_text" translatable="yes">Allow 'when' in action effects</property>
                                 <property name="draw_indicator">True</property>
                               </object>
                               <packing>
@@ -419,6 +444,7 @@ e.g. predicateA predicateB</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
+                                <property name="tooltip_text" translatable="yes">= : existential-preconditions + :universal-preconditions</property>
                                 <property name="draw_indicator">True</property>
                               </object>
                               <packing>
@@ -432,6 +458,7 @@ e.g. predicateA predicateB</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
+                                <property name="tooltip_text" translatable="yes">Allow actions to have :expansions </property>
                                 <property name="draw_indicator">True</property>
                               </object>
                               <packing>
@@ -445,6 +472,7 @@ e.g. predicateA predicateB</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
+                                <property name="tooltip_text" translatable="yes">Allow actions expansions to use 'foreach' </property>
                                 <property name="draw_indicator">True</property>
                               </object>
                               <packing>
@@ -458,6 +486,7 @@ e.g. predicateA predicateB</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
+                                <property name="tooltip_text" translatable="yes">Allow labeled subactions</property>
                                 <property name="draw_indicator">True</property>
                               </object>
                               <packing>
@@ -471,6 +500,7 @@ e.g. predicateA predicateB</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
+                                <property name="tooltip_text" translatable="yes">Support 'eval' predicate in axioms</property>
                                 <property name="draw_indicator">True</property>
                               </object>
                               <packing>
@@ -484,6 +514,8 @@ e.g. predicateA predicateB</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
+                                <property name="tooltip_text" translatable="yes">Support type (fluent t)
+</property>
                                 <property name="draw_indicator">True</property>
                               </object>
                               <packing>
