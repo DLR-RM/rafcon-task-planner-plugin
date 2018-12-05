@@ -1,3 +1,8 @@
+# Contributors:
+# Christoph Suerig <christoph.suerig@dlr.de>
+# Version 01.12.2018
+
+
 import re
 import gi
 gi.require_version('Gtk', '3.0')
@@ -20,13 +25,22 @@ requ_list = [':strips', ':adl', ':typing', ':equality',
 
 
 class PddlActionTabController:
+    '''PddlActionTabController
+    PddlActionTabController, controlles the gui elements of the pddl action tab for each state.
+    it handles the dataflow between this tab, and the semantic section of the state, where the data
+    of this tab is stored in. It also provides some auto fill wizzard for its elements.
 
+    '''
 
 
     def __init__(self,action_tab_gtk_builder, state):
+        '''
+
+        :param action_tab_gtk_builder: gtk builder, contining its gui elements.
+        :param state: the state, it belongs to.
+        '''
         self.__state = state
         self.__gtk_builder = action_tab_gtk_builder
-        self.__description_text_view = self.__gtk_builder.get_object('description_textview')
         self.__description_text_view = self.__gtk_builder.get_object('description_textview')
         self.__pddl_action_source_view = self.__gtk_builder.get_object('pddl_action_sourceview')
         self.__pddl_predicates_text_view = self.__gtk_builder.get_object('pddl_predicates_textview')
@@ -37,7 +51,11 @@ class PddlActionTabController:
 
 
     def __add_requirements_boxes(self, gtk_viewport):
-
+        '''
+        adds dynamically boxes for all requirements, specified in requ_list (above) to the gui.
+        :param gtk_viewport: the base element, where to store the boxes in.
+        :return: a dictionary, contining the information, which button box belongs to which requirement
+        '''
         button_dict = {} #key: id value: checkButtonObject
         grid = Gtk.Grid()
         grid.insert_row(0)
@@ -67,8 +85,11 @@ class PddlActionTabController:
 
 
     def start_control_tab(self):
-
-
+        '''
+        loads the data into the action tab and subscribes on signals of some gui elements.
+        :return:
+        '''
+        #  set elements uneditable if state is library state
         if isinstance(self.__state, LibraryState):
             self.__load_from_semantic_section(True)
             self.__description_text_view.set_editable(False)
@@ -100,6 +121,12 @@ class PddlActionTabController:
 
 
     def __load_from_semantic_section(self, is_library_state):
+        '''
+        loads the pddl data from the semantic section of the state and writes it into
+        the action tab gui elements.
+        :param is_library_state: true, if state is a library state
+        :return: Nothing
+        '''
 
         rtpp_dict = self.__state.semantic_data[SEMANTIC_DATA_DICT_NAME]
 
@@ -121,28 +148,44 @@ class PddlActionTabController:
 
 
     def __save_data(self, buffer, key):
+        '''
+        reads the values of the tab elements and saves them under the specified key in the semantic section
+        :param buffer: a buffer contining the values to store
+        :param key: a key of the semantic dict in the requirements section
+        :return: Nothing
+        '''
         start, end = buffer.get_bounds()
         self.__state.semantic_data[SEMANTIC_DATA_DICT_NAME][key] = buffer.get_text(start, end,True)
 
 
     def __save_requirements(self,checkbox):
+        '''
+        saves all requirements specified in the gui
+        :param checkbox: unused
+        :return: nothing
+        '''
         self.__state.semantic_data[SEMANTIC_DATA_DICT_NAME]['requirements'] = str(self.__get_requirements())
 
     def __get_requirements(self):
-
+        '''
+        creates a list with all requirements checked in the gui.
+        :return: a list with all requirements checked in the gui
+        '''
         requirements = []
 
         for key in self.__requ_cb_dict.keys():
             if self.__requ_cb_dict[key].get_active():
                 requirements.append(key)
 
-
-
-
         return requirements
 
 
     def __auto_fill(self,button):
+        '''
+        tries to auto complete the predicates, types and Requirements fields.
+        :param button: unused
+        :return: Nothing
+        '''
         #get pddl action from source view
         buffer = self.__pddl_action_source_view.get_buffer()
         start, end = buffer.get_bounds()
@@ -157,7 +200,12 @@ class PddlActionTabController:
 
 
     def __requirements_auto_fill(self, raw_action):
-
+        '''
+        a poor try to auto complete the requirements section in pddl Action tab.
+        is not complete, because the question it tries to answer is not decidable at this time.
+        :param raw_action: the pddl action string.
+        :return: Nothing
+        '''
         raw_action = raw_action.upper()
         bev_effects = raw_action[:raw_action.find(':EFFECT')]
 
@@ -190,6 +238,12 @@ class PddlActionTabController:
 
 
     def __types_auto_fill(self,pddl_action):
+        '''
+        takes the types from a pddl action, compares it with the types, already filled in to the type section
+        and adds missing types.
+        :param pddl_action: a PddlActionRepresentation
+        :return: Noting
+        '''
 
         pattern = re.compile('-{1}\s+[^\s\)]*')
         types = pddl_action.types
@@ -199,9 +253,10 @@ class PddlActionTabController:
         start, end = types_buffer.get_bounds()
         type_field = types_buffer.get_text(start, end, True)
         #to be able to compare
-        upper_type_field = type_field.upper()
+        upper_type_field = ' '+ type_field.upper()+' '
+        upper_type_field = upper_type_field.replace(',',' ')
         for type in types:
-            if upper_type_field.find(type.upper()) == -1:
+            if upper_type_field.find(' '+type.upper()+' ') == -1:
                 type_field = type_field + ", "+type
 
         #set type field.
@@ -211,9 +266,15 @@ class PddlActionTabController:
 
 
     def __predicates_auto_fill(self,pddl_action):
+        '''
+        takes the predicates used in the pddl action, compares them with the predicates, the section is already filled
+        with, and completes the missing. some predicates with the same name can be found more than on time, if
+        these two predicates use values of different types.
+        :param pddl_action:
+        :return:
+        '''
 
         found_predicates = pddl_action.predicates
-
 
         # merge add unknown
         start, end = self.__pddl_predicates_text_view.get_buffer().get_bounds()
@@ -234,6 +295,11 @@ class PddlActionTabController:
 
 
     def __filter_input(self,input):
+        '''
+        filters an input string
+        :param input:
+        :return:
+        '''
         if input == '{}':
             input = ''
         return input

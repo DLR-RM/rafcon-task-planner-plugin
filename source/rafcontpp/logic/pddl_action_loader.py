@@ -1,3 +1,6 @@
+# Contributors:
+# Christoph Suerig <christoph.suerig@dlr.de>
+# Version 01.12.2018
 import os
 import unicodedata
 from rafcontpp.model.datastore import SEMANTIC_DATA_DICT_NAME
@@ -5,7 +8,6 @@ from rafcontpp.model.pddl_action_representation import PddlActionRepresentation
 from rafcontpp.model.pddl_action_representation import action_to_upper
 from rafcontpp.logic.pddl_action_parser import PddlActionParser
 from rafcon.core.singleton import library_manager
-
 from rafcon.utils import log
 
 logger = log.get_logger(__name__)
@@ -16,6 +18,10 @@ class PddlActionLoader:
 
 
     def __init__(self, datastore):
+        '''
+
+        :param datastore: a datastore containing all necessary data.
+        '''
 
         self.__datastore = datastore
 
@@ -39,8 +45,7 @@ class PddlActionLoader:
                 sem_data = lib_state.state_copy.semantic_data
 
                 if SEMANTIC_DATA_DICT_NAME in sem_data \
-                        and isinstance(sem_data[SEMANTIC_DATA_DICT_NAME]['pddl_action'], unicode):
-
+                        and str(state) in self.__datastore.get_state_action_map().keys():
                     raw_action = sem_data[SEMANTIC_DATA_DICT_NAME]
                     # parse from unicode to string r means raw
                     r_pred_str = unicodedata.normalize('NFKD', raw_action["pddl_predicates"]).encode('utf-8', 'ignore')
@@ -65,9 +70,10 @@ class PddlActionLoader:
                         action_parser.parse_parameters()))
 
                     if c_action.name in pddl_actions.keys():
-                        logger.warning('Multiple definition of Action: '+c_action.name)
-
-                    pddl_actions[c_action.name] = c_action
+                        logger.warning('Multiple definition of Action: ' + c_action.name +
+                                       '. Action definition of State ' + str(state) + ' not used.')
+                    else:
+                        pddl_actions[c_action.name] = c_action
 
         # just check, if all needed actions could be parsed.
         for action_name in self.__datastore.get_available_actions():
@@ -79,12 +85,24 @@ class PddlActionLoader:
         # parse typestring, make a list out of one string...
 
     def parse_type_string(self, type_string):
+        '''parse_type_string
+        parse_type_string gets a type string of fromat type1,type2 or type1 type2 and parses it into an
+        array containing the types.
+        :param type_string: a typestring of format type1,type2 or type1 type2.
+        :return: an array containing the types of the string.
+        '''
         ts = type_string.replace(',', ' ')
         ts = ts.split(' ')
         ts = list(filter(None, ts))
         return ts
 
     def parse_requirement_string(self, requ_string):
+        '''parse_requirement_string
+        gets an requirements string and parses it into a requirement array.
+        :param requ_string: a string contining requriements.
+        :return: an array contining requirements.
+        '''
+
         rs = requ_string.strip('[').strip(']')
         rs = rs.replace('\'', '')
         rs = rs.replace(' ', '')
@@ -92,7 +110,11 @@ class PddlActionLoader:
         return req_list
 
     def parse_predicate_string(self,pred_string):
-        # construct predicate array from predicate string.
+        '''
+        construct predicate array from predicate string.
+        :param pred_string: A string containing all predicates of the action.
+        :return: a array containing all predicates of the action.
+        '''
         predicates = []
         predicate_string = pred_string
         while predicate_string.find('(') < predicate_string.find(')'):

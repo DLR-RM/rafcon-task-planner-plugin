@@ -1,3 +1,6 @@
+# Contributors:
+# Christoph Suerig <christoph.suerig@dlr.de>
+# Version 01.11.2018
 import os
 from rafcontpp.model.datastore import SEMANTIC_DATA_DICT_NAME
 from rafcontpp.logic.pddl_action_parser import PddlActionParser
@@ -15,6 +18,10 @@ class Mapper:
     '''
 
     def __init__(self,datastore):
+        '''
+
+        :param datastore: a datastore containing all necessary data.
+        '''
 
         if datastore is None:
             logger.error("Datastore in Mapper can not be None!")
@@ -53,8 +60,8 @@ class Mapper:
                     action_name = PddlActionParser(action_string).parse_action_name()
                     if action_name in action_state_map:
                         logger.warning("Multiple association of action " + str(action_name)
-                                       + " associated with states " + str(action_state_map[action_name])
-                                       + " and " + str(state))
+                                       + "! Associated with states " + str(action_state_map[action_name])
+                                       + " and " + str(state) + ". Using association with state " + str(action_state_map[action_name]))
                     else:
                         action_state_map[action_name] = state
                 else:

@@ -1,7 +1,7 @@
 import pytest
 import os
 
-from rafcon.planner.plan_parser import PlanParser, PlanActionRepresentation
+from .plan_parser import PlanParser, PlanActionRepresentation
 
 @pytest.fixture
 def plan_as_string_list():

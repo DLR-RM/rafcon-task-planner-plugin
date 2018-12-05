@@ -24,7 +24,7 @@ class PddlActionParser:
     def __init__(self, action_string):
         '''
 
-        :param action_string: a pddl action
+        :param action_string: a pddl action string
         '''
         #matches variables with types e.g ?obj - Physobj
         self.__type_var_pattern = re.compile('((\?[^\s]+\s+)+-\s+[^\s|^\)]+)')
@@ -33,7 +33,7 @@ class PddlActionParser:
         #matches only varialbes f.e. ?myVar
         self.__var_pattern = re.compile('\?[^\s|^\)]+')
         #matches predicates
-        self.__predicate_pattern = re.compile('\({1}\s*[^\?][^\)|^\(|^-]*\){1}')
+        self.__predicate_pattern = re.compile('\({1}\s*[^\?|^\s][^\)|^\(]*\){1}')
         #matches the action name, ignores cases
         self.__action_name_pattern = re.compile('\(:action\s*([^\s|^:]+)', re.IGNORECASE)
         #a dictionary, which contains all variables and their types.

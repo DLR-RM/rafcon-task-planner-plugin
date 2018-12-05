@@ -7,6 +7,7 @@ import os
 import json
 from rafcontpp.model.plan_step import PlanStep
 from rafcontpp.model.pddl_action_representation import PddlActionRepresentation
+from rafcontpp.model.type_tree import TypeTree
 from rafcon.utils import log
 
 logger = log.get_logger(__name__)
@@ -71,6 +72,10 @@ class Datastore:
     __pddl_action_map = None
     #a list, contining the names of all available actions.
     __available_actions = None
+    #a typeTree containing all available types
+    __available_types = None
+    #a list of (String,[(String,integer)]) prediactes
+    __available_predicates = None
     #the plan, as a list of plan steps.
     __plan = None
     #a list with the name of all files, generated during the pipeline execution.
@@ -82,6 +87,17 @@ class Datastore:
 
     def __init__(self, state_pools,sm_save_dir, planner, planner_argv,
                facts_path,type_db_path,keep_related_files, file_save_dir=os.path.join(os.getcwd(), 'related_files')):
+        '''
+         Constructor of Datastore
+        :param state_pools: a list of file paths.
+        :param sm_save_dir: the directory, where to save the generated state machine.
+        :param planner: the name / script path of the used planner.
+        :param planner_argv: a String array, with arguments for the planner.
+        :param facts_path: path of the facts file.
+        :param type_db_path: path of the type_db.
+        :param keep_related_files: true, if generated files e.g. the domain file or the plan should be saved.
+        :param file_save_dir: a path, where to save all related files.
+        '''
 
         #a list of directories, containing states with pddl notation.
         self.__state_pools = state_pools
@@ -292,6 +308,20 @@ class Datastore:
         else:
             logger.error("pddl action map has to be of type Dict{str:PddlActionRepresentation}")
             raise TypeError("pddl action map has to be of type Dict{str:PddlActionRepresentation}")
+
+    def get_available_types(self):
+        return self.__available_types
+
+    def set_available_types(self,availabe_types):
+        assert isinstance(availabe_types,TypeTree)
+        self.__available_types = availabe_types
+
+    def get_available_predicates(self):
+        return self.__available_predicates
+
+    def set_available_predicates(self,available_predicates):
+        assert isinstance(available_predicates,[(str,[(str,int)])])
+        self.__available_predicates = available_predicates
 
 
 

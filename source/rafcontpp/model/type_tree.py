@@ -107,7 +107,7 @@ class TypeTree:
                 inserted = self.recursive_insert(parent, type_dict)
                 if inserted:
                     inserted = self.insert(type_name, parent)
-        return inserted
+        return inserted or self.type_name == type_name
 
     def insert(self, type_name, parent_name):
         """
@@ -117,8 +117,8 @@ class TypeTree:
         :param parent_name: the direct parent of the type to insert
         :return: true if insert was successfull, false otherwhise. (for example if the parent is not in the tree yet.)
         """
-        inserted = False
-        if (not type_name is None) & (not self.is_in_tree(type_name)):
+        inserted =  self.is_in_tree(type_name)
+        if (not type_name is None) & (not inserted):
             inserted = self.__insert(type_name, parent_name)
         return inserted
 
@@ -162,3 +162,14 @@ class TypeTree:
 
         return as_string
 
+    def get_tree_as_list(self):
+        '''
+        takes the Tree, and writes all its elements into a list
+        :return: a list, contining all types of the tree
+        '''
+
+        type_list = [self.type_name]
+
+        for child in self.children:
+            type_list.extend(child.get_tree_as_list())
+        return type_list

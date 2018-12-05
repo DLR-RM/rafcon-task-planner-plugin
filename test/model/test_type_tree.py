@@ -38,7 +38,7 @@ def test_create_None_type_tree():
     # try to insert null value
     ("some_type", None, "some_type", False),
     # try to insert something twice.
-    ("some_type", "some_type", "some_type", False)
+    ("some_type", "some_type", "some_type", True)
 ])
 def test_insert(root_type, type_name, parent_name, expected):
     # arrange
@@ -72,6 +72,8 @@ def test_recursive_insert(root_type,type_to_insert,expected,filled_type_dict):
 @pytest.mark.parametrize("root_type,type_to_insert,other_type_in_branch,expected",[
     #add usual branch
     ("Object","Car","Roadstar",True),
+    #add usual branch, in this case the whole dict.
+    ("Object","Object","Roadstar",True),
     #try to insert none
     ("Object",None,None,False),
     #insert not in dict
@@ -92,7 +94,7 @@ def test_add_type_branch(root_type,type_to_insert, other_type_in_branch, expecte
     #act
     inserted = sut.add_type_branch(type_to_insert,filled_type_dict)
     #assert
-    assert inserted == expected
+    assert expected == inserted
     assert sut.is_in_tree(type_to_insert) == expected
     assert sut.is_in_tree(other_type_in_branch) == expected
 
@@ -136,3 +138,33 @@ def test_get_as_string(root_type,to_insert,expected,filled_type_dict):
     tree_as_string = sut.get_as_string()
     #assert
     assert expected == tree_as_string
+
+@pytest.mark.parametrize("parent,child,expected",[
+    ('Object','Car',True),
+    ('Location','Spot',True),
+    ('Location','Location',False),
+    ('Location','Object',False),
+    ('Location','Not_in_tree',False),
+    ('Not_in_tree','Location',False),
+    ('Not_in_tree','Not_in_tree',False),
+    ('Car',None,False),
+    (None,'Car',False),
+])
+def test_is_parent_of(parent,child,expected):
+    #prepare
+    tree = TypeTree('Object')
+    tree.add_type_branch('Roadstar',filled_type_dict())
+    tree.add_type_branch('Spot',filled_type_dict())
+    #act
+    is_parent = tree.is_parent_of(parent,child)
+    #assert
+    assert expected == is_parent
+
+
+    return {
+        "Location": "Object",
+        "Vehicle": "Object",
+        "Spot": "Location",
+        "Car": "Vehicle",
+        "Roadstar": "Car"
+    }

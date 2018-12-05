@@ -1,3 +1,7 @@
+# Contributors:
+# Christoph Suerig <christoph.suerig@dlr.de>
+# Version 01.12.2018
+
 import os
 from rafcontpp.logic.mapper import Mapper
 from rafcontpp.logic.domain_generator import DomainGenerator

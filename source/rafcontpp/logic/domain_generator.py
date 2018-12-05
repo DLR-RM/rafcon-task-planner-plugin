@@ -37,7 +37,8 @@ class DomainGenerator:
         pddl_actions = self.__datastore.get_pddl_action_map().values()
         domain_path = os.path.abspath(os.path.join(self.__datastore.get_file_save_dir(), domain_name + ".pddl"))
         type_tree = self.__merge_types(pddl_actions, type_dict)
-        merged_preds = self.__merge_predicates(pddl_actions,type_tree)
+        self.__datastore.set_available_types(type_tree)
+        merged_preds = self.__merge_predicates(pddl_actions)
         merged_requirs = self.__merge_requirements(pddl_actions)
         logger.debug('writing domain file to: '+str(domain_path))
         domain_file = open(domain_path, "w")
@@ -146,7 +147,7 @@ class DomainGenerator:
             types_in_pddl = types + merged_types.get_as_string() + ")"
         return types_in_pddl
 
-    def __merge_predicates(self, pddl_actions,type_tree):
+    def __merge_predicates(self, pddl_actions):
         """
         mergePredicates takes all predicates mentioned in the PddlActionRepresentations, and removes dublicates.
         :param pddl_actions: a list of PddlActionRepresentations.
@@ -159,7 +160,7 @@ class DomainGenerator:
                 if predicate not in predicates:
                     predicates.append(predicate)
 
-        merger = PredicateMerger(type_tree)
+        merger = PredicateMerger(self.__datastore)
         predicates = merger.merge_predicates(predicates)
         return predicates
 

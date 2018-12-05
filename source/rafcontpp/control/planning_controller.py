@@ -1,3 +1,6 @@
+# Contributors:
+# Christoph Suerig <christoph.suerig@dlr.de>
+# Version 01.11.2018
 import inspect
 import os
 import sys
@@ -14,6 +17,10 @@ class PlanningController:
     '''
 
     def __init__(self,datastore):
+        '''
+
+        :param datastore:  a datastore, containing all necessary data.
+        '''
         self.__datastore = datastore
 
 

@@ -1,27 +1,40 @@
-from rafcontpp.model.type_tree import TypeTree
+#
+#
+#
+#
+#
+#
+# Contributors:
+# Christoph Suerig <christoph.suerig@dlr.de>
+# Version: 26.11.2018
 from rafcon.utils import log
 
 logger = log.get_logger(__name__)
 
 class PredicateMerger:
     '''PredicateMerger
-    PredicateMerger
     '''
 
-    __current_name_index = 0
+    __name_index = 0
 
-    def __init__(self, type_tree):
-        self.__type_tree = type_tree
+    def __init__(self, datastore):
+        '''
+        :param datastore: a datastore containing all necassary data
+        '''
+        self.__datastore = datastore
 
 
     def merge_predicates(self,predicates):
-        '''
-
+        '''merge predicates merges all predicates, sets all available predicates in datastore
+        and returns all merged predicates as strings.
         :param predicates: a list [string] with predicates
         :return: a list [string] with merged predicates
         '''
+        if predicates is None:
+            raise ValueError('predicates can not be None!')
         preds_map = {}
-        merged_predicates = []
+        available_predicates = []
+        merged_preds_as_string = []
         for predicate in predicates:
             parsed_pred = self.__parse_predicate(predicate)
             if parsed_pred[0] in preds_map.keys():
@@ -30,9 +43,12 @@ class PredicateMerger:
                 preds_map[parsed_pred[0]] = [parsed_pred]
 
         for key in preds_map.keys():
-            merged_predicates.append(self.__tuple_to_predicate_string(self.__reduce_predicate_list(preds_map[key])))
+            c_pred = self.__reduce_predicate_list(preds_map[key])
+            available_predicates.append(c_pred)
+            merged_preds_as_string.append(self.__tuple_to_predicate_string(c_pred))
 
-        return merged_predicates
+
+        return merged_preds_as_string
 
 
 
@@ -40,8 +56,13 @@ class PredicateMerger:
 
 
     def __get_current_name_index(self):
-        #self.__current_name_index += 1
-        return self.__current_name_index
+        '''
+        some randome name index (a counter the counts up when ever this method is called),
+        to be able to generate variables with unique names.
+        :return: a number.
+        '''
+        self.__name_index += 1
+        return self.__name_index
 
 
     def __parse_predicate(self,predicate_string):
@@ -57,8 +78,6 @@ class PredicateMerger:
             start = predicate_string.index('(')
             end = predicate_string.index('?')
             if start+1 >= end-1:
-                logger.debug('start_index: '+str(start))
-                logger.debug('end_index: '+str(end))
                 logger.error("Can't parse predicate name: "+predicate_string)
                 raise ValueError("Can't parse predicate name: "+predicate_string)
 
@@ -89,12 +108,12 @@ class PredicateMerger:
 
     def __reduce_predicate_list(self,predicate_list):
         '''reduce_predicate_list
-        reduce_predicate_list gets a list of predicated, with the same name but different types,
+        reduce_predicate_list gets a list of predicates, with the same name but different types,
         and reduces them to one predicate, with the most open types.
         :param predicate_list: a list with predicates, all having the same name
-        :return: one predicate tuple, containing the most open types.
+        :return: one predicate tuple, containing the most general types.
         '''
-
+        type_tree = self.__datastore.get_available_types()
         reduced_list = predicate_list[0]
 
         for predicate in predicate_list:
@@ -112,12 +131,12 @@ class PredicateMerger:
 
 
                 # look if type_tuple is parent
-                if self.__type_tree.is_parent_of(type_tuple[0],reduced_list[1][index][0]):
+                if type_tree.is_parent_of(type_tuple[0],reduced_list[1][index][0]):
                     #set reduced tuple to parent
                     reduced_list[1][index] = type_tuple
                 # if they are not equal, and current reduced_list type is not parent, there must be an error!
                 elif reduced_list[1][index][0] != type_tuple[0] \
-                        and not self.__type_tree.is_parent_of(reduced_list[1][index][0],type_tuple[0]):
+                        and not type_tree.is_parent_of(reduced_list[1][index][0],type_tuple[0]):
                     logger.error(err_str)
                     raise ValueError(err_str)
 
@@ -129,7 +148,7 @@ class PredicateMerger:
 
 
     def __tuple_to_predicate_string(self,predicate_tuple):
-        #(LOCATED ?VEH - VEHICLE ?OBJ - PHYSOBJ)
+
         pred_string = '('+predicate_tuple[0]
 
         for type_tup in predicate_tuple[1]:
