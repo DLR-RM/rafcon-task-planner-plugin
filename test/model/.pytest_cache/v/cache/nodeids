@@ -31,5 +31,6 @@
   "test_type_tree.py::test_is_parent_of[Not_in_tree-Location-False]", 
   "test_type_tree.py::test_is_parent_of[Not_in_tree-Not_in_tree-False]", 
   "test_type_tree.py::test_is_parent_of[Car-None-False]", 
-  "test_type_tree.py::test_is_parent_of[None-Car-False]"
+  "test_type_tree.py::test_is_parent_of[None-Car-False]", 
+  "test_type_tree.py::test_type_tree_to_list"
 ]

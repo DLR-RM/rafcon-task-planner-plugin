@@ -7,7 +7,7 @@ from rafcontpp.logic.pddl_action_parser import PddlActionParser
 @pytest.fixture
 def action_string():
     return '(:action my_gripping_action' \
-                ':parameters( ?a - Location ?b - Object ?c -  Gripper)' \
+                ':parameters( ?a - Location ?b ?d - Object ?c -  Gripper)' \
                 ':preconditions (and (at ?a ?b) (at ?a ?c) (empty ?c))' \
                 ':effect(and (not(at ?a ?b))(not(empty ?c))(grasped ?b ?c)))'
 
@@ -30,11 +30,11 @@ def action_name():
 
 @pytest.fixture
 def parameter_line():
-    return ':parameters( ?a - Location ?b - Object ?c -  Gripper)'
+    return ':parameters( ?a - Location ?b ?d - Object ?c -  Gripper)'
 
 @pytest.fixture
 def parameters():
-    return ['a','b','c']
+    return ['a','b','d','c']
 
 @pytest.fixture
 def preconditions():
@@ -152,10 +152,11 @@ def test_parameters_parsing_action_string():
 def test_parameters_parsing_empty_action_string():
     #arrange
     parser = PddlActionParser('')
-    # act
-    params = parser.parse_parameters()
     # assert
-    assert params == []
+    with pytest.raises(ValueError):
+        parser.parse_parameters()
+
+
 
 
 

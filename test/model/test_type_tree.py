@@ -161,10 +161,15 @@ def test_is_parent_of(parent,child,expected):
     assert expected == is_parent
 
 
-    return {
-        "Location": "Object",
-        "Vehicle": "Object",
-        "Spot": "Location",
-        "Car": "Vehicle",
-        "Roadstar": "Car"
-    }
+def test_type_tree_to_list():
+    #prepare
+    tree = TypeTree('Object')
+    tree.add_type_branch('Object',filled_type_dict())
+    list = []
+    #act
+    list = tree.get_as_list()
+    #assert
+    assert 'Object' in list
+    for key in filled_type_dict().keys():
+        assert key in list
+    assert len(filled_type_dict().keys()) + 1 == len(list)

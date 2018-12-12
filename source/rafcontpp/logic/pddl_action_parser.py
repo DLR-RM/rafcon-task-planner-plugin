@@ -78,10 +78,20 @@ class PddlActionParser:
     def parse_parameters(self):
         '''parse_parameters
             parse_parameters parses the parameters out of an pddl action string.
-        :return: a list with parameter names
+        :return: a list with parameter names, without ?
         '''
-        params_pattern = re.compile('(\?[^\s|^\)]*)\s+-')
-        params = [param.strip('?') for param in re.findall(params_pattern,self.__action_string)]
+        params = []
+        action_string_upper = self.__action_string.upper()
+        if ':PARAMETERS' in action_string_upper:
+            start_index = action_string_upper.index(':PARAMETERS')
+            if ')' in self.__action_string[start_index:]:
+                end_index = start_index + self.__action_string[start_index:].index(')')
+                type_vars = self.__type_var_pattern.findall(self.__action_string[start_index:end_index])
+                for type_var in type_vars:
+                    for var in self.__var_pattern.findall(type_var[0]):
+                        params.append(var.strip('?'))
+        else:
+            raise ValueError('No Parameters found in: '+self.__action_string)
         return params
 
 

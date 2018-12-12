@@ -135,6 +135,9 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
+                    <property name="tooltip_text" translatable="yes">Auto Fill will try to fill the fields 'Predicates', 'Types',
+and 'Requirements'
+THERE IS NO GUARANTEE, that Auto Fill is correct or complete.</property>
                     <property name="halign">end</property>
                     <property name="valign">center</property>
                   </object>
@@ -149,6 +152,10 @@
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="label" translatable="yes">Predicates</property>
+                    <style>
+                      <class name="horizontal"/>
+                      <class name="widget-toolbar"/>
+                    </style>
                   </object>
                   <packing>
                     <property name="expand">False</property>

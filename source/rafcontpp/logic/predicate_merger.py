@@ -48,21 +48,7 @@ class PredicateMerger:
             merged_preds_as_string.append(self.__tuple_to_predicate_string(c_pred))
 
 
-        return merged_preds_as_string
-
-
-
-
-
-
-    def __get_current_name_index(self):
-        '''
-        some randome name index (a counter the counts up when ever this method is called),
-        to be able to generate variables with unique names.
-        :return: a number.
-        '''
-        self.__name_index += 1
-        return self.__name_index
+        return (merged_preds_as_string,available_predicates)
 
 
     def __parse_predicate(self,predicate_string):
@@ -148,14 +134,20 @@ class PredicateMerger:
 
 
     def __tuple_to_predicate_string(self,predicate_tuple):
+        '''
+        receives a predicate tuple and returns it as predicate string.
+        :param predicate_tuple: a tuple in format (PREDICATE_NAME,[(TYPE,NUM_VARIABLES)])
+        :return: a predicate string (PREDICATENAME ?0 ?1 - Type)
+        '''
 
         pred_string = '('+predicate_tuple[0]
-
+        variable_counter = 0 #need this counter do guarantee distinctly variable names.
         for type_tup in predicate_tuple[1]:
             c_count = 0
             while c_count < type_tup[1]:
-                pred_string += ' ?' + type_tup[0][:1] + str(self.__get_current_name_index()) + str(c_count)
-                c_count +=1
+                pred_string += ' ?' + type_tup[0][:1] + str(variable_counter) + str(c_count)
+                variable_counter += 1
+                c_count += 1
             pred_string += ' - '+type_tup[0]
 
         pred_string += ')'

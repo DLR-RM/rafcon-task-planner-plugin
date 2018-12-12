@@ -162,7 +162,7 @@ class TypeTree:
 
         return as_string
 
-    def get_tree_as_list(self):
+    def get_as_list(self):
         '''
         takes the Tree, and writes all its elements into a list
         :return: a list, contining all types of the tree
@@ -171,5 +171,5 @@ class TypeTree:
         type_list = [self.type_name]
 
         for child in self.children:
-            type_list.extend(child.get_tree_as_list())
+            type_list.extend(child.get_as_list())
         return type_list

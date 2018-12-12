@@ -51,7 +51,12 @@
                   <object class="GtkLabel" id="description_label">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
+                    <property name="margin_top">5</property>
+                    <property name="margin_bottom">5</property>
                     <property name="label" translatable="yes">Description</property>
+                    <style>
+                      <class name="widget-toolbar"/>
+                    </style>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -73,6 +78,9 @@
                         <property name="border_width">1</property>
                         <property name="pixels_above_lines">1</property>
                         <property name="pixels_below_lines">1</property>
+                        <style>
+                          <class name="widget-toolbar"/>
+                        </style>
                       </object>
                     </child>
                     <style>
@@ -89,7 +97,12 @@
                   <object class="GtkLabel" id="pddl_action_label">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
+                    <property name="margin_top">5</property>
+                    <property name="margin_bottom">5</property>
                     <property name="label" translatable="yes">PDDL</property>
+                    <style>
+                      <class name="widget-toolbar"/>
+                    </style>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -119,6 +132,7 @@
                         <style>
                           <class name="view"/>
                           <class name="sourceview"/>
+                          <class name="widget-toolbar"/>
                         </style>
                       </object>
                     </child>
@@ -140,6 +154,9 @@ and 'Requirements'
 THERE IS NO GUARANTEE, that Auto Fill is correct or complete.</property>
                     <property name="halign">end</property>
                     <property name="valign">center</property>
+                    <style>
+                      <class name="widget-toolbar"/>
+                    </style>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -151,7 +168,13 @@ THERE IS NO GUARANTEE, that Auto Fill is correct or complete.</property>
                   <object class="GtkLabel" id="pddl_predicates_label">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
+                    <property name="margin_top">5</property>
+                    <property name="margin_bottom">5</property>
                     <property name="label" translatable="yes">Predicates</property>
+                    <style>
+                      <class name="horizontal"/>
+                      <class name="widget-toolbar"/>
+                    </style>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -172,6 +195,9 @@ THERE IS NO GUARANTEE, that Auto Fill is correct or complete.</property>
                         <property name="can_focus">True</property>
                         <property name="tooltip_text" translatable="yes">Please enter your Predicates in pddl syntax here
 e.g. predicateA predicateB</property>
+                        <style>
+                          <class name="widget-toolbar"/>
+                        </style>
                       </object>
                     </child>
                   </object>

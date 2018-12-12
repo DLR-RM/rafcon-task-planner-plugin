@@ -156,6 +156,7 @@ class PddlActionTabController:
         '''
         start, end = buffer.get_bounds()
         self.__state.semantic_data[SEMANTIC_DATA_DICT_NAME][key] = buffer.get_text(start, end,True)
+        self.__state.get_state_machine().marked_dirty = True
 
 
     def __save_requirements(self,checkbox):
@@ -165,6 +166,7 @@ class PddlActionTabController:
         :return: nothing
         '''
         self.__state.semantic_data[SEMANTIC_DATA_DICT_NAME]['requirements'] = str(self.__get_requirements())
+        self.__state.get_state_machine().marked_dirty = True
 
     def __get_requirements(self):
         '''

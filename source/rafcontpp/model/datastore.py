@@ -320,7 +320,6 @@ class Datastore:
         return self.__available_predicates
 
     def set_available_predicates(self,available_predicates):
-        assert isinstance(available_predicates,[(str,[(str,int)])])
         self.__available_predicates = available_predicates
 
 

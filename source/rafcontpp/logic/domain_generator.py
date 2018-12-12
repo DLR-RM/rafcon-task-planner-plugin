@@ -4,6 +4,7 @@
 
 import os
 import json
+import re
 from rafcontpp.model.type_tree import TypeTree
 from rafcontpp.logic.predicate_merger import PredicateMerger
 from rafcon.utils import log
@@ -38,7 +39,9 @@ class DomainGenerator:
         domain_path = os.path.abspath(os.path.join(self.__datastore.get_file_save_dir(), domain_name + ".pddl"))
         type_tree = self.__merge_types(pddl_actions, type_dict)
         self.__datastore.set_available_types(type_tree)
-        merged_preds = self.__merge_predicates(pddl_actions)
+        preds = self.__merge_predicates(pddl_actions)
+        self.__datastore.set_available_predicates(preds[1])
+        merged_preds = preds[0]
         merged_requirs = self.__merge_requirements(pddl_actions)
         logger.debug('writing domain file to: '+str(domain_path))
         domain_file = open(domain_path, "w")
@@ -73,11 +76,8 @@ class DomainGenerator:
             if c_char == ')':
                 bracket_counter+=1
 
-
-        input = input.upper()
-        input = input[(input.index(':DOMAIN')+7):-1]
-        domain_name = input.replace(' ','').replace('\r','').replace('\n','').replace('\t','')
-        logger.debug('Parsed domain name, name is: '+domain_name)
+        domain_name = re.findall('\(:DOMAIN\s+([^\s|^\)]+)',input,re.IGNORECASE)[0]
+        logger.debug('Parsed domain name is: '+domain_name)
         return domain_name
 
     def __get_head(self, domain_name):

@@ -17,11 +17,11 @@ def get_type_tree():
 #BEWARE THIS Test is not stable, because of the variable names (e.g. ?C120)!
 @pytest.mark.parametrize("predicates,expected",[
     ([],[]),
-    (['(in ?a - Vehicle ?c - City)','(in ?a - Vehicle ?c - City)'], ['(in ?V90 - Vehicle ?C100 - City)']),
-    (['(in ?a - Car ?c - City)','(in ?a - Vehicle ?l - Location)'], ['(in ?V90 - Vehicle ?L100 - Location)']),
-    (['(in ?a - Vehicle ?c - City)','(in ?a - Car ?l - Location)'], ['(in ?V90 - Vehicle ?L100 - Location)']),
+    (['(in ?a - Vehicle ?c - City)','(in ?a - Vehicle ?c - City)'], ['(in ?V00 - Vehicle ?C10 - City)']),
+    (['(in ?a - Car ?c - City)','(in ?a - Vehicle ?l - Location)'], ['(in ?V00 - Vehicle ?L10 - Location)']),
+    (['(in ?a - Vehicle ?c - City)','(in ?a - Car ?l - Location)'], ['(in ?V00 - Vehicle ?L10 - Location)']),
     (['(in ?a - Vehicle ?c - City)','(at ?a - Car ?l - Location)'],
-     ['(in ?V110 - Vehicle ?C120 - City)', '(at ?C50 - Car ?L60 - Location)']),
+     ['(in ?V00 - Vehicle ?C10 - City)', '(at ?C00 - Car ?L10 - Location)']),
 
 
 
@@ -32,7 +32,7 @@ def test_merge_predicates(predicates,expected):
     ds.set_available_types(get_type_tree())
     sut = PredicateMerger(ds)
     #act
-    merged = sut.merge_predicates(predicates)
+    merged = sut.merge_predicates(predicates)[0]
     #assert
     for predicate in expected:
         assert predicate in merged
