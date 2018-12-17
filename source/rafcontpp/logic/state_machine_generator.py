@@ -51,31 +51,18 @@ class StateMachineGenerator:
             if plan_step.name in a_s_map:
                 #load and prepare state
                 current_state = self.__load_state(a_s_map[plan_step.name])
-                #OLD VERSIONfill dataport runtime value with params of action
-                # if current_state.input_data_port_runtime_values:
-                #     for index, param in enumerate(plan_step.parameter):
-                #         if index in current_state.input_data_port_runtime_values:
-                #             input_port = current_state.input_data_ports[index]
-                #             ##input_port_name = input_port.name
-                #             current_state.input_data_port_runtime_values[str(index)] = param
-                #OLD VERSION END
-                #NewVersion
                 if current_state.input_data_port_runtime_values:
                    c_pddl_action = pddl_action_dict[plan_step.name]
-                   # containing names of dataports as keys and the dataport id / index as values.
-                   name_index_dict = {}
-                   for index in current_state.input_data_ports.keys():
-                       name_index_dict[current_state.input_data_ports[index].name.upper()] = index
-
-                   for index, param in enumerate(plan_step.parameter):
-                       c_param_name = c_pddl_action.parameters[index].upper()
-                       if c_param_name in name_index_dict.keys():
-                           current_state.input_data_port_runtime_values[name_index_dict[c_param_name]] = param
-
+                   c_input_data_ports = current_state.input_data_ports
+                   for key in c_input_data_ports.keys():
+                       #c_pddl_action.parameters contains parameter names
+                       if c_input_data_ports[key].name in c_pddl_action.parameters:
+                           index = c_pddl_action.parameters.index(c_input_data_ports[key].name)
+                           #plan_step.parameter contains parameter values
+                           current_state.input_data_port_runtime_values[key] = plan_step.parameter[index]
                        else:
-                           logger.warn("Parameter "+c_param_name+" not defined in State "+current_state.name)
-
-                #NewVersion END
+                           logger.warn("Action "+c_pddl_action.name+" has no Parameter "
+                                       +c_input_data_ports[key].name+", which is needed in State "+current_state.name)
                 #add state to state machine
                 root_state.add_state(current_state)
                 if last_state is None:
