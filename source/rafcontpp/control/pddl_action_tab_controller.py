@@ -137,7 +137,7 @@ class PddlActionTabController:
         source_view_string = self.__filter_input(str(rtpp_dict['pddl_action']))
 
         if len(source_view_string) == 0:
-            source_view_string = '\n\n\n\n\n\n'
+            source_view_string = '\n\n\n\n\n\n\n\n\n'
         self.__pddl_action_source_view.get_buffer().set_text(source_view_string)
         self.__pddl_predicates_text_view.get_buffer().set_text(self.__filter_input(str(rtpp_dict['pddl_predicates'])))
         self.__pddl_types_text_view.get_buffer().set_text(self.__filter_input(str(rtpp_dict['pddl_types'])))
@@ -155,7 +155,7 @@ class PddlActionTabController:
         :return: Nothing
         '''
         start, end = buffer.get_bounds()
-        self.__state.semantic_data[SEMANTIC_DATA_DICT_NAME][key] = buffer.get_text(start, end,True)
+        self.__state.semantic_data[SEMANTIC_DATA_DICT_NAME][key] = buffer.get_text(start, end,True).strip('\n')
         self.__state.get_state_machine().marked_dirty = True
 
 

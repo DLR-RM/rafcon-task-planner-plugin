@@ -54,9 +54,6 @@
                     <property name="margin_top">5</property>
                     <property name="margin_bottom">5</property>
                     <property name="label" translatable="yes">Description</property>
-                    <style>
-                      <class name="widget-toolbar"/>
-                    </style>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -66,7 +63,7 @@
                 </child>
                 <child>
                   <object class="GtkScrolledWindow">
-                    <property name="height_request">0</property>
+                    <property name="height_request">80</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="border_width">0</property>
@@ -78,13 +75,10 @@
                         <property name="border_width">1</property>
                         <property name="pixels_above_lines">1</property>
                         <property name="pixels_below_lines">1</property>
-                        <style>
-                          <class name="widget-toolbar"/>
-                        </style>
                       </object>
                     </child>
                     <style>
-                      <class name="rtpp.scrolledwindow"/>
+                      <class name="widget-toolbar"/>
                     </style>
                   </object>
                   <packing>
@@ -100,9 +94,6 @@
                     <property name="margin_top">5</property>
                     <property name="margin_bottom">5</property>
                     <property name="label" translatable="yes">PDDL</property>
-                    <style>
-                      <class name="widget-toolbar"/>
-                    </style>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -112,7 +103,7 @@
                 </child>
                 <child>
                   <object class="GtkScrolledWindow">
-                    <property name="height_request">8</property>
+                    <property name="height_request">160</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="border_width">0</property>
@@ -132,10 +123,12 @@
                         <style>
                           <class name="view"/>
                           <class name="sourceview"/>
-                          <class name="widget-toolbar"/>
                         </style>
                       </object>
                     </child>
+                    <style>
+                      <class name="widget-toolbar"/>
+                    </style>
                   </object>
                   <packing>
                     <property name="expand">True</property>
@@ -144,16 +137,32 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkButton" id="rtpp_pddl_tab_auto_fill_button">
-                    <property name="label" translatable="yes">Auto Fill</property>
+                  <object class="GtkBox">
                     <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">True</property>
-                    <property name="tooltip_text" translatable="yes">Auto Fill will try to fill the fields 'Predicates', 'Types',
+                    <property name="can_focus">False</property>
+                    <property name="orientation">vertical</property>
+                    <child>
+                      <object class="GtkButton" id="rtpp_pddl_tab_auto_fill_button">
+                        <property name="label" translatable="yes">Auto Complete</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                        <property name="tooltip_text" translatable="yes">Auto Complete will try to fill the fields 'Predicates', 'Types',
 and 'Requirements'
 THERE IS NO GUARANTEE, that Auto Fill is correct or complete.</property>
-                    <property name="halign">end</property>
-                    <property name="valign">center</property>
+                        <property name="halign">end</property>
+                        <property name="valign">center</property>
+                        <property name="margin_top">5</property>
+                        <style>
+                          <class name="widget-toolbar"/>
+                        </style>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
                     <style>
                       <class name="widget-toolbar"/>
                     </style>
@@ -171,10 +180,6 @@ THERE IS NO GUARANTEE, that Auto Fill is correct or complete.</property>
                     <property name="margin_top">5</property>
                     <property name="margin_bottom">5</property>
                     <property name="label" translatable="yes">Predicates</property>
-                    <style>
-                      <class name="horizontal"/>
-                      <class name="widget-toolbar"/>
-                    </style>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -184,6 +189,7 @@ THERE IS NO GUARANTEE, that Auto Fill is correct or complete.</property>
                 </child>
                 <child>
                   <object class="GtkScrolledWindow">
+                    <property name="height_request">80</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="border_width">1</property>
@@ -200,6 +206,9 @@ e.g. predicateA predicateB</property>
                         </style>
                       </object>
                     </child>
+                    <style>
+                      <class name="widget-toolbar"/>
+                    </style>
                   </object>
                   <packing>
                     <property name="expand">True</property>
@@ -226,11 +235,15 @@ e.g. predicateA predicateB</property>
                     <property name="shadow_type">in</property>
                     <child>
                       <object class="GtkTextView" id="pddl_types_textview">
+                        <property name="height_request">50</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="margin_bottom">5</property>
                       </object>
                     </child>
+                    <style>
+                      <class name="widget-toolbar"/>
+                    </style>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -255,7 +268,7 @@ e.g. predicateA predicateB</property>
                 </child>
                 <child>
                   <object class="GtkScrolledWindow">
-                    <property name="height_request">3</property>
+                    <property name="height_request">100</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="margin_bottom">5</property>
@@ -270,6 +283,9 @@ e.g. predicateA predicateB</property>
                         </child>
                       </object>
                     </child>
+                    <style>
+                      <class name="widget-toolbar"/>
+                    </style>
                   </object>
                   <packing>
                     <property name="expand">True</property>
