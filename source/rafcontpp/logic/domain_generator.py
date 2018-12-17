@@ -126,6 +126,7 @@ class DomainGenerator:
                 for type in action.types:
                     if tree:
                         if not tree.add_type_branch(type, type_dict) and not tree.is_in_tree(type):
+                            logger.error("no Type \"" + type + "\" found in type dictionary!")
                             raise LookupError("no Type \"" + type + "\" found in type dictionary!")
                     else:
                         c_type = type

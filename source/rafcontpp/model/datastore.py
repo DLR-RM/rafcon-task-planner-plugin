@@ -48,7 +48,6 @@ def datastore_from_file(file_path):
                      data['keep_related_files'],
                      data['file_save_dir'])
         ds.set_planner_script_path(data['planner_script_path'])
-        ds.validate_ds()
         logger.info("Red configuration successfully!")
     return ds
 

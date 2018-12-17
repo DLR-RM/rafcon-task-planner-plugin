@@ -91,6 +91,7 @@ class PddlActionParser:
                     for var in self.__var_pattern.findall(type_var[0]):
                         params.append(var.strip('?'))
         else:
+            logger.error('No Parameters found in: '+self.__action_string)
             raise ValueError('No Parameters found in: '+self.__action_string)
         return params
 
@@ -153,6 +154,7 @@ class PddlActionParser:
                         type_concat += c_type
                     generalized_predicate += ' '+c_pred_var
                 else:
+                    logger.error('Variable: ' + c_pred_var+' not defined!')
                     raise ValueError('Variable: ' + c_pred_var+' not defined!')
             generalized_predicate += ' - ' + last_type + ')'
             #add predicate to a dictionary, to eliminate duplicats.

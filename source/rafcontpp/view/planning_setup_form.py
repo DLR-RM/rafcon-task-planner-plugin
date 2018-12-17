@@ -91,6 +91,7 @@ class PlanningSetupForm:
         everything_filled, not_filled = self.__prepare_datastore()
 
         if everything_filled:
+            self.__datastore.validate_ds()
             self.__builder.get_object('plannig_setup_form_dialog').destroy()
             self.__datastore.save_datastore_parts_in_file(DATASTORE_STORAGE_PATH)
             logger.info("start pipeline...")
@@ -109,7 +110,7 @@ class PlanningSetupForm:
     def __on_choose_state_pool(self,chooser):
         to_append = chooser.get_filename()
         pools = self.__state_pool_chooser_entry.get_text()
-        if pools[len(pools)-1] != ':':
+        if len(pools)> 0 and pools[len(pools)-1] != ':':
             pools+=':'
         self.__state_pool_chooser_entry.set_text(pools + to_append + ':')
 
