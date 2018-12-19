@@ -113,6 +113,7 @@
                         <property name="height_request">8</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
+                        <property name="tooltip_text" translatable="yes">Insert a PDDL Action here.</property>
                         <property name="vexpand">True</property>
                         <property name="border_width">1</property>
                         <property name="left_margin">5</property>
@@ -238,6 +239,8 @@ e.g. predicateA predicateB</property>
                         <property name="height_request">50</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
+                        <property name="tooltip_text" translatable="yes">Insert Types as Comma seperated String
+e.g. Type1, Type2</property>
                         <property name="margin_bottom">5</property>
                       </object>
                     </child>

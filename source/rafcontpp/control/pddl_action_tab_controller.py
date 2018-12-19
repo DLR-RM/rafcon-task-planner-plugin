@@ -108,7 +108,7 @@ class PddlActionTabController:
             self.__load_from_semantic_section(False)
             #observe parts
             auto_fill_button = self.__gtk_builder.get_object('rtpp_pddl_tab_auto_fill_button')
-            auto_fill_button.connect('clicked', self.__auto_fill)
+            auto_fill_button.connect('clicked', self.__auto_complete)
             self.__description_text_view.get_buffer().connect('changed',self.__save_data,'description')
             self.__pddl_action_source_view.get_buffer().connect('changed', self.__save_data,'pddl_action')
             self.__pddl_predicates_text_view.get_buffer().connect('changed', self.__save_data,'pddl_predicates')
@@ -155,8 +155,9 @@ class PddlActionTabController:
         :return: Nothing
         '''
         start, end = buffer.get_bounds()
-        self.__state.semantic_data[SEMANTIC_DATA_DICT_NAME][key] = buffer.get_text(start, end,True).strip('\n')
-        self.__state.get_state_machine().marked_dirty = True
+        self.__state.add_semantic_data([SEMANTIC_DATA_DICT_NAME],buffer.get_text(start, end,True).strip('\n'),key)
+
+
 
 
     def __save_requirements(self,checkbox):
@@ -165,8 +166,8 @@ class PddlActionTabController:
         :param checkbox: unused
         :return: nothing
         '''
-        self.__state.semantic_data[SEMANTIC_DATA_DICT_NAME]['requirements'] = str(self.__get_requirements())
-        self.__state.get_state_machine().marked_dirty = True
+        self.__state.add_semantic_data([SEMANTIC_DATA_DICT_NAME], str(self.__get_requirements()), 'requirements')
+
 
     def __get_requirements(self):
         '''
@@ -182,7 +183,7 @@ class PddlActionTabController:
         return requirements
 
 
-    def __auto_fill(self,button):
+    def __auto_complete(self, button):
         '''
         tries to auto complete the predicates, types and Requirements fields.
         :param button: unused
@@ -195,13 +196,13 @@ class PddlActionTabController:
         pddl_action = PddlActionParser(raw_action).parse_action()
 
         self.__predicates_auto_fill(pddl_action)
-        self.__types_auto_fill(pddl_action)
-        self.__requirements_auto_fill(raw_action)
+        self.__types_auto_complete(pddl_action)
+        self.__requirements_auto_complete(raw_action)
 
 
 
 
-    def __requirements_auto_fill(self, raw_action):
+    def __requirements_auto_complete(self, raw_action):
         '''
         a poor try to auto complete the requirements section in pddl Action tab.
         is not complete, because the question it tries to answer is not decidable at this time.
@@ -239,7 +240,7 @@ class PddlActionTabController:
 
 
 
-    def __types_auto_fill(self,pddl_action):
+    def __types_auto_complete(self, pddl_action):
         '''
         takes the types from a pddl action, compares it with the types, already filled in to the type section
         and adds missing types.

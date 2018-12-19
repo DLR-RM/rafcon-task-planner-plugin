@@ -35,7 +35,6 @@ class Mapper:
         generates a map, with pddl action names as key, and RAFCON States as Values.
         :return: Noting, its writing the map into the datastore
         '''
-
         state_libs = self.__datastore.get_state_pools()
         libraries = global_config.get_config_value("LIBRARY_PATHS")
         lib_names=[]
@@ -44,9 +43,7 @@ class Mapper:
             lib_name = os.path.basename(pool)
             lib_names.append(lib_name)
             libraries[lib_name] = os.path.abspath(pool)
-
-        global_config.set_config_value("LIBRARY_PATHS", libraries)
-        library_manager.refresh_libraries()
+        global_config.set_config_value("LIBRARY_PATHS", libraries)#also refreshes libraries
         action_state_map = {}
         for lib_name in lib_names:
             state_pool = library_manager.libraries[lib_name]
