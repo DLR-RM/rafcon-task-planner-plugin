@@ -1,4 +1,5 @@
 import os
+import shutil
 import subprocess
 from rafcontpp.model.planner_interface import PlannerInterface
 from rafcontpp.model.planning_report import PlanningReport
@@ -64,9 +65,9 @@ class FdIntegration(PlannerInterface):
     def __copy_and_clean(self, plan_path, outsas_path, storage_path):
 
         if os.path.isfile(plan_path):
-            os.rename(plan_path, os.path.join(storage_path, 'sas_plan'))
+            shutil.move(plan_path, os.path.join(storage_path, 'sas_plan'))
         if os.path.isfile(outsas_path):
-            os.rename(outsas_path, os.path.join(storage_path, 'output.sas'))
+            shutil.move(outsas_path, os.path.join(storage_path, 'output.sas'))
 
     def __translate_fd_exit_code(self,fd_exit):
 

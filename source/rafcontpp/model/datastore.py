@@ -63,6 +63,8 @@ class Datastore:
     __domain_path = None
     #the name of the domain (e.g. BlocksWorld).
     __domain_name = None
+    #the name of the problem (e.g. five_blocks)
+    __problem_name = None
     #a map containing pddl action names as keys, and rafcon states as values.
     __action_state_map = None
     #a map containing rafcon states as keys and pddl action names as values.
@@ -199,6 +201,12 @@ class Datastore:
 
     def set_domain_name(self,domain_name):
         self.__domain_name = domain_name
+
+    def get_problem_name(self):
+        return str(self.__problem_name)
+
+    def set_problem_name(self, problem_name):
+        self.__problem_name = problem_name
 
     def get_facts_path(self):
         return self.__facts_path

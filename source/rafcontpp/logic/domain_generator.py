@@ -33,10 +33,11 @@ class DomainGenerator:
         :return: the path of the generated domain file
         """
         domain_name = self.__parse_domain_name()
-        self.__datastore.set_domain_name(domain_name.lower())
+        self.__datastore.set_problem_name(self.__parse_problem_name())#i do it here because i have no better module, in future it should be done somwhere else
+        self.__datastore.set_domain_name(domain_name)
         type_dict = self.__dict_to_upper(json.load(open(self.__datastore.get_type_db_path(), "r")))
         pddl_actions = self.__datastore.get_pddl_action_map().values()
-        domain_path = os.path.abspath(os.path.join(self.__datastore.get_file_save_dir(), domain_name + ".pddl"))
+        domain_path = os.path.abspath(os.path.join(self.__datastore.get_file_save_dir(), domain_name + "_domain.pddl"))
         type_tree = self.__merge_types(pddl_actions, type_dict)
         self.__datastore.set_available_types(type_tree)
         preds = self.__merge_predicates(pddl_actions)
@@ -54,13 +55,13 @@ class DomainGenerator:
         domain_file.flush()
         domain_file.close()
         self.__datastore.set_domain_path(domain_path)
-        self.__datastore.add_generated_file(domain_name+'.pddl')
+        self.__datastore.add_generated_file(domain_name + "_domain.pddl")
         return domain_path
 
 
 
 
-    def __parse_domain_name(self):
+    def __parse_domain_name(self):#TODO: dont do this in domain_generator!
         '''parse_domain_name
         parse_domain_name parses the domain name out of the given facts file.
         :return: the domain name
@@ -79,6 +80,24 @@ class DomainGenerator:
         domain_name = re.findall('\(:DOMAIN\s+([^\s|^\)]+)',input,re.IGNORECASE)[0]
         logger.debug('Parsed domain name is: '+domain_name)
         return domain_name
+
+    def __parse_problem_name(self):#TODO: dont do this in domain_generator! (its also not used here, but in sm generator)
+        '''parse_problem_name
+        parse_problem_name parses the problem name out of the given facts file.
+        :return: the problem name
+        '''
+        facts_file = self.__datastore.get_facts_path()
+        input = ""
+        c_char = 'a'
+        facts = open(facts_file, 'r')
+        while c_char != ')':
+            c_char = facts.read(1)
+            input = input + c_char
+
+        problem_name = re.findall('\(PROBLEM\s+([^\s|^\)]+)', input, re.IGNORECASE)[0]
+        logger.debug('Parsed problem name is: ' + problem_name)
+        return problem_name
+
 
     def __get_head(self, domain_name):
         ''' get_head
