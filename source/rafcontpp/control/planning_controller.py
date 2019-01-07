@@ -32,6 +32,9 @@ class PlanningController:
 
         planning_successful = False
         planner_choice = self.__datastore.get_planner()
+        if not planner_choice or len(planner_choice) == 0:
+            logger.error('Can\'t Import None as Planner')
+            raise ImportError('Can\'t Import None as Planner')
         logger.debug('Try to resolve given planner string.')
         to_import = self.__get_built_in_script(planner_choice)
         if to_import is None:
@@ -58,7 +61,7 @@ class PlanningController:
         if planning_report.planning_successful():
             self.__datastore.set_plan(planning_report.get_plan())
             planning_successful = True
-            if len(planning_report.get_plan()) >0:
+            if len(planning_report.get_plan()) > 0:
                 logger.info("Planning Successful! Plan has length: "+str(len(planning_report.get_plan())))
             else:
                 logger.info("Planning Successful, but no Plan was found!")
@@ -98,6 +101,7 @@ class PlanningController:
         :param script: the name of a custom planner integration module
         :return: a (script_name, class_name) tuple
         '''
+
         class_name = None
         script_import = __import__(script)
         for cname, some_obj in inspect.getmembers(script_import):

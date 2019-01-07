@@ -21,9 +21,6 @@ def initialize():
 
     # add new button
 
-
-    # button.set_label_widget(create_label_widget_with_icon(constants.BUTTON_REFR, _("Refresh Selected"),
-    #                                                                        "Refresh selected state machine"))
     plan_sm_button = Gtk.ToolButton(label='Rafcon Task Planner Plugin')
     plan_sm_button.set_label_widget(create_label_widget_with_icon('f1ec', _("Rafcon Task Planner Plugin"),
                                                                             "Open planning Form"))

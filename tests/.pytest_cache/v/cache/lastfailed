@@ -1,0 +1,7 @@
+{
+  "logic/test_pddl_action_parser.py": true, 
+  "logic/test_predicate_merger.py": true, 
+  "model/test_datastore.py": true, 
+  "model/test_plan_step.py": true, 
+  "model/test_type_tree.py": true
+}

@@ -149,7 +149,7 @@ class DomainGenerator:
                             raise LookupError("no Type \"" + type + "\" found in type dictionary!")
                     else:
                         c_type = type
-                        while c_type in type_dict:
+                        while c_type in type_dict.keys():
                             c_type = type_dict[c_type]
                         tree = TypeTree(c_type)
                         tree.recursive_insert(type, type_dict)

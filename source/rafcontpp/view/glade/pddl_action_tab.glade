@@ -150,7 +150,7 @@
                         <property name="receives_default">True</property>
                         <property name="tooltip_text" translatable="yes">Auto Complete will try to fill the fields 'Predicates', 'Types',
 and 'Requirements'
-THERE IS NO GUARANTEE, that Auto Fill is correct or complete.</property>
+THERE IS NO GUARANTEE, that Auto Complete is correct or complete.</property>
                         <property name="halign">end</property>
                         <property name="valign">center</property>
                         <property name="margin_top">5</property>

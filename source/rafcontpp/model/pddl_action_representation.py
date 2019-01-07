@@ -40,7 +40,7 @@ def action_to_upper(action):
     '''
 
     if action:
-        upper_types = []
+        action.name = action.name.upper()
         action.types = [type.upper() for type in action.types]
         action.predicates = [pred.upper() for pred in action.predicates]
         action.requirements = [req.upper() for req in action.requirements]

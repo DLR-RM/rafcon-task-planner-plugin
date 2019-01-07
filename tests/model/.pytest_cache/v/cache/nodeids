@@ -1,0 +1,5 @@
+[
+  "test_datastore.py::test_datastore_from_file", 
+  "test_datastore.py::test_save_datastore_to_file", 
+  "test_datastore.py::test_validate_datastore"
+]

@@ -32,9 +32,8 @@ def datastore_from_file(file_path):
         logger.warning("Can't restore configuration from: " + str(file_path))
         logger.info("Creating default configuration...")
         default_dir = str(os.path.expanduser('~'))
-        ds = Datastore([default_dir], default_dir, built_in_planners.keys()[0], [], default_dir,
+        ds = Datastore([default_dir], default_dir, built_in_planners.keys()[0], default_dir, [], default_dir,
                   default_dir, False)
-        ds.set_planner_script_path(default_dir)
 
     else:
         data = json.load(open(file_path, "r"))
@@ -42,12 +41,12 @@ def datastore_from_file(file_path):
         ds = Datastore(data['state_pools'],
                      data['sm_save_dir'],
                      data['planner'],
+                     data['planner_script_path'],
                      data['planner_argv'],
                      data['facts_path'],
                      data['type_db_path'],
                      data['keep_related_files'],
                      data['file_save_dir'])
-        ds.set_planner_script_path(data['planner_script_path'])
         logger.info("Red configuration successfully!")
     return ds
 
@@ -59,34 +58,10 @@ class Datastore:
 
 
 
-    #the complete path of the domain file (e.g. /home/domain.pddl).
-    __domain_path = None
-    #the name of the domain (e.g. BlocksWorld).
-    __domain_name = None
-    #the name of the problem (e.g. five_blocks)
-    __problem_name = None
-    #a map containing pddl action names as keys, and rafcon states as values.
-    __action_state_map = None
-    #a map containing rafcon states as keys and pddl action names as values.
-    __state_action_map = None
-    #a map containing action names as keys and pddl action representations as values
-    __pddl_action_map = None
-    #a list, contining the names of all available actions.
-    __available_actions = None
-    #a typeTree containing all available types
-    __available_types = None
-    #a list of (String,[(String,integer)]) prediactes
-    __available_predicates = None
-    #the plan, as a list of plan steps.
-    __plan = None
-    #a list with the name of all files, generated during the pipeline execution.
-    __generated_files = []
-    #the path of a custom planner script. this variable is not really useful for the plugin, and its not used, BUT:
-    #its useful or usability, to be able to save the script path persistent.
-    __planner_script_path = None
 
 
-    def __init__(self, state_pools,sm_save_dir, planner, planner_argv,
+
+    def __init__(self, state_pools,sm_save_dir, planner,planner_script_path, planner_argv,
                facts_path,type_db_path,keep_related_files, file_save_dir=os.path.join(os.getcwd(), 'related_files')):
         '''
          Constructor of Datastore
@@ -114,8 +89,35 @@ class Datastore:
         self.__file_save_dir = file_save_dir
         # the shortcut, or the name of the planner script
         self.__planner = planner
-        #additional arguments for the planner.
+        #additional arguments for the planner as string array.
         self.__planner_argv = planner_argv
+        # the path of a custom planner script. this variable is not really useful for the plugin, and its not used, BUT:
+        # its useful for usability, to be able to save the script path persistent.
+        self.__planner_script_path = planner_script_path
+        # the complete path of the domain file (e.g. /home/domain.pddl).
+        self.__domain_path = None
+        # the name of the domain (e.g. BlocksWorld).
+        self.__domain_name = None
+        # the name of the problem (e.g. five_blocks)
+        self.__problem_name = None
+        # a map containing pddl action names as keys, and rafcon states as values.
+        self.__action_state_map = None
+        # a map containing rafcon states as keys and pddl action names as values.
+        self.__state_action_map = None
+        # a map containing action names as keys and pddl action representations as values
+        self.__pddl_action_map = None
+        # a list, contining the names of all available actions.
+        self.__available_actions = None
+        # a typeTree containing all available types
+        self.__available_types = None
+        # a list of (String,[(String,integer)]) prediactes
+        self.__available_predicates = None
+        # the plan, as a list of plan steps.
+        self.__plan = None
+        # a list with the name of all files, generated during the pipeline execution.
+        self.__generated_files = []
+
+
 
 
 
