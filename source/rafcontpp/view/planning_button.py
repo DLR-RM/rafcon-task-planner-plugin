@@ -21,8 +21,8 @@ def initialize():
 
     # add new button
 
-    plan_sm_button = Gtk.ToolButton(label='Rafcon Task Planner Plugin')
-    plan_sm_button.set_label_widget(create_label_widget_with_icon('f1ec', _("Rafcon Task Planner Plugin"),
+    plan_sm_button = Gtk.ToolButton(label='Plan Task')
+    plan_sm_button.set_label_widget(create_label_widget_with_icon('f1ec', _("Plan Task"),
                                                                             "Open planning Form"))
     plan_sm_button.set_stock_id(Gtk.STOCK_CLEAR)
     tool_bar_ctrl.view.get_top_widget().add(plan_sm_button)

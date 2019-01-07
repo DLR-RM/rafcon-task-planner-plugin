@@ -16,7 +16,6 @@ def pre_init():
     :return:
     """
     logger.info("Run pre-initiation hook of {0} plugin.".format(__file__.split(os.path.sep)[-2]))
-    #TODO load datastore here!
 
 
 def main_window_setup(main_window_controller):
@@ -36,7 +35,6 @@ def post_init(*args, **kwargs):
 
 
 def post_state_editor_register_view(state_editor):
-    logger.info("state_editor {}".format(str(state_editor)))
     state_editor_view = state_editor.view
     state = state_editor.model.state
     glade_path = os.path.abspath(

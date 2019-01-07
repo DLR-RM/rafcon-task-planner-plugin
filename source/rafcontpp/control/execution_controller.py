@@ -57,8 +57,8 @@ class ExecutionController:
                 logger.info('Planning successful!')
                 sm_generator = StateMachineGenerator(self.__datastore)
                 logger.debug('Handover to state machine generator')
-                sm_generator.generate_state_machine() #--> generate state machine
-                #now open sm!
+                sm_generator.generate_state_machine() #--> generates state machine and opens it.
+
 
             else:
                 logger.error("No Plan was found, therefore no state machine was generated!")
