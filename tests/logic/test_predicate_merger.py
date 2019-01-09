@@ -3,6 +3,8 @@ import os
 from rafcontpp.logic.predicate_merger import PredicateMerger
 from rafcontpp.model.type_tree import TypeTree
 from rafcontpp.model.datastore import datastore_from_file
+
+
 @pytest.fixture
 def get_type_tree():
     dict = { 'Location': 'Object',
@@ -37,8 +39,13 @@ def test_merge_predicates(predicates,expected):
     for predicate in expected:
         assert predicate in merged
 
-@pytest.mark.parametrize("predicates",[(None),
-                                       (['(in ?a - Vehicle ?c - City)','(in ?a - City ?l - Location)'])
+@pytest.mark.parametrize("predicates",[
+    (None),
+    (['(in ?a - Vehicle ?c - City)','(in ?a - City ?l - Location)']),
+    (['Some','array','not','containing','predicates']),
+    (['(in ?noType ?alsoNoType)','(in ?b ?a)']),
+    (['(under ?not - closed']),
+    (['(at - noVariables)'])
 
 ])
 def test_merge_predicates_fail(predicates):
@@ -49,6 +56,7 @@ def test_merge_predicates_fail(predicates):
     # assert
     with pytest.raises(ValueError):
         merged = sut.merge_predicates(predicates)
+
 
 
 

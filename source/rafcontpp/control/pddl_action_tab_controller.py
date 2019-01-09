@@ -1,19 +1,19 @@
 # Contributors:
 # Christoph Suerig <christoph.suerig@dlr.de>
-# Version 01.12.2018
+# Version 09.01.2019
 
 
 import re
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
-from gi.repository import GObject
 from rafcontpp.model.datastore import SEMANTIC_DATA_DICT_NAME
 from rafcontpp.logic.pddl_action_parser import PddlActionParser
+from rafcontpp.logic.pddl_requirement_finder import PddlRequirementFinder
 from rafcon.core.states.library_state import LibraryState
 from rafcon.utils import log
-
 logger = log.get_logger(__name__)
+
 #list with all pddl requirements
 requ_list = [':strips', ':adl', ':typing', ':equality',
                 ':negative-preconditions', ':disjunctive-preconditions',
@@ -195,7 +195,7 @@ class PddlActionTabController:
         raw_action = buffer.get_text(start, end, True)
         pddl_action = PddlActionParser(raw_action).parse_action()
 
-        self.__predicates_auto_fill(pddl_action)
+        self.__predicates_auto_complete(pddl_action)
         self.__types_auto_complete(pddl_action)
         self.__requirements_auto_complete(raw_action)
 
@@ -209,33 +209,16 @@ class PddlActionTabController:
         :param raw_action: the pddl action string.
         :return: Nothing
         '''
-        raw_action = raw_action.upper()
-        bev_effects = raw_action[:raw_action.find(':EFFECT')]
-
-        if raw_action.find(' - ') > -1:
-            self.__requ_cb_dict[':typing'].set_active(True)
-
-        if raw_action.find('=') > -1:
-            self.__requ_cb_dict[':equality'].set_active(True)
-
-        if re.search('\(\s*(WHEN)[\s|\(]', raw_action):
-            self.__requ_cb_dict[':conditional-effects'].set_active(True)
-            self.__requ_cb_dict[':adl'].set_active(True)
-
-        if re.search('\(\s*(FORALL)[\s|\(]', raw_action):
-            self.__requ_cb_dict[':adl'].set_active(True)
-
-        if re.search('\(\s*(AND)[\s|\(]', bev_effects):
-            self.__requ_cb_dict[':strips'].set_active(True)
-
-        if re.search('\(\s*(NOT)[\s|\(]', bev_effects):
-            self.__requ_cb_dict[':negative-preconditions'].set_active(True)
-
-        if re.search('\(\s*(OR)[\s|\(]', bev_effects):
-            self.__requ_cb_dict[':adl'].set_active(True)
-            self.__requ_cb_dict[':disjunctive-preconditions'].set_active(True)
-
-        #TODO more autofill
+        need = PddlRequirementFinder(raw_action)
+        self.__requ_cb_dict[':strips'].set_active(need.strips())
+        self.__requ_cb_dict[':typing'].set_active(need.typing())
+        self.__requ_cb_dict[':equality'].set_active(need.equality())
+        self.__requ_cb_dict[':conditional-effects'].set_active(need.conditional_effects())
+        self.__requ_cb_dict[':foreach-expansions'].set_active(need.foreach_expansions())
+        self.__requ_cb_dict[':dag-expansions'].set_active(need.dag_expansions())
+        if not need.foreach_expansions() and not need.dag_expansions():
+            self.__requ_cb_dict[':action-expansions'].set_active(need.action_expansions())
+        self.__requ_cb_dict[':fluents'].set_active(need.fluents())
         self.__save_requirements(self.__requ_cb_dict[':strips'])
 
 
@@ -268,7 +251,7 @@ class PddlActionTabController:
 
 
 
-    def __predicates_auto_fill(self,pddl_action):
+    def __predicates_auto_complete(self, pddl_action):
         '''
         takes the predicates used in the pddl action, compares them with the predicates, the section is already filled
         with, and completes the missing. some predicates with the same name can be found more than on time, if

@@ -64,16 +64,19 @@ class PredicateMerger:
             start = predicate_string.index('(')
             end = predicate_string.index('?')
             if start+1 >= end-1:
-                logger.error("Can't parse predicate name: "+predicate_string)
-                raise ValueError("Can't parse predicate name: "+predicate_string)
+                logger.error("Can't parse predicate: "+predicate_string)
+                raise ValueError("Can't parse predicate: "+predicate_string)
 
             pred_name = predicate_string[start+1:end-1].replace(' ','')
             pred = predicate_string[end:]
         else:
-            logger.error("Can't parse predicate name: " + predicate_string)
-            raise ValueError("Can't parse predicate name: " + predicate_string)
+            logger.error("Can't parse predicate: " + predicate_string)
+            raise ValueError("Can't parse predicate: " + predicate_string)
 
 
+        if not '-' in pred:
+            logger.error("Can't parse predicate: " + predicate_string)
+            raise ValueError("Can't parse predicate: " + predicate_string)
 
         while '-' in pred:
             c_type_s = pred.index('-')+1
