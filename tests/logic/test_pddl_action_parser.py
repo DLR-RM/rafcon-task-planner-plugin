@@ -117,7 +117,9 @@ def test_parse_missing_preconditions_action_string():
     pddl_action.predicates.sort()
     pddl_action.types.sort()
     #assert
-    assert pddl_action.predicates != predicates()
+    assert pddl_action.predicates == ['(at ?a - Location ?b - Object)',
+                                      '(empty ?c - Gripper)',
+                                      '(grasped ?b - Object ?c - Gripper)']
     assert pddl_action.types == types()
     assert pddl_action.name == action_name()
     assert pddl_action.action == action_string().replace(preconditions(),'')

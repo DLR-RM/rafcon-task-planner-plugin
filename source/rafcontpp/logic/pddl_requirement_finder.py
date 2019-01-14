@@ -19,51 +19,90 @@ class PddlRequirementFinder():
         return self.action.find(' - ') > -1
 
     def disjunctive_preconditions(self):
-        pattern = re.compile(':precondition.*not.*:effect',re.IGNORECASE | re.MULTILINE | re.DOTALL)
-        return re.search(pattern,self.action) is None
+        not_pattern = re.compile(':precondition.*not.*:effect',re.IGNORECASE | re.MULTILINE | re.DOTALL)
+        imply_pattern = re.compile(':precondition.*imply.*:effect',re.IGNORECASE | re.MULTILINE | re.DOTALL)
+        return not_pattern.search(self.action) is not None or imply_pattern.search(self.action) is not None
 
     def existential_preconditions(self):
         pattern = re.compile(':precondition.*exists.*:effect', re.IGNORECASE | re.MULTILINE | re.DOTALL)
-        return re.search(pattern, self.action) is None
+        return bool(pattern.search(self.action))
 
     def universal_preconditions(self):
         pattern = re.compile(':precondition.*forall.*:effect', re.IGNORECASE | re.MULTILINE | re.DOTALL)
-        return re.search(pattern, self.action) is None
-    #slast was universal_preconditions
+        return bool(pattern.search(self.action))
+
+    def quantified_preconditions(self):
+        return self.existential_preconditions() and self.universal_preconditions()
 
     def equality(self):
         return self.action.find('=') > -1
 
     def conditional_effects(self):
         when_pattern = re.compile('effect.*\(\s*when[\s+|\(]', re.IGNORECASE | re.MULTILINE | re.DOTALL)
-        return re.search(when_pattern,self.action) is not None
+        forall_pattern = re.compile('effect.*\(\s*forall[\s+|\(]', re.IGNORECASE | re.MULTILINE | re.DOTALL)
+        return when_pattern.search(self.action) is not None or forall_pattern.search(self.action) is not None
 
     def action_expansions(self):
+        if self.dag_expansions():
+            return True
+        if self.foreach_expansions():
+            return True
         expansions_pattern = re.compile(':expansion', re.IGNORECASE)
-        return re.search(expansions_pattern,self.action) is not None
+        if re.search(expansions_pattern,self.action):
+            return True
+        return False
 
     def foreach_expansions(self):
         requires = False
-        if self.action_expansions():
-            expansions_pattern = re.compile(':expansion', re.IGNORECASE)
+        expansions_pattern = re.compile(':expansion', re.IGNORECASE)
+        if expansions_pattern.search(self.action):
             expansion = self.action[re.search(expansions_pattern,self.action).start():]
             foreach_pattern = re.compile('foreach',re.IGNORECASE)
             requires = re.search(foreach_pattern,expansion) is not None
         return requires
 
     def dag_expansions(self):
-        #TODO implement
-        return False
+        requires = False
+        expansions_pattern = re.compile(':expansion', re.IGNORECASE)
+        if expansions_pattern.search(self.action):
+            expansion = self.action[re.search(expansions_pattern, self.action).start():]
+            foreach_pattern = re.compile('constrained', re.IGNORECASE)
+            requires = re.search(foreach_pattern, expansion) is not None
+        return requires
 
     def fluents(self):
         requires = False
         in_dec_pattern = re.compile('effect.*\(\s*(increase|decrease)[\s+|\(]', re.IGNORECASE | re.MULTILINE | re.DOTALL)
-        if re.search(in_dec_pattern,self.action) is not None:
-            requires = True
-        if re.search('<|>',self.action) is not None:
+        if re.search(in_dec_pattern,self.action):
             requires = True
 
         return requires
+
+    def expression_evaluation(self):
+        if self.fluents():
+            return True
+        return False
+
+    def domain_axioms(self):
+        if self.expression_evaluation():
+            return True
+        return False
+
+    def adl(self):
+        if not self.strips():
+            return False
+        if not self.typing():
+            return False
+        if not self.disjunctive_preconditions():
+            return False
+        if not self.equality():
+            return False
+        if not self.quantified_preconditions():
+            return False
+        if not self.conditional_effects():
+            return False
+
+        return True
 
 
 

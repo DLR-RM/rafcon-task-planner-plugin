@@ -21,7 +21,7 @@ requ_list = [':strips', ':adl', ':typing', ':equality',
                 ':universal-preconditions', ':derived-predicates',
                 ':action-costs', ':quantified-preconditions',
                 ':action-expansions', ':foreach-expansions',
-                ':dag-expansions', ':expression-evaluation', ':fluents']
+                ':dag-expansions', ':expression-evaluation', ':fluents', ':open-world',':true-negation']#todo: remove undecidable
 
 
 class PddlActionTabController:
@@ -210,15 +210,26 @@ class PddlActionTabController:
         :return: Nothing
         '''
         need = PddlRequirementFinder(raw_action)
-        self.__requ_cb_dict[':strips'].set_active(need.strips())
-        self.__requ_cb_dict[':typing'].set_active(need.typing())
-        self.__requ_cb_dict[':equality'].set_active(need.equality())
-        self.__requ_cb_dict[':conditional-effects'].set_active(need.conditional_effects())
+
+        self.__requ_cb_dict[':adl'].set_active(need.adl())
+        if not need.adl():
+            self.__requ_cb_dict[':strips'].set_active(need.strips())
+            self.__requ_cb_dict[':typing'].set_active(need.typing())
+            self.__requ_cb_dict[':equality'].set_active(need.equality())
+            self.__requ_cb_dict[':conditional-effects'].set_active(need.conditional_effects())
+            self.__requ_cb_dict[':disjunctive-preconditions'].set_active(need.disjunctive_preconditions())
+            self.__requ_cb_dict[':quantified-preconditions'].set_active(need.quantified_preconditions())
+            if not need.quantified_preconditions():
+                self.__requ_cb_dict[':existential-preconditions'].set_active(need.existential_preconditions())
+                self.__requ_cb_dict[':universal-preconditions'].set_active(need.universal_preconditions())
+
         self.__requ_cb_dict[':foreach-expansions'].set_active(need.foreach_expansions())
         self.__requ_cb_dict[':dag-expansions'].set_active(need.dag_expansions())
-        if not need.foreach_expansions() and not need.dag_expansions():
-            self.__requ_cb_dict[':action-expansions'].set_active(need.action_expansions())
+        self.__requ_cb_dict[':action-expansions'].set_active(need.action_expansions())
         self.__requ_cb_dict[':fluents'].set_active(need.fluents())
+        self.__requ_cb_dict[':expression-evaluation'].set_active(need.expression_evaluation())
+
+
         self.__save_requirements(self.__requ_cb_dict[':strips'])
 
 
