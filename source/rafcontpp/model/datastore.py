@@ -13,7 +13,7 @@ from rafcon.utils import log
 logger = log.get_logger(__name__)
 # a map containing all built in planners e.g. planners with integration script.
 built_in_planners = {
-    'Fast Downward Planning System': ('rafcontpp.planner.fdintegration', 'FdIntegration')
+    'Fast Downward Planning System': ('rafcontpp.planner.fast_downward_integration', 'FdIntegration')
 }
 #The storage path of the config file.
 DATASTORE_STORAGE_PATH = os.path.join(os.path.expanduser('~'), os.path.normpath('.config/rafcon/rafcontpp_conf.json'))

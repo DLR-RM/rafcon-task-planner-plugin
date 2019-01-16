@@ -35,7 +35,7 @@ class FdIntegration(PlannerInterface):
 
         self.__copy_and_clean(plan_path, outsas, storage_path)
 
-        return PlanningReport(fd_exit == 0,
+        return PlanningReport(fd_exit < 4,
                               plan,
                               ['sas_plan', 'output.sas'],
                               str(fd_exit)
@@ -73,15 +73,26 @@ class FdIntegration(PlannerInterface):
 
         translated_exit_code = str(fd_exit)
         codes = {
-            0: "No Error!",
-            1: "Something went wrong that should not have gone wrong (e.g. planner bug)",
-            2: "Wrong command line options or SAS+ file.",
-            3: "Requested unsupported feature.",
-            4: "Task is provably unsolvable with current bound.",
-            5: "Search ended without finding a solution.",
-            6: "Memory exhausted.",
-            7: "Timeout occured. Only returned by portfolios.",
-            8: "In portfolio configurations both timeouts and out-of-memory conditions occurred.",
+            0:  "No Error!",
+            1:  "at least one plan was found and another component ran out of memory.",
+            2:  "at least one plan was found and another component ran out of time.",
+            3:  "at least one plan was found, another component ran out of memory, and yet another one ran out of time. ",
+            10: "Translator proved task to be unsolvable.",
+            11: "Task is provably unsolvable with current bound.",
+            12: "Search ended without finding a solution. ",
+            20: "Translate, Memory exhausted.",
+            21: "Translate, Time exhausted. Not supported on Windows because we use SIGXCPU to kill the planner.",
+            22: "Search, Memory exhausted.",
+            23: "Search, Timeout occurred. Not supported on Windows because we use SIGXCPU to kill the planner. ",
+            24: "Search, one component ran out of memory and another one out of time. ",
+            30:  "Critical error: something went wrong (e.g. translator bug, but also malformed PDDL input).",
+            31: "Usage error: wrong command line options",
+            32: "Something went wrong that should not have gone wrong (e.g. planner bug).",
+            33: "Wrong command line options or SAS+ file.",
+            34: "Requested unsupported feature.",
+            35: "Something went wrong in the driver (e.g. failed setting resource limits, ill-defined portfolio, complete plan generated after an incomplete one).",
+            36: "Usage error: wrong or missing command line options, including (implicitly) specifying non-existing paths (e.g. for input files or build directory).",
+            37: "Requested unsupported feature (e.g. limiting memory on macOS).",
             127: "Couldn't start FastDownward Planner: command \"fast-downward.py\" not found!"
         }
 
