@@ -36,6 +36,13 @@ class PddlActionTabController:
     #a list containing all auto save buttons
     auto_save_check_buttons = []
     # a semaphore for the auto save handler function
+    # this semaphore works as follows:
+    # all check buttons of all action tabs are connected to the change signal, and stored in the auto_save_check_buttons array
+    # if one tab is changed, all tabs are. the initiator checkbutton will propergate the changes to the others
+    # (all button add 1 to the semaphore)
+    # if the semaphore is more then one, thats the indecator, that a button has to do nothing.
+    # if the semaphore equals the length of the list, its the indecator, that this button is the last one,
+    # it has to do nothing, despite resetting the semaphore.
     auto_save_semaphore = 0
 
 
