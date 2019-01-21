@@ -31,6 +31,12 @@ class PddlActionTabController:
     of this tab is stored in. It also provides some auto fill wizzard for its elements.
 
     '''
+    #true if auto save enabled
+    auto_save_enabled = True
+    #a list containing all auto save buttons
+    auto_save_check_buttons = []
+    # a semaphore for the auto save handler function
+    auto_save_semaphore = 0
 
 
     def __init__(self,action_tab_gtk_builder, state):
@@ -46,8 +52,13 @@ class PddlActionTabController:
         self.__pddl_predicates_text_view = self.__gtk_builder.get_object('pddl_predicates_textview')
         self.__pddl_types_text_view = self.__gtk_builder.get_object('pddl_types_textview')
         view_port = self.__gtk_builder.get_object('requirements_viewport')
+        self.__auto_save_button = self.__gtk_builder.get_object('rtpp_action_tab_auto_save_checkbox')
         #__requ_bb_dict contains all requirements button boxes
         self.__requ_cb_dict = self.__add_requirements_boxes(view_port)
+
+    def __del__(self):
+        if self.__auto_save_button in PddlActionTabController.auto_save_check_buttons:
+            PddlActionTabController.auto_save_check_buttons.remove(self.__auto_save_button)
 
 
     def __add_requirements_boxes(self, gtk_viewport):
@@ -100,7 +111,10 @@ class PddlActionTabController:
             self.__pddl_predicates_text_view.set_cursor_visible(False)
             self.__pddl_types_text_view.set_editable(False)
             self.__pddl_types_text_view.set_cursor_visible(False)
+            self.__auto_save_button.set_sensitive(False)
             self.__gtk_builder.get_object('rtpp_pddl_tab_auto_fill_button').set_sensitive(False)
+            self.__gtk_builder.get_object('rtpp_pddl_tab_apply').set_sensitive(False)
+
             #disable requirements check boxes
             for c_button in self.__requ_cb_dict.values():
                 c_button.set_sensitive(False)
@@ -109,14 +123,20 @@ class PddlActionTabController:
             #observe parts
             auto_fill_button = self.__gtk_builder.get_object('rtpp_pddl_tab_auto_fill_button')
             auto_fill_button.connect('clicked', self.__auto_complete)
-            self.__description_text_view.get_buffer().connect('changed',self.__save_data,'description')
-            self.__pddl_action_source_view.get_buffer().connect('changed', self.__save_data,'pddl_action')
-            self.__pddl_predicates_text_view.get_buffer().connect('changed', self.__save_data,'pddl_predicates')
-            self.__pddl_types_text_view.get_buffer().connect('changed', self.__save_data, 'pddl_types')
+            apply_button = self.__gtk_builder.get_object('rtpp_pddl_tab_apply')
+            apply_button.connect('clicked',self.__on_apply_changes)
+            self.__auto_save_button.set_active(PddlActionTabController.auto_save_enabled)
+            self.__auto_save_button.connect('toggled', self.__auto_save_toogled)
+            PddlActionTabController.auto_save_check_buttons.append(self.__auto_save_button)
+
+            self.__description_text_view.get_buffer().connect('changed',self.__save_data,'description',False)
+            self.__pddl_action_source_view.get_buffer().connect('changed', self.__save_data,'pddl_action',False)
+            self.__pddl_predicates_text_view.get_buffer().connect('changed', self.__save_data,'pddl_predicates',False)
+            self.__pddl_types_text_view.get_buffer().connect('changed', self.__save_data, 'pddl_types',False)
 
             #connect to requirements check boxes
             for c_button in self.__requ_cb_dict.values():
-                c_button.connect('toggled',self.__save_requirements)
+                c_button.connect('toggled',self.__save_requirements,False)
 
 
 
@@ -147,26 +167,32 @@ class PddlActionTabController:
 
 
 
-    def __save_data(self, buffer, key):
+    def __save_data(self, buffer, key,saved_manually):
         '''
-        reads the values of the tab elements and saves them under the specified key in the semantic section
+        reads the values of the tab elements and saves them under the specified key in the semantic section,
+        saves only if saved_manually or auto_save_enabled is true.
         :param buffer: a buffer contining the values to store
         :param key: a key of the semantic dict in the requirements section
+        :param saved_manually: True if saved manually, false otherwhise
         :return: Nothing
         '''
-        start, end = buffer.get_bounds()
-        self.__state.add_semantic_data([SEMANTIC_DATA_DICT_NAME],buffer.get_text(start, end,True).strip('\n'),key)
+        if saved_manually or PddlActionTabController.auto_save_enabled:
+            start, end = buffer.get_bounds()
+            self.__state.add_semantic_data([SEMANTIC_DATA_DICT_NAME],buffer.get_text(start, end,True).strip('\n'),key)
 
 
 
 
-    def __save_requirements(self,checkbox):
+    def __save_requirements(self,checkbox,saved_manually):
         '''
-        saves all requirements specified in the gui
+        saves all requirements specified in the gui,
+        saves only if saved_manually or auto_save_enabled is true.
         :param checkbox: unused
+        :param saved_manually: True if saved manually, false otherwhise
         :return: nothing
         '''
-        self.__state.add_semantic_data([SEMANTIC_DATA_DICT_NAME], str(self.__get_requirements()), 'requirements')
+        if saved_manually or PddlActionTabController.auto_save_enabled:
+            self.__state.add_semantic_data([SEMANTIC_DATA_DICT_NAME], str(self.__get_requirements()), 'requirements')
 
 
     def __get_requirements(self):
@@ -181,6 +207,28 @@ class PddlActionTabController:
                 requirements.append(key)
 
         return requirements
+
+    def __on_apply_changes(self,button):
+        self.__save_data(self.__description_text_view.get_buffer(),'description',True)
+        self.__save_data(self.__pddl_action_source_view.get_buffer(),'pddl_action',True)
+        self.__save_data(self.__pddl_predicates_text_view.get_buffer(),'pddl_predicates',True)
+        self.__save_data(self.__pddl_types_text_view.get_buffer(),'pddl_types',True)
+        self.__save_requirements(None,True)
+
+
+    def __auto_save_toogled(self,checkbox):
+        #count semaphore up
+        PddlActionTabController.auto_save_semaphore+=1
+        #only modify if you are the first one
+        if PddlActionTabController.auto_save_semaphore == 1:
+            PddlActionTabController.auto_save_enabled = checkbox.get_active()
+            for button in PddlActionTabController.auto_save_check_buttons:
+                button.set_active(checkbox.get_active())
+        #reset semaphore if you are the last one
+        if PddlActionTabController.auto_save_semaphore >= len(PddlActionTabController.auto_save_check_buttons):
+            PddlActionTabController.auto_save_semaphore = 0
+
+
 
 
     def __auto_complete(self, button):
@@ -229,8 +277,7 @@ class PddlActionTabController:
         self.__requ_cb_dict[':fluents'].set_active(need.fluents())
         self.__requ_cb_dict[':expression-evaluation'].set_active(need.expression_evaluation())
 
-
-        self.__save_requirements(self.__requ_cb_dict[':strips'])
+        self.__save_requirements(self.__requ_cb_dict[':strips'],True)
 
 
 
@@ -258,7 +305,7 @@ class PddlActionTabController:
 
         #set type field.
         types_buffer.set_text(type_field.strip(',').strip())
-        self.__save_data(types_buffer, 'pddl_types')
+        self.__save_data(types_buffer, 'pddl_types',True)
 
 
 
@@ -286,7 +333,7 @@ class PddlActionTabController:
 
         pred_field = pred_field.strip('\r\n')
         self.__pddl_predicates_text_view.get_buffer().set_text(pred_field)
-        self.__save_data(self.__pddl_predicates_text_view.get_buffer(),'pddl_predicates')
+        self.__save_data(self.__pddl_predicates_text_view.get_buffer(),'pddl_predicates',True)
 
 
 

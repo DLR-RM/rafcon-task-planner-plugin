@@ -150,9 +150,10 @@
                         <property name="receives_default">True</property>
                         <property name="tooltip_text" translatable="yes">Auto Complete will try to fill the fields 'Predicates', 'Types',
 and 'Requirements'
-THERE IS NO GUARANTEE, that Auto Fill is correct or complete.</property>
+THERE IS NO GUARANTEE, that Auto Complete is correct or complete.</property>
                         <property name="halign">end</property>
                         <property name="valign">center</property>
+                        <property name="margin_right">5</property>
                         <property name="margin_top">5</property>
                         <style>
                           <class name="widget-toolbar"/>
@@ -311,6 +312,57 @@ e.g. Type1, Type2</property>
         <property name="expand">True</property>
         <property name="fill">True</property>
         <property name="position">1</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkBox">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="halign">baseline</property>
+        <property name="homogeneous">True</property>
+        <child>
+          <object class="GtkCheckButton" id="rtpp_action_tab_auto_save_checkbox">
+            <property name="label" translatable="yes">Enable Auto Save</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">False</property>
+            <property name="halign">start</property>
+            <property name="valign">center</property>
+            <property name="margin_left">5</property>
+            <property name="margin_top">5</property>
+            <property name="draw_indicator">True</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkButton" id="rtpp_pddl_tab_apply">
+            <property name="label" translatable="yes">Apply</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">True</property>
+            <property name="halign">end</property>
+            <property name="valign">center</property>
+            <property name="margin_right">5</property>
+            <property name="margin_top">5</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <style>
+          <class name="widget-toolbar"/>
+        </style>
+      </object>
+      <packing>
+        <property name="expand">False</property>
+        <property name="fill">True</property>
+        <property name="position">2</property>
       </packing>
     </child>
     <style>
