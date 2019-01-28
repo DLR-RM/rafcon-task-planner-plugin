@@ -11,7 +11,7 @@ import rafcon.gui.singleton as gui_singletons
 logger = log.get_logger(__name__)
 OTHER = 'Other...'
 SEL_PLANNER = '--select planner--'
-
+NOT_AVAILABLE = ' (!) Not Available'
 class PlanningSetupForm:
 
     __dialog = None
@@ -70,11 +70,17 @@ class PlanningSetupForm:
         drop_down.append_text(SEL_PLANNER)
 
         for index, planner in enumerate(self.__datastore.get_built_in_planners().keys()):
-            drop_down.append_text(planner)
+            #dynamically import and check if planner is available.
+            to_import = self.__datastore.get_built_in_planners()[planner]
+            script_import = __import__(to_import[0], fromlist=(to_import[1]))
+            if getattr(script_import, to_import[1])().is_available():
+                drop_down.append_text(planner) #add planner to dropdown if available
+            else:
+                drop_down.append_text(planner+ NOT_AVAILABLE) # also add if not availavle, but with a hint.
             if planner == self.__datastore.get_planner():
                 active_index = index +1
 
-            drop_down.append_text(OTHER)
+        drop_down.append_text(OTHER)
 
         if active_index == 0 and self.__datastore.get_planner() is not None and len(self.__datastore.get_planner()) > 0:
             active_index = len(drop_down.get_model()) - 1
@@ -123,7 +129,7 @@ class PlanningSetupForm:
         logger.info(self.__string_to_string_array(self.__state_pool_chooser_entry.get_text()))
         self.__datastore.add_state_pools(self.__string_to_string_array(self.__state_pool_chooser_entry.get_text()),True)
         self.__datastore.set_type_db_path(self.__builder.get_object('type_db_chooser').get_filename())
-        choosen_planner = self.__builder.get_object('planner_dropdown').get_active_text()
+        choosen_planner = self.__builder.get_object('planner_dropdown').get_active_text().replace(NOT_AVAILABLE,'')
         #set planner
         script_path = self.__builder.get_object('script_path_chooser').get_filename()
         if choosen_planner == OTHER:

@@ -1,3 +1,6 @@
+# Contributors:
+# Christoph Suerig <christoph.suerig@dlr.de>
+# Version 28.01.2019
 import os
 import shutil
 import subprocess
@@ -8,6 +11,9 @@ from rafcontpp.model.plan_step import PlanStep
 
 
 class FdIntegration(PlannerInterface):
+    '''
+    This is the integration Script for the Fast downward Planning System by Malte Helmert Et al. (fast-downward.org)
+    '''
 
 
 
@@ -40,6 +46,14 @@ class FdIntegration(PlannerInterface):
                               ['sas_plan', 'output.sas'],
                               str(fd_exit)
                               + ': ' + self.__translate_fd_exit_code(fd_exit) +" used command was: "+command)
+
+    def is_available(self):
+        devnull = open(os.devnull, "wb")
+        process = subprocess.Popen('fast-downward',stdout=devnull, stderr=devnull,shell=True)
+        process.wait()
+        status = process.returncode
+        devnull.close()
+        return  status != 127 #127 is the code for command not found.
 
     def __parse_raw_plan(self,plan_path):
         '''
