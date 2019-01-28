@@ -33,15 +33,16 @@ class PddlActionTabController:
     '''
     #true if auto save enabled
     auto_save_enabled = True
-    #a list containing all auto save buttons
+    #a list containing all auto apply buttons
     auto_save_check_buttons = []
     # a semaphore for the auto save handler function
     # this semaphore works as follows:
-    # all check buttons of all action tabs are connected to the change signal, and stored in the auto_save_check_buttons array
-    # if one tab is changed, all tabs are. the initiator checkbutton will propergate the changes to the others
-    # (all button add 1 to the semaphore)
-    # if the semaphore is more then one, thats the indecator, that a button has to do nothing.
-    # if the semaphore equals the length of the list, its the indecator, that this button is the last one,
+    # all auto apply check buttons of all action tabs are connected to the change signal, and stored in the auto_save_check_buttons array
+    # if one tab is changed, all tabs are. the initiator checkbutton will propagate the changes to the others and
+    # change their truth value.
+    # (all buttons add 1 to the semaphore)
+    # if the semaphores value is more then one, thats the indicator, that a button has to do nothing.
+    # if the semaphore equals the length of the list, its the indicator, that this button is the last one,
     # it has to do nothing, despite resetting the semaphore.
     auto_save_semaphore = 0
 
@@ -224,6 +225,7 @@ class PddlActionTabController:
         self.__save_requirements(None,True)
 
 
+    #now called auto apply
     def __auto_save_toogled(self,checkbox):
         #count semaphore up
         PddlActionTabController.auto_save_semaphore+=1

@@ -322,10 +322,11 @@ e.g. Type1, Type2</property>
         <property name="homogeneous">True</property>
         <child>
           <object class="GtkCheckButton" id="rtpp_action_tab_auto_save_checkbox">
-            <property name="label" translatable="yes">Enable Auto Save</property>
+            <property name="label" translatable="yes">Enable Auto Apply</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">False</property>
+            <property name="tooltip_text" translatable="yes">Can cause performance issues.</property>
             <property name="halign">start</property>
             <property name="valign">center</property>
             <property name="margin_left">5</property>
