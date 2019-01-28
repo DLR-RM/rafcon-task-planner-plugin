@@ -268,24 +268,24 @@ class PddlActionTabController:
         :return: Nothing
         '''
         need = PddlRequirementFinder(raw_action)
-
-        self.__requ_cb_dict[':adl'].set_active(need.adl())
+        #represents the hierarchy specified in pddl 1.2
+        self.__requ_cb_dict[':adl'].set_active(need.adl() or self.__requ_cb_dict[':adl'].get_active())
         if not need.adl():
-            self.__requ_cb_dict[':strips'].set_active(need.strips())
-            self.__requ_cb_dict[':typing'].set_active(need.typing())
-            self.__requ_cb_dict[':equality'].set_active(need.equality())
-            self.__requ_cb_dict[':conditional-effects'].set_active(need.conditional_effects())
-            self.__requ_cb_dict[':disjunctive-preconditions'].set_active(need.disjunctive_preconditions())
-            self.__requ_cb_dict[':quantified-preconditions'].set_active(need.quantified_preconditions())
+            self.__requ_cb_dict[':strips'].set_active(need.strips()or self.__requ_cb_dict[':strips'].get_active())
+            self.__requ_cb_dict[':typing'].set_active(need.typing()or self.__requ_cb_dict[':typing'].get_active())
+            self.__requ_cb_dict[':equality'].set_active(need.equality()or self.__requ_cb_dict[':equality'].get_active())
+            self.__requ_cb_dict[':conditional-effects'].set_active(need.conditional_effects()or self.__requ_cb_dict[':conditional-effects'].get_active())
+            self.__requ_cb_dict[':disjunctive-preconditions'].set_active(need.disjunctive_preconditions()or self.__requ_cb_dict[':disjunctive-preconditions'].get_active())
+            self.__requ_cb_dict[':quantified-preconditions'].set_active(need.quantified_preconditions()or self.__requ_cb_dict[':quantified-preconditions'].get_active())
             if not need.quantified_preconditions():
-                self.__requ_cb_dict[':existential-preconditions'].set_active(need.existential_preconditions())
-                self.__requ_cb_dict[':universal-preconditions'].set_active(need.universal_preconditions())
+                self.__requ_cb_dict[':existential-preconditions'].set_active(need.existential_preconditions()or self.__requ_cb_dict[':existential-preconditions'].get_active())
+                self.__requ_cb_dict[':universal-preconditions'].set_active(need.universal_preconditions()or self.__requ_cb_dict[':universal-preconditions'].get_active())
 
-        self.__requ_cb_dict[':foreach-expansions'].set_active(need.foreach_expansions())
-        self.__requ_cb_dict[':dag-expansions'].set_active(need.dag_expansions())
-        self.__requ_cb_dict[':action-expansions'].set_active(need.action_expansions())
-        self.__requ_cb_dict[':fluents'].set_active(need.fluents())
-        self.__requ_cb_dict[':expression-evaluation'].set_active(need.expression_evaluation())
+        self.__requ_cb_dict[':foreach-expansions'].set_active(need.foreach_expansions()or self.__requ_cb_dict[':foreach-expansions'].get_active())
+        self.__requ_cb_dict[':dag-expansions'].set_active(need.dag_expansions()or self.__requ_cb_dict[':dag-expansions'].get_active())
+        self.__requ_cb_dict[':action-expansions'].set_active(need.action_expansions()or self.__requ_cb_dict[':action-expansions'].get_active())
+        self.__requ_cb_dict[':fluents'].set_active(need.fluents()or self.__requ_cb_dict[':fluents'].get_active())
+        self.__requ_cb_dict[':expression-evaluation'].set_active(need.expression_evaluation()or self.__requ_cb_dict[':expression-evaluation'].get_active())
 
         self.__save_requirements(self.__requ_cb_dict[':strips'],True)
 
