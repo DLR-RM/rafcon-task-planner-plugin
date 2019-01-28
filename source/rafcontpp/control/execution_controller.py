@@ -70,8 +70,8 @@ class ExecutionController:
                 for file_name in self.__datastore.get_generated_files():
                     file = os.path.join(self.__datastore.get_file_save_dir(), file_name)
                     if os.path.isfile(file):
-                        logger.debug('Successfully removed file: ' + str(file))
                         os.remove(file)
+                        logger.debug('Successfully removed file: ' + str(file))
                     else:
                         logger.warning("Coundn't remove "+str(file))
             else:

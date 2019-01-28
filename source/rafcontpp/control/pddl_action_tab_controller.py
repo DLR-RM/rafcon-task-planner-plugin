@@ -64,6 +64,7 @@ class PddlActionTabController:
         self.__requ_cb_dict = self.__add_requirements_boxes(view_port)
 
     def __del__(self):
+        #remove the save button from the list, if the action tab was closed.
         if self.__auto_save_button in PddlActionTabController.auto_save_check_buttons:
             PddlActionTabController.auto_save_check_buttons.remove(self.__auto_save_button)
 
