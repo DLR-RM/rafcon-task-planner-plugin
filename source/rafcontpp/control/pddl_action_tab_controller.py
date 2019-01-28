@@ -1,6 +1,6 @@
 # Contributors:
 # Christoph Suerig <christoph.suerig@dlr.de>
-# Version 09.01.2019
+# Version 28.01.2019
 
 
 import re
@@ -262,8 +262,7 @@ class PddlActionTabController:
 
     def __requirements_auto_complete(self, raw_action):
         '''
-        a poor try to auto complete the requirements section in pddl Action tab.
-        is not complete, because the question it tries to answer is not decidable at this time.
+        requirements auto complete, will set requirements as specified in pddl 1.2 paper.
         :param raw_action: the pddl action string.
         :return: Nothing
         '''

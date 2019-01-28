@@ -1,6 +1,6 @@
 # Contributors:
 # Christoph Suerig <christoph.suerig@dlr.de>
-# Version 01.11.2018
+# Version 28.01.2019
 import inspect
 import os
 import sys
@@ -90,8 +90,10 @@ class PlanningController:
         #remove file extension
         if '.' in script_name:
             script_name = script_name.split('.')[0]
-        #add path to PYTHONPATH
-        sys.path.append(path)
+        #add path to PYTHONPATH if needed.
+        if path not in sys.path:
+            sys.path.append(path)
+            logger.debug(sys.path)
         return script_name
 
     def __discover_class(self, script):
@@ -109,7 +111,7 @@ class PlanningController:
                 for me_name, class_obj in inspect.getmembers(some_obj):
                     if inspect.ismethod(class_obj) and me_name == 'plan_scenario':
                         class_name = cname
-                        break;
+                        break
         return (script, class_name)
 
 

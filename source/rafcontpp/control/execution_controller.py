@@ -1,6 +1,6 @@
 # Contributors:
 # Christoph Suerig <christoph.suerig@dlr.de>
-# Version 01.12.2018
+# Version 27.01.2019
 
 import os
 from rafcontpp.logic.mapper import Mapper
