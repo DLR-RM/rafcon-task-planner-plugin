@@ -38,7 +38,7 @@ def datastore_from_file(file_path):
 
     else:
         data = json.load(open(file_path, "r"))
-        logger.info('Loading Configuration form: '+file_path)
+        logger.debug('Loading Configuration form: '+file_path)
         ds = Datastore(data['state_pools'],
                      data['sm_save_dir'],
                      data['planner'],
@@ -353,11 +353,12 @@ class Datastore:
             'keep_related_files': self.__keep_related_files,
             'file_save_dir': self.__file_save_dir
         }
-        logger.info('Writing Configuration to path: '+file_path)
+        logger.debug('Writing Configuration to path: '+file_path)
         conf_file = open(file_path, "w")
         conf_file.write(json.dumps(data_to_save))
         conf_file.flush()
         conf_file.close()
+        logger.info('Saved Configuration successfully!')
 
 
 

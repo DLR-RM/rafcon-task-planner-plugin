@@ -17,7 +17,12 @@ class FfIntegration(PlannerInterface):
 
     def plan_scenario(self, domain_path, facts_path, planner_argv, storage_path):
         plan_path = os.path.abspath(os.path.join(storage_path, "ff_plan"))
-        command = 'ff -o ' + domain_path + ' -f ' + facts_path
+        command = 'ff -o ' + domain_path + ' -f ' + facts_path + ' '
+
+        for arg in planner_argv:
+            command += arg + ' '
+        command = command.rstrip()
+        print command
         plan = []
 
         # run Fast Forward

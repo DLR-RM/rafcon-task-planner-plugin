@@ -1,6 +1,7 @@
 # Contributors:
 # Christoph Suerig <christoph.suerig@dlr.de>
 # Version 28.01.2019
+
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
@@ -15,19 +16,22 @@ logger = log.get_logger(__name__)
 #other string, if other planner is choosen.
 OTHER = 'Other...'
 #select planner string, if nothing is choosen.
-SEL_PLANNER = '--Select planner--'
+SEL_PLANNER = '-- Select planner --'
 #printed next to planner, if it is not available.
 NOT_AVAILABLE = ' (!) Indisposed'
 class PlanningSetupForm:
 
-    __dialog = None
-    __state_pool_chooser_entry = None
+
 
 
     def __init__(self, datastore):
         assert isinstance(datastore, Datastore)
         self.__datastore = datastore
         self.__builder = Gtk.Builder()
+        self.__dialog = None
+        self.__state_pool_chooser_entry = None
+        self.__planning_wait_window = self.__init_planning_wait_window()
+
 
     def initialize(self):
         '''
@@ -40,8 +44,9 @@ class PlanningSetupForm:
         #get items
         self.__dialog = self.__builder.get_object('plannig_setup_form_dialog')
         self.__dialog.set_title('Task Planner Plugin Configuration')
-        self.__dialog.set_transient_for()
-        mc = gui_singletons.main_window_controller.view['main_window']
+        main_window = gui_singletons.main_window_controller.view['main_window']
+        self.__dialog.set_transient_for(main_window)
+        self.__dialog.set_modal(main_window)
         state_pool_chooser = self.__builder.get_object('state_pools_chooser')
         self.__state_pool_chooser_entry = self.__builder.get_object('state_pools_chooser_entry')
         type_db_chooser = self.__builder.get_object('type_db_chooser')
@@ -71,6 +76,26 @@ class PlanningSetupForm:
 
 
 
+
+    def __init_planning_wait_window(self):
+        '''
+        a window that says, that planning needs a while...
+        :return: the dialog window
+        '''
+
+
+        planning_wait_dialog_path = os.path.abspath(
+            os.path.join(os.path.dirname(os.path.realpath(__file__)), "glade", "planning_wait_dialog.glade"))
+        builder = Gtk.Builder()
+        builder.add_from_file(planning_wait_dialog_path)
+        planning_wait_dialog = builder.get_object('rtpp_planning_wait_window')
+        planning_wait_dialog.set_title('Task Planner Plugin')
+        main_window = gui_singletons.main_window_controller.view['main_window']
+        planning_wait_dialog.set_transient_for(main_window)
+        planning_wait_dialog.set_modal(main_window)
+        planning_wait_dialog.set_position(Gtk.WindowPosition.CENTER_ALWAYS)
+        planning_wait_dialog.set_keep_above(True)
+        return planning_wait_dialog
 
 
 
@@ -114,10 +139,15 @@ class PlanningSetupForm:
 
         if everything_filled:
             self.__datastore.validate_ds()
-            self.__builder.get_object('plannig_setup_form_dialog').destroy()
             self.__datastore.save_datastore_parts_in_file(DATASTORE_STORAGE_PATH)
-            logger.info("start pipeline...")
+            self.__dialog.hide()
+            self.__planning_wait_window.show()
+            self.__dialog.destroy()
+            #start pipeline
+            logger.info("Start pipeline...")
             ExecutionController(self.__datastore).on_execute()
+            self.__planning_wait_window.hide()
+            self.__planning_wait_window.destroy()
         else:
             logger.error(not_filled+" missing! Please select "+ not_filled)
 
@@ -148,7 +178,7 @@ class PlanningSetupForm:
         #looks if everything necessary was filled.
         everything_filled = True
         not_filled = None
-        logger.info(self.__string_to_string_array(self.__state_pool_chooser_entry.get_text()))
+        logger.debug('State pool: ' + str(self.__string_to_string_array(self.__state_pool_chooser_entry.get_text())))
         self.__datastore.add_state_pools(self.__string_to_string_array(self.__state_pool_chooser_entry.get_text()),True)
         self.__datastore.set_type_db_path(self.__builder.get_object('type_db_chooser').get_filename())
         choosen_planner = self.__builder.get_object('planner_dropdown').get_active_text().replace(NOT_AVAILABLE,'')

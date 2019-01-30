@@ -54,7 +54,7 @@ class ExecutionController:
             planning_successful = planning_controller.execute_planning()
             #check if a plan was found.
             if planning_successful and len(self.__datastore.get_plan()) > 0:
-                logger.info('Planning successful!')
+                logger.info('A Plan was found!')
                 sm_generator = StateMachineGenerator(self.__datastore)
                 logger.debug('Handover to state machine generator')
                 sm_generator.generate_state_machine() #--> generates state machine and opens it.
