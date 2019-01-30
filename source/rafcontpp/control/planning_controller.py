@@ -90,7 +90,7 @@ class PlanningController:
         #remove file extension
         if '.' in script_name:
             script_name = script_name.split('.')[0]
-        #add path to PYTHONPATH if needed.
+        #add path to PYTHONPATH only if needed.
         if path not in sys.path:
             sys.path.append(path)
             logger.debug(sys.path)

@@ -40,12 +40,15 @@ class FfIntegration(PlannerInterface):
         return PlanningReport(ff_exit == 0, plan, ['ff_plan'], str(ff_exit) + ': ' + str(stderr))
 
     def is_available(self):
+        '''
+        :return: True, if the planner is available in the system, false otherwhise.
+        '''
         devnull = open(os.devnull, "wb")
         process = subprocess.Popen('ff',stdout=devnull, stderr=devnull,shell=True)
         process.wait()
         status = process.returncode
         devnull.close()
-        return  status == 1 #ff returns 1 if flags are missing
+        return status != 127  # 127 is the code for command not found.
 
     def __parse_console_output(self, to_parse):
         '''

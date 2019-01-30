@@ -322,7 +322,7 @@ e.g. Type1, Type2</property>
         <property name="homogeneous">True</property>
         <child>
           <object class="GtkCheckButton" id="rtpp_action_tab_auto_save_checkbox">
-            <property name="label" translatable="yes">Enable Auto Save</property>
+            <property name="label" translatable="yes">Enable Auto Apply</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">False</property>
@@ -330,6 +330,7 @@ e.g. Type1, Type2</property>
             <property name="valign">center</property>
             <property name="margin_left">5</property>
             <property name="margin_top">5</property>
+            <property name="margin_bottom">5</property>
             <property name="draw_indicator">True</property>
           </object>
           <packing>
@@ -348,6 +349,7 @@ e.g. Type1, Type2</property>
             <property name="valign">center</property>
             <property name="margin_right">5</property>
             <property name="margin_top">5</property>
+            <property name="margin_bottom">5</property>
           </object>
           <packing>
             <property name="expand">False</property>

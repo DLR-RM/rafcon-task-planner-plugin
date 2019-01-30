@@ -1,3 +1,6 @@
+# Contributors:
+# Christoph Suerig <christoph.suerig@dlr.de>
+# Version 28.01.2019
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
@@ -9,9 +12,12 @@ from rafcon.utils import log
 import rafcon.gui.singleton as gui_singletons
 
 logger = log.get_logger(__name__)
+#other string, if other planner is choosen.
 OTHER = 'Other...'
-SEL_PLANNER = '--select planner--'
-NOT_AVAILABLE = ' (!) Not Available'
+#select planner string, if nothing is choosen.
+SEL_PLANNER = '--Select planner--'
+#printed next to planner, if it is not available.
+NOT_AVAILABLE = ' (!) Indisposed'
 class PlanningSetupForm:
 
     __dialog = None
@@ -24,15 +30,18 @@ class PlanningSetupForm:
         self.__builder = Gtk.Builder()
 
     def initialize(self):
+        '''
+        initialize initiates the components with data present in the datastore, also it adds listeners for
+        each part e.g. a file chooser.
+        :return: nothing
+        '''
         glade_path = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), "glade", "planning_setup_form.glade"))
-        print glade_path
         self.__builder.add_from_file(glade_path)
         #get items
         self.__dialog = self.__builder.get_object('plannig_setup_form_dialog')
         self.__dialog.set_title('Task Planner Plugin Configuration')
         self.__dialog.set_transient_for()
         mc = gui_singletons.main_window_controller.view['main_window']
-        print mc
         state_pool_chooser = self.__builder.get_object('state_pools_chooser')
         self.__state_pool_chooser_entry = self.__builder.get_object('state_pools_chooser_entry')
         type_db_chooser = self.__builder.get_object('type_db_chooser')
@@ -57,6 +66,7 @@ class PlanningSetupForm:
         self.__builder.get_object('planning_form_start_button').connect('clicked', self.__on_apply)
         self.__builder.get_object('planning_form_cancel_button').connect('clicked', self.__on_destroy)
         state_pool_chooser.connect('file-set',self.__on_choose_state_pool)
+        #automatically choose Other... if planner script is set.
         script_path_chooser.connect('file-set', lambda x: (planner_dropdown.set_active(len(planner_dropdown.get_model()) - 1)))
 
 
@@ -65,6 +75,8 @@ class PlanningSetupForm:
 
 
     def __init_drop_down(self,drop_down, script_path_chooser):
+        #initiates the planner drop down with all built in planners and the script path chooser for the planenr script
+        #look if planner is available
         active_index = 0
 
         drop_down.append_text(SEL_PLANNER)
@@ -77,16 +89,16 @@ class PlanningSetupForm:
                 drop_down.append_text(planner) #add planner to dropdown if available
             else:
                 drop_down.append_text(planner+ NOT_AVAILABLE) # also add if not availavle, but with a hint.
+            #set active planner to last used planner
             if planner == self.__datastore.get_planner():
                 active_index = index +1
 
         drop_down.append_text(OTHER)
-
+        #set active planner to Other if script was used last.
         if active_index == 0 and self.__datastore.get_planner() is not None and len(self.__datastore.get_planner()) > 0:
             active_index = len(drop_down.get_model()) - 1
-
+        #initiate planner script field.
         script_path_chooser.set_filename(self.__datastore.get_planner_script_path())
-
         drop_down.set_active(active_index)
 
 
@@ -94,6 +106,10 @@ class PlanningSetupForm:
 
 
     def __on_apply(self, button):
+        #prepare datastore with new data from dialog.
+        #save datastore to configuration file.
+        #destroy dialog.
+        #start the pipeline to generate a sm.
         everything_filled, not_filled = self.__prepare_datastore()
 
         if everything_filled:
@@ -107,6 +123,9 @@ class PlanningSetupForm:
 
 
     def __on_destroy(self, button):
+        #destroy dialog
+        #save data to datastore
+        #save datastore to file.
         try:
             self.__prepare_datastore()
             self.__datastore.save_datastore_parts_in_file(DATASTORE_STORAGE_PATH)
@@ -114,6 +133,7 @@ class PlanningSetupForm:
             self.__dialog.destroy()
 
     def __on_choose_state_pool(self,chooser):
+        #append choosen state pool to state pool text entry.
         to_append = chooser.get_filename()
         pools = self.__state_pool_chooser_entry.get_text()
         if len(pools)> 0 and pools[len(pools)-1] != ':':
@@ -124,6 +144,8 @@ class PlanningSetupForm:
 
 
     def __prepare_datastore(self):
+        #saves all data from the dialog into the datastore.
+        #looks if everything necessary was filled.
         everything_filled = True
         not_filled = None
         logger.info(self.__string_to_string_array(self.__state_pool_chooser_entry.get_text()))
@@ -159,6 +181,7 @@ class PlanningSetupForm:
 
 
     def __string_array_to_string(self,list):
+        #helper method for state pool text entry
             toReturn = ''
 
             for element in list:
@@ -167,4 +190,5 @@ class PlanningSetupForm:
             return toReturn
 
     def __string_to_string_array(self,string):
+        # helper method for state pool text entry
         return list(filter(None,string.split(':')))
