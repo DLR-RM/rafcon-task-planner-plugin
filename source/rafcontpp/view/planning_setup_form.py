@@ -141,13 +141,13 @@ class PlanningSetupForm:
             self.__datastore.validate_ds()
             self.__datastore.save_datastore_parts_in_file(DATASTORE_STORAGE_PATH)
             self.__dialog.hide()
-            self.__planning_wait_window.show()
+            #self.__planning_wait_window.show()
             self.__dialog.destroy()
             #start pipeline
             logger.info("Start pipeline...")
             ExecutionController(self.__datastore).on_execute()
-            self.__planning_wait_window.hide()
-            self.__planning_wait_window.destroy()
+            #self.__planning_wait_window.hide()
+            #self.__planning_wait_window.destroy()
         else:
             logger.error(not_filled+" missing! Please select "+ not_filled)
 

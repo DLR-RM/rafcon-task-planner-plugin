@@ -13,6 +13,7 @@ def datastore():
      ds.set_facts_path(facts_path)
      ds.set_domain_path(domain_path)
      ds.set_file_save_dir(file_save_dir)
+     ds.set_planner('Fast Downward Planning System')
      return ds
 
 

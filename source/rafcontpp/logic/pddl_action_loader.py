@@ -89,11 +89,13 @@ class PddlActionLoader:
         parse_type_string gets a type string of fromat type1,type2 or type1 type2 and parses it into an
         array containing the types.
         :param type_string: a typestring of format type1,type2 or type1 type2.
-        :return: an array containing the types of the string.
+        :return: an array containing the types of the string, or an empty array if string is None or empty
         '''
-        ts = type_string.replace(',', ' ')
-        ts = ts.split(' ')
-        ts = list(filter(None, ts))
+        ts = []
+        if type_string:
+            ts = type_string.replace(',', ' ')
+            ts = ts.split(' ')
+            ts = list(filter(None, ts))
         return ts
 
     def parse_requirement_string(self, requ_string):
@@ -102,11 +104,12 @@ class PddlActionLoader:
         :param requ_string: a string contining requriements.
         :return: an array contining requirements.
         '''
-
-        rs = requ_string.strip('[').strip(']')
-        rs = rs.replace('\'', '')
-        rs = rs.replace(' ', '')
-        req_list = rs.split(',')
+        req_list = []
+        if requ_string:
+            rs = requ_string.strip('[').strip(']')
+            rs = rs.replace('\'', '')
+            rs = rs.replace(' ', '')
+            req_list = rs.split(',')
         return req_list
 
     def parse_predicate_string(self,pred_string):

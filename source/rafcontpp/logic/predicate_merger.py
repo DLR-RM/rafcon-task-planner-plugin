@@ -106,7 +106,7 @@ class PredicateMerger:
         reduced_list = predicate_list[0]
 
         for predicate in predicate_list:
-            err_str = "Can't merge predicates, they are Incompatible! first: " +\
+            err_str = "Can't merge predicates, they are Incompatible! (variable names where changed) first: " +\
                       self.__tuple_to_predicate_string(reduced_list) + \
                       " second: " + self.__tuple_to_predicate_string(predicate)
             if reduced_list[0] != predicate[0] or len(reduced_list[1]) != len(predicate[1]):
