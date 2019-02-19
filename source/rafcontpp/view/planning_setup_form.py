@@ -7,6 +7,7 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 from gi.repository import GObject
 import os
+from threading import Thread
 from rafcontpp.control.execution_controller import ExecutionController
 from rafcontpp.model.datastore import Datastore, DATASTORE_STORAGE_PATH
 from rafcon.utils import log
@@ -18,13 +19,13 @@ OTHER = 'Other...'
 #select planner string, if nothing is choosen.
 SEL_PLANNER = '-- Select planner --'
 #printed next to planner, if it is not available.
-NOT_AVAILABLE = ' (!) Indisposed'
+NOT_AVAILABLE = ' (!) Unavailable'
 class PlanningSetupForm:
 
 
 
 
-    def __init__(self, datastore):
+    def __init__(self, datastore, ):
         assert isinstance(datastore, Datastore)
         self.__datastore = datastore
         self.__builder = Gtk.Builder()
@@ -92,9 +93,9 @@ class PlanningSetupForm:
         planning_wait_dialog.set_title('Task Planner Plugin')
         main_window = gui_singletons.main_window_controller.view['main_window']
         planning_wait_dialog.set_transient_for(main_window)
-        planning_wait_dialog.set_modal(main_window)
         planning_wait_dialog.set_position(Gtk.WindowPosition.CENTER_ALWAYS)
-        planning_wait_dialog.set_keep_above(True)
+        window_button = builder.get_object('rtpp_planning_wait_window_ok_button')
+        window_button.connect('clicked', lambda x: planning_wait_dialog.destroy())
         return planning_wait_dialog
 
 
@@ -140,16 +141,23 @@ class PlanningSetupForm:
         if everything_filled:
             self.__datastore.validate_ds()
             self.__datastore.save_datastore_parts_in_file(DATASTORE_STORAGE_PATH)
-            self.__dialog.hide()
-            #self.__planning_wait_window.show()
+            self.__planning_wait_window.show()
             self.__dialog.destroy()
+            from rafcontpp.view.planning_button import increment_button
+            increment_button()#increment the button, to indecate that a new planning process has started.
             #start pipeline
             logger.info("Start pipeline...")
-            ExecutionController(self.__datastore).on_execute()
-            #self.__planning_wait_window.hide()
-            #self.__planning_wait_window.destroy()
+            planning_thread = ExecutionController(self.__datastore).on_execute_pre_planning()
+            Thread(target=self.__wait_and_hide,args=[planning_thread]).start()
+
         else:
             logger.error(not_filled+" missing! Please select "+ not_filled)
+
+    def __wait_and_hide(self,thread):
+        thread.join()
+        self.__planning_wait_window.destroy()
+        from rafcontpp.view.planning_button import decrement_button
+        decrement_button()# decrement button, to indicate, that the planning process is finish.
 
 
     def __on_destroy(self, button):

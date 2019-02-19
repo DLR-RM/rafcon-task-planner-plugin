@@ -5,15 +5,44 @@
   <object class="GtkApplicationWindow" id="rtpp_planning_wait_window">
     <property name="can_focus">False</property>
     <child>
-      <object class="GtkLabel">
+      <object class="GtkBox">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
-        <property name="margin_left">100</property>
-        <property name="margin_right">100</property>
-        <property name="margin_top">100</property>
-        <property name="margin_bottom">100</property>
-        <property name="label" translatable="yes">Planning State machine, please wait...
+        <property name="orientation">vertical</property>
+        <child>
+          <object class="GtkLabel">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="margin_left">100</property>
+            <property name="margin_right">100</property>
+            <property name="margin_top">100</property>
+            <property name="margin_bottom">100</property>
+            <property name="label" translatable="yes">Planning State machine, please wait...
 (This could take a long time)</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkButton" id="rtpp_planning_wait_window_ok_button">
+            <property name="label" translatable="yes">Ok</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">True</property>
+            <property name="halign">center</property>
+            <property name="valign">center</property>
+            <property name="margin_top">10</property>
+            <property name="margin_bottom">10</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
       </object>
     </child>
   </object>

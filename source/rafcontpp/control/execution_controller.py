@@ -27,10 +27,10 @@ class ExecutionController:
         self.__datastore = datastore
 
 
-    def on_execute(self):
+    def on_execute_pre_planning(self):
         """on_execute
          on_execute executes the pipeline in order to plan a scenario and create a state machine for it
-        :return: nothing
+        :return: the planning thread.
         """
         try:
             #pipeline, after input reading...
@@ -51,19 +51,10 @@ class ExecutionController:
             #generate plan
             logger.debug('Handover to planning controller')
             planning_controller = PlanningController(self.__datastore)
-            planning_successful = planning_controller.execute_planning()
-            #check if a plan was found.
-            if planning_successful and len(self.__datastore.get_plan()) > 0:
-                logger.info('A Plan was found!')
-                sm_generator = StateMachineGenerator(self.__datastore)
-                logger.debug('Handover to state machine generator')
-                sm_generator.generate_state_machine() #--> generates state machine and opens it.
+            return planning_controller.execute_planning(self.on_execute_post_planning)
 
 
-            else:
-                logger.error("No Plan was found, therefore no state machine was generated!")
-
-        finally:
+        except Exception, err:
 
             if not self.__datastore.keep_related_files():
                 logger.info('Cleaning files...')
@@ -76,3 +67,34 @@ class ExecutionController:
                         logger.warning("Coundn't remove "+str(file))
             else:
                 logger.debug('Keeping files')
+
+            raise err
+
+
+    def on_execute_post_planning(self,planning_successful):
+
+        try:
+            # check if a plan was found.
+            if planning_successful and len(self.__datastore.get_plan()) > 0:
+                logger.info('A Plan was found!')
+                sm_generator = StateMachineGenerator(self.__datastore)
+                logger.debug('Handover to state machine generator')
+                sm_generator.generate_state_machine()  # --> generates state machine and opens it.
+
+
+            else:
+                logger.error("No Plan was found, therefore no state machine was generated!")
+        finally:
+
+            if not self.__datastore.keep_related_files():
+                logger.info('Cleaning files...')
+                for file_name in self.__datastore.get_generated_files():
+                    file = os.path.join(self.__datastore.get_file_save_dir(), file_name)
+                    if os.path.isfile(file):
+                        os.remove(file)
+                        logger.debug('Successfully removed file: ' + str(file))
+                    else:
+                        logger.warning("Coundn't remove " + str(file))
+            else:
+                logger.debug('Keeping files')
+
