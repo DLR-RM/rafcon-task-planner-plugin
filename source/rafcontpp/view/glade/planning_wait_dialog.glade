@@ -18,7 +18,10 @@
             <property name="margin_top">100</property>
             <property name="margin_bottom">100</property>
             <property name="label" translatable="yes">Planning State machine, please wait...
-(This could take a long time)</property>
+
+This could take a long time. If you want, 
+you can close this Window, and use rafcon
+while the Task is planned in the background.</property>
           </object>
           <packing>
             <property name="expand">False</property>

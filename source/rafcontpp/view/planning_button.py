@@ -14,7 +14,6 @@ from rafcon.utils import log
 logger = log.get_logger(__name__)
 plan_task_label = "Plan Task"
 tool_tip_text = "Open planning Configuration"
-progress_text = " Task(s) in Progress."
 plan_sm_button = None
 button_counter = 0
 lock = threading.Lock()
@@ -39,7 +38,7 @@ def increment_button():
         button_counter += 1
         plan_sm_button.set_label_widget(create_label_widget_with_icon('f1ec',
                                         _(plan_task_label + ' ({})'.format(button_counter)),
-                                        tool_tip_text +'\n'+ str(button_counter)+progress_text))
+                                        tool_tip_text +'\n'+ str(button_counter)+ __get_progress_text()))
 
 def decrement_button():
     with lock:
@@ -51,10 +50,17 @@ def decrement_button():
         else:
             plan_sm_button.set_label_widget(
                 create_label_widget_with_icon('f1ec', _(plan_task_label + ' ({})'.format(button_counter)),
-                                              tool_tip_text +'\n'+ str(button_counter)+progress_text))
+                                              tool_tip_text +'\n'+ str(button_counter)+ __get_progress_text()))
 
 
 
 def __on_button_clicked(*args):
     logger.debug('opening planning form!')
     PlanningSetupForm(datastore_from_file(DATASTORE_STORAGE_PATH)).initialize()
+
+
+def __get_progress_text():
+    if button_counter == 1:
+        return " Task in progress."
+    else:
+        return " Tasks in progress."
