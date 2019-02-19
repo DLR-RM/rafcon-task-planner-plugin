@@ -51,3 +51,21 @@ def test_parse_requirement_string(string, expected):
     result = sut.parse_requirement_string(string)
     # assert
     assert expected == result
+
+
+@pytest.mark.parametrize("string, expected",[
+    ('[]',[]),
+    (None,[]),
+    ('no predicates in here',[]),
+    ('(be-full ?person - Person)(has ?person - Person ?food - Food)',['(be-full ?person - Person)','(has ?person - Person ?food - Food)']),
+    ('(be-full ?person - Person)    (has ?person - Person ?food - Food)',['(be-full ?person - Person)', '(has ?person - Person ?food - Food)']),
+    ('(be-full ?person - Person)\r\n(has ?person - Person ?food - Food)',['(be-full ?person - Person)','(has ?person - Person ?food - Food)']),
+
+])
+def test_parse_predicate_string(string, expected):
+    # arrange
+    sut = PddlActionLoader(datastore())
+    # act
+    result = sut.parse_predicate_string(string)
+    # assert
+    assert expected == result

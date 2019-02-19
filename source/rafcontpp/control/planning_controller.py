@@ -2,6 +2,7 @@
 # Christoph Suerig <christoph.suerig@dlr.de>
 # Version 28.01.2019
 import inspect
+import time
 import os
 import sys
 from rafcon.utils import log
@@ -53,11 +54,12 @@ class PlanningController:
         planner = PlannerModule()
         logger.info("Planning...")
         logger.debug("planner argv: "+str(self.__datastore.get_planner_argv()))
+        start_time = time.time()
         planning_report = planner.plan_scenario(self.__datastore.get_domain_path(),
                                                 self.__datastore.get_facts_path(),
                                                 self.__datastore.get_planner_argv(),
                                                 self.__datastore.get_file_save_dir())
-        logger.info("finished planning.")
+        logger.info("finished planning after {0:.4f} seconds".format(time.time()-start_time))
         if planning_report.planning_successful():
             self.__datastore.set_plan(planning_report.get_plan())
             planning_successful = True

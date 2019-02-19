@@ -26,6 +26,12 @@ class PddlActionParser:
 
         :param action_string: a pddl action string
         '''
+
+        if action_string is None or len(action_string) == 0:
+            logger.error('Can not parse action from None or Empty String!')
+            raise ValueError('Can not parse action from None or Empty String!')
+
+
         #matches variables with types e.g ?obj - Physobj
         self.__type_var_pattern = re.compile('((\?[^\s]+\s+)+-\s+[^\s|^\)]+)')
         #matches only type strings result  f.e. Location
@@ -38,8 +44,8 @@ class PddlActionParser:
         self.__action_name_pattern = re.compile('\(:action\s*([^\s|^:]+)', re.IGNORECASE)
         #a dictionary, which contains all variables and their types.
         self.__var_type_dict = {}
-        #the pddl action as string
-        self.__action_string = action_string
+        #the pddl action as string, comments removed.
+        self.__action_string = self.__clean_comments(action_string)
 
     def parse_action(self):
         '''parse_action
@@ -47,9 +53,6 @@ class PddlActionParser:
         raises ValueError, if action is none or empty.
         :return: a PddlActionRepresentation of the pddl action
         '''
-
-        if self.__action_string is None or len(self.__action_string) == 0:
-            raise ValueError('Can not parse action from None or Empty String!')
 
         self.__create_var_type_dict()
         name = self.parse_action_name()
@@ -66,9 +69,6 @@ class PddlActionParser:
 
         :return: The name of the action as string
         '''
-        if self.__action_string is None or len(self.__action_string) == 0:
-            logger.error('Can not parse action name from None or Empty String!')
-            raise ValueError('Can not parse action name from None or Empty String!')
         parsed = re.findall(self.__action_name_pattern,self.__action_string)
         if len(parsed) == 0:
             logger.error("Couldn't find action name in "+self.__action_string)
@@ -95,6 +95,13 @@ class PddlActionParser:
             raise ValueError('No Parameters found in: '+self.__action_string)
         return params
 
+    def __clean_comments(self, action_string):
+        '''
+        takes the action string and removes all comments from it
+        :return: the action string without comments
+        '''
+        comment_pattern = re.compile('(;[^\n]*)')
+        return comment_pattern.sub('',action_string)
 
 
     def __create_var_type_dict(self):

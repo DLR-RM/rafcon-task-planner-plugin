@@ -119,11 +119,14 @@ class PddlActionLoader:
         :return: a array containing all predicates of the action.
         '''
         predicates = []
-        predicate_string = pred_string
-        while predicate_string.find('(') < predicate_string.find(')'):
-            start = predicate_string.find('(')
-            end = predicate_string.find(')') + 1
-            predicates.append(predicate_string[start:end])
-            predicate_string = predicate_string[end:]
-
+        predicate_string = pred_string if pred_string is not None else ''
+        start_index = predicate_string.find('(')
+        end_index = predicate_string.find(')') + 1
+        while start_index > -1 and start_index < end_index:
+            predicates.append(predicate_string[start_index:end_index])
+            predicate_string = predicate_string[end_index:]
+            start_index = predicate_string.find('(')
+            end_index = predicate_string.find(')') + 1
+        logger.debug("predicates:  "+str(predicates))
         return predicates
+
