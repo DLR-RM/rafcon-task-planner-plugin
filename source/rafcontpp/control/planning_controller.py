@@ -30,6 +30,7 @@ class PlanningController:
         '''execute_planning
         execute_planning loads built-in scripts, imports custom scripts, and executes them.
         it starts the planner in a new thread, and calls the callback_function when finish.
+        :param callback_func is callback_func(Boolean):void planning will be executed async, and call this function when finish.
         :return: the planning thread
         '''
 

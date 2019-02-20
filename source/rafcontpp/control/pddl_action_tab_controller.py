@@ -186,12 +186,12 @@ class PddlActionTabController:
         :param saved_manually: True if saved manually, false otherwhise
         :return: Nothing
         '''
-        start_time = time.time()#TODO remove, just for debugging
+        #start_time = time.time()#TODO remove, just for debugging
         if saved_manually or PddlActionTabController.auto_save_enabled:
             start, end = buffer.get_bounds()
             self.__state.add_semantic_data([SEMANTIC_DATA_DICT_NAME],buffer.get_text(start, end,True).strip('\n'),key)
 
-        logger.debug('saving description needed: {0:.4f} '.format(time.time() - start_time))#TODO remove, just for debugging
+        #logger.debug('saving description needed: {0:.4f} '.format(time.time() - start_time))#TODO remove, just for debugging
 
 
 
