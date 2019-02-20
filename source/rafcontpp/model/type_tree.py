@@ -2,7 +2,7 @@
 #
 # Contributors:
 # Christoph Suerig <christoph.suerig@dlr.de>
-# Version 12.11.2018
+# Version 20.02.2019
 
 
 class TypeTree:
@@ -173,3 +173,26 @@ class TypeTree:
         for child in self.children:
             type_list.extend(child.get_as_list())
         return type_list
+
+    def get_parent_of(self, type_name):
+        '''
+        get_parent_of gets a type name, and returns its parent.
+        IMPORTANT: it searches in the tree for the parent, just childs.
+        :param type_name: a type name
+        :return: the parent or None if the type has no parent or is not in tree.
+        '''
+        parent  = None
+        #look, if this node the parent
+        for child in self.children:
+            if type_name == child.type_name:
+                parent = self.type_name
+                break
+
+        #search in child nodes for parent
+        if parent is None:
+            for child in self.children:
+                parent = child.get_parent_of(type_name)
+                if parent:
+                    break
+
+        return parent

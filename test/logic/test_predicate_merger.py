@@ -22,6 +22,7 @@ def get_type_tree():
     (['(in ?a - Vehicle ?c - City)','(in ?a - Car ?l - Location)'], ['(in ?V00 - Vehicle ?L10 - Location)']),
     (['(in ?a - Vehicle ?c - City)','(at ?a - Car ?l - Location)'],
      ['(in ?V00 - Vehicle ?C10 - City)', '(at ?C00 - Car ?L10 - Location)']),
+    (['(in ?a - Vehicle ?c - City)','(in ?a - Location ?l - City)'], ['(in ?V00 - Object ?L10 - City)'])
 
 
 
