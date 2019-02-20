@@ -24,9 +24,8 @@ def get_type_tree():
     (['(in ?a - Vehicle ?c - City)','(in ?a - Car ?l - Location)'], ['(in ?V00 - Vehicle ?L10 - Location)']),
     (['(in ?a - Vehicle ?c - City)','(at ?a - Car ?l - Location)'],
      ['(in ?V00 - Vehicle ?C10 - City)', '(at ?C00 - Car ?L10 - Location)']),
-    (['(in ?a - Vehicle ?c - City)','(in ?a - Location ?l - City)'], ['(in ?V00 - Object ?L10 - City)'])
-
-
+    (['(in ?a - Vehicle ?c - City)','(in ?a - Location ?l - City)'], ['(in ?O00 - Object ?C10 - City)']),
+    (['(in ?a - Car ?c - Location)','(in ?a - Location ?l - City)'], ['(in ?O00 - Object ?L10 - Location)'])
 
 ])
 def test_merge_predicates(predicates,expected):
@@ -42,7 +41,7 @@ def test_merge_predicates(predicates,expected):
 
 @pytest.mark.parametrize("predicates",[
     (None),
-    (['(in ?a - Vehicle ?c - City)','(in ?a - City ?l - Location)']),
+    (['(in ?a - NoType ?c - City)','(in ?a - City ?l - Location)']),
     (['Some','array','not','containing','predicates']),
     (['(in ?noType ?alsoNoType)','(in ?b ?a)']),
     (['(under ?not - closed']),

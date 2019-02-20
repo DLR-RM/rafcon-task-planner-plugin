@@ -147,14 +147,18 @@ class PlanningSetupForm:
             increment_button()#increment the button, to indecate that a new planning process has started.
             #start pipeline
             logger.info("Start pipeline...")
-            planning_thread = ExecutionController(self.__datastore).on_execute_pre_planning()
-            Thread(target=self.__wait_and_hide,args=[planning_thread]).start()
+            planning_thread = None
+            try:
+                planning_thread = ExecutionController(self.__datastore).on_execute_pre_planning()
+            finally:
+                Thread(target=self.__wait_and_hide, args=[planning_thread]).start()
 
         else:
             logger.error(not_filled+" missing! Please select "+ not_filled)
 
     def __wait_and_hide(self,thread):
-        thread.join()
+        if thread:
+            thread.join()
         self.__planning_wait_window.destroy()
         from rafcontpp.view.planning_button import decrement_button
         decrement_button()# decrement button, to indicate, that the planning process is finish.
