@@ -1,6 +1,6 @@
 # Contributors:
 # Christoph Suerig <christoph.suerig@dlr.de>
-# Version 27.01.2019
+# Version 21.02.2019
 
 import os
 from rafcontpp.logic.mapper import Mapper
@@ -54,21 +54,8 @@ class ExecutionController:
             return planning_controller.execute_planning(self.on_execute_post_planning)
 
 
-        except Exception, err:
-
-            if not self.__datastore.keep_related_files():
-                logger.info('Cleaning files...')
-                for file_name in self.__datastore.get_generated_files():
-                    file = os.path.join(self.__datastore.get_file_save_dir(), file_name)
-                    if os.path.isfile(file):
-                        os.remove(file)
-                        logger.debug('Successfully removed file: ' + str(file))
-                    else:
-                        logger.warning("Coundn't remove "+str(file))
-            else:
-                logger.debug('Keeping files')
-
-            raise err
+        except Exception:
+            self.on_execute_post_planning(False)
 
 
     def on_execute_post_planning(self,planning_successful):
