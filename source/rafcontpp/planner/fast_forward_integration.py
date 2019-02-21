@@ -1,6 +1,6 @@
 # Contributors:
 # Christoph Suerig <christoph.suerig@dlr.de>
-# Version 28.01.2019
+# Version 21.02.2019
 import os
 import subprocess
 from rafcontpp.model.planner_interface import PlannerInterface
@@ -22,7 +22,7 @@ class FfIntegration(PlannerInterface):
         for arg in planner_argv:
             command += arg + ' '
         command = command.rstrip()
-        print command
+
         plan = []
 
         # run Fast Forward
