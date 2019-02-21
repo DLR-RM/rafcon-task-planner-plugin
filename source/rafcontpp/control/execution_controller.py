@@ -70,7 +70,7 @@ class ExecutionController:
 
 
             else:
-                logger.error("No Plan was found, therefore no state machine was generated!")
+                logger.info("No Plan was found, therefore no state machine was generated!")
         finally:
 
             if not self.__datastore.keep_related_files():

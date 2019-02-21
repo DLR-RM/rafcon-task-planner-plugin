@@ -47,7 +47,6 @@ class PredicateMerger:
             available_predicates.append(c_pred)
             merged_preds_as_string.append(self.__tuple_to_predicate_string(c_pred))
 
-        logger.debug(merged_preds_as_string)
         return (merged_preds_as_string,available_predicates)
 
 
