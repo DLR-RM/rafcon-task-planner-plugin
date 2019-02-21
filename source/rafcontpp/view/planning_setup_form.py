@@ -5,7 +5,7 @@
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
-from gi.repository import GObject
+from gi.repository import Gdk
 import os
 from threading import Thread
 from rafcontpp.control.execution_controller import ExecutionController
@@ -157,12 +157,18 @@ class PlanningSetupForm:
             logger.error(not_filled+" missing! Please select "+ not_filled)
 
     def __wait_and_hide(self,thread):
+        '''
+        wait and hide should be executed in another thread, it joins the planning thread, closes the wait window
+        and decrements the planning button.
+        :param thread: the thread to wait for
+        '''
         if thread:
             thread.join()
+        Gdk.threads_enter()
         self.__planning_wait_window.destroy()
         from rafcontpp.view.planning_button import decrement_button
         decrement_button()# decrement button, to indicate, that the planning process is finish.
-
+        Gdk.threads_leave()
 
     def __on_destroy(self, button):
         #destroy dialog
