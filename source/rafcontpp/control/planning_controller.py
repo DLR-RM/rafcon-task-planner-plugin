@@ -75,6 +75,7 @@ class PlanningController:
         logger.info("Planning...")
         logger.debug("planner argv: " + str(self.__datastore.get_planner_argv()))
         start_time = time.time()
+        planning_successful = False
         planning_report = planner.plan_scenario(self.__datastore.get_domain_path(),
                                                 self.__datastore.get_facts_path(),
                                                 self.__datastore.get_planner_argv(),
