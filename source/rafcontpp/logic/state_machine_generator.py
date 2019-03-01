@@ -81,11 +81,17 @@ class StateMachineGenerator:
         logger.info("State machine " + sm_name + " created. It contains " + str(
             len(self.__datastore.get_plan())) + " states.")
         #open state machine
+        self.__open_state_machine(state_machine,sm_path)
+
+
+
+    def __open_state_machine(self,state_machine, state_machine_path):
+
         logger.debug('Opening state machine...')
         if state_machine_manager.is_state_machine_open(state_machine.file_system_path):
             old_sm = state_machine_manager.get_open_state_machine_of_file_system_path(state_machine.file_system_path)
             state_machine_manager.remove_state_machine(old_sm.state_machine_id)
-        new_state_machine = storage.load_state_machine_from_path(sm_path)
+        new_state_machine = storage.load_state_machine_from_path(state_machine_path)
         state_machine_manager.add_state_machine(new_state_machine)
 
 

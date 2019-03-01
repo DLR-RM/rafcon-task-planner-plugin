@@ -54,8 +54,10 @@ class ExecutionController:
             return planning_controller.execute_planning(self.on_execute_post_planning)
 
 
-        except Exception:
+        except Exception as exception:
+            logger.error(exception)
             self.on_execute_post_planning(False)
+            return None
 
 
     def on_execute_post_planning(self,planning_successful):
@@ -81,7 +83,7 @@ class ExecutionController:
                         os.remove(file)
                         logger.debug('Successfully removed file: ' + str(file))
                     else:
-                        logger.warning("Coundn't remove " + str(file))
+                        logger.warning("Couldn't remove " + str(file))
             else:
                 logger.debug('Keeping files')
 

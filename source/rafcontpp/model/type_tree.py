@@ -25,51 +25,6 @@ class TypeTree:
         self.type_name = type_name
         self.children = []
 
-    def is_in_tree(self, type_to_search):
-        """
-        isInTree searchs the typeTree for a specific type, and returns true,
-        if the tree contains the type.
-        unfortunately the tree is not sorted, and has a complexity of O(n)
-        :param type_name: the name of the type to search
-        :return: true if the tree contains the type, else false.
-        """
-        return self.get_sub_tree(type_to_search) is not None
-
-    def get_sub_tree(self,type_to_search):
-        ''' get_sub_tree
-        get_sub_tree gets a type, and returns the subtree, with the type as root.
-        :param type_to_search: the root of the subtree to get
-        :return: a sub tree, or none if the type is not in the tree.
-        '''
-        sub_tree = None
-        if self.type_name == type_to_search:
-            sub_tree = self
-        else:
-            for child in self.children:
-                sub_tree = child.get_sub_tree(type_to_search)
-
-                if sub_tree is not None:
-                    break
-        return sub_tree
-
-
-    def is_parent_of(self,parent,child):
-        ''' is_parent_of
-        is_parent_of receives two types, and returns true,
-        if the first type it the parent of the second type.
-        :param parent: the maybe parent type
-        :param child: the maybe child type
-        :return: true, if the parent is really the parent of the child, false otherwhise
-        '''
-
-        is_parent = False
-        if parent != child:
-            sub_tree = self.get_sub_tree(parent)
-
-            if sub_tree is not None:
-                is_parent = sub_tree.is_in_tree(child)
-
-        return is_parent
 
 
     def add_type_branch(self, type_name, type_dict):
@@ -174,6 +129,56 @@ class TypeTree:
             type_list.extend(child.get_as_list())
         return type_list
 
+
+    def is_in_tree(self, type_to_search):
+        """
+        isInTree searchs the typeTree for a specific type, and returns true,
+        if the tree contains the type.
+        unfortunately the tree is not sorted, and has a complexity of O(n)
+        :param type_name: the name of the type to search
+        :return: true if the tree contains the type, else false.
+        """
+        return self.get_sub_tree(type_to_search) is not None
+
+    def get_sub_tree(self,type_to_search):
+        ''' get_sub_tree
+        get_sub_tree gets a type, and returns the subtree, with the type as root.
+        :param type_to_search: the root of the subtree to get
+        :return: a sub tree, or none if the type is not in the tree.
+        '''
+        sub_tree = None
+        if self.type_name == type_to_search:
+            sub_tree = self
+        else:
+            for child in self.children:
+                sub_tree = child.get_sub_tree(type_to_search)
+
+                if sub_tree is not None:
+                    break
+
+        return sub_tree
+
+
+    def is_parent_of(self,parent,child):
+        ''' is_parent_of
+        is_parent_of receives two types, and returns true,
+        if the first type it the parent of the second type.
+        :param parent: the maybe parent type
+        :param child: the maybe child type
+        :return: true, if the parent is really the parent of the child, false otherwhise
+        '''
+
+        is_parent = False
+        if parent != child:
+            sub_tree = self.get_sub_tree(parent)
+
+            if sub_tree is not None:
+                is_parent = sub_tree.is_in_tree(child)
+
+        return is_parent
+
+
+
     def get_parent_of(self, type_name):
         '''
         get_parent_of gets a type name, and returns its parent.
@@ -196,3 +201,40 @@ class TypeTree:
                     break
 
         return parent
+
+    def get_smallest_parent(self, type_a, type_b):
+        '''
+        gets two types and finds their smallest parent. E.g. given a type t1 and a type t2:
+        if: t2 is parent of t1, it will return t2
+        if t1 is the parent of t2, it will return t1
+        if t3 is the parent of t1 and t2, it will return t3
+        if t1 or t2 is not in the tree, it will return None.
+        :param type_a: a type a
+        :param type_b: a type b
+        :return: the smallest parent, or None
+        '''
+        smallest_parent = None
+        #fast fail if not in tree, or one is none
+        if type_a is None or type_b is None:
+            return None
+        if not self.is_in_tree(type_a) or not self.is_in_tree(type_b):
+            return None
+        #check if one is the parent of the other
+        smallest_parent = type_a if self.is_parent_of(type_a, type_b) else smallest_parent
+        smallest_parent = type_b if self.is_parent_of(type_b, type_a) else smallest_parent
+        #climb up branches until branch root
+        if smallest_parent is None:
+            parent_a = self.get_parent_of(type_a)
+            parent_b = self.get_parent_of(type_b)
+
+            if parent_a and parent_b:
+                while parent_a and smallest_parent is None:
+                    c_parent_b = parent_b
+                    while c_parent_b and smallest_parent is None:
+                        if c_parent_b == parent_a:
+                            smallest_parent = c_parent_b
+                        else:
+                            c_parent_b = self.get_parent_of(c_parent_b)
+                    parent_a = self.get_parent_of(parent_a)
+
+        return smallest_parent

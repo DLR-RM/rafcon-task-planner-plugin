@@ -1,0 +1,8 @@
+{
+"Person":"Object",
+"Food":"Object",
+"Location":"Object",
+"Chef":"Person",
+"Waiter":"Person",
+"Guest":"Person"
+}
