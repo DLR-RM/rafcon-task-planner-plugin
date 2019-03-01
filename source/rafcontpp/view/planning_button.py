@@ -13,7 +13,7 @@ import rafcon.gui.singleton
 from rafcon.utils import log
 logger = log.get_logger(__name__)
 plan_task_label = "Plan Task"
-tool_tip_text = "Open planning Configuration"
+tool_tip_text = "Opens the planning Configuration, to plan a new task."
 plan_sm_button = None
 button_counter = 0
 lock = threading.Lock()
