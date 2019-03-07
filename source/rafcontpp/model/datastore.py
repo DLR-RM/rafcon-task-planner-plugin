@@ -2,9 +2,11 @@
 #
 # Contributors:
 # Christoph Suerig <christoph.suerig@dlr.de>
-# Version 12.11.2018
+# Version 07.03.2019
 import os
 import json
+import threading
+import time
 from rafcontpp.model.plan_step import PlanStep
 from rafcontpp.model.pddl_action_representation import PddlActionRepresentation
 from rafcontpp.model.type_tree import TypeTree
@@ -20,6 +22,17 @@ built_in_planners = {
 DATASTORE_STORAGE_PATH = os.path.join(os.path.expanduser('~'), os.path.normpath('.config/rafcon/rafcontpp_conf.json'))
 #The name of the semantic data dict in rafcon state
 SEMANTIC_DATA_DICT_NAME = 'RAFCONTPP_PDDL_ACTION'
+
+#A lock to synchronize planning thread map accesses.
+planning_threads_lock = threading.Lock()
+#tuples of all registered (currently running) planning threads format: (thread,problem name)
+planning_threads = {}
+
+def get_planning_threads():
+    '''
+    :return: a copy of the planning_threads dict.
+    '''
+    return planning_threads.copy()
 
 def datastore_from_file(file_path):
     ''' datastore_from_file
@@ -56,11 +69,6 @@ class Datastore:
     ''' Datastore
     Datastore is a datastore, which holds all data of the plugin. Every module can get, and store its data here.
     '''
-
-
-
-
-
 
     def __init__(self, state_pools,sm_save_dir, planner,planner_script_path, planner_argv,
                facts_path,type_db_path,keep_related_files, file_save_dir=os.path.join(os.getcwd(), 'related_files')):
@@ -121,8 +129,6 @@ class Datastore:
 
 
 
-
-
     def validate_ds(self): #TODO validate everything!
 
         # validate state_pools
@@ -146,6 +152,36 @@ class Datastore:
         if self.__keep_related_files and (not os.path.isdir(self.__file_save_dir)):
             logger.error("file save dir is not a directory: " + str(self.__file_save_dir))
             raise ValueError('Is not a directory: ' + str(self.__file_save_dir))
+
+
+
+    def register_thread(self,interruptable_thread):
+        '''
+        gets a thread, addes it synchronized to a global map, and returns the map key (which is the register time.).
+        :param interruptable_thread: a thread, the Datastore should store
+        :return: the key used to register the thread. (That's the register time as unixtimestamp.)
+        '''
+        with planning_threads_lock:
+            global planning_threads
+            register_time = time.time()#unix timestamp
+            planning_threads[register_time] = (interruptable_thread,self.get_problem_name())
+        return register_time
+
+    def remove_thread(self, key):
+        '''
+        gets a timestamp as key, and removes the thread synchronized from the global map.
+        :param key: the time, the thread was registered
+        :return: true, if removing was successful, false otherwise
+        '''
+
+        successful = False
+        with planning_threads_lock:
+            global planning_threads
+            if key in planning_threads.keys():
+                del planning_threads[key]
+                successful = not (key in planning_threads.keys())
+
+        return successful
 
 
 

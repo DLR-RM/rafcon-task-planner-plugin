@@ -2,7 +2,7 @@ import pytest
 import os
 from rafcontpp.model.datastore import datastore_from_file
 from rafcontpp.model.datastore import Datastore
-
+from rafcontpp.model.interruptable_thread import InterruptableThread
 @pytest.fixture
 def datastore_file_path():
     return os.path.join(os.path.dirname(os.path.abspath(__file__)),'test_data','test_conf.json')
@@ -101,6 +101,37 @@ def test_validate_datastore():
     #assert
      with pytest.raises(ValueError):
         sut.validate_ds()
+
+
+def test_register_thread():
+    sut = datastore_from_file(get_static_test_conf_path())
+    last_key = 0
+    for index in range(10):
+        c_key = sut.register_thread(InterruptableThread())
+        assert last_key < c_key
+        last_key = c_key
+
+def test_remove_thread():
+    #arrange
+    sut = datastore_from_file(get_static_test_conf_path())
+    keys = []
+    for index in range(10):
+        c_key = sut.register_thread(InterruptableThread())
+        keys.append(c_key)
+    #assert
+    #key not in list:
+    assert False == sut.remove_thread(0)
+    #double remove:
+    key = keys.pop(0)
+    assert True == sut.remove_thread(key)
+    assert False == sut.remove_thread(key)
+    #remove others:
+    for key in keys:
+        assert True == sut.remove_thread(key)
+
+
+
+
 
 
 

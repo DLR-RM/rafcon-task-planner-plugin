@@ -1,9 +1,10 @@
 # Contributors:
 # Christoph Suerig <christoph.suerig@dlr.de>
-# Version 21.02.2019
+# Version 07.03.2019
 
 import os
 import time
+import traceback
 from rafcontpp.logic.mapper import Mapper
 from rafcontpp.logic.domain_generator import DomainGenerator
 from rafcontpp.logic.state_machine_generator import StateMachineGenerator
@@ -26,6 +27,7 @@ class ExecutionController:
         :param datastore: a datastore, containing all relevant data.
         """
         self.__datastore = datastore
+        self.__planning_thread_register_time = -1
 
 
     def on_execute_pre_planning(self):
@@ -54,13 +56,15 @@ class ExecutionController:
             logger.debug('Handover to planning controller')
             planning_controller = PlanningController(self.__datastore)
             logger.info('Planning preparation took {0:.4f} seconds'.format(time.time()-start_time))
-            return planning_controller.execute_planning(self.on_execute_post_planning)
+            planning_thread = planning_controller.execute_planning(self.on_execute_post_planning)
+            self.__planning_thread_register_time = self.__datastore.register_thread(planning_thread)
+            return planning_thread
 
 
-        except Exception as exception:
-            logger.error(exception)
+        except Exception:
+            traceback.print_exc()
             self.on_execute_post_planning(False)
-            return None
+
 
 
     def on_execute_post_planning(self,planning_successful):
@@ -90,3 +94,7 @@ class ExecutionController:
             else:
                 logger.debug('Keeping files')
 
+            #remove the planning_thread at the end of the Task.
+            if self.__planning_thread_register_time is not -1:
+                if not self.__datastore.remove_thread(self.__planning_thread_register_time):
+                    logger.debug("could not remove planning thread.")
