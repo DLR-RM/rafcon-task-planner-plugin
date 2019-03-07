@@ -1,11 +1,13 @@
 # Contributors:
 # Christoph Suerig <christoph.suerig@dlr.de>
-# Version 28.01.2019
+# Version 07.03.2019
 import inspect
 import time
 import os
+import signal
 import sys
-from threading import Thread
+from multiprocessing import Process, Queue
+from rafcontpp.model.interruptable_thread import InterruptableThread
 from rafcon.utils import log
 
 logger = log.get_logger(__name__)
@@ -56,45 +58,77 @@ class PlanningController:
         logger.info('Using Planner script: '+str(to_import[0]))
         planner = PlannerModule()
 
-        planning_thread = Thread(target=self.__plan_and_report, args=(callback_func,planner))
+        planning_thread = InterruptableThread(target=self.__plan_and_report, args=(callback_func, planner))
         planning_thread.setDaemon(True)
         planning_thread.start()
 
         return planning_thread
 
 
-    def __plan_and_report(self, callback_function, planner):
+    def __plan_and_report(self,current_thread,callback_function, planner):
         '''
         plan and report triggers the planner, and evaluates the planning report
         e.g. storing the plan in the datastore. Due planning could take a long time
         this method should be called async.
+        :param current_thread: the Interruptable Thread, this function runs in. (automatically added by the thread.)
         :param callback_function: a call back function called after planning
         :param planner: the planner to plan with
         :return: nothing
         '''
-        logger.info("Planning...")
+        #---------------------------------------------------------------------------------------------------------------
+        def execute_in_sub_process(queue):
+            '''
+            This mehod executes the actual planning.
+            should be executed in a sub process.(this decision was made, to be able to kill the planning process)
+            :param queue: a message queue, which will contain the planning report
+            '''
+            os.setsid()#give a new process group id, to be able to kill the whole group resulting from this sub process and the planner.
+            planning_report = planner.plan_scenario(self.__datastore.get_domain_path(),
+                                                    self.__datastore.get_facts_path(),
+                                                    self.__datastore.get_planner_argv(),
+                                                    self.__datastore.get_file_save_dir())
+            queue.put(planning_report)
+
+        #---------------------------------------------------------------------------------------------------------------
         logger.debug("planner argv: " + str(self.__datastore.get_planner_argv()))
         start_time = time.time()
-        planning_successful = False
-        planning_report = planner.plan_scenario(self.__datastore.get_domain_path(),
-                                                self.__datastore.get_facts_path(),
-                                                self.__datastore.get_planner_argv(),
-                                                self.__datastore.get_file_save_dir())
-        logger.info("finished planning after {0:.4f} seconds".format(time.time() - start_time))
-        if planning_report.planning_successful():
-            self.__datastore.set_plan(planning_report.get_plan())
-            planning_successful = True
-            if len(planning_report.get_plan()) > 0:
-                logger.info("Planning Successful! Plan has length: " + str(len(planning_report.get_plan())))
+        planning_report = None
+        queue = Queue()#for interprocess communication, to get the planning_report
+        planning_process = Process(target=execute_in_sub_process, args=[queue])
+        planning_process.daemon = True
+        planning_process.start()
+        logger.info("Planning...")
+
+        #wait for the planning thread to terminate, check if thread was interrupted
+        while not current_thread.is_interrupted() and planning_process.is_alive():
+            planning_process.join(2)
+
+        #NOT interrupted path
+        if not current_thread.is_interrupted():
+            planning_report = queue.get_nowait()
+            logger.info("finished planning after {0:.4f} seconds".format(time.time() - start_time))
+            if planning_report.planning_successful():
+                self.__datastore.set_plan(planning_report.get_plan())
+                planning_successful = True
+                if len(planning_report.get_plan()) > 0:
+                    logger.info("Planning Successful! Plan has length: " + str(len(planning_report.get_plan())))
+                else:
+                    logger.info("Planning Successful, but no Plan was found!")
             else:
-                logger.info("Planning Successful, but no Plan was found!")
+                logger.error("Planning failed! :: " + planning_report.get_error_message())
+
+            self.__datastore.add_generated_file(planning_report.get_generated_files())
+
+            callback_function(planning_successful)
+        #Interrupted path
         else:
-            logger.error("Planning failed! :: " + planning_report.get_error_message())
-
-        self.__datastore.add_generated_file(planning_report.get_generated_files())
-
-        callback_function(planning_successful)
-
+            planning_process_pgid = os.getpgid(planning_process.pid)
+            #kill planning_process with all spawned sub processes
+            os.killpg(planning_process_pgid,signal.SIGTERM)
+            logger.info('Waiting for the Planner to terminate...')
+            planning_process.join()
+            logger.info("Planning was cancled after {0:.4f} seconds".format(time.time() - start_time))
+            callback_function(False)
 
 
 

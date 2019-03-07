@@ -4,6 +4,7 @@
 
 import os
 import time
+import traceback
 from rafcontpp.logic.mapper import Mapper
 from rafcontpp.logic.domain_generator import DomainGenerator
 from rafcontpp.logic.state_machine_generator import StateMachineGenerator
@@ -58,9 +59,9 @@ class ExecutionController:
 
 
         except Exception as exception:
-            logger.error(exception)
+            traceback.print_exc()
             self.on_execute_post_planning(False)
-            return None
+
 
 
     def on_execute_post_planning(self,planning_successful):
