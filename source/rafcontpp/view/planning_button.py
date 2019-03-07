@@ -11,6 +11,7 @@ from rafcon.gui.helpers.label import create_label_widget_with_icon
 from rafcon.gui.views.tool_bar import ToolBarView
 import threading
 import time
+import os
 import rafcon.gui.utils
 import rafcon.gui.helpers.state_machine
 import rafcon.gui.singleton
@@ -80,7 +81,7 @@ def __on_button_clicked(button):
 
 
 def __on_show_menu(button):
-    
+
     cancel_task_menu = button.get_menu()
     #first remove all entries (they could be outdated)
     for child in cancel_task_menu.get_children():
@@ -94,10 +95,20 @@ def __on_show_menu(button):
     # -------------------------------------------------------------------------------------------------------------------
     # a call back function for an activated menu item.
     def __on_menu_item_activate(menu_item):
+        # get label
         label = menu_item.get_label()
-        label_thread[label].interrupt()
-        logger.info('Cancled Task: ' + label)
+        #load glade file
+        cancel_dialog = Gtk.Dialog("Task Planner Plugin - Cancel Task",None,0,
+                                   (Gtk.STOCK_YES, Gtk.ResponseType.YES, Gtk.STOCK_NO, Gtk.ResponseType.NO))
+        cancel_dialog.set_default_size(400, 100)
+        cancel_dialog.get_content_area().add(Gtk.Label('Do you really want to cancel Task:\n'+label+'?'))
+        cancel_dialog.show_all()
+        user_response = cancel_dialog.run()
+        cancel_dialog.destroy()
 
+        if user_response == Gtk.ResponseType.YES:
+            label_thread[label].interrupt()
+            logger.info('Cancleing Task: ' + label)
     # -------------------------------------------------------------------------------------------------------------------
 
     #fill menu:
