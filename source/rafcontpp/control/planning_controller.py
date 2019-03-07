@@ -124,7 +124,7 @@ class PlanningController:
         else:
             planning_process_pgid = os.getpgid(planning_process.pid)
             #kill planning_process with all spawned sub processes
-            os.killpg(planning_process_pgid,signal.SIGTERM)
+            os.killpg(planning_process_pgid, signal.SIGTERM)
             logger.info('Waiting for the Planner to terminate...')
             planning_process.join()
             logger.info("Planning was cancled after {0:.4f} seconds".format(time.time() - start_time))
