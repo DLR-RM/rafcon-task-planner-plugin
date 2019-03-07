@@ -61,7 +61,7 @@ class ExecutionController:
             return planning_thread
 
 
-        except Exception as exception:
+        except Exception:
             traceback.print_exc()
             self.on_execute_post_planning(False)
 

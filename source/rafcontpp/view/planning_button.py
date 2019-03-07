@@ -1,12 +1,16 @@
+# Contributors:
+# Christoph Suerig <christoph.suerig@dlr.de>
+# Version 07.03.2019
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
-from gi.repository import GObject
+from gi.repository import Gdk
 from rafcontpp.view.planning_setup_form import PlanningSetupForm
-from rafcontpp.model.datastore import datastore_from_file, DATASTORE_STORAGE_PATH
+from rafcontpp.model.datastore import datastore_from_file, DATASTORE_STORAGE_PATH, get_planning_threads
 from rafcon.gui.helpers.label import create_label_widget_with_icon
 from rafcon.gui.views.tool_bar import ToolBarView
 import threading
+import time
 import rafcon.gui.utils
 import rafcon.gui.helpers.state_machine
 import rafcon.gui.singleton
@@ -24,24 +28,40 @@ def initialize():
 
     # add new button
     global plan_sm_button
-    plan_sm_button = Gtk.ToolButton(label='Plan Task')
+    plan_sm_button = Gtk.MenuToolButton(label='Plan Task')
     plan_sm_button.set_label_widget(create_label_widget_with_icon('f1ec', _(plan_task_label),tool_tip_text))
     plan_sm_button.set_stock_id(Gtk.STOCK_CLEAR)
     tool_bar_ctrl.view.get_top_widget().add(plan_sm_button)
     plan_sm_button.show_all()
+    cancel_task_menu = Gtk.Menu()
+    plan_sm_button.set_menu(cancel_task_menu)
     plan_sm_button.connect('clicked', __on_button_clicked)
+    plan_sm_button.connect('show-menu', __on_show_menu)
 
 
 def increment_button():
+    '''
+    the Plan Task button can be incremented, and then looks like: Plan Task (n)
+    this method increments the 'n', synchronized and also redraws the button thread save.
+    :return:
+    '''
     with lock:
+        Gdk.threads_enter()
         global button_counter
         button_counter += 1
         plan_sm_button.set_label_widget(create_label_widget_with_icon('f1ec',
                                         _(plan_task_label + ' ({})'.format(button_counter)),
                                         tool_tip_text +'\n'+ str(button_counter)+ __get_progress_text()))
+        Gdk.threads_leave()
 
 def decrement_button():
+    '''
+    the Plan Task button can be decremented, and then looks like: Plan Task (n) or just Plan Task, if n == 0
+    this method decrements the 'n', synchronized and also redraws the button thread save.
+    :return:
+    '''
     with lock:
+        Gdk.threads_enter()
         global button_counter
         button_counter -= 1
         if button_counter <= 0:
@@ -51,12 +71,51 @@ def decrement_button():
             plan_sm_button.set_label_widget(
                 create_label_widget_with_icon('f1ec', _(plan_task_label + ' ({})'.format(button_counter)),
                                               tool_tip_text +'\n'+ str(button_counter)+ __get_progress_text()))
+        Gdk.threads_leave()
 
 
-
-def __on_button_clicked(*args):
+def __on_button_clicked(button):
     logger.debug('opening planning form!')
     PlanningSetupForm(datastore_from_file(DATASTORE_STORAGE_PATH)).initialize()
+
+
+def __on_show_menu(button):
+    
+    cancel_task_menu = button.get_menu()
+    #first remove all entries (they could be outdated)
+    for child in cancel_task_menu.get_children():
+        cancel_task_menu.remove(child)
+    #now get all registered threads and display them with names, also register a on click for each menu item
+    planning_threads = get_planning_threads()
+    current_time = time.time()
+    # a map containg all threads, with the created lable as key
+    label_thread = {}  # lable:thread
+
+    # -------------------------------------------------------------------------------------------------------------------
+    # a call back function for an activated menu item.
+    def __on_menu_item_activate(menu_item):
+        label = menu_item.get_label()
+        label_thread[label].interrupt()
+        logger.info('Cancled Task: ' + label)
+
+    # -------------------------------------------------------------------------------------------------------------------
+
+    #fill menu:
+    for index, key in enumerate(planning_threads.keys()):
+        label = planning_threads[key][1]+' ({0:.4f}s)'.format(current_time-key)
+        #to ensure, no labels are duplicates.
+        label_counter = 1
+        while label in label_thread.keys():
+            label = label + '({})'.format(label_counter)
+            label_counter+=1
+        label_thread[label] = planning_threads[key][0]
+        c_menu_item = Gtk.MenuItem.new_with_label(label)
+        c_menu_item.connect('activate',__on_menu_item_activate)
+        cancel_task_menu.attach(c_menu_item,0,1,index,index+1)
+    cancel_task_menu.show_all()
+
+
+
 
 
 def __get_progress_text():

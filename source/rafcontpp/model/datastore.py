@@ -179,7 +179,7 @@ class Datastore:
             global planning_threads
             if key in planning_threads.keys():
                 del planning_threads[key]
-                successful = key in planning_threads.keys()
+                successful = not (key in planning_threads.keys())
 
         return successful
 
