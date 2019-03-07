@@ -121,28 +121,28 @@ class PddlActionParser:
 
     def __parse_and_generalize_predicates(self):
         '''parse and generalize predicates
-        this method extracts all used pradicates from the action, then it generalizes them.
+        this method extracts all applied pradicates from the action, then it generalizes them.
         e.g. add types to the variables and remove dublicats.
-        used predicate example:       (at ?a ?b)
+        applied predicate example:       (at ?a ?b)
         generalized predicate example: (at ?a - Location ?b - Robot)
 
         :return: a list with all parsed predicates.
         '''
-        #matches used predicates
-        u_pred_name_pattern = re.compile('\(([^\s]+)\s')
-        used_predicates = re.findall(self.__predicate_pattern,self.__action_string)
+        #matches applied predicates
+        a_pred_name_pattern = re.compile('\(([^\s]+)\s')
+        applied_predicates = re.findall(self.__predicate_pattern,self.__action_string)
 
         if not self.__var_type_dict:
             self.__create_var_type_dict()
 
-        #change used predicates to normal ones
+        #change applied predicates to normal ones
 
         parsed_predicates = {}
         #iterate through all used predicates
-        for used_predicate in used_predicates:
+        for applied_predicate in applied_predicates:
             generalized_predicate = '('
-            c_pred_name = u_pred_name_pattern.findall(used_predicate)[0]
-            c_pred_vars = self.__var_pattern.findall(used_predicate)
+            c_pred_name = a_pred_name_pattern.findall(applied_predicate)[0]
+            c_pred_vars = self.__var_pattern.findall(applied_predicate)
             generalized_predicate += c_pred_name
             #the last type used
             last_type = ''
