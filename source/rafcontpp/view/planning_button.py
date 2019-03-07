@@ -34,11 +34,10 @@ def initialize():
     plan_sm_button.set_stock_id(Gtk.STOCK_CLEAR)
     tool_bar_ctrl.view.get_top_widget().add(plan_sm_button)
     plan_sm_button.show_all()
-    cancel_task_menu = Gtk.Menu()
-    plan_sm_button.set_menu(cancel_task_menu)
+    plan_sm_button.set_menu(Gtk.Menu())
+    plan_sm_button.set_arrow_tooltip_text('A List of running Tasks. Click on Task to Cancel it.')
     plan_sm_button.connect('clicked', __on_button_clicked)
     plan_sm_button.connect('show-menu', __on_show_menu)
-
 
 def increment_button():
     '''
