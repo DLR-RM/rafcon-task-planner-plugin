@@ -3,6 +3,7 @@
 # Version 21.02.2019
 
 import os
+import time
 from rafcontpp.logic.mapper import Mapper
 from rafcontpp.logic.domain_generator import DomainGenerator
 from rafcontpp.logic.state_machine_generator import StateMachineGenerator
@@ -35,6 +36,7 @@ class ExecutionController:
         try:
             #pipeline, after input reading...
             #prepare dicts
+            start_time = time.time()
             logger.debug('Handover to mapper')
             mapper = Mapper(self.__datastore)
             mapper.generate_action_state_map()                      #--> as_map
@@ -51,6 +53,7 @@ class ExecutionController:
             #generate plan
             logger.debug('Handover to planning controller')
             planning_controller = PlanningController(self.__datastore)
+            logger.info('Planning preparation took {0:.4f} seconds'.format(time.time()-start_time))
             return planning_controller.execute_planning(self.on_execute_post_planning)
 
 
