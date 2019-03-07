@@ -1,5 +1,7 @@
 import pytest
 import os
+import testing_utils
+from testing_utils import call_gui_callback
 from rafcontpp.logic.mapper import Mapper
 from rafcontpp.model.datastore import datastore_from_file
 @pytest.fixture
@@ -16,11 +18,57 @@ def datastore():
      ds.add_state_pools([state_pool_path],True)
      return ds
 
+@pytest.fixture
+def action_state_map():
+     return {'COOK': 'cook', 'ORDER': 'order', 'EAT': 'eat', 'GOT-TO': 'go_to', 'GIVE': 'give'}
 
-#NOT TESTABLE AT THE MOMENT, BECAUSE RAFCON HAS TO BE UP FOR THIS TEST TO WORK...
+
+@pytest.fixture
+def state_action_map():
+     return {'cook': 'COOK', 'go_to': 'GOT-TO', 'give': 'GIVE', 'order': 'ORDER', 'eat': 'EAT'}
+
+@pytest.fixture
+def available_actions():
+     return ['COOK', 'ORDER', 'EAT', 'GOT-TO', 'GIVE']
+
 def test_generate_action_state_map():
      #arrange
      ds = datastore()
      mapper = Mapper(ds)
-     #act
-     #mapper.generate_action_state_map()
+     testing_utils.run_gui(gui_config={'HISTORY_ENABLED': False, 'AUTO_BACKUP_ENABLED': False})
+     # act
+
+     try:
+          call_gui_callback(mapper.generate_action_state_map)
+          assert action_state_map() == ds.get_action_state_map()
+     finally:
+          testing_utils.close_gui()
+          testing_utils.shutdown_environment(caplog=None)
+
+def test_generate_state_action_map():
+     #arrange
+     ds = datastore()
+     mapper = Mapper(ds)
+     testing_utils.run_gui(gui_config={'HISTORY_ENABLED': False, 'AUTO_BACKUP_ENABLED': False})
+     # act
+
+     try:
+          call_gui_callback(mapper.generate_state_action_map)
+          assert state_action_map() == ds.get_state_action_map()
+     finally:
+          testing_utils.close_gui()
+          testing_utils.shutdown_environment(caplog=None)
+
+def test_generate_available_actions():
+     #arrange
+     ds = datastore()
+     mapper = Mapper(ds)
+     testing_utils.run_gui(gui_config={'HISTORY_ENABLED': False, 'AUTO_BACKUP_ENABLED': False})
+     # act
+
+     try:
+          call_gui_callback(mapper.generate_available_actions)
+          assert available_actions() == ds.get_available_actions()
+     finally:
+          testing_utils.close_gui()
+          testing_utils.shutdown_environment(caplog=None)

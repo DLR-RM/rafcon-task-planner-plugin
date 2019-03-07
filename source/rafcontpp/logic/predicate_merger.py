@@ -103,63 +103,39 @@ class PredicateMerger:
         '''
         type_tree = self.__datastore.get_available_types()
         #the resulting predicate
-        reduced_list = predicate_list[0]
+        result_predicate = predicate_list[0]
 
         for predicate in predicate_list:
             err_str = "Can't merge predicates, they are Incompatible! (variable names where changed) first: " +\
-                      self.__tuple_to_predicate_string(reduced_list) + \
+                      self.__tuple_to_predicate_string(result_predicate) + \
                       " second: " + self.__tuple_to_predicate_string(predicate)
             #cant merge, if they have different names, or different number of argument types.
-            if reduced_list[0] != predicate[0] or len(reduced_list[1]) != len(predicate[1]):
+            if result_predicate[0] != predicate[0] or len(result_predicate[1]) != len(predicate[1]):
                 logger.error(err_str)
                 raise ValueError(err_str)
             for index, type_tuple in enumerate(predicate[1]):
                 #cant merge, if they have different number of arguments per type.
-                if type_tuple[1] != reduced_list[1][index][1]:
+                if type_tuple[1] != result_predicate[1][index][1]:
                     logger.error(err_str)
                     raise ValueError(err_str)
 
-
-                # look if type_tuple is parent
-                if type_tree.is_parent_of(type_tuple[0],reduced_list[1][index][0]):
-                    #set reduced tuple to parent
-                    reduced_list[1][index] = type_tuple
-                # if they are not equal, and current reduced_list type is not parent, whe have to find the "smalest" parent
-                elif reduced_list[1][index][0] != type_tuple[0] \
-                        and not type_tree.is_parent_of(reduced_list[1][index][0],type_tuple[0]):
-                        #cant be none, because we ensure, that tyes are not the same, so they cant be root type.
-                        parent_type_tuple = type_tree.get_parent_of(type_tuple[0])
-                        parent_reduced_list = type_tree.get_parent_of(reduced_list[1][index][0])
-                        while parent_type_tuple:
-                            c_parent_reduced_list = parent_reduced_list
-                            while c_parent_reduced_list:
-                                if c_parent_reduced_list == parent_type_tuple:
-                                    parent_reduced_list = c_parent_reduced_list
-                                    break
-                                else:
-                                    c_parent_reduced_list = type_tree.get_parent_of(c_parent_reduced_list)
-                             #break if found
-                            if parent_type_tuple == parent_reduced_list:
-                                break
-                            #go higher in hierarchy
-                            parent_type_tuple = type_tree.get_parent_of(parent_type_tuple)
-
-                        if parent_type_tuple is not None and parent_type_tuple == parent_reduced_list:
-                            #set parent type as predicate type
-                            reduced_list[1][index] = (parent_type_tuple,reduced_list[1][index][1])
-                            #just to warn the user...
-                            if  (type_tree.get_parent_of(parent_type_tuple) is None):
-                                logger.warn('Predicate merged to root Type predicate: '+self.__tuple_to_predicate_string(reduced_list))
-
-                        else:
-                            logger.error(err_str)
-                            raise ValueError(err_str)
+                #try to merge the types used in predicates e.g. Robot or Vehicle
+                if result_predicate[1][index][0] != type_tuple[0]:
+                    smallest_parent = type_tree.get_smallest_parent(type_tuple[0], result_predicate[1][index][0])
+                    if smallest_parent:
+                        # set smallest_parent type as predicate type
+                        result_predicate[1][index] = (smallest_parent, result_predicate[1][index][1])
+                        # just to warn the user, that a predicate is a root-type-predicate.
+                        if (type_tree.get_parent_of(smallest_parent) is None):
+                            logger.warn('Predicate merged to root Type predicate: ' + self.__tuple_to_predicate_string(
+                                result_predicate))
+                    else:
+                        logger.error(err_str)
+                        raise ValueError(err_str)
 
 
+        return result_predicate
 
-
-
-        return reduced_list
 
 
 

@@ -10,6 +10,7 @@ def filled_type_dict():
         "Vehicle": "Object",
         "Spot": "Location",
         "Car": "Vehicle",
+        "Truck": "Vehicle",
         "Roadstar": "Car"
     }
 
@@ -173,3 +174,33 @@ def test_type_tree_to_list():
     for key in filled_type_dict().keys():
         assert key in list
     assert len(filled_type_dict().keys()) + 1 == len(list)
+
+@pytest.mark.parametrize("type_a,type_b,expected_parent",[
+    ('','',None),
+    (None, None, None),
+    (None,'',None),
+    ('',None,None),
+    ('Not_in_tree','Not_in_tree',None),
+    ('Not_in_tree','Object',None),
+    ('Object','Not_in_tree',None),
+    #a == b
+    ('Location','Location','Object'),
+    # a > b
+    ('Car','Roadstar','Car'),
+    # a < b
+    ('Roadstar','Car','Car'),
+    # a << b
+    ('Roadstar','Vehicle','Vehicle'),
+    # a other branch b
+    ('Roadstar','Truck','Vehicle'),
+    #a far other branch b
+    ('Spot','Roadstar','Object')
+])
+def test_get_smallest_parent(type_a,type_b,expected_parent):
+    #prepare
+    sut = TypeTree('Object')
+    sut.add_type_branch('Object', filled_type_dict())
+    #act
+    actual_parent = sut.get_smallest_parent(type_a,type_b)
+    #assert
+    assert expected_parent == actual_parent

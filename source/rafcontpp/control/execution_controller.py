@@ -1,8 +1,10 @@
 # Contributors:
 # Christoph Suerig <christoph.suerig@dlr.de>
-# Version 21.02.2019
+# Version 07.03.2019
 
 import os
+import time
+import traceback
 from rafcontpp.logic.mapper import Mapper
 from rafcontpp.logic.domain_generator import DomainGenerator
 from rafcontpp.logic.state_machine_generator import StateMachineGenerator
@@ -25,6 +27,7 @@ class ExecutionController:
         :param datastore: a datastore, containing all relevant data.
         """
         self.__datastore = datastore
+        self.__planning_thread_register_time = -1
 
 
     def on_execute_pre_planning(self):
@@ -35,6 +38,7 @@ class ExecutionController:
         try:
             #pipeline, after input reading...
             #prepare dicts
+            start_time = time.time()
             logger.debug('Handover to mapper')
             mapper = Mapper(self.__datastore)
             mapper.generate_action_state_map()                      #--> as_map
@@ -51,11 +55,16 @@ class ExecutionController:
             #generate plan
             logger.debug('Handover to planning controller')
             planning_controller = PlanningController(self.__datastore)
-            return planning_controller.execute_planning(self.on_execute_post_planning)
+            logger.info('Planning preparation took {0:.4f} seconds'.format(time.time()-start_time))
+            planning_thread = planning_controller.execute_planning(self.on_execute_post_planning)
+            self.__planning_thread_register_time = self.__datastore.register_thread(planning_thread)
+            return planning_thread
 
 
         except Exception:
+            traceback.print_exc()
             self.on_execute_post_planning(False)
+
 
 
     def on_execute_post_planning(self,planning_successful):
@@ -81,7 +90,11 @@ class ExecutionController:
                         os.remove(file)
                         logger.debug('Successfully removed file: ' + str(file))
                     else:
-                        logger.warning("Coundn't remove " + str(file))
+                        logger.warning("Couldn't remove " + str(file))
             else:
                 logger.debug('Keeping files')
 
+            #remove the planning_thread at the end of the Task.
+            if self.__planning_thread_register_time is not -1:
+                if not self.__datastore.remove_thread(self.__planning_thread_register_time):
+                    logger.debug("could not remove planning thread.")

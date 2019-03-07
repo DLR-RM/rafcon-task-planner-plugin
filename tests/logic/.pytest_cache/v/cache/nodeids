@@ -1,15 +1,5 @@
 [
-  "test_predicate_merger.py::test_merge_predicates[predicates0-expected0]", 
-  "test_predicate_merger.py::test_merge_predicates[predicates1-expected1]", 
-  "test_predicate_merger.py::test_merge_predicates[predicates2-expected2]", 
-  "test_predicate_merger.py::test_merge_predicates[predicates3-expected3]", 
-  "test_predicate_merger.py::test_merge_predicates[predicates4-expected4]", 
-  "test_predicate_merger.py::test_merge_predicates[predicates5-expected5]", 
-  "test_predicate_merger.py::test_merge_predicates[predicates6-expected6]", 
-  "test_predicate_merger.py::test_merge_predicates_fail[None]", 
-  "test_predicate_merger.py::test_merge_predicates_fail[predicates1]", 
-  "test_predicate_merger.py::test_merge_predicates_fail[predicates2]", 
-  "test_predicate_merger.py::test_merge_predicates_fail[predicates3]", 
-  "test_predicate_merger.py::test_merge_predicates_fail[predicates4]", 
-  "test_predicate_merger.py::test_merge_predicates_fail[predicates5]"
+  "test_mapper.py::test_generate_action_state_map", 
+  "test_mapper.py::test_generate_state_action_map", 
+  "test_mapper.py::test_generate_available_actions"
 ]

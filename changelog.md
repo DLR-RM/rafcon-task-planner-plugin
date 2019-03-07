@@ -1,3 +1,6 @@
+### Version 1.2
+- added the possibility to interrupt a running planning task
+- fixed some bugs
 ### Version 1.1
 - added changelog
 - integrated Fast-Forward Planning System
