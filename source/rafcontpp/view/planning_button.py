@@ -108,7 +108,7 @@ def __on_show_menu(button):
 
         if user_response == Gtk.ResponseType.YES:
             label_thread[label].interrupt()
-            logger.info('Cancleing Task: ' + label)
+            logger.info('Cancelling Task: ' + label)
     # -------------------------------------------------------------------------------------------------------------------
 
     #fill menu:
