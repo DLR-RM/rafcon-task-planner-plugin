@@ -33,7 +33,7 @@ class PddlActionParser:
 
 
         #matches variables with types e.g ?obj - Physobj
-        self.__type_var_pattern = re.compile('((\?[^\s]+\s+)+-\s+[^\s|^\)]+)')
+        self.__type_var_pattern = re.compile('((\?[^\s|^\)|^\(]+\s+)+-\s+[^\s|^\)|^\(]+)')
         #matches only type strings result  f.e. Location
         self.__type_pattern = re.compile('-\s+([^\s|^\)|^?|^-]+)')
         #matches only varialbes f.e. ?myVar

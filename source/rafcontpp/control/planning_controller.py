@@ -109,7 +109,6 @@ class PlanningController:
             logger.info("finished planning after {0:.4f} seconds".format(time.time() - start_time))
             if planning_report.planning_successful():
                 self.__datastore.set_plan(planning_report.get_plan())
-                planning_successful = True
                 if len(planning_report.get_plan()) > 0:
                     logger.info("Planning Successful! Plan has length: " + str(len(planning_report.get_plan())))
                 else:
@@ -119,7 +118,7 @@ class PlanningController:
 
             self.__datastore.add_generated_file(planning_report.get_generated_files())
 
-            callback_function(planning_successful)
+            callback_function(planning_report.planning_successful())
         #Interrupted path
         else:
             planning_process_pgid = os.getpgid(planning_process.pid)
