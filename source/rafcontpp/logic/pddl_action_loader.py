@@ -29,7 +29,7 @@ class PddlActionLoader:
     def load_pddl_actions(self):
         """
         load_pddl_actions reads the actions from the states and
-        parses them into the internal format (PddlActionPrepresentation).
+        parses them into the internal format (PddlActionRepresentation).
         :return: Nothing, sets the pddl action map in datastore.
         """
         state_libs = self.__datastore.get_state_pools()

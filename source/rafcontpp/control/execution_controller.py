@@ -17,7 +17,7 @@ logger = log.get_logger(__name__)
 
 class ExecutionController:
     """ExecutionController
-       ExecutionController controlles the execution of the planning pipeline, from mapping up to generating the state
+       ExecutionController controls the execution of the planning pipeline, from mapping up to generating the state
        machine
     """
 
