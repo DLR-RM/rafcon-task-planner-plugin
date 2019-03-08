@@ -1,6 +1,6 @@
 # Contributors:
 # Christoph Suerig <christoph.suerig@dlr.de>
-# Version 07.03.2019
+# Version 08.03.2019
 
 import os
 import time
@@ -55,7 +55,7 @@ class ExecutionController:
             #generate plan
             logger.debug('Handover to planning controller')
             planning_controller = PlanningController(self.__datastore)
-            logger.info('Planning preparation took {0:.4f} seconds'.format(time.time()-start_time))
+            logger.info('Planning preparation took {0:.4f} seconds.'.format(time.time()-start_time))
             planning_thread = planning_controller.execute_planning(self.on_execute_post_planning)
             self.__planning_thread_register_time = self.__datastore.register_thread(planning_thread)
             return planning_thread

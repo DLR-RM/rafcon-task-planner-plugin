@@ -7,11 +7,12 @@
 #
 # Contributors:
 # Christoph Suerig <christoph.suerig@dlr.de>
-# Version 17.12.1018
+# Version 08.03.1019
 
 
 
 import os
+import time
 from rafcon.core.storage import storage
 from rafcon.core.singleton import library_manager
 from rafcon.core.singleton import state_machine_manager
@@ -37,13 +38,13 @@ class StateMachineGenerator:
         :param self:
         :return: nothing
         '''
-        logger.info('Creating Statemachine...')
-        sm_name = self.__datastore.get_problem_name()+'_statemachine'
+        sm_name = self.__datastore.get_sm_name()
+        sm_name = self.__datastore.get_problem_name()+'_state_machine' if len(sm_name) == 0 else sm_name
         sm_path = os.path.abspath(os.path.join(self.__datastore.get_sm_save_dir(), sm_name))
         a_s_map = self.__datastore.get_action_state_map()
-
         pddl_action_dict = self.__datastore.get_pddl_action_map()
-
+        logger.info('Creating State machine \"'+sm_name+'\"...')
+        start_time = time.time()
         root_state = HierarchyState(sm_name)
         last_state = None
         for plan_step in self.__datastore.get_plan():
@@ -78,8 +79,8 @@ class StateMachineGenerator:
         state_machine = StateMachine(root_state=root_state)
         storage.save_state_machine_to_path(state_machine, sm_path)
         library_manager.refresh_libraries()
-        logger.info("State machine " + sm_name + " created. It contains " + str(
-            len(self.__datastore.get_plan())) + " states.")
+        logger.info("State machine \"" + sm_name + "\" created. It contains " + str(
+            len(self.__datastore.get_plan())) + " states, generation took {0:.4f} seconds.".format(time.time()- start_time))
         #open state machine
         self.__open_state_machine(state_machine,sm_path)
 

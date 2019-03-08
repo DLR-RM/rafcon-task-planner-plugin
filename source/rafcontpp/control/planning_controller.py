@@ -106,7 +106,7 @@ class PlanningController:
         #NOT interrupted path
         if not current_thread.is_interrupted():
             planning_report = queue.get_nowait()
-            logger.info("finished planning after {0:.4f} seconds".format(time.time() - start_time))
+            logger.info("finished planning after {0:.4f} seconds.".format(time.time() - start_time))
             if planning_report.planning_successful():
                 self.__datastore.set_plan(planning_report.get_plan())
                 if len(planning_report.get_plan()) > 0:
@@ -126,7 +126,7 @@ class PlanningController:
             os.killpg(planning_process_pgid, signal.SIGTERM)
             logger.info('Waiting for the Planner to terminate...')
             planning_process.join()
-            logger.info("Planning was cancled after {0:.4f} seconds".format(time.time() - start_time))
+            logger.info("Planning was cancled after {0:.4f} seconds.".format(time.time() - start_time))
             callback_function(False)
 
 

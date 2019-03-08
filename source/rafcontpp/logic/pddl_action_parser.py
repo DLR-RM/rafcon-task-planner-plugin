@@ -6,7 +6,7 @@
 #
 # Contributors:
 # Christoph Suerig <christoph.suerig@dlr.de>
-# Version: 26.11.2018
+# Version: 08.03.2019
 import re
 from rafcontpp.model.pddl_action_representation import PddlActionRepresentation
 from rafcon.utils import log

@@ -2,7 +2,7 @@
 #
 # Contributors:
 # Christoph Suerig <christoph.suerig@dlr.de>
-# Version 07.03.2019
+# Version 08.03.2019
 import os
 import json
 import threading
@@ -46,13 +46,15 @@ def datastore_from_file(file_path):
         logger.warning("Can't restore configuration from: " + str(file_path))
         logger.info("Creating default configuration...")
         default_dir = str(os.path.expanduser('~'))
-        ds = Datastore([default_dir], default_dir, built_in_planners.keys()[0], default_dir, [], default_dir,
-                  default_dir, False)
+        ds = Datastore([default_dir],'',
+                       default_dir, built_in_planners.keys()[0], default_dir, [], default_dir, default_dir, False)
 
     else:
         data = json.load(open(file_path, "r"))
         logger.debug('Loading Configuration form: '+file_path)
+        sm_name = data['sm_name'] if 'sm_name' in data.keys() else '' #To provide backward compatibility.
         ds = Datastore(data['state_pools'],
+                     sm_name,
                      data['sm_save_dir'],
                      data['planner'],
                      data['planner_script_path'],
@@ -70,11 +72,12 @@ class Datastore:
     Datastore is a datastore, which holds all data of the plugin. Every module can get, and store its data here.
     '''
 
-    def __init__(self, state_pools,sm_save_dir, planner,planner_script_path, planner_argv,
+    def __init__(self, state_pools,sm_name,sm_save_dir, planner,planner_script_path, planner_argv,
                facts_path,type_db_path,keep_related_files, file_save_dir=os.path.join(os.getcwd(), 'related_files')):
         '''
          Constructor of Datastore
         :param state_pools: a list of file paths.
+        :param sm_name: the name of the state machine which will be generated.
         :param sm_save_dir: the directory, where to save the generated state machine.
         :param planner: the name / script path of the used planner.
         :param planner_argv: a String array, with arguments for the planner.
@@ -86,6 +89,8 @@ class Datastore:
 
         #a list of directories, containing states with pddl notation.
         self.__state_pools = state_pools
+        #the name of the state machine, which will be generated.
+        self.__sm_name = sm_name
         #the location, to save the generated state machine in.
         self.__sm_save_dir = sm_save_dir
         #the complete path of the facts file (e.g. /home/facts.pddl).
@@ -216,6 +221,13 @@ class Datastore:
             logger.error('file_save_dir must be a directory')
             raise ValueError('Is not a directory: '+str(file_save_dir))
         self.__file_save_dir = file_save_dir
+
+
+    def get_sm_name(self):
+        return self.__sm_name
+
+    def set_sm_name(self, name):
+        self.__sm_name = name
 
     def get_sm_save_dir(self):
         return self.__sm_save_dir
@@ -385,6 +397,7 @@ class Datastore:
             'planner_script_path': self.__planner_script_path,
             'planner_argv': self.__planner_argv,
             'facts_path': self.__facts_path,
+            'sm_name': self.__sm_name,
             'sm_save_dir': self.__sm_save_dir,
             'keep_related_files': self.__keep_related_files,
             'file_save_dir': self.__file_save_dir

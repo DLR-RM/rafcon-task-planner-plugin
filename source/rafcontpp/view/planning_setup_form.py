@@ -1,6 +1,6 @@
 # Contributors:
 # Christoph Suerig <christoph.suerig@dlr.de>
-# Version 07.03.2019
+# Version 08.03.2019
 
 import gi
 gi.require_version('Gtk', '3.0')
@@ -55,6 +55,7 @@ class PlanningSetupForm:
         script_path_chooser = self.__builder.get_object('script_path_chooser')
         planner_argv_entry = self.__builder.get_object('planner_argv_entry')
         facts_file_chooser = self.__builder.get_object('facts_file_chooser')
+        sm_name_entry = self.__builder.get_object('rtpp_sm_name_entry')
         sm_save_dir = self.__builder.get_object('sm_save_dir_chooser')
         keep_related_files = self.__builder.get_object('keep_produced_files_checkbox')
         file_save_dir = self.__builder.get_object('file_save_dir_chooser')
@@ -65,6 +66,7 @@ class PlanningSetupForm:
         self.__init_drop_down(planner_dropdown, script_path_chooser)
         planner_argv_entry.set_text(''.join(e+" " for e in self.__datastore.get_planner_argv()).rstrip())
         facts_file_chooser.set_filename(self.__datastore.get_facts_path())
+        sm_name_entry.set_text(self.__datastore.get_sm_name())
         sm_save_dir.set_filename(self.__datastore.get_sm_save_dir())
         keep_related_files.set_active(self.__datastore.keep_related_files())
         file_save_dir.set_filename(self.__datastore.get_file_save_dir())
@@ -218,6 +220,7 @@ class PlanningSetupForm:
             self.__datastore.set_planner_argv([])
 
         self.__datastore.set_facts_path(self.__builder.get_object('facts_file_chooser').get_filename())
+        self.__datastore.set_sm_name(self.__builder.get_object('rtpp_sm_name_entry').get_text())
         self.__datastore.set_sm_save_dir(self.__builder.get_object('sm_save_dir_chooser').get_filename())
         self.__datastore.set_keep_related_files(self.__builder.get_object('keep_produced_files_checkbox').get_active())
         if self.__datastore.keep_related_files:
