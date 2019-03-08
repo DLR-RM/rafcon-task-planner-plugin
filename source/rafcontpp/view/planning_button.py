@@ -1,6 +1,6 @@
 # Contributors:
 # Christoph Suerig <christoph.suerig@dlr.de>
-# Version 07.03.2019
+# Version 08.03.2019
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
@@ -11,7 +11,6 @@ from rafcon.gui.helpers.label import create_label_widget_with_icon
 from rafcon.gui.views.tool_bar import ToolBarView
 import threading
 import time
-import os
 import rafcon.gui.utils
 import rafcon.gui.helpers.state_machine
 import rafcon.gui.singleton
@@ -21,12 +20,16 @@ plan_task_label = "Plan Task"
 tool_tip_text = "Opens the planning Configuration, to plan a new task."
 plan_sm_button = None
 button_counter = 0
-lock = threading.Lock()
+lock = None
 def initialize():
     tool_bar_ctrl = rafcon.gui.singleton.main_window_controller.get_controller('tool_bar_controller')
     rafcon.gui.utils.wait_for_gui()
     assert isinstance(tool_bar_ctrl.view, ToolBarView)
 
+    global lock
+    lock = threading.Lock()
+    global button_counter
+    button_counter = 0
     # add new button
     global plan_sm_button
     plan_sm_button = Gtk.MenuToolButton(label='Plan Task')
@@ -53,6 +56,7 @@ def increment_button():
                                         _(plan_task_label + ' ({})'.format(button_counter)),
                                         tool_tip_text +'\n'+ str(button_counter)+ __get_progress_text()))
         Gdk.threads_leave()
+
 
 def decrement_button():
     '''
