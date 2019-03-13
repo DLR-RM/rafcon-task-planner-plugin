@@ -65,7 +65,8 @@ class Mapper:
                     logger.warning("State " + state + " is not associated with any PDDL Action!" )
 
         if not action_state_map:
-            logger.warning("No States with semantic PDDL_Action data found!")
+            logger.error("No States with semantic PDDL_Action data found!")
+            raise ValueError("No States with semantic PDDL_Action data found!")
         logger.debug('action_state_map has '+str(len(action_state_map.keys())) + ' entires.')
         self.__datastore.set_action_state_map(action_state_map)
 
