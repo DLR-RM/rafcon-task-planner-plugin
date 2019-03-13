@@ -41,17 +41,17 @@ class ExecutionController:
             #pipeline, after input reading...
             #prepare dicts
             start_time = time.time()
-            logger.debug('Handover to mapper')
+            logger.debug('Handover to mapper.')
             mapper = Mapper(self.__datastore)
             mapper.generate_action_state_map()                      #--> as_map
             mapper.generate_state_action_map()                      #--> sa_map
             mapper.generate_available_actions()                     #--> available actions
             #load actions into datastore
-            logger.debug('Handover to action loader')
+            logger.debug('Handover to action loader.')
             loader = PddlActionLoader(self.__datastore)
             loader.load_pddl_actions()
             #create domain
-            logger.debug('Handover to domain generator')
+            logger.debug('Handover to domain generator.')
             domain_generator = DomainGenerator(self.__datastore)
             domain_generator.generate_domain()                      #--> domain
             #generate plan
@@ -77,7 +77,7 @@ class ExecutionController:
                 logger.info('A Plan was found!')
                 self.__parse_and_set_facts()
                 sm_generator = StateMachineGenerator(self.__datastore)
-                logger.debug('Handover to state machine generator')
+                logger.debug('Handover to state machine generator.')
                 sm_generator.generate_state_machine()  # --> generates state machine and opens it.
 
 
@@ -93,7 +93,7 @@ class ExecutionController:
                         os.remove(file)
                         logger.debug('Successfully removed file: ' + str(file))
                     else:
-                        logger.warning("Couldn't remove " + str(file))
+                        logger.warning("Couldn't remove: " + str(file))
             else:
                 logger.debug('Keeping files')
 
