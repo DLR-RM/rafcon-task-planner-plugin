@@ -45,7 +45,16 @@ class StateMachineGenerator:
         pddl_action_dict = self.__datastore.get_pddl_action_map()
         logger.info('Creating State machine \"'+sm_name+'\"...')
         start_time = time.time()
-        root_state = HierarchyState(sm_name)
+        # set root-state id to old root-state id, in case the state machine is replanned.
+        # why is it important? - if you added the planned sm as a library, replan it and refresh it,
+        # rafcon will throw an error, if the refreshed library has a different root-state id. 
+        if os.path.isdir(sm_path):
+            # rootstate id of rootstate in old sm.
+            old_sm_rs_id = storage.load_state_machine_from_path(sm_path).root_state.state_id
+            root_state = HierarchyState(name=sm_name, state_id=old_sm_rs_id)
+        else:
+            root_state = HierarchyState(sm_name)
+
         last_state = None
         for plan_step in self.__datastore.get_plan():
             #the name of a plan step is an action name.
