@@ -171,7 +171,9 @@ class Datastore:
         with planning_threads_lock:
             global planning_threads
             register_time = time.time()#unix timestamp
-            planning_threads[register_time] = (interruptable_thread,self.get_problem_name())
+            #set task name to sm name, or problem name, if no sm name is available.
+            planning_threads[register_time] = (interruptable_thread,
+                                            self.get_problem_name() if self.get_sm_name() == 0 else self.get_sm_name())
         return register_time
 
     def remove_thread(self, key):
