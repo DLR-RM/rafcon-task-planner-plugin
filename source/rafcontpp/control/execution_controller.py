@@ -6,6 +6,8 @@ import os
 import time
 import traceback
 from rafcontpp.logic.mapper import Mapper
+from rafcontpp.logic.pddl_facts_parser import PddlFactsParser
+from rafcontpp.model.pddl_facts_representation import PddlFactsRepresentation
 from rafcontpp.logic.domain_generator import DomainGenerator
 from rafcontpp.logic.state_machine_generator import StateMachineGenerator
 from rafcontpp.logic.pddl_action_loader import PddlActionLoader
@@ -73,6 +75,7 @@ class ExecutionController:
             # check if a plan was found.
             if planning_successful and len(self.__datastore.get_plan()) > 0:
                 logger.info('A Plan was found!')
+                self.__parse_and_set_facts()
                 sm_generator = StateMachineGenerator(self.__datastore)
                 logger.debug('Handover to state machine generator')
                 sm_generator.generate_state_machine()  # --> generates state machine and opens it.
@@ -98,3 +101,14 @@ class ExecutionController:
             if self.__planning_thread_register_time is not -1:
                 if not self.__datastore.remove_thread(self.__planning_thread_register_time):
                     logger.debug("could not remove planning thread.")
+
+    def __parse_and_set_facts(self):
+        '''
+        i do it here, because i have no better place, later on i will do it in a dedicated facts module
+        TODO delete, and do somewhere else.
+        :return:
+        '''
+        facts_file = open(self.__datastore.get_facts_path(), 'r')
+        facts_string = facts_file.read()
+        facts_parser = PddlFactsParser(facts_string)
+        self.__datastore.set_pddl_facts_representation(PddlFactsRepresentation(facts_parser.parse_objects()))
