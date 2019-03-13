@@ -189,7 +189,9 @@ class PddlActionTabController:
         #start_time = time.time()#TODO remove, just for debugging
         if saved_manually or PddlActionTabController.auto_save_enabled:
             start, end = buffer.get_bounds()
-            self.__state.add_semantic_data([SEMANTIC_DATA_DICT_NAME],buffer.get_text(start, end,True).strip('\n'),key)
+            to_save = buffer.get_text(start, end,True).strip('\n')
+            self.__state.add_semantic_data([SEMANTIC_DATA_DICT_NAME],to_save,key)
+        #if key == 'pddl_action' and len(to_save.replace(' ','').replace('\n','')) == 0:
 
         #logger.debug('saving description needed: {0:.4f} '.format(time.time() - start_time))#TODO remove, just for debugging
 

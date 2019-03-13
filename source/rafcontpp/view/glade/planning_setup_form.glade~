@@ -359,7 +359,6 @@ disable to delete all additional files, when the state machine is generated.</pr
               <object class="GtkLabel" id="rtpp_sm_name_label">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="tooltip_text" translatable="yes">The name, the generated state machine will have.</property>
                 <property name="label" translatable="yes">State machine name</property>
               </object>
               <packing>

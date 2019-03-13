@@ -142,34 +142,42 @@ class PddlActionParser:
         for applied_predicate in applied_predicates:
             generalized_predicate = '('
             c_pred_name = a_pred_name_pattern.findall(applied_predicate)[0]
-            c_pred_vars = self.__var_pattern.findall(applied_predicate)
-            generalized_predicate += c_pred_name
-            #the last type used
-            last_type = ''
-            #a concatination of all types, used to produce an identifier for the predicate
-            type_concat = ''
-            #iterate through all variables of the predicate
-            for c_pred_var in c_pred_vars:
-                if c_pred_var in self.__var_type_dict:
-                    c_type = self.__var_type_dict[c_pred_var]
-                    if last_type == '':
-                        last_type = c_type
-                        type_concat += c_type
-                    if last_type != c_type:
-                        generalized_predicate += ' - '+last_type
-                        last_type = c_type
-                        type_concat += c_type
-                    generalized_predicate += ' '+c_pred_var
-                else:
-                    logger.error('Variable: ' + c_pred_var+' not defined!')
-                    raise ValueError('Variable: ' + c_pred_var+' not defined!')
-            generalized_predicate += ' - ' + last_type + ')'
-            #add predicate to a dictionary, to eliminate duplicats.
-            #two predicates with the same name, but different types are handled as two
-            #predicates at this time. Because of unknowen type hierarchies, its not decidable
-            # at this time how to merge the predicates.
-            parsed_predicates[c_pred_name+type_concat] = generalized_predicate
+            if not self.__is_built_in_pred(c_pred_name):
+                c_pred_vars = self.__var_pattern.findall(applied_predicate)
+                generalized_predicate += c_pred_name
+                #the last type used
+                last_type = ''
+                #a concatination of all types, used to produce an identifier for the predicate
+                type_concat = ''
+                #iterate through all variables of the predicate
+                for c_pred_var in c_pred_vars:
+                    if c_pred_var in self.__var_type_dict:
+                        c_type = self.__var_type_dict[c_pred_var]
+                        if last_type == '':
+                            last_type = c_type
+                            type_concat += c_type
+                        if last_type != c_type:
+                            generalized_predicate += ' - '+last_type
+                            last_type = c_type
+                            type_concat += c_type
+                        generalized_predicate += ' '+c_pred_var
+                    else:
+                        logger.error('Variable: ' + c_pred_var+' not defined!')
+                        raise ValueError('Variable: ' + c_pred_var+' not defined!')
+                generalized_predicate += ' - ' + last_type + ')'
+                #add predicate to a dictionary, to eliminate duplicats.
+                #two predicates with the same name, but different types are handled as two
+                #predicates at this time. Because of unknowen type hierarchies, its not decidable
+                # at this time how to merge the predicates.
+                parsed_predicates[c_pred_name+type_concat] = generalized_predicate
         return parsed_predicates.values()
+
+    def __is_built_in_pred(self,name):
+        is_built_in = False
+        if name:
+            is_built_in = True if name == '=' else is_built_in
+
+        return is_built_in
 
 
 
