@@ -56,6 +56,7 @@ class StateMachineGenerator:
             root_state = HierarchyState(sm_name)
 
         last_state = None
+        facts = self.__datastore.get_pddl_facts_representation()
         for plan_step in self.__datastore.get_plan():
             #the name of a plan step is an action name.
             if plan_step.name in a_s_map:
@@ -69,7 +70,8 @@ class StateMachineGenerator:
                        if c_input_data_ports[key].name in c_pddl_action.parameters:
                            index = c_pddl_action.parameters.index(c_input_data_ports[key].name)
                            #plan_step.parameter contains parameter values
-                           current_state.input_data_port_runtime_values[key] = plan_step.parameter[index]
+                           current_state.input_data_port_runtime_values[key] = \
+                                                            facts.get_original_object_name(plan_step.parameter[index])
                        else:
                            logger.warn("Action "+c_pddl_action.name+" has no Parameter "
                                        +c_input_data_ports[key].name+", which is needed in State "+current_state.name)

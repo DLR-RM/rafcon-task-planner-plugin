@@ -122,6 +122,8 @@ class Datastore:
         self.__pddl_action_map = None
         # a list, contining the names of all available actions.
         self.__available_actions = None
+        # a PddlFactsRepresentation Object, containing the parsed facts file.
+        self.__pddl_facts_representation = None
         # a typeTree containing all available types
         self.__available_types = None
         # a list of (String,[(String,integer)]) prediactes
@@ -307,8 +309,8 @@ class Datastore:
 
     def set_state_action_map(self,state_action_map):
         if state_action_map is None:
-            logger.error("can't set None value as state_action_map")
-            raise ValueError("can't set None value as state_action_map")
+            logger.error("can't set None value as state_action_map.")
+            raise ValueError("can't set None value as state_action_map.")
         self.__state_action_map = state_action_map
 
     def get_available_actions(self):
@@ -316,20 +318,30 @@ class Datastore:
 
     def set_available_actions(self,available_actions):
         if available_actions is None:
-            logger.error("can't set None value as available_actions")
-            raise ValueError("can't set None value as available_actions")
+            logger.error("Can't set None value as available_actions.")
+            raise ValueError("Can't set None value as available_actions.")
         self.__available_actions = available_actions
+
+    def set_pddl_facts_representation(self, facts_representation):
+        if facts_representation is None:
+            logger.error("Can't set None value as pddl_facts_representation.")
+            raise ValueError("Can't set None value as pddl_facts_representation.")
+        self.__pddl_facts_representation = facts_representation
+
+
+    def get_pddl_facts_representation(self):
+        return self.__pddl_facts_representation
 
     def get_plan(self):
         return self.__plan
 
     def set_plan(self,plan):
         if plan is None:
-            logger.error("can't set None value as plan")
-            raise ValueError("can't set None value as plan")
+            logger.error("can't set None value as plan.")
+            raise ValueError("can't set None value as plan.")
         if len(plan) > 0 and (not isinstance(plan[0],PlanStep)):
-            logger.error("plan hast to be of type [PlanStep]")
-            raise TypeError("plan hast to be of type [PlanStep]")
+            logger.error("plan hast to be of type [PlanStep].")
+            raise TypeError("plan hast to be of type [PlanStep].")
         self.__plan = plan
 
     def keep_related_files(self):
