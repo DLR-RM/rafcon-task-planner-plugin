@@ -52,7 +52,7 @@ def datastore_from_file(file_path):
     else:
         data = json.load(open(file_path, "r"))
         logger.debug('Loading Configuration form: '+file_path)
-        sm_name = data['sm_name'] if 'sm_name' in data.keys() else '' #To provide backward compatibility.
+        sm_name = data['sm_name'] if 'sm_name' in data else '' #To provide backward compatibility.
         ds = Datastore(data['state_pools'],
                      sm_name,
                      data['sm_save_dir'],
@@ -63,6 +63,11 @@ def datastore_from_file(file_path):
                      data['type_db_path'],
                      data['keep_related_files'],
                      data['file_save_dir'])
+        runtime_data_path = data['runtime_data_path'] if 'runtime_data_path' in data else '' #To provide backward compatibility.
+        runtime_as_ref = data['runtime_as_ref'] if 'runtime_as_ref' in data else False #To provide backward compatibility.
+        ds.set_runtime_data_path(runtime_data_path)
+        ds.set_use_runtime_path_as_ref(runtime_as_ref)
+
         logger.info("Red configuration successfully!")
     return ds
 
@@ -132,6 +137,10 @@ class Datastore:
         self.__plan = None
         # a list with the name of all files, generated during the pipeline execution.
         self.__generated_files = []
+        # the complete path of the runtime data dict, which holds data required during the run of the generated sm.
+        self.__runtime_data_path = None
+        # if true the runtime_data is red during runtime, otherwhise its red when generating the sm.
+        self.__use_runtime_data_path_as_reference = False
 
 
 
@@ -330,6 +339,19 @@ class Datastore:
             raise ValueError("Can't set None value as pddl_facts_representation.")
         self.__pddl_facts_representation = facts_representation
 
+    def get_runtime_data_path(self):
+        return self.__runtime_data_path
+
+    def set_runtime_data_path(self, runtime_data_path):
+        if not runtime_data_path or not os.path.isfile(runtime_data_path):
+            logger.warning('Runtime Data Path is not a Path: {}'.format(runtime_data_path))
+        self.__runtime_data_path = runtime_data_path
+
+    def use_runtime_path_as_ref(self):
+        return self.__use_runtime_data_path_as_reference
+
+    def set_use_runtime_path_as_ref(self, use):
+        self.__use_runtime_data_path_as_reference = use
 
     def get_pddl_facts_representation(self):
         return self.__pddl_facts_representation
@@ -414,7 +436,9 @@ class Datastore:
             'sm_name': self.__sm_name,
             'sm_save_dir': self.__sm_save_dir,
             'keep_related_files': self.__keep_related_files,
-            'file_save_dir': self.__file_save_dir
+            'file_save_dir': self.__file_save_dir,
+            'runtime_data_path':self.__runtime_data_path,
+            'runtime_as_ref':self.__use_runtime_data_path_as_reference
         }
         logger.debug('Writing Configuration to path: '+file_path)
         conf_file = open(file_path, "w")

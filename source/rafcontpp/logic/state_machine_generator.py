@@ -13,11 +13,13 @@
 
 import os
 import time
+import json
 from rafcon.core.storage import storage
 from rafcon.core.singleton import library_manager
 from rafcon.core.singleton import state_machine_manager
 from rafcon.core.state_machine import StateMachine
 from rafcon.core.states.hierarchy_state import HierarchyState
+from rafcon.core.states.execution_state import ExecutionState
 from rafcon.utils import log
 
 logger = log.get_logger(__name__)
@@ -56,6 +58,12 @@ class StateMachineGenerator:
             root_state = HierarchyState(sm_name)
 
         last_state = None
+        # add global data init state and set start state
+        runtime_data_path = self.__datastore.get_runtime_data_path()
+        if runtime_data_path and len(runtime_data_path)>0:
+            last_state = self.__get_runtime_data_init_state(runtime_data_path, self.__datastore.use_runtime_path_as_ref())
+            root_state.add_state(last_state)
+            root_state.set_start_state(last_state.state_id)
         facts = self.__datastore.get_pddl_facts_representation()
         for plan_step in self.__datastore.get_plan():
             #the name of a plan step is an action name.
@@ -133,5 +141,16 @@ class StateMachineGenerator:
 
         return return_state
 
+    def __get_runtime_data_init_state(self, data_init_file_path, use_as_ref):
+        data_init_state = ExecutionState(name='Global Data Initialization (Rtpp)')
+        data_to_load = None
+        if use_as_ref:
+            data_to_load = 'json.load(open("{}", "r"))'.format(data_init_file_path)
+            data_init_state.script_text = 'import json{}'.format(data_init_state.script_text)
+        else:
+            data_to_load = json.dumps(json.load(open(data_init_file_path, "r")), indent=2, separators=(',', ': '))
+        execute_str = 'gvm.set_variable(\'{}\',{})'.format('rtpp_data',data_to_load)
+        data_init_state.script_text = data_init_state.script_text.replace('self.logger.debug("Hello world")',execute_str)
+        return data_init_state
 
 

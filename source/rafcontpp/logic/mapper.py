@@ -62,7 +62,7 @@ class Mapper:
                     else:
                         action_state_map[action_name] = state
                 else:
-                    logger.warning("State " + state + " is not associated with any PDDL Action!" )
+                    logger.warning("State " + state + " is not associated with any PDDL Action!")
 
         if not action_state_map:
             logger.error("No States with semantic PDDL_Action data found!")

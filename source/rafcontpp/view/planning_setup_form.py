@@ -59,6 +59,9 @@ class PlanningSetupForm:
         sm_save_dir = self.__builder.get_object('sm_save_dir_chooser')
         keep_related_files = self.__builder.get_object('keep_produced_files_checkbox')
         file_save_dir = self.__builder.get_object('file_save_dir_chooser')
+        runtime_data_field = self.__builder.get_object('rtpp_planning_setup_form_runtime_data_path_entry')
+        runtime_data_direct = self.__builder.get_object('rtpp_planning_setup_form_runtime_data_direct_radio')
+        runtime_data_reference = self.__builder.get_object('rtpp_planning_setup-form_runtime_data_reference_radio')
         #init items
         state_pool_chooser.set_filename(self.__datastore.get_state_pools()[0])
         self.__state_pool_chooser_entry.set_text(self.__string_array_to_string(self.__datastore.get_state_pools()))
@@ -70,6 +73,12 @@ class PlanningSetupForm:
         sm_save_dir.set_filename(self.__datastore.get_sm_save_dir())
         keep_related_files.set_active(self.__datastore.keep_related_files())
         file_save_dir.set_filename(self.__datastore.get_file_save_dir())
+        if self.__datastore.get_runtime_data_path():
+            runtime_data_field.set_text(self.__datastore.get_runtime_data_path())
+        if self.__datastore.use_runtime_path_as_ref():
+            runtime_data_reference.set_active(True)
+        else:
+            runtime_data_direct.set_active(True)
         self.__dialog.show_all()
         self.__builder.get_object('planning_form_start_button').connect('clicked', self.__on_apply)
         self.__builder.get_object('planning_form_cancel_button').connect('clicked', self.__on_destroy)
@@ -156,7 +165,7 @@ class PlanningSetupForm:
                 Thread(target=self.__wait_and_hide, args=[planning_thread]).start()
 
         else:
-            logger.error(not_filled+" missing! Please select "+ not_filled)
+            logger.error(" Field missing! {}".format(not_filled))
 
     def __wait_and_hide(self,thread):
         '''
@@ -225,6 +234,18 @@ class PlanningSetupForm:
         self.__datastore.set_keep_related_files(self.__builder.get_object('keep_produced_files_checkbox').get_active())
         if self.__datastore.keep_related_files:
             self.__datastore.set_file_save_dir(self.__builder.get_object('file_save_dir_chooser').get_filename())
+
+        #runtime section
+
+        runtime_data_path = self.__builder.get_object('rtpp_planning_setup_form_runtime_data_path_entry').get_text()
+        runtime_data_path = runtime_data_path.strip()
+        runtime_data_reference = self.__builder.get_object('rtpp_planning_setup-form_runtime_data_reference_radio')
+        self.__datastore.set_use_runtime_path_as_ref(runtime_data_reference.get_active())
+        self.__datastore.set_runtime_data_path(runtime_data_path)
+        if not self.__datastore.use_runtime_path_as_ref() and runtime_data_path and len(runtime_data_path)>0:
+            if not os.path.isfile(self.__datastore.get_runtime_data_path()):
+                everything_filled = False
+                not_filled = 'Runtime Data contains no valid Filepath!'
 
         return (everything_filled,not_filled)
 
