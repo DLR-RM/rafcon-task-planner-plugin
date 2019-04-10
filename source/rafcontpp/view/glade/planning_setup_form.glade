@@ -420,10 +420,10 @@ disable to delete all additional files, when the state machine is generated.</pr
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">Optionally enter here the path to a file with a Json dictionary. 
-The dictionary should contain data objects, which will be stored as global variable under the 'rtpp_data' key in Rafcon.
+The dictionary should contain data objects, which will be stored as global variable under the 'rtpp_data' key in Rafcon Global Variables.
 
-don't Integrate:
-In order not to integrate any data, just leave the Runtime Data field empty.</property>
+don't Include:
+In order not to Include any data, just leave the Runtime Data field empty.</property>
                 <property name="margin_left">29</property>
                 <property name="margin_right">29</property>
                 <property name="label" translatable="yes">Runtime Data</property>
@@ -438,14 +438,14 @@ In order not to integrate any data, just leave the Runtime Data field empty.</pr
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">direct: 
-The data will be read from the filepath during the state machine generation process.
+The data will be read from the filepath, and included during the state machine generation process.
 
 as reference: 
-The data will be read from the filepath during runtime of the state machine.
+The path will be included as reference and the data will be read from the filepath later, during runtime of the state machine.
 
-don't Integrate:
-In order not to integrate any data, just leave the Runtime Data field empty.</property>
-                <property name="label" translatable="yes">Integrate</property>
+don't Include:
+In order not to Include any data, just leave the Runtime Data field empty.</property>
+                <property name="label" translatable="yes">Include</property>
               </object>
               <packing>
                 <property name="left_attach">0</property>
@@ -462,6 +462,7 @@ In order not to integrate any data, just leave the Runtime Data field empty.</pr
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">False</property>
+                    <property name="tooltip_text" translatable="yes">The data will be read from the filepath, and included during the state machine generation process.</property>
                     <property name="margin_left">10</property>
                     <property name="margin_top">5</property>
                     <property name="margin_bottom">5</property>
@@ -480,6 +481,7 @@ In order not to integrate any data, just leave the Runtime Data field empty.</pr
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">False</property>
+                    <property name="tooltip_text" translatable="yes">The path will be included as reference and the data will be read from the filepath later, during runtime of the state machine.</property>
                     <property name="margin_left">5</property>
                     <property name="margin_top">5</property>
                     <property name="margin_bottom">5</property>

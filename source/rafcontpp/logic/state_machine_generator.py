@@ -7,7 +7,7 @@
 #
 # Contributors:
 # Christoph Suerig <christoph.suerig@dlr.de>
-# Version 08.03.1019
+# Version 10.04.1019
 
 
 
@@ -142,7 +142,14 @@ class StateMachineGenerator:
         return return_state
 
     def __get_runtime_data_init_state(self, data_init_file_path, use_as_ref):
-        data_init_state = ExecutionState(name='Global Data Initialization (Rtpp)')
+        '''
+
+        :param data_init_file_path: The path of a file containing a json dict
+        :param use_as_ref: True if the path should be included as reference, False if the dictionary itself should be included.
+        :return: an Execution state, that will initialize the rtpp_data dict in the global variables.
+        '''
+
+        data_init_state = ExecutionState(name='Global Variable Initialization (rtpp_data)')
         data_to_load = None
         if use_as_ref:
             data_to_load = 'json.load(open("{}", "r"))'.format(data_init_file_path)
