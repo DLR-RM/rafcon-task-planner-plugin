@@ -99,7 +99,7 @@ class StateMachineGenerator:
         storage.save_state_machine_to_path(state_machine, sm_path)
         library_manager.refresh_libraries()
         logger.info("State machine \"" + sm_name + "\" created.")
-        logger.info(sm_name+" contains " + str(len(self.__datastore.get_plan())) + " states.")
+        logger.info(sm_name+" contains " + str(len(root_state.states)) + " states.")
         logger.info("State machine generation took {0:.4f} seconds.".format(time.time()- start_time))
         #open state machine
         self.__open_state_machine(state_machine,sm_path)
