@@ -7,7 +7,7 @@
 #
 # Contributors:
 # Christoph Suerig <christoph.suerig@dlr.de>
-# Version 10.04.1019
+# Version 17.04.1019
 
 
 
@@ -21,7 +21,7 @@ from rafcon.core.state_machine import StateMachine
 from rafcon.core.states.hierarchy_state import HierarchyState
 from rafcon.core.states.execution_state import ExecutionState
 from rafcon.utils import log
-
+from rafcon.utils.gui_functions import call_gui_callback
 logger = log.get_logger(__name__)
 
 
@@ -111,9 +111,9 @@ class StateMachineGenerator:
         logger.debug('Opening state machine...')
         if state_machine_manager.is_state_machine_open(state_machine.file_system_path):
             old_sm = state_machine_manager.get_open_state_machine_of_file_system_path(state_machine.file_system_path)
-            state_machine_manager.remove_state_machine(old_sm.state_machine_id)
+            call_gui_callback(state_machine_manager.remove_state_machine, old_sm.state_machine_id)
         new_state_machine = storage.load_state_machine_from_path(state_machine_path)
-        state_machine_manager.add_state_machine(new_state_machine)
+        call_gui_callback(state_machine_manager.add_state_machine,new_state_machine)
 
 
 
