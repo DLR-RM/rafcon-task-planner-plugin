@@ -112,8 +112,7 @@ class PddlActionTab:
             pred_buf = self.__pddl_predicates_text_view.get_buffer()
             types_buf = self.__pddl_types_text_view.get_buffer()
             req_dict = self.__requ_cb_dict
-            auto_fill_button.connect('clicked', self.__controller.auto_complete,
-                                     pred_buf, types_buf, req_dict, self.__get_pddl_action())
+            auto_fill_button.connect('clicked', self.__call_controller_auto_complete)
             apply_button = self.__gtk_builder.get_object('rtpp_pddl_tab_apply')
             desc_buf = self.__description_text_view.get_buffer()
             action_buf = self.__pddl_action_source_view.get_buffer()
@@ -195,6 +194,9 @@ class PddlActionTab:
         #load requirements
         for requ in requ_list:
             self.__requ_cb_dict[requ].set_active(requ in rtpp_dict['requirements'])
+
+    def __call_controller_auto_complete(self, button):
+        self.__controller.auto_complete(button, pred_buf, types_buf, req_dict, self.__get_pddl_action())
 
 
     def __filter_input(self,input):
