@@ -343,7 +343,7 @@ class Datastore:
         return self.__runtime_data_path
 
     def set_runtime_data_path(self, runtime_data_path):
-        if not runtime_data_path or not os.path.isfile(runtime_data_path):
+        if runtime_data_path and len(runtime_data_path) > 0 and not os.path.isfile(runtime_data_path):
             logger.warning('Runtime Data Path is not a Path: {}'.format(runtime_data_path))
         self.__runtime_data_path = runtime_data_path
 

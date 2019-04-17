@@ -137,13 +137,12 @@ class PlanningSetupFormController:
         #runtime section
         runtime_data_path = rt_data_path.strip()
         self.__datastore.set_use_runtime_path_as_ref(as_reference)
+        self.__datastore.set_runtime_data_path(runtime_data_path)
+        if not self.__datastore.use_runtime_path_as_ref() and runtime_data_path and len(runtime_data_path)>0:
+            if not os.path.isfile(self.__datastore.get_runtime_data_path()):
+                everything_filled = False
+                not_filled = 'Runtime Data contains no valid Filepath!'
 
-        if runtime_data_path and len(runtime_data_path)>0:
-            self.__datastore.set_runtime_data_path(runtime_data_path)
-            if not self.__datastore.use_runtime_path_as_ref():
-                if not os.path.isfile(self.__datastore.get_runtime_data_path()):
-                    everything_filled = False
-                    not_filled = 'Runtime Data contains no valid Filepath!'
 
         return (everything_filled,not_filled)
 
