@@ -6,7 +6,7 @@
 #
 # Contributors:
 # Christoph Suerig <christoph.suerig@dlr.de>
-# Version: 08.03.2019
+# Version: 18.04.2019
 import re
 from rafcontpp.model.pddl_action_representation import PddlActionRepresentation
 from rafcon.utils import log
@@ -71,7 +71,7 @@ class PddlActionParser:
         '''
         parsed = re.findall(self.__action_name_pattern,self.__action_string)
         if len(parsed) == 0:
-            logger.error("Couldn't find action name in "+self.__action_string)
+            logger.error("Couldn't parse action name from \"{}\"".format(self.__action_string))
             raise ValueError("Couldn't parse action name!")
         return parsed[0]
 

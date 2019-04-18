@@ -41,7 +41,7 @@ class ExecutionController:
         try:
             #pipeline, after input reading...
             #prepare dicts
-            #logger.debug('main thread is: {}'.format(threading.current_thread().getName()))#todo remove
+            logger.verbose('Main thread is: {}'.format(threading.current_thread().getName()))
             start_time = time.time()
             logger.debug('Handover to mapper.')
             mapper = Mapper(self.__datastore)
@@ -74,7 +74,7 @@ class ExecutionController:
     def on_execute_post_planning(self,planning_successful):
 
         try:
-            #logger.debug('post planning executed from thread: {}'.format(threading.current_thread().getName()))  # todo remove
+            logger.verbose('post planning executed from thread: {}'.format(threading.current_thread().getName()))
             # check if a plan was found.
             if planning_successful and len(self.__datastore.get_plan()) > 0:
                 logger.info('A Plan was found!')
@@ -86,6 +86,9 @@ class ExecutionController:
 
             else:
                 logger.info("No Plan was found, therefore no state machine was generated!")
+        except Exception, e:
+            traceback.print_exc()
+            logger.error("Error during State machine generation Process! :: {}".format(e.message))
         finally:
 
             if not self.__datastore.keep_related_files():
