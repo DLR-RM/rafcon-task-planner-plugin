@@ -142,6 +142,17 @@ def test_parameters_parsing_action_string():
     assert params == parameters()
 
 
+def test_normal_parse_tricy_action_of_bug1():
+    action_string = "(:action teleport" \
+                    ":parameters (?turtle - Turtle ?location - Location)" \
+                    ":precondition (and (not (alive ?turtle))(not(exists(?pos - Location)(and (at ?pos ?turtle)))))" \
+                    ":effect (and (at ?location ?turtle)))"
+
+    parser = PddlActionParser(action_string)
+    action = parser.parse_action()
+    assert ['(alive ?turtle - Turtle)','(at ?location - Location ?turtle - Turtle)'] == action.predicates
+
+
 
 
 

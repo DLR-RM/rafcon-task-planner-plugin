@@ -16,6 +16,10 @@ def state_pools():
     return ["My/state/pools"]
 
 @pytest.fixture
+def sm_name():
+    return 'my_test_sm_name'
+
+@pytest.fixture
 def sm_save_dir():
     return "my/sm/save/dir"
 
@@ -66,6 +70,7 @@ def test_datastore_from_file():
 def test_save_datastore_to_file():
     #arrange
     to_save = Datastore(state_pools(),
+                        sm_name(),
                         sm_save_dir(),
                         planner(),
                         planner_script_path(),
@@ -84,6 +89,7 @@ def test_save_datastore_to_file():
 
     # assert
     assert state_pools() == sut.get_state_pools()
+    assert sm_name() == sut.get_sm_name()
     assert sm_save_dir() == sut.get_sm_save_dir()
     assert planner() == sut.get_planner()
     assert planner_script_path() == sut.get_planner_script_path()

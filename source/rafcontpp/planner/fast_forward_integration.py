@@ -1,7 +1,8 @@
 # Contributors:
 # Christoph Suerig <christoph.suerig@dlr.de>
-# Version 21.02.2019
+# Version 11.04.2019
 import os
+import time
 import subprocess
 from rafcontpp.model.planner_interface import PlannerInterface
 from rafcontpp.model.planning_report import PlanningReport
@@ -16,6 +17,12 @@ class FfIntegration(PlannerInterface):
     '''
 
     def plan_scenario(self, domain_path, facts_path, planner_argv, storage_path):
+        # get own directory for creating files in and so on...
+        old_cwd = os.getcwd()
+        new_cwd = os.path.join(old_cwd, 'ff_planning_tmp {0:.8f}'.format(time.time()))
+        os.mkdir(new_cwd)
+        os.chdir(new_cwd)
+
         plan_path = os.path.abspath(os.path.join(storage_path, "ff_plan"))
         command = 'ff -o ' + domain_path + ' -f ' + facts_path + ' '
 
@@ -42,6 +49,10 @@ class FfIntegration(PlannerInterface):
             plan_file.close()
         else:
             stderr = stdout
+
+        # reset to old cwd
+        os.chdir(old_cwd)
+        os.rmdir(new_cwd)
         return PlanningReport(ff_exit == 0, plan, ['ff_plan'], str(ff_exit) + ': ' + str(stderr))
 
     def is_available(self):

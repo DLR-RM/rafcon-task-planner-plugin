@@ -106,4 +106,5 @@ ENV/
 
 
 #ignore testresults
-tests/control/test_data/serve_guest_statemachine/
+tests/control/test_data/serve_guest_statemachine/*
+tests/control/test_data/serve_guest_state_machine/*

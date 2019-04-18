@@ -1,11 +1,14 @@
 # Contributors:
 # Christoph Suerig <christoph.suerig@dlr.de>
-# Version 07.03.2019
+# Version 08.03.2019
 
 import os
 import time
 import traceback
+import threading
 from rafcontpp.logic.mapper import Mapper
+from rafcontpp.logic.pddl_facts_parser import PddlFactsParser
+from rafcontpp.model.pddl_facts_representation import PddlFactsRepresentation
 from rafcontpp.logic.domain_generator import DomainGenerator
 from rafcontpp.logic.state_machine_generator import StateMachineGenerator
 from rafcontpp.logic.pddl_action_loader import PddlActionLoader
@@ -17,7 +20,7 @@ logger = log.get_logger(__name__)
 
 class ExecutionController:
     """ExecutionController
-       ExecutionController controlles the execution of the planning pipeline, from mapping up to generating the state
+       ExecutionController controls the execution of the planning pipeline, from mapping up to generating the state
        machine
     """
 
@@ -38,24 +41,25 @@ class ExecutionController:
         try:
             #pipeline, after input reading...
             #prepare dicts
+            #logger.debug('main thread is: {}'.format(threading.current_thread().getName()))#todo remove
             start_time = time.time()
-            logger.debug('Handover to mapper')
+            logger.debug('Handover to mapper.')
             mapper = Mapper(self.__datastore)
             mapper.generate_action_state_map()                      #--> as_map
             mapper.generate_state_action_map()                      #--> sa_map
             mapper.generate_available_actions()                     #--> available actions
             #load actions into datastore
-            logger.debug('Handover to action loader')
+            logger.debug('Handover to action loader.')
             loader = PddlActionLoader(self.__datastore)
             loader.load_pddl_actions()
             #create domain
-            logger.debug('Handover to domain generator')
+            logger.debug('Handover to domain generator.')
             domain_generator = DomainGenerator(self.__datastore)
             domain_generator.generate_domain()                      #--> domain
             #generate plan
             logger.debug('Handover to planning controller')
             planning_controller = PlanningController(self.__datastore)
-            logger.info('Planning preparation took {0:.4f} seconds'.format(time.time()-start_time))
+            logger.info('Planning preparation took {0:.4f} seconds.'.format(time.time()-start_time))
             planning_thread = planning_controller.execute_planning(self.on_execute_post_planning)
             self.__planning_thread_register_time = self.__datastore.register_thread(planning_thread)
             return planning_thread
@@ -70,11 +74,13 @@ class ExecutionController:
     def on_execute_post_planning(self,planning_successful):
 
         try:
+            #logger.debug('post planning executed from thread: {}'.format(threading.current_thread().getName()))  # todo remove
             # check if a plan was found.
             if planning_successful and len(self.__datastore.get_plan()) > 0:
                 logger.info('A Plan was found!')
+                self.__parse_and_set_facts()
                 sm_generator = StateMachineGenerator(self.__datastore)
-                logger.debug('Handover to state machine generator')
+                logger.debug('Handover to state machine generator.')
                 sm_generator.generate_state_machine()  # --> generates state machine and opens it.
 
 
@@ -90,7 +96,7 @@ class ExecutionController:
                         os.remove(file)
                         logger.debug('Successfully removed file: ' + str(file))
                     else:
-                        logger.warning("Couldn't remove " + str(file))
+                        logger.warning("Couldn't remove: " + str(file))
             else:
                 logger.debug('Keeping files')
 
@@ -98,3 +104,16 @@ class ExecutionController:
             if self.__planning_thread_register_time is not -1:
                 if not self.__datastore.remove_thread(self.__planning_thread_register_time):
                     logger.debug("could not remove planning thread.")
+                else:
+                    logger.debug('removed planning thread successfully.')
+
+    def __parse_and_set_facts(self):
+        '''
+        i do it here, because i have no better place, later on i will do it in a dedicated facts module
+        TODO delete, and do somewhere else.
+        :return:
+        '''
+        facts_file = open(self.__datastore.get_facts_path(), 'r')
+        facts_string = facts_file.read()
+        facts_parser = PddlFactsParser(facts_string)
+        self.__datastore.set_pddl_facts_representation(PddlFactsRepresentation(facts_parser.parse_objects()))

@@ -1,6 +1,6 @@
 # Contributors:
 # Christoph Suerig <christoph.suerig@dlr.de>
-# Version 07.03.2019
+# Version 17.04.2019
 
 import gi
 gi.require_version('Gtk', '3.0')
@@ -10,27 +10,24 @@ import os
 from threading import Thread
 from rafcontpp.control.execution_controller import ExecutionController
 from rafcontpp.model.datastore import Datastore, DATASTORE_STORAGE_PATH
+from rafcontpp.control.planning_setup_form_controller import PlanningSetupFormController
+from rafcontpp.control.planning_setup_form_controller import NOT_AVAILABLE, OTHER, SEL_PLANNER
 from rafcon.utils import log
 import rafcon.gui.singleton as gui_singletons
-
 logger = log.get_logger(__name__)
-#other string, if other planner is choosen.
-OTHER = 'Other...'
-#select planner string, if nothing is choosen.
-SEL_PLANNER = '-- Select planner --'
-#printed next to planner, if it is not available.
-NOT_AVAILABLE = ' (!) Unavailable'
+
 class PlanningSetupForm:
 
 
 
 
-    def __init__(self, datastore, ):
+    def __init__(self, datastore):
         assert isinstance(datastore, Datastore)
         self.__datastore = datastore
         self.__builder = Gtk.Builder()
         self.__dialog = None
         self.__state_pool_chooser_entry = None
+        self.__controller = PlanningSetupFormController(datastore)
         self.__planning_wait_window = self.__init_planning_wait_window()
 
 
@@ -55,9 +52,13 @@ class PlanningSetupForm:
         script_path_chooser = self.__builder.get_object('script_path_chooser')
         planner_argv_entry = self.__builder.get_object('planner_argv_entry')
         facts_file_chooser = self.__builder.get_object('facts_file_chooser')
+        sm_name_entry = self.__builder.get_object('rtpp_sm_name_entry')
         sm_save_dir = self.__builder.get_object('sm_save_dir_chooser')
         keep_related_files = self.__builder.get_object('keep_produced_files_checkbox')
         file_save_dir = self.__builder.get_object('file_save_dir_chooser')
+        runtime_data_field = self.__builder.get_object('rtpp_planning_setup_form_runtime_data_path_entry')
+        runtime_data_direct = self.__builder.get_object('rtpp_planning_setup_form_runtime_data_direct_radio')
+        self.__runtime_data_reference = self.__builder.get_object('rtpp_planning_setup-form_runtime_data_reference_radio')
         #init items
         state_pool_chooser.set_filename(self.__datastore.get_state_pools()[0])
         self.__state_pool_chooser_entry.set_text(self.__string_array_to_string(self.__datastore.get_state_pools()))
@@ -65,17 +66,40 @@ class PlanningSetupForm:
         self.__init_drop_down(planner_dropdown, script_path_chooser)
         planner_argv_entry.set_text(''.join(e+" " for e in self.__datastore.get_planner_argv()).rstrip())
         facts_file_chooser.set_filename(self.__datastore.get_facts_path())
+        sm_name_entry.set_text(self.__datastore.get_sm_name())
         sm_save_dir.set_filename(self.__datastore.get_sm_save_dir())
         keep_related_files.set_active(self.__datastore.keep_related_files())
         file_save_dir.set_filename(self.__datastore.get_file_save_dir())
+        if self.__datastore.get_runtime_data_path():
+            runtime_data_field.set_text(self.__datastore.get_runtime_data_path())
+        if self.__datastore.use_runtime_path_as_ref():
+            self.__runtime_data_reference.set_active(True)
+        else:
+            runtime_data_direct.set_active(True)
         self.__dialog.show_all()
-        self.__builder.get_object('planning_form_start_button').connect('clicked', self.__on_apply)
-        self.__builder.get_object('planning_form_cancel_button').connect('clicked', self.__on_destroy)
-        state_pool_chooser.connect('file-set',self.__on_choose_state_pool)
+        self.__builder.get_object('planning_form_start_button').connect('clicked', self.__call_controller_on_apply)
+        self.__builder.get_object('planning_form_cancel_button').connect('clicked', self.__call_controller_on_destroy)
+        state_pool_chooser.connect('file-set',self.__controller.on_choose_state_pool,self.__state_pool_chooser_entry)
         #automatically choose Other... if planner script is set.
         script_path_chooser.connect('file-set', lambda x: (planner_dropdown.set_active(len(planner_dropdown.get_model()) - 1)))
 
 
+    def __call_controller_on_apply(self, button):
+        '''
+        this function is needed, to get the data when method is called, and not old data from declaration time.
+        :param button:
+        :return:
+        '''
+
+        self.__controller.on_apply(button, self.__dialog, self.__planning_wait_window,*self.__get_entered_data())
+
+    def __call_controller_on_destroy(self, button):
+        '''
+        this function is needed, to get the data when method is called, and not old data from declaration time.
+        :param button:
+        :return:
+        '''
+        self.__controller.on_destroy(button, self.__dialog, *self.__get_entered_data())
 
 
     def __init_planning_wait_window(self):
@@ -128,104 +152,21 @@ class PlanningSetupForm:
         drop_down.set_active(active_index)
 
 
-
-
-
-    def __on_apply(self, button):
-        #prepare datastore with new data from dialog.
-        #save datastore to configuration file.
-        #destroy dialog.
-        #start the pipeline to generate a sm.
-        everything_filled, not_filled = self.__prepare_datastore()
-
-        if everything_filled:
-            self.__datastore.validate_ds()
-            self.__datastore.save_datastore_parts_in_file(DATASTORE_STORAGE_PATH)
-            self.__planning_wait_window.show()
-            self.__dialog.destroy()
-            from rafcontpp.view.planning_button import increment_button
-            increment_button()#increment the button, to indecate that a new planning process has started.
-            #start pipeline
-            logger.info("Start pipeline...")
-            planning_thread = None
-            try:
-                planning_thread = ExecutionController(self.__datastore).on_execute_pre_planning()
-            finally:
-                Thread(target=self.__wait_and_hide, args=[planning_thread]).start()
-
-        else:
-            logger.error(not_filled+" missing! Please select "+ not_filled)
-
-    def __wait_and_hide(self,thread):
-        '''
-        wait and hide should be executed in another thread, it joins the planning thread, closes the wait window
-        and decrements the planning button.
-        :param thread: the thread to wait for
-        '''
-        if thread:
-            thread.join()
-        Gdk.threads_enter()
-        self.__planning_wait_window.destroy()
-        from rafcontpp.view.planning_button import decrement_button
-        decrement_button()# decrement button, to indicate, that the planning process is finish.
-        Gdk.threads_leave()
-
-    def __on_destroy(self, button):
-        #destroy dialog
-        #save data to datastore
-        #save datastore to file.
-        try:
-            self.__prepare_datastore()
-            self.__datastore.save_datastore_parts_in_file(DATASTORE_STORAGE_PATH)
-        finally:
-            self.__dialog.destroy()
-
-    def __on_choose_state_pool(self,chooser):
-        #append choosen state pool to state pool text entry.
-        to_append = chooser.get_filename()
-        pools = self.__state_pool_chooser_entry.get_text()
-        if len(pools)> 0 and pools[len(pools)-1] != ':':
-            pools+=':'
-        self.__state_pool_chooser_entry.set_text(pools + to_append + ':')
-
-
-
-
-    def __prepare_datastore(self):
-        #saves all data from the dialog into the datastore.
-        #looks if everything necessary was filled.
-        everything_filled = True
-        not_filled = None
-        logger.debug('State pool: ' + str(self.__string_to_string_array(self.__state_pool_chooser_entry.get_text())))
-        self.__datastore.add_state_pools(self.__string_to_string_array(self.__state_pool_chooser_entry.get_text()),True)
-        self.__datastore.set_type_db_path(self.__builder.get_object('type_db_chooser').get_filename())
-        choosen_planner = self.__builder.get_object('planner_dropdown').get_active_text().replace(NOT_AVAILABLE,'')
-        #set planner
-        script_path = self.__builder.get_object('script_path_chooser').get_filename()
-        if choosen_planner == OTHER:
-            choosen_planner = script_path
-        if choosen_planner == SEL_PLANNER:
-            everything_filled = False
-            not_filled = 'a Planner'
-        if choosen_planner != SEL_PLANNER:
-            self.__datastore.set_planner(choosen_planner)
-        self.__datastore.set_planner_script_path(script_path)
-        planner_argv_text = self.__builder.get_object('planner_argv_entry').get_text()
-        #set planner argv
-        if len(planner_argv_text) > 0:
-            self.__datastore.set_planner_argv(planner_argv_text.split(' '))
-        else:
-            self.__datastore.set_planner_argv([])
-
-        self.__datastore.set_facts_path(self.__builder.get_object('facts_file_chooser').get_filename())
-        self.__datastore.set_sm_save_dir(self.__builder.get_object('sm_save_dir_chooser').get_filename())
-        self.__datastore.set_keep_related_files(self.__builder.get_object('keep_produced_files_checkbox').get_active())
-        if self.__datastore.keep_related_files:
-            self.__datastore.set_file_save_dir(self.__builder.get_object('file_save_dir_chooser').get_filename())
-
-        return (everything_filled,not_filled)
-
-
+    def __get_entered_data(self):
+        state_pool_text = self.__state_pool_chooser_entry.get_text()
+        type_db_path = self.__builder.get_object('type_db_chooser').get_filename()
+        planner_text = self.__builder.get_object('planner_dropdown').get_active_text()
+        planner_script_path = self.__builder.get_object('script_path_chooser').get_filename()
+        planner_argv = self.__builder.get_object('planner_argv_entry').get_text()
+        facts_path = self.__builder.get_object('facts_file_chooser').get_filename()
+        sm_name = self.__builder.get_object('rtpp_sm_name_entry').get_text()
+        sm_save_dir = self.__builder.get_object('sm_save_dir_chooser').get_filename()
+        keep_related_files = self.__builder.get_object('keep_produced_files_checkbox').get_active()
+        file_save_dir = self.__builder.get_object('file_save_dir_chooser').get_filename()
+        rt_data_path = self.__builder.get_object('rtpp_planning_setup_form_runtime_data_path_entry').get_text()
+        as_reference = self.__runtime_data_reference.get_active()
+        return (state_pool_text, type_db_path, planner_text, planner_script_path, planner_argv,
+                facts_path, sm_name, sm_save_dir, keep_related_files, file_save_dir, rt_data_path, as_reference)
 
 
     def __string_array_to_string(self,list):
@@ -237,6 +178,3 @@ class PlanningSetupForm:
 
             return toReturn
 
-    def __string_to_string_array(self,string):
-        # helper method for state pool text entry
-        return list(filter(None,string.split(':')))

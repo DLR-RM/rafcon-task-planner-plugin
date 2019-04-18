@@ -7,18 +7,21 @@
 #
 # Contributors:
 # Christoph Suerig <christoph.suerig@dlr.de>
-# Version 17.12.1018
+# Version 17.04.1019
 
 
 
 import os
+import time
+import json
 from rafcon.core.storage import storage
 from rafcon.core.singleton import library_manager
 from rafcon.core.singleton import state_machine_manager
 from rafcon.core.state_machine import StateMachine
 from rafcon.core.states.hierarchy_state import HierarchyState
+from rafcon.core.states.execution_state import ExecutionState
+from rafcon.utils.gui_functions import call_gui_callback
 from rafcon.utils import log
-
 logger = log.get_logger(__name__)
 
 
@@ -37,15 +40,31 @@ class StateMachineGenerator:
         :param self:
         :return: nothing
         '''
-        logger.info('Creating Statemachine...')
-        sm_name = self.__datastore.get_problem_name()+'_statemachine'
+        sm_name = self.__datastore.get_sm_name()
+        sm_name = self.__datastore.get_problem_name()+'_state_machine' if len(sm_name) == 0 else sm_name
         sm_path = os.path.abspath(os.path.join(self.__datastore.get_sm_save_dir(), sm_name))
         a_s_map = self.__datastore.get_action_state_map()
-
         pddl_action_dict = self.__datastore.get_pddl_action_map()
+        logger.info('Creating State machine \"'+sm_name+'\"...')
+        start_time = time.time()
+        # set root-state id to old root-state id, in case the state machine is replanned.
+        # why is it important? - if you added the planned sm as a library, replan it and refresh it,
+        # rafcon will throw an error, if the refreshed library has a different root-state id. 
+        if os.path.isdir(sm_path):
+            # rootstate id of rootstate in old sm.
+            old_sm_rs_id = storage.load_state_machine_from_path(sm_path).root_state.state_id
+            root_state = HierarchyState(name=sm_name, state_id=old_sm_rs_id)
+        else:
+            root_state = HierarchyState(sm_name)
 
-        root_state = HierarchyState(sm_name)
         last_state = None
+        # add global data init state and set start state
+        runtime_data_path = self.__datastore.get_runtime_data_path()
+        if runtime_data_path and len(runtime_data_path)>0:
+            last_state = self.__get_runtime_data_init_state(runtime_data_path, self.__datastore.use_runtime_path_as_ref())
+            root_state.add_state(last_state)
+            root_state.set_start_state(last_state.state_id)
+        facts = self.__datastore.get_pddl_facts_representation()
         for plan_step in self.__datastore.get_plan():
             #the name of a plan step is an action name.
             if plan_step.name in a_s_map:
@@ -59,7 +78,8 @@ class StateMachineGenerator:
                        if c_input_data_ports[key].name in c_pddl_action.parameters:
                            index = c_pddl_action.parameters.index(c_input_data_ports[key].name)
                            #plan_step.parameter contains parameter values
-                           current_state.input_data_port_runtime_values[key] = plan_step.parameter[index]
+                           current_state.input_data_port_runtime_values[key] = \
+                                                            facts.get_original_object_name(plan_step.parameter[index])
                        else:
                            logger.warn("Action "+c_pddl_action.name+" has no Parameter "
                                        +c_input_data_ports[key].name+", which is needed in State "+current_state.name)
@@ -78,8 +98,9 @@ class StateMachineGenerator:
         state_machine = StateMachine(root_state=root_state)
         storage.save_state_machine_to_path(state_machine, sm_path)
         library_manager.refresh_libraries()
-        logger.info("State machine " + sm_name + " created. It contains " + str(
-            len(self.__datastore.get_plan())) + " states.")
+        logger.info("State machine \"" + sm_name + "\" created.")
+        logger.info(sm_name+" contains " + str(len(root_state.states)) + " states.")
+        logger.info("State machine generation took {0:.4f} seconds.".format(time.time()- start_time))
         #open state machine
         self.__open_state_machine(state_machine,sm_path)
 
@@ -90,9 +111,9 @@ class StateMachineGenerator:
         logger.debug('Opening state machine...')
         if state_machine_manager.is_state_machine_open(state_machine.file_system_path):
             old_sm = state_machine_manager.get_open_state_machine_of_file_system_path(state_machine.file_system_path)
-            state_machine_manager.remove_state_machine(old_sm.state_machine_id)
+            call_gui_callback(state_machine_manager.remove_state_machine, old_sm.state_machine_id)
         new_state_machine = storage.load_state_machine_from_path(state_machine_path)
-        state_machine_manager.add_state_machine(new_state_machine)
+        call_gui_callback(state_machine_manager.add_state_machine,new_state_machine)
 
 
 
@@ -120,5 +141,23 @@ class StateMachineGenerator:
 
         return return_state
 
+    def __get_runtime_data_init_state(self, data_init_file_path, use_as_ref):
+        '''
+
+        :param data_init_file_path: The path of a file containing a json dict
+        :param use_as_ref: True if the path should be included as reference, False if the dictionary itself should be included.
+        :return: an Execution state, that will initialize the rtpp_data dict in the global variables.
+        '''
+
+        data_init_state = ExecutionState(name='Global Variable Initialization (rtpp_data)')
+        data_to_load = None
+        if use_as_ref:
+            data_to_load = 'json.load(open("{}", "r"))'.format(data_init_file_path)
+            data_init_state.script_text = 'import json{}'.format(data_init_state.script_text)
+        else:
+            data_to_load = json.dumps(json.load(open(data_init_file_path, "r")), indent=2, separators=(',', ': '))
+        execute_str = 'gvm.set_variable(\'{}\',{})'.format('rtpp_data',data_to_load)
+        data_init_state.script_text = data_init_state.script_text.replace('self.logger.debug("Hello world")',execute_str)
+        return data_init_state
 
 

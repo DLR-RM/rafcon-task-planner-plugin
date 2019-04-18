@@ -1,5 +1,0 @@
-[
-  "test_mapper.py::test_generate_action_state_map", 
-  "test_mapper.py::test_generate_state_action_map", 
-  "test_mapper.py::test_generate_available_actions"
-]

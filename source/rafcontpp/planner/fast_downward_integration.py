@@ -1,7 +1,8 @@
 # Contributors:
 # Christoph Suerig <christoph.suerig@dlr.de>
-# Version 28.01.2019
+# Version 11.04.2019
 import os
+import time
 import shutil
 import subprocess
 from rafcontpp.model.planner_interface import PlannerInterface
@@ -16,8 +17,12 @@ class FdIntegration(PlannerInterface):
     '''
 
 
-
     def plan_scenario(self, domain_path, facts_path, planner_argv, storage_path):
+        #get own directory for creating files in and so on...
+        old_cwd = os.getcwd()
+        new_cwd = os.path.join(old_cwd,'fd_planning_tmp {0:.8f}'.format(time.time()))
+        os.mkdir(new_cwd)
+        os.chdir(new_cwd)
 
         command ='fast-downward '+domain_path+' '+facts_path+' '
         plan_path = os.path.abspath(os.path.join(os.curdir, "sas_plan"))
@@ -41,6 +46,9 @@ class FdIntegration(PlannerInterface):
 
         self.__copy_and_clean(plan_path, outsas, storage_path)
 
+         #reset to old cwd
+        os.chdir(old_cwd)
+        os.rmdir(new_cwd)
         return PlanningReport(fd_exit < 4,
                               plan,
                               ['sas_plan', 'output.sas'],
@@ -85,6 +93,7 @@ class FdIntegration(PlannerInterface):
             shutil.move(plan_path, os.path.join(storage_path, 'sas_plan'))
         if os.path.isfile(outsas_path):
             shutil.move(outsas_path, os.path.join(storage_path, 'output.sas'))
+
 
     def __translate_fd_exit_code(self,fd_exit):
 

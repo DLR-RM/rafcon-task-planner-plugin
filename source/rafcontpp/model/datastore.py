@@ -2,7 +2,7 @@
 #
 # Contributors:
 # Christoph Suerig <christoph.suerig@dlr.de>
-# Version 07.03.2019
+# Version 18.04.2019
 import os
 import json
 import threading
@@ -46,13 +46,15 @@ def datastore_from_file(file_path):
         logger.warning("Can't restore configuration from: " + str(file_path))
         logger.info("Creating default configuration...")
         default_dir = str(os.path.expanduser('~'))
-        ds = Datastore([default_dir], default_dir, built_in_planners.keys()[0], default_dir, [], default_dir,
-                  default_dir, False)
+        ds = Datastore([default_dir],'',
+                       default_dir, built_in_planners.keys()[0], default_dir, [], default_dir, default_dir, False)
 
     else:
         data = json.load(open(file_path, "r"))
         logger.debug('Loading Configuration form: '+file_path)
+        sm_name = data['sm_name'] if 'sm_name' in data else '' #To provide backward compatibility.
         ds = Datastore(data['state_pools'],
+                     sm_name,
                      data['sm_save_dir'],
                      data['planner'],
                      data['planner_script_path'],
@@ -61,6 +63,11 @@ def datastore_from_file(file_path):
                      data['type_db_path'],
                      data['keep_related_files'],
                      data['file_save_dir'])
+        runtime_data_path = data['runtime_data_path'] if 'runtime_data_path' in data else '' #To provide backward compatibility.
+        runtime_as_ref = data['runtime_as_ref'] if 'runtime_as_ref' in data else False #To provide backward compatibility.
+        ds.set_runtime_data_path(runtime_data_path)
+        ds.set_use_runtime_path_as_ref(runtime_as_ref)
+
         logger.info("Red configuration successfully!")
     return ds
 
@@ -70,11 +77,12 @@ class Datastore:
     Datastore is a datastore, which holds all data of the plugin. Every module can get, and store its data here.
     '''
 
-    def __init__(self, state_pools,sm_save_dir, planner,planner_script_path, planner_argv,
+    def __init__(self, state_pools,sm_name,sm_save_dir, planner,planner_script_path, planner_argv,
                facts_path,type_db_path,keep_related_files, file_save_dir=os.path.join(os.getcwd(), 'related_files')):
         '''
          Constructor of Datastore
         :param state_pools: a list of file paths.
+        :param sm_name: the name of the state machine which will be generated.
         :param sm_save_dir: the directory, where to save the generated state machine.
         :param planner: the name / script path of the used planner.
         :param planner_argv: a String array, with arguments for the planner.
@@ -86,6 +94,8 @@ class Datastore:
 
         #a list of directories, containing states with pddl notation.
         self.__state_pools = state_pools
+        #the name of the state machine, which will be generated.
+        self.__sm_name = sm_name
         #the location, to save the generated state machine in.
         self.__sm_save_dir = sm_save_dir
         #the complete path of the facts file (e.g. /home/facts.pddl).
@@ -117,6 +127,8 @@ class Datastore:
         self.__pddl_action_map = None
         # a list, contining the names of all available actions.
         self.__available_actions = None
+        # a PddlFactsRepresentation Object, containing the parsed facts file.
+        self.__pddl_facts_representation = None
         # a typeTree containing all available types
         self.__available_types = None
         # a list of (String,[(String,integer)]) prediactes
@@ -125,6 +137,10 @@ class Datastore:
         self.__plan = None
         # a list with the name of all files, generated during the pipeline execution.
         self.__generated_files = []
+        # the complete path of the runtime data dict, which holds data required during the run of the generated sm.
+        self.__runtime_data_path = None
+        # if true the runtime_data is red during runtime, otherwhise its red when generating the sm.
+        self.__use_runtime_data_path_as_reference = False
 
 
 
@@ -164,7 +180,10 @@ class Datastore:
         with planning_threads_lock:
             global planning_threads
             register_time = time.time()#unix timestamp
-            planning_threads[register_time] = (interruptable_thread,self.get_problem_name())
+            #set task name to sm name, or problem name, if no sm name is available.
+            planning_threads[register_time] = (interruptable_thread,
+                                            self.get_problem_name() if self.get_sm_name() == 0 else self.get_sm_name(),
+                                            self.get_planner())
         return register_time
 
     def remove_thread(self, key):
@@ -216,6 +235,13 @@ class Datastore:
             logger.error('file_save_dir must be a directory')
             raise ValueError('Is not a directory: '+str(file_save_dir))
         self.__file_save_dir = file_save_dir
+
+
+    def get_sm_name(self):
+        return self.__sm_name
+
+    def set_sm_name(self, name):
+        self.__sm_name = name
 
     def get_sm_save_dir(self):
         return self.__sm_save_dir
@@ -295,8 +321,8 @@ class Datastore:
 
     def set_state_action_map(self,state_action_map):
         if state_action_map is None:
-            logger.error("can't set None value as state_action_map")
-            raise ValueError("can't set None value as state_action_map")
+            logger.error("can't set None value as state_action_map.")
+            raise ValueError("can't set None value as state_action_map.")
         self.__state_action_map = state_action_map
 
     def get_available_actions(self):
@@ -304,20 +330,43 @@ class Datastore:
 
     def set_available_actions(self,available_actions):
         if available_actions is None:
-            logger.error("can't set None value as available_actions")
-            raise ValueError("can't set None value as available_actions")
+            logger.error("Can't set None value as available_actions.")
+            raise ValueError("Can't set None value as available_actions.")
         self.__available_actions = available_actions
+
+    def set_pddl_facts_representation(self, facts_representation):
+        if facts_representation is None:
+            logger.error("Can't set None value as pddl_facts_representation.")
+            raise ValueError("Can't set None value as pddl_facts_representation.")
+        self.__pddl_facts_representation = facts_representation
+
+    def get_runtime_data_path(self):
+        return self.__runtime_data_path
+
+    def set_runtime_data_path(self, runtime_data_path):
+        if runtime_data_path and len(runtime_data_path) > 0 and not os.path.isfile(runtime_data_path):
+            logger.warning('Runtime Data Path is not a Path: {}'.format(runtime_data_path))
+        self.__runtime_data_path = runtime_data_path
+
+    def use_runtime_path_as_ref(self):
+        return self.__use_runtime_data_path_as_reference
+
+    def set_use_runtime_path_as_ref(self, use):
+        self.__use_runtime_data_path_as_reference = use
+
+    def get_pddl_facts_representation(self):
+        return self.__pddl_facts_representation
 
     def get_plan(self):
         return self.__plan
 
     def set_plan(self,plan):
         if plan is None:
-            logger.error("can't set None value as plan")
-            raise ValueError("can't set None value as plan")
+            logger.error("can't set None value as plan.")
+            raise ValueError("can't set None value as plan.")
         if len(plan) > 0 and (not isinstance(plan[0],PlanStep)):
-            logger.error("plan hast to be of type [PlanStep]")
-            raise TypeError("plan hast to be of type [PlanStep]")
+            logger.error("plan hast to be of type [PlanStep].")
+            raise TypeError("plan hast to be of type [PlanStep].")
         self.__plan = plan
 
     def keep_related_files(self):
@@ -385,9 +434,12 @@ class Datastore:
             'planner_script_path': self.__planner_script_path,
             'planner_argv': self.__planner_argv,
             'facts_path': self.__facts_path,
+            'sm_name': self.__sm_name,
             'sm_save_dir': self.__sm_save_dir,
             'keep_related_files': self.__keep_related_files,
-            'file_save_dir': self.__file_save_dir
+            'file_save_dir': self.__file_save_dir,
+            'runtime_data_path':self.__runtime_data_path,
+            'runtime_as_ref':self.__use_runtime_data_path_as_reference
         }
         logger.debug('Writing Configuration to path: '+file_path)
         conf_file = open(file_path, "w")
