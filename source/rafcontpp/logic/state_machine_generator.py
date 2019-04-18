@@ -20,8 +20,8 @@ from rafcon.core.singleton import state_machine_manager
 from rafcon.core.state_machine import StateMachine
 from rafcon.core.states.hierarchy_state import HierarchyState
 from rafcon.core.states.execution_state import ExecutionState
-from rafcon.utils import log
 from rafcon.utils.gui_functions import call_gui_callback
+from rafcon.utils import log
 logger = log.get_logger(__name__)
 
 

@@ -5,6 +5,7 @@
 import os
 import time
 import traceback
+import threading
 from rafcontpp.logic.mapper import Mapper
 from rafcontpp.logic.pddl_facts_parser import PddlFactsParser
 from rafcontpp.model.pddl_facts_representation import PddlFactsRepresentation
@@ -40,6 +41,7 @@ class ExecutionController:
         try:
             #pipeline, after input reading...
             #prepare dicts
+            #logger.debug('main thread is: {}'.format(threading.current_thread().getName()))#todo remove
             start_time = time.time()
             logger.debug('Handover to mapper.')
             mapper = Mapper(self.__datastore)
@@ -72,6 +74,7 @@ class ExecutionController:
     def on_execute_post_planning(self,planning_successful):
 
         try:
+            #logger.debug('post planning executed from thread: {}'.format(threading.current_thread().getName()))  # todo remove
             # check if a plan was found.
             if planning_successful and len(self.__datastore.get_plan()) > 0:
                 logger.info('A Plan was found!')
@@ -101,6 +104,8 @@ class ExecutionController:
             if self.__planning_thread_register_time is not -1:
                 if not self.__datastore.remove_thread(self.__planning_thread_register_time):
                     logger.debug("could not remove planning thread.")
+                else:
+                    logger.debug('removed planning thread successfully.')
 
     def __parse_and_set_facts(self):
         '''

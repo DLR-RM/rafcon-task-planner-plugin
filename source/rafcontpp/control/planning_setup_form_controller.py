@@ -1,11 +1,12 @@
 # Contributors:
 # Christoph Suerig <christoph.suerig@dlr.de>
-# Version 17.04.2019
+# Version 18.04.2019
 
 
 import os
-from gi.repository import Gdk
+import threading
 from threading import Thread
+from rafcon.utils.gui_functions import call_gui_callback
 from rafcontpp.control.execution_controller import ExecutionController
 from rafcontpp.model.datastore import Datastore, DATASTORE_STORAGE_PATH
 from rafcon.utils import log
@@ -43,6 +44,7 @@ class PlanningSetupFormController:
         if everything_filled:
             self.__datastore.validate_ds()
             self.__datastore.save_datastore_parts_in_file(DATASTORE_STORAGE_PATH)
+            setup_form.hide()#its more smoothly to first hide and then destroy
             planning_wait_window.show()
             setup_form.destroy()
             from rafcontpp.view.planning_button import increment_button
@@ -53,7 +55,9 @@ class PlanningSetupFormController:
             try:
                 planning_thread = ExecutionController(self.__datastore).on_execute_pre_planning()
             finally:
-                Thread(target=self.__wait_and_hide, args=[planning_thread, planning_wait_window]).start()
+                Thread(target=self.__wait_and_hide,
+                       args=[planning_thread, planning_wait_window],
+                       name='PlanningObserverThread').start()
 
         else:
             logger.error(" Field missing! {}".format(not_filled))
@@ -64,13 +68,14 @@ class PlanningSetupFormController:
         and decrements the planning button.
         :param thread: the thread to wait for
         '''
-        if thread:
+        #logger.debug('wait_and_hide executed from thread: {}'.format(threading.current_thread().getName()))#todo remove
+        if thread and thread.is_alive():
             thread.join()
-        Gdk.threads_enter()
-        planning_wait_window.destroy()
+        call_gui_callback(planning_wait_window.hide)#its more smoothly to first hide and then destroy
+        call_gui_callback(planning_wait_window.destroy)
         from rafcontpp.view.planning_button import decrement_button
-        decrement_button()# decrement button, to indicate, that the planning process is finish.
-        Gdk.threads_leave()
+        call_gui_callback(decrement_button)# decrement button, to indicate, that the planning process is finish.
+
 
     def on_destroy(self, button, setup_form, state_pool_string,
                             type_db_path,planner_text,planner_script_path,planner_argv_text,
