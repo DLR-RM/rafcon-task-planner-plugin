@@ -149,7 +149,7 @@ class StateMachineGenerator:
         :return: an Execution state, that will initialize the rtpp_data dict in the global variables.
         '''
 
-        data_init_state = ExecutionState(name='Global Variable Initialization (rtpp_data)')
+        data_init_state = ExecutionState(name='Runtime Data Initialization (rtpp_data)')
         data_to_load = None
         if use_as_ref:
             data_to_load = 'json.load(open("{}", "r"))'.format(data_init_file_path)

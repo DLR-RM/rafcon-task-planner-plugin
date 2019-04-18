@@ -32,7 +32,9 @@ def get_planning_threads():
     '''
     :return: a copy of the planning_threads dict.
     '''
-    return planning_threads.copy()
+    with planning_threads_lock:
+        copy = planning_threads.copy()
+    return copy
 
 def datastore_from_file(file_path):
     ''' datastore_from_file
@@ -43,7 +45,7 @@ def datastore_from_file(file_path):
     '''
     ds = None
     if not os.path.isfile(file_path):
-        logger.warning("Can't restore configuration from: " + str(file_path))
+        logger.warning("Can't restore configuration from: {}".format(file_path))
         logger.info("Creating default configuration...")
         default_dir = str(os.path.expanduser('~'))
         ds = Datastore([default_dir],'',
@@ -68,7 +70,7 @@ def datastore_from_file(file_path):
         ds.set_runtime_data_path(runtime_data_path)
         ds.set_use_runtime_path_as_ref(runtime_as_ref)
 
-        logger.info("Red configuration successfully!")
+        logger.info("Read configuration successfully!")
     return ds
 
 
@@ -177,8 +179,8 @@ class Datastore:
         :param interruptable_thread: a thread, the Datastore should store
         :return: the key used to register the thread. (That's the register time as unixtimestamp.)
         '''
+
         with planning_threads_lock:
-            global planning_threads
             register_time = time.time()#unix timestamp
             #set task name to sm name, or problem name, if no sm name is available.
             planning_threads[register_time] = (interruptable_thread,
@@ -195,7 +197,6 @@ class Datastore:
 
         successful = False
         with planning_threads_lock:
-            global planning_threads
             if key in planning_threads.keys():
                 del planning_threads[key]
                 successful = not (key in planning_threads.keys())
@@ -443,7 +444,7 @@ class Datastore:
         }
         logger.debug('Writing Configuration to path: '+file_path)
         conf_file = open(file_path, "w")
-        conf_file.write(json.dumps(data_to_save))
+        conf_file.write(json.dumps(data_to_save, indent=2,sort_keys=True, separators=(',', ': ')))
         conf_file.flush()
         conf_file.close()
         logger.info('Saved Configuration successfully!')
