@@ -2,6 +2,7 @@
 - added tooltips for a better understanding
 - added a state machine name into the setup form, so that the state machine that will be generated can now be named freely
 - added a possibility to add runtime data into the state machine, which will be stored in a global dictionary in rafcon, when the   state machine is executed. Therefore the Data can be included directly into the state machine, or as reference (asfile path), and be read during runtime. (the data has to be provided as (nested) json dictionary)
+- started to parse the facts file, in order to get consistent object names. Some planner change 'pizza' indo 'PIZZA' because pddl is case insensitive. To prevent that, variable names in the plan are later exchanged with the original definition in the facts file.
 - removed some minor and major bugs e.g. a gui freeze bug
 - wrote documentation
 - wrote unittests
