@@ -458,7 +458,7 @@ In order not to Include any data, just leave the Runtime Data field empty.</prop
                 <property name="can_focus">False</property>
                 <child>
                   <object class="GtkRadioButton" id="rtpp_planning_setup_form_runtime_data_direct_radio">
-                    <property name="label" translatable="yes">direct</property>
+                    <property name="label" translatable="yes">as copy</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">False</property>

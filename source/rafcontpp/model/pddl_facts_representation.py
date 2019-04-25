@@ -9,6 +9,7 @@ class PddlFactsRepresentation:
 
 
     def __init__(self,obj_type_map):
+        #contains the objects of the facts file and their types as dict value.
         self.__obj_type_map = obj_type_map
 
 
