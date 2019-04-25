@@ -46,7 +46,10 @@ class PlanningController:
         if to_import is None:
             logger.debug('Planner string was no built-in planner')
             planner_choice = self.__split_and_add_to_path(planner_choice)
-            to_import = self.__discover_class(planner_choice)
+            try:
+                to_import = self.__discover_class(planner_choice)
+            except ImportError:
+                to_import = None
 
         if to_import is None:
             logger.error("Couldn't discover planner "+planner_choice)
