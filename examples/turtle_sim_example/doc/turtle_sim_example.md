@@ -45,7 +45,7 @@ turtle_sim_state_machine is the one we will execute later. If you open it now, y
 This is the machine we will plan, and also the one where everything happens. Inside of the Core Turtles are spawned, moved and eaten.
 
 ### turtle_lib:  
-This folder contains a bunch of states. These are the bricks used to plan our scenario. Most of them are enriched with an PDDL action, but not all of them so don't be surprised, if the plugin warns you later on, during the planning process. 
+This folder contains a bunch of states. These are the bricks used to plan our scenario. Most of them are enriched with an PDDL action, but not all. So don't be surprised, if the plugin warns you later on during the planning process. 
 
 ## Planning
 
@@ -84,6 +84,8 @@ Feel free to have a look into the file, and see all object definitions.
 At this radio button group we can decide, if we want to add the data directly into the state, or if we only want to reference the data file. This can be usefull in lots of situations, but in our scenario its unimportant. so you can try both if you want. 
 
 
+Now we can generate the core state machine.
+
 ## Execution
 Now we have planned the core machine, and are ready to watch turtles moving arround. Just open the **turtle_sim_state_machine**, and refresh it bevore execution. 
 
@@ -92,7 +94,19 @@ have fun!
 
 ## Last Words on Data Flow
 
-TODO!
+Well as we have seen above we get some how an object identifier in our states, and somewhere is a definition for this identifier stored in a json file. But how does this actually work? - Like this:
+
+All definitions you made in the file are available during runtime in a dictionary called **rtpp_data**, which is stored as a global variable in RAFCON. For example let's assume you got the object identifier `top_left` (which is an location of our example) passed, and want to know the locations x-coordinate: 
+
+1. At first you would like to get the rtpp_data dictionary:   
+   `rtpp_data = gvm.get_variable('rtpp_data')`
+
+2. As second step you would like to have the actual `top_left` object:  
+  `top_left_object = rtpp_data['top_left']`
+
+3. And in the last step you would get the x-coordinate like this:  
+   `x = top_left_object['x_coordinate']`
+
 
 
 
