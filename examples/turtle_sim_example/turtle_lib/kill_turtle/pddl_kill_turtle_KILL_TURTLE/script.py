@@ -10,5 +10,6 @@ def execute(self, inputs, outputs, gvm):
     rospy.wait_for_service(service)
     kill_turtle_service = rospy.ServiceProxy(service, Kill)
     resp1 = kill_turtle_service(turtle_name)
-    self.logger.info("ROS external module: executed the {} service".format(service))
+    self.logger.verbose("ROS external module: executed the {} service".format(service))
+    self.logger.info('Killing {}'.format(turtle_name))
     return 0

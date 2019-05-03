@@ -39,7 +39,7 @@ def execute(self, inputs, outputs, gvm):
         r.sleep()
 
 
-    self.logger.info("turtle_position_subscriber: position of user turtle {} {} {}".format(str(x), str(y), str(theta)))
+    self.logger.verbose("turtle_position_subscriber: position of user turtle {} {} {}".format(str(x), str(y), str(theta)))
     gvm.set_variable(global_storage_id + "/" + "x", x)
     gvm.set_variable(global_storage_id + "/" + "y", y)
     gvm.set_variable(global_storage_id + "/" + "phi", theta)

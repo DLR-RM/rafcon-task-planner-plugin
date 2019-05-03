@@ -35,7 +35,7 @@ def set_velocity(x, phi, turtle_name, logger):
     rotation_vector = Vector3(0, 0, phi)
     twist_msg = Twist(position_vector, rotation_vector)
     try:
-        logger.info("move_to_position: publish twist to turtle".format(turtle_name))
+        logger.verbose("move_to_position: publish twist to turtle".format(turtle_name))
         turtle_vel_publisher = rospy.Publisher("/" + turtle_name + "/cmd_vel", Twist, queue_size=10, latch=True)
         turtle_vel_publisher.publish(twist_msg)
         rate = rospy.Rate(10)
@@ -46,11 +46,11 @@ def set_velocity(x, phi, turtle_name, logger):
 
 def execute(self, inputs, outputs, gvm):
     pddl_map = gvm.get_variable('rtpp_data')
-    self.logger.info("move_to_position: inputs of move_difference: {}".format(str(inputs)))
+    self.logger.verbose("move_to_position: inputs of move_difference: {}".format(str(inputs)))
     turtle = pddl_map[inputs['turtle']]
     global_storage_id_of_turtle_pose = turtle["global_storage_id_of_turtle_pos"]
     turtle_name = turtle["name"]
-
+    self.logger.verbose('{} is moving to {}'.format(turtle_name, inputs['destination']))
     my_x = gvm.get_variable(global_storage_id_of_turtle_pose + "/" + "x")
     my_y = gvm.get_variable(global_storage_id_of_turtle_pose + "/" + "y")
     my_phi = gvm.get_variable(global_storage_id_of_turtle_pose + "/" + "phi")
@@ -109,8 +109,8 @@ def execute(self, inputs, outputs, gvm):
     if distance < 0.5:
         x_move = 0
         theta_move = 0
-    self.logger.info("move_to_position: final theta_move: {}".format(str(theta_move)))
-    self.logger.info("move_to_position: final x_move: {}".format(str(x_move)))
+    self.logger.verbose("move_to_position: final theta_move: {}".format(str(theta_move)))
+    self.logger.verbose("move_to_position: final x_move: {}".format(str(x_move)))
 
     set_velocity(x_move, theta_move, turtle_name, self.logger)
     if x_move == 0:

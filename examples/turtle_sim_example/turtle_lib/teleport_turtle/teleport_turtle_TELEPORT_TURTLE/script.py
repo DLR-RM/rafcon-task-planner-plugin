@@ -13,5 +13,6 @@ def execute(self, inputs, outputs, gvm):
     rospy.wait_for_service(service)
     move_turtle = rospy.ServiceProxy(service, TeleportAbsolute)
     resp1 = move_turtle(x, y, phi)
-    self.logger.info("ROS external module: executed the {} service".format(service))
+    self.logger.verbose("ROS external module: executed the {} service".format(service))
+    self.logger.info('Teleporting turtle {} to location {}'.format(turtle_name,inputs['location']))
     return 0

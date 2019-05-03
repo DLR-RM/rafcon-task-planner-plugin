@@ -1,21 +1,21 @@
 {
     "__jsonqualname__": "rafcon.core.states.hierarchy_state.HierarchyState", 
     "data_flows": {
-        "1": {
-            "__jsonqualname__": "rafcon.core.state_elements.data_flow.DataFlow", 
-            "data_flow_id": 1, 
-            "from_key": 1, 
-            "from_state": "BQUUXK", 
-            "to_key": 6, 
-            "to_state": "XQOPMO"
-        }, 
         "2": {
             "__jsonqualname__": "rafcon.core.state_elements.data_flow.DataFlow", 
             "data_flow_id": 2, 
             "from_key": 0, 
             "from_state": "BQUUXK", 
             "to_key": 7, 
-            "to_state": "XQOPMO"
+            "to_state": "AUXYJV"
+        }, 
+        "3": {
+            "__jsonqualname__": "rafcon.core.state_elements.data_flow.DataFlow", 
+            "data_flow_id": 3, 
+            "from_key": 1, 
+            "from_state": "BQUUXK", 
+            "to_key": 6, 
+            "to_state": "AUXYJV"
         }
     }, 
     "description": null, 
@@ -64,29 +64,29 @@
     "scoped_variables": {}, 
     "state_id": "BQUUXK", 
     "transitions": {
-        "1": {
-            "__jsonqualname__": "rafcon.core.state_elements.transition.Transition", 
-            "from_outcome": 0, 
-            "from_state": "XQOPMO", 
-            "to_outcome": null, 
-            "to_state": "FODKKX", 
-            "transition_id": 1
-        }, 
-        "2": {
-            "__jsonqualname__": "rafcon.core.state_elements.transition.Transition", 
-            "from_outcome": 0, 
-            "from_state": "FODKKX", 
-            "to_outcome": 0, 
-            "to_state": "BQUUXK", 
-            "transition_id": 2
-        }, 
         "3": {
             "__jsonqualname__": "rafcon.core.state_elements.transition.Transition", 
             "from_outcome": null, 
             "from_state": null, 
             "to_outcome": null, 
-            "to_state": "XQOPMO", 
+            "to_state": "AUXYJV", 
             "transition_id": 3
+        }, 
+        "68": {
+            "__jsonqualname__": "rafcon.core.state_elements.transition.Transition", 
+            "from_outcome": 0, 
+            "from_state": "AUXYJV", 
+            "to_outcome": null, 
+            "to_state": "CAWXIR", 
+            "transition_id": 68
+        }, 
+        "69": {
+            "__jsonqualname__": "rafcon.core.state_elements.transition.Transition", 
+            "from_outcome": 0, 
+            "from_state": "CAWXIR", 
+            "to_outcome": 0, 
+            "to_state": "BQUUXK", 
+            "transition_id": 69
         }
     }
 }

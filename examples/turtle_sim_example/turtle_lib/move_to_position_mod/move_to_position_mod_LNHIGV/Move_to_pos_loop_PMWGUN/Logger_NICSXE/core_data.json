@@ -12,19 +12,19 @@
                 "__type__": "__builtin__.str"
             }, 
             "default_value": null, 
-            "name": "eater"
+            "name": "turtle"
         }, 
-        "13": {
+        "1": {
             "__jsonqualname__": "rafcon.core.state_elements.data_port.InputDataPort", 
-            "data_port_id": 13, 
+            "data_port_id": 1, 
             "data_type": {
                 "__type__": "__builtin__.str"
             }, 
-            "default_value": "new_turtle", 
-            "name": "turtle"
+            "default_value": null, 
+            "name": "destination"
         }
     }, 
-    "name": "eat turtle", 
+    "name": "Logger", 
     "outcomes": {
         "-2": {
             "__jsonqualname__": "rafcon.core.state_elements.logical_port.Outcome", 
@@ -43,5 +43,5 @@
         }
     }, 
     "output_data_ports": {}, 
-    "state_id": "KILL_TURTLE"
+    "state_id": "NICSXE"
 }

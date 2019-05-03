@@ -4,7 +4,7 @@
         "15": "new_turtle"
     }, 
     "library_name": "turtle_position_subscriber", 
-    "library_path": "turtle_libraries", 
+    "library_path": "turtle_sim_example/turtle_lib", 
     "name": "turtle position subscriber", 
     "outcomes": {
         "-2": {
@@ -28,7 +28,7 @@
         "17": null, 
         "18": null
     }, 
-    "state_id": "HVJHZP", 
+    "state_id": "XAMUDB", 
     "use_runtime_value_input_data_ports": {
         "15": true
     }, 

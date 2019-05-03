@@ -46,6 +46,19 @@
             }
         }
     }, 
+    "input_data_port0": {
+        "gui": {
+            "editor_gaphas": {
+                "rel_pos": {
+                    "__jsonqualname__": "__builtin__.tuple", 
+                    "items": [
+                        0, 
+                        82.0
+                    ]
+                }
+            }
+        }
+    }, 
     "input_data_port13": {
         "gui": {
             "editor_gaphas": {

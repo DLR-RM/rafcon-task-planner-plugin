@@ -1,13 +1,13 @@
 {
     "__jsonqualname__": "rafcon.core.states.hierarchy_state.HierarchyState", 
     "data_flows": {
-        "6": {
+        "1": {
             "__jsonqualname__": "rafcon.core.state_elements.data_flow.DataFlow", 
-            "data_flow_id": 6, 
+            "data_flow_id": 1, 
             "from_key": 0, 
             "from_state": "KWNJUD", 
             "to_key": 15, 
-            "to_state": "HVJHZP"
+            "to_state": "XAMUDB"
         }
     }, 
     "description": null, 
@@ -47,21 +47,21 @@
     "scoped_variables": {}, 
     "state_id": "KWNJUD", 
     "transitions": {
-        "13": {
+        "1": {
+            "__jsonqualname__": "rafcon.core.state_elements.transition.Transition", 
+            "from_outcome": 0, 
+            "from_state": "XAMUDB", 
+            "to_outcome": null, 
+            "to_state": "XAMUDB", 
+            "transition_id": 1
+        }, 
+        "2": {
             "__jsonqualname__": "rafcon.core.state_elements.transition.Transition", 
             "from_outcome": null, 
             "from_state": null, 
             "to_outcome": null, 
-            "to_state": "HVJHZP", 
-            "transition_id": 13
-        }, 
-        "14": {
-            "__jsonqualname__": "rafcon.core.state_elements.transition.Transition", 
-            "from_outcome": 0, 
-            "from_state": "HVJHZP", 
-            "to_outcome": null, 
-            "to_state": "HVJHZP", 
-            "transition_id": 14
+            "to_state": "XAMUDB", 
+            "transition_id": 2
         }
     }
 }
