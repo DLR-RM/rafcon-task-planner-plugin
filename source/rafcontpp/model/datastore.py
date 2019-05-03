@@ -2,7 +2,7 @@
 #
 # Contributors:
 # Christoph Suerig <christoph.suerig@dlr.de>
-# Version 25.04.2019
+# Version 03.05.2019
 import os
 import json
 import threading
@@ -80,7 +80,7 @@ class Datastore:
     '''
 
     def __init__(self, state_pools,sm_name,sm_save_dir, planner,planner_script_path, planner_argv,
-               facts_path,type_db_path,keep_related_files, file_save_dir=os.path.join(os.getcwd(), 'related_files')):
+               facts_path,type_db_path,keep_related_files, file_save_dir='/tmp'):
         '''
          Constructor of Datastore
         :param state_pools: a list of file paths.
