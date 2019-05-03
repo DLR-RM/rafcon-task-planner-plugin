@@ -1,0 +1,9 @@
+{
+    "RAFCONTPP_PDDL_ACTION": {
+        "description": "", 
+        "pddl_action": "(:action spawn\n    :parameters (?turtle - Turtle)\n    :precondition (and(not(dead ?turtle))(not(alive ?turtle)))\n    :effect (and (alive ?turtle))\n)", 
+        "pddl_predicates": "(alive ?turtle - Turtle)\r\n(dead ?turtle - Turtle)", 
+        "pddl_types": "Turtle", 
+        "requirements": "[':typing', ':disjunctive-preconditions', ':strips']"
+    }
+}
