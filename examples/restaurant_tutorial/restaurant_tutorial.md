@@ -1,3 +1,18 @@
+- [1. Restaurant Tutorial](#1-restaurant-tutorial)
+  * [1.1 Scenario description](#11-scenario-description)
+  * [1.2 Requirements / Pre-Setup](#12-requirements--pre-setup)
+  * [1.3 First Step](#13-first-step)
+  * [1.4 Preparing some States](#14-preparing-some-states)
+    + [1.4.1 Eat](#141-eat)
+    + [1.4.2 Cook](#142-cook)
+    + [1.4.3 Give](#143-give)
+    + [1.4.4 Move](#144-move)
+    + [1.4.5 Order](#145-order)
+  * [1.5 Type Hierarchy](#15-type-hierarchy)
+  * [1.6 Facts Facts Facts](#16-facts-facts-facts)
+  * [1.7 Planning a State machine](#17-planning-a-state-machine)
+  * [1.8 Solution](#18-solution)
+
 # 1. Restaurant Tutorial
 
 This tutorial introduces the **base functionality** of the Task Planner Plugin (Tpp), by leading through a little example.
