@@ -1,4 +1,4 @@
-# Turtle Sim Example
+# 2. Turtle Sim Example
 
 This example should demonstrate how the **data flow** can work in a planned state machine and how **flexible** they are even when using them with **Ros**.
 The example is base on rafcons [turtle demo](https://rafcon.readthedocs.io/en/latest/tutorials.html#starting-the-basic-turtle-demo-state-machine-using-ros), but the states were modified to use the plugins data flow style, and enriched with PDDL actions.
