@@ -8,7 +8,7 @@ The scenario consists of:
 - a map with five points (down_left, down_right, top_left, top_right and middle) 
 - and three turtles (alice, bob and eve).
 
-`![Map](doc/turtle_example_scenario.png "Map")` UNCOMMENT
+![Map](doc/turtle_example_scenario.png "Map")
 
 
 
