@@ -2,7 +2,7 @@
 
 This tutorial introduces the **base functionality** of the Task Planner Plugin (Tpp), by leading through a little example.
 
-##Scenario description
+## Scenario description
 
 Our scenario takes place in a little pizzeria. There is Bob, the chef baking pizza, the waiter James serving the guests,
 and one guest alice.   
