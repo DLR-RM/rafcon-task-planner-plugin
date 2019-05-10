@@ -1,4 +1,4 @@
-#1. Restaurant Tutorial
+# 1. Restaurant Tutorial
 
 This tutorial introduces the **base functionality** of the Task Planner Plugin (Tpp), by leading through a little example.
 
@@ -6,11 +6,12 @@ This tutorial introduces the **base functionality** of the Task Planner Plugin (
 
 Our scenario takes place in a little pizzeria. There is Bob, the chef baking pizza, the waiter James serving the guests,
 and one guest alice.   
-INSERT_JPG_HERE doc/restaurant_tutorial_overview.jpg
+
+![Restaurant_example_overview](doc/restaurant_tutorial_overview.jpg "Scenario Overview")
 
 Lets assume Alice is really hungry, and wants to eat some pizza. In this tutorial, we want to create a state machine, to feed Alice, e.g. a state machine, that models the process of Alice ordering a pizza in the restaurant, Bob cooking, and James serving it, so that Alice is able to eat it.
  
-##Requirements / Pre-Setup
+## Requirements / Pre-Setup
 
 To be able to run this tutorial, you need: 
 
@@ -19,7 +20,7 @@ To be able to run this tutorial, you need:
  - **The Fast Downward Planning System**ː `pip install --user downward-dlr --no-compile` (evt. you have to install the wheel package first)
  - **OPTIONAL** the **Auto Layout Plugin**ː `git clone git@rmc-github.robotic.dlr.de:beld-rc/rafcon_auto_layout_plugin.git`
  
-##First Step 
+## First Step 
 At first, the plugin has to be registered in RAFCON. To do so, `[RAFCON̙-TASK-PLANNER-PLUGIN̠-REPOSITORY̠-PATH]/source/rafcontpp` has to be added to the `RAFCON_PLUGIN_PATH` environmental variable. If you want to use the auto Layout Plugin, also add its path. (See [RAFCON Docs](https://rafcon.readthedocs.io/en/latest/plugins.html))  
  
 `RAFCON_PLUGIN_PATH=$RAFCON_PLUGIN_PATH:[RAFCON̙-TASK-PLANNER-PLUGIN̠-REPOSITORY̠-PATH]/source/rafcontpp`
@@ -28,12 +29,13 @@ At first, the plugin has to be registered in RAFCON. To do so, `[RAFCON̙-TASK-P
 If you did this successfully, RAFCON should now have an extra menu button called "Plan Task", and a new tab called "PDDL Action" at the right, below the Semantic Data tab.
 RAFCON with loaded RAFCON Task Planner Plugin.
 
-INSERT_JPG_HERE doc/Rafcon_rtpp_loaded.png
 
-##Preparing some States
+![Restaurant_example_rtpp_loaded](doc/Rafcon_rtpp_loaded.png "Plugin loaded")
+
+## Preparing some States
 All in all five States are involved in the process. You have to create and store them in a directory of your choice. 
 
-###Eat
+### Eat
 To give Alice the ability to eat her pizza, we have to create the state eat. To do soː
 
 1. Create a new state machine in RAFCON
@@ -89,12 +91,13 @@ To give Alice the ability to eat her pizza, we have to create the state eat. To 
 12. Save the State into a folder of your choice. 
 
 Once you are finish your state should look like in the figure below.
-INSERT PNG HERE doc/Rafcon_rtpp_eat.png
+
+![restaurant_example_state_eat](doc/Rafcon_rtpp_eat.png "State Eat")
 
 
 Repeat this process with the following statesː 
 
-###Cook
+### Cook
 
 Giving Bob the ability to cook in the kitchenː 
 
@@ -120,7 +123,7 @@ def execute(self, inputs, outputs, gvm):
 
 **Other fieldsː** Hit Auto Complete
 
-###Give
+### Give
 
 give someone the ability to handover foodː  
 
@@ -154,7 +157,7 @@ def execute(self, inputs, outputs, gvm):
 ```
 **Other fieldsː** Hit Auto Complete
 
-###Move
+### Move
 Give the James the ability to move aroundː 
 
 **StateNameː** `Move`  
@@ -181,7 +184,7 @@ def execute(self, inputs, outputs, gvm):
 
 **Other fieldsː** Hit Auto Complete
 
-###Order
+### Order
 
 Give Alice the ability to order her pizzaː 
 
@@ -216,7 +219,7 @@ def execute(self, inputs, outputs, gvm):
 
 Once your are finish, you should have a folder, containing this five states. 
 
-##Type Hierarchy
+## Type Hierarchy
  As you may have noticed, we are using types in the pddl actions. But you don't know the hierarchy of these types yet, and the plugin does that neither. Therefor we need a separate file, where this hierarchy is specified. Let's call it **rtpp-typehierarchy.json** it contains the followingː 
  
  ```json
@@ -232,7 +235,7 @@ Once your are finish, you should have a folder, containing this five states.
 
 The structure of the file is a dictionary with types as Keys, and their parents as values. For example, the type "Waiter" is extending the type "Person", and "Person" is extending "Object", which is the root type and has no parent. 
 
-##Facts Facts Facts
+## Facts Facts Facts
 
 As final Step, we have to describe our problem, or better our goal, our initial state (init), and all "objects", which are present in our world. In this case the **objects** are James the Waiter, Bob the chef, Alice the Guest, a pizza, the kitchen, the table and the entrance of the restaurant. At the beginning of our Situation (**init**) Bob is where chefs areː in the kitchen. James is standing at the entrance, waiting for new guests and Alice is sitting at a table. She is really hungry and wants a pizza. The **goal** is to bring Alice her pizza and make her feel full. Written in pddl, this could look like thisː 
 ```Pddl
@@ -258,7 +261,7 @@ As final Step, we have to describe our problem, or better our goal, our initial 
 
 Copy it, and save it in a file, **facts.pddl** 
 
-##Planning a State machine
+## Planning a State machine
 
 Now we are ready. We haveː 
 1. A folder containing five prepared states
@@ -279,10 +282,12 @@ Let's hit the "Plan Task" Button:
 **Save files inː** Specifies the location, where to save generated files.  
 **Runtime Dataː** Leave it empty.  
 **Includeː** As long as Runtime Data is empty, this buttons are not considered, so we don't need to change something here.   
-INSERT JPG HERE doc/Rafcon_rtpp_configuration.png
+
+![Restaurant_example_plugin_conf](doc/Rafcon_rtpp_configuration.png "Plugin Configuration")
 
 If we hit the "Generate State machine" button now, the planner will try to solve the scenario. Afterwards the found plan will be used to create a state machine, which has the same name as your problem in the facts.pddl. When you see it now, it looks a bit... messed up. 
-INSERT JPG HERE doc/Rtpp_restaurant_statemachine.png
+
+![Restaurant_example_state_machine](doc/Rtpp_restaurant_statemachine.png "Restaurant State machine")
 
 To beautify the state machine you can use the Auto layout plugin, or you leave it that way and just execute it. The console output should look like below, as you can see Alice got her pizzaǃ 
 ```consoleOutput
