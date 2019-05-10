@@ -1,3 +1,26 @@
+- [2. Turtle Sim Example](#2-turtle-sim-example)
+  * [2.1 Scenario description](#21-scenario-description)
+  * [2.2 Requirements](#22-requirements)
+  * [2.3 Setup](#23-setup)
+    + [2.3.1 trutle_sim_state_machine](#231-trutle%5Fsim%5Fstate%5Fmachine)
+    + [2.3.2 turtle_sim_core_machine](#232-turtle%5Fsim%5Fcore%5Fmachine)
+    + [2.3.3 turtle_lib](#233-turtle%5Flib)
+  * [2.4 Planning](#24-planning)
+    + [2.4.1 Planning](#241-planning)
+      - [2.4.1.1 State pools](#2411-state-pools)
+      - [2.4.1.2 Type file](#2412-type-file)
+      - [2.4.1.3 Planner](#2413-planner)
+      - [2.4.1.4 Facts file](#2414-facts-file)
+      - [2.4.1.5 State machine name](#2415-state-machine-name)
+      - [2.4.1.6 Save state machine in](#2416-save-state-machine-in)
+    + [2.4.2 Runtime](#242-runtime)
+      - [2.4.2.1 Runtime Data](#2421-runtime-data)
+      - [2.4.2.2 Include](#2422-include)
+  * [2.5 Execution](#25-execution)
+  * [2.6 Last Words on Data Flow](#26-last-words-on-data-flow)  
+<small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
+
+
 # 2. Turtle Sim Example
 
 This example should demonstrate how the **data flow** can work in a planned state machine and how **flexible** they are even when using them with **Ros**.
@@ -38,13 +61,13 @@ In this example, Alice, Bob and Eve will wander arround in the map, but Bob is a
 
 If we have a look into the **turtle_sim_example** Library, we can see **turtle_lib** as well as the two state machines **turtle_sim_core_machine** and **turtle_sim_state_machine**.
 
-### 2.3.1 trutle_sim_state_machine:  
+### 2.3.1 trutle_sim_state_machine  
 turtle_sim_state_machine is the one we will execute later. If you open it now, you will see that it just initializes a ros node, and then executing the turtle_sim_core_machine. If you want you can execute it now, but since we didn't plan the core machine yet, nothing spectacular will happen.
 
-### 2.3.2 turtle_sim_core_machine:   
+### 2.3.2 turtle_sim_core_machine   
 This is the machine we will plan, and also the one where everything happens. Inside of the Core Turtles are spawned, moved and eaten.
 
-### 2.3.3 turtle_lib:  
+### 2.3.3 turtle_lib  
 This folder contains a bunch of states. These are the bricks used to plan our scenario. Most of them are enriched with a PDDL action, but not all. So don't be surprised, if the plugin warns you later on during the planning process. 
 
 ## 2.4 Planning
