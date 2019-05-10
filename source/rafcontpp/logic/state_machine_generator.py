@@ -7,7 +7,7 @@
 #
 # Contributors:
 # Christoph Suerig <christoph.suerig@dlr.de>
-# Version 17.04.1019
+# Version 25.04.1019
 
 
 
@@ -146,7 +146,7 @@ class StateMachineGenerator:
 
         :param data_init_file_path: The path of a file containing a json dict
         :param use_as_ref: True if the path should be included as reference, False if the dictionary itself should be included.
-        :return: an Execution state, that will initialize the rtpp_data dict in the global variables.
+        :return: an Execution state, that will update the rtpp_data dict in the global variables.
         '''
 
         data_init_state = ExecutionState(name='Runtime Data Initialization (rtpp_data)')
@@ -156,8 +156,12 @@ class StateMachineGenerator:
             data_init_state.script_text = 'import json{}'.format(data_init_state.script_text)
         else:
             data_to_load = json.dumps(json.load(open(data_init_file_path, "r")), indent=2, separators=(',', ': '))
-        execute_str = 'gvm.set_variable(\'{}\',{})'.format('rtpp_data',data_to_load)
+        execute_str = "self.logger.info('Updating rtpp_data.')\r\n"
+        execute_str = "{}    rtpp_data = gvm.get_variable('rtpp_data')\r\n".format(execute_str)
+        execute_str = "{}    rtpp_data = rtpp_data if rtpp_data else {}\r\n".format(execute_str,{})
+        execute_str = "{}    rtpp_data.update({})\r\n".format(execute_str, data_to_load)
+        execute_str = '{}    gvm.set_variable(\'{}\',{})'.format(execute_str,'rtpp_data',' rtpp_data')
+
         data_init_state.script_text = data_init_state.script_text.replace('self.logger.debug("Hello world")',execute_str)
         return data_init_state
-
 

@@ -1,0 +1,37 @@
+{
+    "down_left": {
+        "x_pos": 3,
+        "y_pos": 3
+    },
+    "down_right": {
+        "x_pos": 8,
+        "y_pos": 3
+    },
+    "top_left": {
+        "x_pos": 3,
+        "y_pos": 8
+    },
+    "top_right": {
+        "x_pos": 8,
+        "y_pos": 8
+    },
+    "middle": {
+        "x_pos": 5.5,
+        "y_pos": 4.5
+    },
+    "bob": {
+        "name": "bob",
+        "global_storage_id_of_turtle_pos": "turtle_bob",
+        "phi": 30
+    },
+    "alice": {
+        "name": "alice",
+        "global_storage_id_of_turtle_pos": "turtle_alice",
+        "phi": 30
+    },
+    "eve": {
+        "name": "eve",
+        "global_storage_id_of_turtle_pos": "turtle_eve",
+        "phi": 30
+    }
+}

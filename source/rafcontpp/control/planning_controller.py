@@ -1,6 +1,6 @@
 # Contributors:
 # Christoph Suerig <christoph.suerig@dlr.de>
-# Version 18.04.2019
+# Version 25.04.2019
 import inspect
 import time
 import os
@@ -46,7 +46,10 @@ class PlanningController:
         if to_import is None:
             logger.debug('Planner string was no built-in planner')
             planner_choice = self.__split_and_add_to_path(planner_choice)
-            to_import = self.__discover_class(planner_choice)
+            try:
+                to_import = self.__discover_class(planner_choice)
+            except ImportError:
+                to_import = None
 
         if to_import is None:
             logger.error("Couldn't discover planner "+planner_choice)
@@ -129,17 +132,18 @@ class PlanningController:
             planning_process_pgid = os.getpgid(planning_process.pid)
             #terminate planning_process with all spawned sub processes
             os.killpg(planning_process_pgid, signal.SIGTERM)
-            times_waited = 0
+            times_waited = 1
+            max_wait = 3
             while planning_process and planning_process.is_alive():
-                logger.info('Waiting for the Planner to terminate...')
-                if times_waited == 3:
+                logger.info('Waiting for the Planner to terminate({}/{})...'.format(times_waited,max_wait))
+                if times_waited == max_wait:
                     logger.info('Killing Planner...')
                     os.killpg(planning_process_pgid, signal.SIGKILL)#somethimes terminating is not enough.
                 planning_process.join(2)
                 times_waited +=1
 
 
-            logger.info("Planning was cancled after {0:.4f} seconds.".format(time.time() - start_time))
+            logger.info("Planning was canceled after {0:.4f} seconds.".format(time.time() - start_time))
             callback_function(False)
 
 
