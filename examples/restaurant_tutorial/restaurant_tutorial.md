@@ -276,7 +276,7 @@ Let's hit the "Plan Task" Button:
 **Planner script locationː** Leave it at it is (its not considered as long as you don't choose "Other..." in the Planner field.). If you want to use your own planner with the Plugin, you can enter the location of your integration script here.  
 **planner argvː** Leave it empty. If you want to pass arguments directly to the planner, you can enter them here.  
 **Facts fileː** Enter the location of your facts.pddl file.  
-**State machine nameː** Let's call it restaurant_statemachine  
+**State machine nameː** Let's call it restaurant_state_machine  
 **Save state machine inː** Enter the location, where the plugin should save the state machine it will generate.  
 **Generated filesː** The Plugin will create additional files, like a domain, or the plan to solve the problem. if you want to keep them, check this button.  
 **Save files inː** Specifies the location, where to save generated files.  
@@ -328,3 +328,7 @@ You can't just plan this one state machine, but a whole groupǃ Let's for exampl
    (be-full bob)
    )))
 ```
+## 1.8 Solution
+
+A solution for this tutorial is provided in `[repository_path]/examples/restaurant_tutorial/src`.
+There you find all described files, and states as well as a executable restaurant_state_machine and all related files, generated during the planning process.
