@@ -2,7 +2,7 @@
 
 This tutorial introduces the **base functionality** of the Task Planner Plugin (Tpp), by leading through a little example.
 
-## Scenario description
+## 1.1 Scenario description
 
 Our scenario takes place in a little pizzeria. There is Bob, the chef baking pizza, the waiter James serving the guests,
 and one guest alice.   
@@ -11,7 +11,7 @@ and one guest alice.
 
 Lets assume Alice is really hungry, and wants to eat some pizza. In this tutorial, we want to create a state machine, to feed Alice, e.g. a state machine, that models the process of Alice ordering a pizza in the restaurant, Bob cooking, and James serving it, so that Alice is able to eat it.
  
-## Requirements / Pre-Setup
+## 1.2 Requirements / Pre-Setup
 
 To be able to run this tutorial, you need: 
 
@@ -20,7 +20,7 @@ To be able to run this tutorial, you need:
  - **The Fast Downward Planning System**ː `pip install --user downward-dlr --no-compile` (evt. you have to install the wheel package first)
  - **OPTIONAL** the **Auto Layout Plugin**ː `git clone git@rmc-github.robotic.dlr.de:beld-rc/rafcon_auto_layout_plugin.git`
  
-## First Step 
+## 1.3 First Step 
 At first, the plugin has to be registered in RAFCON. To do so, `[RAFCON̙-TASK-PLANNER-PLUGIN̠-REPOSITORY̠-PATH]/source/rafcontpp` has to be added to the `RAFCON_PLUGIN_PATH` environmental variable. If you want to use the auto Layout Plugin, also add its path. (See [RAFCON Docs](https://rafcon.readthedocs.io/en/latest/plugins.html))  
  
 `RAFCON_PLUGIN_PATH=$RAFCON_PLUGIN_PATH:[RAFCON̙-TASK-PLANNER-PLUGIN̠-REPOSITORY̠-PATH]/source/rafcontpp`
@@ -32,10 +32,10 @@ RAFCON with loaded RAFCON Task Planner Plugin.
 
 ![Restaurant_example_rtpp_loaded](doc/Rafcon_rtpp_loaded.png "Plugin loaded")
 
-## Preparing some States
+## 1.4 Preparing some States
 All in all five States are involved in the process. You have to create and store them in a directory of your choice. 
 
-### Eat
+### 1.4.1 Eat
 To give Alice the ability to eat her pizza, we have to create the state eat. To do soː
 
 1. Create a new state machine in RAFCON
@@ -97,7 +97,7 @@ Once you are finish your state should look like in the figure below.
 
 Repeat this process with the following statesː 
 
-### Cook
+### 1.4.2 Cook
 
 Giving Bob the ability to cook in the kitchenː 
 
@@ -123,7 +123,7 @@ def execute(self, inputs, outputs, gvm):
 
 **Other fieldsː** Hit Auto Complete
 
-### Give
+### 1.4.3 Give
 
 give someone the ability to handover foodː  
 
@@ -157,7 +157,7 @@ def execute(self, inputs, outputs, gvm):
 ```
 **Other fieldsː** Hit Auto Complete
 
-### Move
+### 1.4.4 Move
 Give the James the ability to move aroundː 
 
 **StateNameː** `Move`  
@@ -184,7 +184,7 @@ def execute(self, inputs, outputs, gvm):
 
 **Other fieldsː** Hit Auto Complete
 
-### Order
+### 1.4.5 Order
 
 Give Alice the ability to order her pizzaː 
 
@@ -219,7 +219,7 @@ def execute(self, inputs, outputs, gvm):
 
 Once your are finish, you should have a folder, containing this five states. 
 
-## Type Hierarchy
+## 1.5 Type Hierarchy
  As you may have noticed, we are using types in the pddl actions. But you don't know the hierarchy of these types yet, and the plugin does that neither. Therefor we need a separate file, where this hierarchy is specified. Let's call it **rtpp-typehierarchy.json** it contains the followingː 
  
  ```json
@@ -235,7 +235,7 @@ Once your are finish, you should have a folder, containing this five states.
 
 The structure of the file is a dictionary with types as Keys, and their parents as values. For example, the type "Waiter" is extending the type "Person", and "Person" is extending "Object", which is the root type and has no parent. 
 
-## Facts Facts Facts
+## 1.6 Facts Facts Facts
 
 As final Step, we have to describe our problem, or better our goal, our initial state (init), and all "objects", which are present in our world. In this case the **objects** are James the Waiter, Bob the chef, Alice the Guest, a pizza, the kitchen, the table and the entrance of the restaurant. At the beginning of our Situation (**init**) Bob is where chefs areː in the kitchen. James is standing at the entrance, waiting for new guests and Alice is sitting at a table. She is really hungry and wants a pizza. The **goal** is to bring Alice her pizza and make her feel full. Written in pddl, this could look like thisː 
 ```Pddl
@@ -261,7 +261,7 @@ As final Step, we have to describe our problem, or better our goal, our initial 
 
 Copy it, and save it in a file, **facts.pddl** 
 
-## Planning a State machine
+## 1.7 Planning a State machine
 
 Now we are ready. We haveː 
 1. A folder containing five prepared states
