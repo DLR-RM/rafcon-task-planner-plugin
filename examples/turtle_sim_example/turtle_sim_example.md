@@ -103,7 +103,7 @@ We want to replan the turtle_sim_core_machine e.g. overwriting it, therefor we s
 This section is not important during the planning process, but during runtime of the state machine we plan.
 #### 2.4.2.1 Runtime Data
 If we enter a path to a json file here, the plugin will add a data initialization state as first state of the planned state machine.
-As we know a planner would return something like **move bob middle** and not **move bob x=5, y=5**. However, ROS needs coordinates, and don't know where **middle** is. To solve this issue, we use **middle** as an object identifier, and define the object in a file. Its path is `[repository_PATH]/rafcon_task_planner_plugin/examples/turtle_sim_example/turtle_demo_data.json`.
+As we know a planner would return something like **move bob middle** and not **move bob x=5, y=5**. However, ROS needs coordinates, and don't know where **middle** is. To solve this issue, we use **middle** as an object identifier, and define the object in a file. Its path is `[repository_PATH]/rafcon_task_planner_plugin/examples/turtle_sim_example/src/turtle_demo_data.json`.
 Feel free to have a look into the file, and see all object definitions.
 
 #### 2.4.2.2 Include
