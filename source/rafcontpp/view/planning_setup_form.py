@@ -1,6 +1,6 @@
 # Contributors:
 # Christoph Suerig <christoph.suerig@dlr.de>
-# Version 17.04.2019
+# Version 17.05.2019
 
 import gi
 gi.require_version('Gtk', '3.0')
@@ -27,6 +27,7 @@ class PlanningSetupForm:
         self.__builder = Gtk.Builder()
         self.__dialog = None
         self.__state_pool_chooser_entry = None
+        self.__runtime_data_reference = None
         self.__controller = PlanningSetupFormController(datastore)
         self.__planning_wait_window = self.__init_planning_wait_window()
 
@@ -57,6 +58,7 @@ class PlanningSetupForm:
         keep_related_files = self.__builder.get_object('keep_produced_files_checkbox')
         file_save_dir = self.__builder.get_object('file_save_dir_chooser')
         runtime_data_field = self.__builder.get_object('rtpp_planning_setup_form_runtime_data_path_entry')
+        runtime_data_chooser = self.__builder.get_object('rtpp_planning_setup_form_runtime_data_file_chooser')
         runtime_data_direct = self.__builder.get_object('rtpp_planning_setup_form_runtime_data_direct_radio')
         self.__runtime_data_reference = self.__builder.get_object('rtpp_planning_setup-form_runtime_data_reference_radio')
         #init items
@@ -70,16 +72,23 @@ class PlanningSetupForm:
         sm_save_dir.set_filename(self.__datastore.get_sm_save_dir())
         keep_related_files.set_active(self.__datastore.keep_related_files())
         file_save_dir.set_filename(self.__datastore.get_file_save_dir())
+        #initialize runtime data section
         if self.__datastore.get_runtime_data_path():
-            runtime_data_field.set_text(self.__datastore.get_runtime_data_path())
+            runtime_data_path = self.__datastore.get_runtime_data_path()
+            runtime_data_field.set_text(runtime_data_path)
+            if os.path.isfile(runtime_data_path):
+                runtime_data_chooser.set_filename(runtime_data_path)
+
         if self.__datastore.use_runtime_path_as_ref():
             self.__runtime_data_reference.set_active(True)
         else:
             runtime_data_direct.set_active(True)
         self.__dialog.show_all()
+        #connect
         self.__builder.get_object('planning_form_start_button').connect('clicked', self.__call_controller_on_apply)
         self.__builder.get_object('planning_form_cancel_button').connect('clicked', self.__call_controller_on_destroy)
         state_pool_chooser.connect('file-set',self.__controller.on_choose_state_pool,self.__state_pool_chooser_entry)
+        runtime_data_chooser.connect('file-set',self.__controller.on_choose_runtime_data,runtime_data_field)
         #automatically choose Other... if planner script is set.
         script_path_chooser.connect('file-set', lambda x: (planner_dropdown.set_active(len(planner_dropdown.get_model()) - 1)))
 
@@ -177,4 +186,5 @@ class PlanningSetupForm:
                 toReturn += element +':'
 
             return toReturn
+
 

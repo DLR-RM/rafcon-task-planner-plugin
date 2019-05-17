@@ -1,6 +1,6 @@
 # Contributors:
 # Christoph Suerig <christoph.suerig@dlr.de>
-# Version 18.04.2019
+# Version 17.05.2019
 
 
 import os
@@ -94,12 +94,27 @@ class PlanningSetupFormController:
             setup_form.destroy()
 
     def on_choose_state_pool(self,chooser, chooser_entry):
+        '''
+        Receives a directory chooser and a text entry, reads the path, set in the chooser and appends it to the text of
+        the text entry.
+        :param chooser: a GtkFileChooserButton
+        :param chooser_entry:  a GtkEntry
+        '''
         #append choosen state pool to state pool text entry.
         to_append = chooser.get_filename()
         pools = chooser_entry.get_text()
         if len(pools)> 0 and pools[len(pools)-1] != ':':
             pools+=':'
         chooser_entry.set_text(pools + to_append + ':')
+
+
+    def on_choose_runtime_data(self,chooser,runtime_data_entry):
+        '''
+        Receivs a file chooser and a text entry, reads the filepath of the chooser and sets it as text into the entry.
+        :param chooser: a GtkFileChooserButton
+        :param runtime_data_entry: a GtkEntry
+        '''
+        runtime_data_entry.set_text(chooser.get_filename())
 
 
 

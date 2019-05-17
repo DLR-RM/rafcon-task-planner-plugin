@@ -449,7 +449,7 @@ In order not to Include any data, just leave the Runtime Data field empty.</prop
               </object>
               <packing>
                 <property name="left_attach">0</property>
-                <property name="top_attach">1</property>
+                <property name="top_attach">2</property>
               </packing>
             </child>
             <child>
@@ -498,7 +498,7 @@ In order not to Include any data, just leave the Runtime Data field empty.</prop
               </object>
               <packing>
                 <property name="left_attach">1</property>
-                <property name="top_attach">1</property>
+                <property name="top_attach">2</property>
               </packing>
             </child>
             <child>
@@ -510,6 +510,31 @@ In order not to Include any data, just leave the Runtime Data field empty.</prop
                 <property name="margin_top">5</property>
                 <property name="margin_bottom">5</property>
                 <property name="hexpand">True</property>
+              </object>
+              <packing>
+                <property name="left_attach">1</property>
+                <property name="top_attach">1</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+              </object>
+              <packing>
+                <property name="left_attach">0</property>
+                <property name="top_attach">1</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkFileChooserButton" id="rtpp_planning_setup_form_runtime_data_file_chooser">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="margin_left">10</property>
+                <property name="margin_right">10</property>
+                <property name="margin_top">5</property>
+                <property name="margin_bottom">5</property>
+                <property name="title" translatable="yes"/>
               </object>
               <packing>
                 <property name="left_attach">1</property>
