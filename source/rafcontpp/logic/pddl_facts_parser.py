@@ -2,7 +2,7 @@
 #
 # Contributors:
 # Christoph Suerig <christoph.suerig@dlr.de>
-# Version 12.03.2019
+# Version 17.05.2019
 
 
 import re
@@ -24,7 +24,11 @@ class PddlFactsParser:
         self.__facts_string = facts_string
         #matches the whole objects section, without (:objects and )
         self.__objects_section_pattern = re.compile('\(:objects([^\)]+)\)',re.IGNORECASE|re.MULTILINE)
-        self.__objects_type_pattern = re.compile('([^-]+\s+-\s+[^\s]+)')
+        self.__objects_type_pattern = re.compile('([^-]+\s+-\s+[^\s]+)',)
+        #matches the domain_name in a facts file
+        self.__domain_name_pattern = re.compile('[^;\s]\s*\(\s*:domain\s+([^\s|^\)]+)',re.IGNORECASE)
+        #machtes the problem name in a facts file
+        self.__problem_name_pattern = re.compile('\(\s*problem\s+([^\s|^\)]+)',re.IGNORECASE)
 
 
     def parse_objects(self):
@@ -57,3 +61,26 @@ class PddlFactsParser:
             raise ValueError()
 
         return obj_type_map
+
+
+    def parse_domain_name(self):
+        '''parse_domain_name
+        parse_domain_name parses the domain name out of the given facts file.
+        :return: the domain name
+        '''
+        parsed = self.__domain_name_pattern.findall(self.__facts_string)
+        if len(parsed) == 0:
+            logger.error("Couldn't parse domain name from facts file!")
+            raise ValueError("Couldn't parse domain name!")
+        return parsed[0]
+
+    def parse_problem_name(self):
+        '''parse_problem_name
+        parse_problem_name parses the problem name out of the given facts file.
+        :return: the problem name
+        '''
+        parsed = self.__problem_name_pattern.findall(self.__facts_string)
+        if len(parsed) == 0:
+            logger.error("Couldn't parse problem name from facts file!")
+            raise ValueError("Couldn't parse problem name!")
+        return parsed[0]

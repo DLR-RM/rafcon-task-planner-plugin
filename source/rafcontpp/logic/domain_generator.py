@@ -1,12 +1,13 @@
 # Contributors:
 # Christoph Suerig <christoph.suerig@dlr.de>
-# Version 01.11.2018
+# Version 17.05.2019
 
 import os
 import json
 import re
 from rafcontpp.model.type_tree import TypeTree
 from rafcontpp.logic.predicate_merger import PredicateMerger
+from rafcontpp.logic.pddl_facts_parser import PddlFactsParser
 from rafcon.utils import log
 logger = log.get_logger(__name__)
 
@@ -32,8 +33,10 @@ class DomainGenerator:
         :param domain_dir: the location to save the generated domain file at.
         :return: the path of the generated domain file
         """
-        domain_name = self.__parse_domain_name()
-        self.__datastore.set_problem_name(self.__parse_problem_name())#i do it here because i have no better module, in future it should be done somwhere else
+
+        facts_parser = PddlFactsParser(open(self.__datastore.get_facts_path(),'r').read())
+        domain_name = facts_parser.parse_domain_name()
+        self.__datastore.set_problem_name(facts_parser.parse_problem_name())#i do it here because i have no better module, in future it should be done somwhere else
         self.__datastore.set_domain_name(domain_name)
         type_dict = self.__dict_to_upper(json.load(open(self.__datastore.get_type_db_path(), "r")))
         pddl_actions = self.__datastore.get_pddl_action_map().values()
@@ -57,46 +60,6 @@ class DomainGenerator:
         self.__datastore.set_domain_path(domain_path)
         self.__datastore.add_generated_file(domain_name + "_domain.pddl")
         return domain_path
-
-
-
-
-    def __parse_domain_name(self):#TODO: dont do this in domain_generator!
-        '''parse_domain_name
-        parse_domain_name parses the domain name out of the given facts file.
-        :return: the domain name
-        '''
-        facts_file = self.__datastore.get_facts_path()
-        input = ""
-        c_char = 'a'
-        facts = open(facts_file,'r')
-        bracket_counter = 0
-        while bracket_counter < 2:
-            c_char = facts.read(1)
-            input = input + c_char
-            if c_char == ')':
-                bracket_counter+=1
-
-        domain_name = re.findall('\(:DOMAIN\s+([^\s|^\)]+)',input,re.IGNORECASE)[0]
-        logger.debug('Parsed domain name is: '+domain_name)
-        return domain_name
-
-    def __parse_problem_name(self):#TODO: dont do this in domain_generator! (its also not used here, but in sm generator)
-        '''parse_problem_name
-        parse_problem_name parses the problem name out of the given facts file.
-        :return: the problem name
-        '''
-        facts_file = self.__datastore.get_facts_path()
-        input = ""
-        c_char = 'a'
-        facts = open(facts_file, 'r')
-        while c_char != ')':
-            c_char = facts.read(1)
-            input = input + c_char
-
-        problem_name = re.findall('\(PROBLEM\s+([^\s|^\)]+)', input, re.IGNORECASE)[0]
-        logger.debug('Parsed problem name is: ' + problem_name)
-        return problem_name
 
 
     def __get_head(self, domain_name):
