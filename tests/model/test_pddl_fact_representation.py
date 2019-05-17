@@ -21,7 +21,7 @@ def obj_map():
 ])
 def test_get_original_object_name(obj, expected):
     #arrange
-    sut = PddlFactsRepresentation(obj_map())
+    sut = PddlFactsRepresentation("",obj_map(),"","")
     #act
     ori_name = sut.get_original_object_name(obj)
     #assert

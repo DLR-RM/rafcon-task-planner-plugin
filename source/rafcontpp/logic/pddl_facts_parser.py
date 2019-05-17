@@ -21,12 +21,12 @@ class PddlFactsParser:
         if not facts_string:
             logger.error('facts_string can\'t be None!')
             raise ValueError('facts_string can\'t be None!')
-        self.__facts_string = facts_string
+        self.__facts_string = self.__clean_comments(facts_string)
         #matches the whole objects section, without (:objects and )
         self.__objects_section_pattern = re.compile('\(:objects([^\)]+)\)',re.IGNORECASE|re.MULTILINE)
-        self.__objects_type_pattern = re.compile('([^-]+\s+-\s+[^\s]+)',)
+        self.__objects_type_pattern = re.compile('([^-]+\s+-\s+[^\s]+)')
         #matches the domain_name in a facts file
-        self.__domain_name_pattern = re.compile('[^;\s]\s*\(\s*:domain\s+([^\s|^\)]+)',re.IGNORECASE)
+        self.__domain_name_pattern = re.compile('\(\s*:domain\s+([^\s|^\)]+)',re.IGNORECASE)
         #machtes the problem name in a facts file
         self.__problem_name_pattern = re.compile('\(\s*problem\s+([^\s|^\)]+)',re.IGNORECASE)
 
@@ -84,3 +84,11 @@ class PddlFactsParser:
             logger.error("Couldn't parse problem name from facts file!")
             raise ValueError("Couldn't parse problem name!")
         return parsed[0]
+
+    def __clean_comments(self, facts_string):
+        '''
+        takes the facts string and removes all comments from it
+        :return: the facts string without comments
+        '''
+        comment_pattern = re.compile('(;[^\n]*)')
+        return comment_pattern.sub('', facts_string)

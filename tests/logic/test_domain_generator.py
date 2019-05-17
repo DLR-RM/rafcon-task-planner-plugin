@@ -2,6 +2,8 @@ import pytest
 import os
 from rafcontpp.logic.domain_generator import DomainGenerator
 from rafcontpp.model.pddl_action_representation import PddlActionRepresentation
+from rafcontpp.model.pddl_facts_representation import PddlFactsRepresentation
+from rafcontpp.logic.pddl_facts_parser import PddlFactsParser
 from rafcontpp.model.pddl_action_representation import action_to_upper
 from rafcontpp.model.datastore import datastore_from_file
 
@@ -72,6 +74,15 @@ def pddl_action_map():
     return map
 
 @pytest.fixture
+def pddl_facts_repr():
+    base_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'test_data')
+    facts_path = os.path.join(base_path, 'test_facts.pddl')
+    facts_string = open(facts_path,'r').read()
+    parser = PddlFactsParser(facts_string)
+    return PddlFactsRepresentation(facts_string, parser.parse_objects(), parser.parse_domain_name(), parser.parse_problem_name())
+
+
+@pytest.fixture
 def datastore():
      base_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'test_data')
      facts_path = os.path.join(base_path, 'test_facts.pddl')
@@ -82,6 +93,7 @@ def datastore():
      ds.set_type_db_path(type_db_path)
      ds.set_file_save_dir(file_save_dir)
      ds.set_pddl_action_map(pddl_action_map())
+     ds.set_pddl_facts_representation(pddl_facts_repr())
      return ds
 
 def test_domain_generator_datastore_none():

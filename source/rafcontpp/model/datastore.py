@@ -2,7 +2,7 @@
 #
 # Contributors:
 # Christoph Suerig <christoph.suerig@dlr.de>
-# Version 03.05.2019
+# Version 17.05.2019
 import os
 import json
 import threading
