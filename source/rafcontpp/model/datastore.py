@@ -117,10 +117,6 @@ class Datastore:
         self.__planner_script_path = planner_script_path
         # the complete path of the domain file (e.g. /home/domain.pddl).
         self.__domain_path = None
-        # the name of the domain (e.g. BlocksWorld).
-        self.__domain_name = None
-        # the name of the problem (e.g. five_blocks)
-        self.__problem_name = None
         # a map containing pddl action names as keys, and rafcon states as values.
         self.__action_state_map = None
         # a map containing rafcon states as keys and pddl action names as values.
@@ -184,7 +180,7 @@ class Datastore:
             register_time = time.time()#unix timestamp
             #set task name to sm name, or problem name, if no sm name is available.
             planning_threads[register_time] = (interruptable_thread,
-                                               self.get_problem_name() if self.get_sm_name() == 0 else self.get_sm_name(),
+                                               self.get_pddl_facts_representation().problem_name if len(self.get_sm_name()) == 0 else self.get_sm_name(),
                                                self.get_planner())
         return register_time
 
@@ -261,18 +257,6 @@ class Datastore:
             logger.error("No domain file: " + str(domain_path))
             raise ValueError('Is not a file: ' + str(domain_path))
         self.__domain_path = domain_path
-
-    def get_domain_name(self):
-        return str(self.__domain_name)
-
-    def set_domain_name(self,domain_name):
-        self.__domain_name = domain_name
-
-    def get_problem_name(self):
-        return str(self.__problem_name)
-
-    def set_problem_name(self, problem_name):
-        self.__problem_name = problem_name
 
     def get_facts_path(self):
         return self.__facts_path

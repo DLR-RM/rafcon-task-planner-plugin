@@ -1,6 +1,6 @@
 # Contributors:
 # Christoph Suerig <christoph.suerig@dlr.de>
-# Version 08.03.2019
+# Version 17.05.2019
 
 import os
 import time
@@ -43,6 +43,8 @@ class ExecutionController:
             #prepare dicts
             logger.verbose('Main thread is: {}'.format(threading.current_thread().getName()))
             start_time = time.time()
+            logger.debug('Handover to facts parser')
+            self.__parse_and_set_facts()
             logger.debug('Handover to mapper.')
             mapper = Mapper(self.__datastore)
             mapper.generate_action_state_map()                      #--> as_map
@@ -78,7 +80,6 @@ class ExecutionController:
             # check if a plan was found.
             if planning_successful and len(self.__datastore.get_plan()) > 0:
                 logger.info('A Plan was found!')
-                self.__parse_and_set_facts()
                 sm_generator = StateMachineGenerator(self.__datastore)
                 logger.debug('Handover to state machine generator.')
                 sm_generator.generate_state_machine()  # --> generates state machine and opens it.
@@ -119,4 +120,7 @@ class ExecutionController:
         facts_file = open(self.__datastore.get_facts_path(), 'r')
         facts_string = facts_file.read()
         facts_parser = PddlFactsParser(facts_string)
-        self.__datastore.set_pddl_facts_representation(PddlFactsRepresentation(facts_parser.parse_objects()))
+        obj_type_map = facts_parser.parse_objects()
+        domain_name = facts_parser.parse_domain_name()
+        problem_name = facts_parser.parse_problem_name()
+        self.__datastore.set_pddl_facts_representation(PddlFactsRepresentation(facts_string, obj_type_map, domain_name, problem_name))

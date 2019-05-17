@@ -6,7 +6,6 @@ import os
 import json
 from rafcontpp.model.type_tree import TypeTree
 from rafcontpp.logic.predicate_merger import PredicateMerger
-from rafcontpp.logic.pddl_facts_parser import PddlFactsParser
 from rafcon.utils import log
 logger = log.get_logger(__name__)
 
@@ -33,10 +32,9 @@ class DomainGenerator:
         :return: the path of the generated domain file
         """
 
-        facts_parser = PddlFactsParser(open(self.__datastore.get_facts_path(),'r').read())
-        domain_name = facts_parser.parse_domain_name()
-        self.__datastore.set_problem_name(facts_parser.parse_problem_name())#i do it here because i have no better module, in future it should be done somwhere else
-        self.__datastore.set_domain_name(domain_name)
+        facts = self.__datastore.get_pddl_facts_representation()
+        domain_name = facts.domain_name
+        problem_name = facts.problem_name
         type_dict = self.__dict_to_upper(json.load(open(self.__datastore.get_type_db_path(), "r")))
         pddl_actions = self.__datastore.get_pddl_action_map().values()
         domain_path = os.path.abspath(os.path.join(self.__datastore.get_file_save_dir(), domain_name + "_domain.pddl"))

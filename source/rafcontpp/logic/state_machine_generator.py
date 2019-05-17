@@ -41,7 +41,7 @@ class StateMachineGenerator:
         :return: nothing
         '''
         sm_name = self.__datastore.get_sm_name()
-        sm_name = self.__datastore.get_problem_name()+'_state_machine' if len(sm_name) == 0 else sm_name
+        sm_name = self.__datastore.get_pddl_facts_representation.problem_name+'_state_machine' if len(sm_name) == 0 else sm_name
         sm_path = os.path.abspath(os.path.join(self.__datastore.get_sm_save_dir(), sm_name))
         a_s_map = self.__datastore.get_action_state_map()
         pddl_action_dict = self.__datastore.get_pddl_action_map()

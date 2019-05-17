@@ -8,12 +8,12 @@
 class PddlFactsRepresentation:
 
 
-    def __init__(self,obj_type_map, facts_string):
+    def __init__(self, facts_string, obj_type_map, domain_name, problem_name):
         self.__facts_string = facts_string
         #contains the objects of the facts file and their types as dict value.
-        self.__obj_type_map = obj_type_map
-        self.__domain_name = None
-        self.__problem_name = None
+        self.obj_type_map = obj_type_map
+        self.domain_name = domain_name
+        self.problem_name = problem_name
 
 
     def get_original_object_name(self, object_name):
@@ -25,7 +25,7 @@ class PddlFactsRepresentation:
         ori_obj_name = object_name
         if object_name:
             object_name =  object_name.upper()
-            for obj in self.__obj_type_map.keys():
+            for obj in self.obj_type_map.keys():
                 if obj.upper() == object_name:
                     ori_obj_name = obj
                     break
