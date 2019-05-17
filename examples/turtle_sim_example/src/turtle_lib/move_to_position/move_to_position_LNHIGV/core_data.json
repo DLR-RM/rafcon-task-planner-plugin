@@ -50,7 +50,7 @@
             "name": "destination"
         }
     }, 
-    "name": "move_to_position_mod", 
+    "name": "move_to_position", 
     "outcomes": {
         "-2": {
             "__jsonqualname__": "rafcon.core.state_elements.logical_port.Outcome", 

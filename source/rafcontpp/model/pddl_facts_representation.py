@@ -2,15 +2,18 @@
 #
 # Contributors:
 # Christoph Suerig <christoph.suerig@dlr.de>
-# Version 13.03.2019
+# Version 17.05.2019
 
 
 class PddlFactsRepresentation:
 
 
-    def __init__(self,obj_type_map):
+    def __init__(self,obj_type_map, facts_string):
+        self.__facts_string = facts_string
         #contains the objects of the facts file and their types as dict value.
         self.__obj_type_map = obj_type_map
+        self.__domain_name = None
+        self.__problem_name = None
 
 
     def get_original_object_name(self, object_name):

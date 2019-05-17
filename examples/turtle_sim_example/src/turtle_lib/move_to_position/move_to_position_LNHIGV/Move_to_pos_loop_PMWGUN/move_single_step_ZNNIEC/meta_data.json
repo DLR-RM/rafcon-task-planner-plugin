@@ -1,39 +1,38 @@
 {
-    "data_flow2": {}, 
-    "data_flow3": {}, 
     "gui": {
         "editor_gaphas": {
             "name": {
                 "rel_pos": {
                     "__jsonqualname__": "__builtin__.tuple", 
                     "items": [
-                        4.0, 
-                        4.0
+                        0.287274763202861, 
+                        0.287274763202861
                     ]
                 }, 
                 "size": {
                     "__jsonqualname__": "__builtin__.tuple", 
                     "items": [
-                        80.0, 
-                        40.0
+                        5.7454952640572206, 
+                        2.8727476320286103
                     ]
                 }
             }, 
             "rel_pos": {
                 "__jsonqualname__": "__builtin__.tuple", 
                 "items": [
-                    0, 
-                    0
+                    13.83603934972188, 
+                    16.808963746068386
                 ]
             }, 
             "size": {
                 "__jsonqualname__": "__builtin__.tuple", 
                 "items": [
-                    100, 
-                    100
+                    7.181869080071525, 
+                    7.181869080071525
                 ]
             }
-        }
+        }, 
+        "show_content": {}
     }, 
     "income": {
         "gui": {
@@ -41,8 +40,8 @@
                 "rel_pos": {
                     "__jsonqualname__": "__builtin__.tuple", 
                     "items": [
-                        0, 
-                        10.0
+                        0.0, 
+                        0.8977336350089407
                     ]
                 }
             }
@@ -54,21 +53,21 @@
                 "rel_pos": {
                     "__jsonqualname__": "__builtin__.tuple", 
                     "items": [
-                        0, 
-                        90.0
+                        0.0, 
+                        5.88913264565865
                     ]
                 }
             }
         }
     }, 
-    "input_data_port1": {
+    "input_data_port21": {
         "gui": {
             "editor_gaphas": {
                 "rel_pos": {
                     "__jsonqualname__": "__builtin__.tuple", 
                     "items": [
-                        0, 
-                        82.0
+                        0.0, 
+                        4.8477616290482795
                     ]
                 }
             }
@@ -80,8 +79,8 @@
                 "rel_pos": {
                     "__jsonqualname__": "__builtin__.tuple", 
                     "items": [
-                        90.0, 
-                        0
+                        6.284135445062584, 
+                        0.0
                     ]
                 }
             }
@@ -93,8 +92,8 @@
                 "rel_pos": {
                     "__jsonqualname__": "__builtin__.tuple", 
                     "items": [
-                        82.0, 
-                        0
+                        5.565948537055432, 
+                        0.0
                     ]
                 }
             }
@@ -106,31 +105,23 @@
                 "rel_pos": {
                     "__jsonqualname__": "__builtin__.tuple", 
                     "items": [
-                        100.0, 
-                        10.0
+                        7.181869080071525, 
+                        0.8977336350089407
                     ]
                 }
             }
         }
     }, 
-    "transition3": {
+    "outcome1": {
         "gui": {
             "editor_gaphas": {
-                "waypoints": {}
-            }
-        }
-    }, 
-    "transition68": {
-        "gui": {
-            "editor_gaphas": {
-                "waypoints": {}
-            }
-        }
-    }, 
-    "transition69": {
-        "gui": {
-            "editor_gaphas": {
-                "waypoints": {}
+                "rel_pos": {
+                    "__jsonqualname__": "__builtin__.tuple", 
+                    "items": [
+                        7.181869080071525, 
+                        1.615920543016093
+                    ]
+                }
             }
         }
     }

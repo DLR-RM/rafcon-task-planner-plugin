@@ -1,38 +1,39 @@
 {
+    "data_flow1": {}, 
+    "data_flow2": {}, 
     "gui": {
         "editor_gaphas": {
             "name": {
                 "rel_pos": {
                     "__jsonqualname__": "__builtin__.tuple", 
                     "items": [
-                        0.287274763202861, 
-                        0.287274763202861
+                        4.0, 
+                        4.0
                     ]
                 }, 
                 "size": {
                     "__jsonqualname__": "__builtin__.tuple", 
                     "items": [
-                        5.7454952640572206, 
-                        2.8727476320286103
+                        80.0, 
+                        40.0
                     ]
                 }
             }, 
             "rel_pos": {
                 "__jsonqualname__": "__builtin__.tuple", 
                 "items": [
-                    12.920994893151622, 
-                    9.05539137591714
+                    0, 
+                    0
                 ]
             }, 
             "size": {
                 "__jsonqualname__": "__builtin__.tuple", 
                 "items": [
-                    7.181869080071525, 
-                    7.181869080071525
+                    100, 
+                    100
                 ]
             }
-        }, 
-        "show_content": true
+        }
     }, 
     "income": {
         "gui": {
@@ -40,8 +41,8 @@
                 "rel_pos": {
                     "__jsonqualname__": "__builtin__.tuple", 
                     "items": [
-                        0.0, 
-                        0.8977336350089407
+                        0, 
+                        10.0
                     ]
                 }
             }
@@ -53,21 +54,21 @@
                 "rel_pos": {
                     "__jsonqualname__": "__builtin__.tuple", 
                     "items": [
-                        0.0, 
-                        5.88913264565865
+                        0, 
+                        90.0
                     ]
                 }
             }
         }
     }, 
-    "input_data_port21": {
+    "input_data_port1": {
         "gui": {
             "editor_gaphas": {
                 "rel_pos": {
                     "__jsonqualname__": "__builtin__.tuple", 
                     "items": [
-                        0.0, 
-                        4.8477616290482795
+                        0, 
+                        82.0
                     ]
                 }
             }
@@ -79,8 +80,8 @@
                 "rel_pos": {
                     "__jsonqualname__": "__builtin__.tuple", 
                     "items": [
-                        6.284135445062584, 
-                        0.0
+                        90.0, 
+                        0
                     ]
                 }
             }
@@ -92,8 +93,8 @@
                 "rel_pos": {
                     "__jsonqualname__": "__builtin__.tuple", 
                     "items": [
-                        5.565948537055432, 
-                        0.0
+                        82.0, 
+                        0
                     ]
                 }
             }
@@ -105,23 +106,31 @@
                 "rel_pos": {
                     "__jsonqualname__": "__builtin__.tuple", 
                     "items": [
-                        7.181869080071525, 
-                        0.8977336350089407
+                        100.0, 
+                        10.0
                     ]
                 }
             }
         }
     }, 
-    "outcome1": {
+    "transition1": {
         "gui": {
             "editor_gaphas": {
-                "rel_pos": {
-                    "__jsonqualname__": "__builtin__.tuple", 
-                    "items": [
-                        7.181869080071525, 
-                        1.615920543016093
-                    ]
-                }
+                "waypoints": {}
+            }
+        }
+    }, 
+    "transition2": {
+        "gui": {
+            "editor_gaphas": {
+                "waypoints": {}
+            }
+        }
+    }, 
+    "transition69": {
+        "gui": {
+            "editor_gaphas": {
+                "waypoints": {}
             }
         }
     }

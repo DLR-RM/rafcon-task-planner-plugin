@@ -3,6 +3,8 @@
     "data_flow2": {}, 
     "data_flow3": {}, 
     "data_flow4": {}, 
+    "data_flow5": {}, 
+    "data_flow6": {}, 
     "gui": {
         "editor_gaphas": {
             "name": {
@@ -159,6 +161,49 @@
         }
     }, 
     "transition3": {
+        "gui": {
+            "editor_gaphas": {
+                "waypoints": {}
+            }
+        }
+    }, 
+    "transition4": {
+        "gui": {
+            "editor_gaphas": {
+                "waypoints": {}
+            }
+        }
+    }, 
+    "transition5": {
+        "gui": {
+            "editor_gaphas": {
+                "waypoints": [
+                    {
+                        "__jsonqualname__": "__builtin__.tuple", 
+                        "items": [
+                            21.736095337800556, 
+                            16.090776838061235
+                        ]
+                    }, 
+                    {
+                        "__jsonqualname__": "__builtin__.tuple", 
+                        "items": [
+                            13.117852441714726, 
+                            16.090776838061235
+                        ]
+                    }
+                ]
+            }
+        }
+    }, 
+    "transition6": {
+        "gui": {
+            "editor_gaphas": {
+                "waypoints": {}
+            }
+        }
+    }, 
+    "transition7": {
         "gui": {
             "editor_gaphas": {
                 "waypoints": {}

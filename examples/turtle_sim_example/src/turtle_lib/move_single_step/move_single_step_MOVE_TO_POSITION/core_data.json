@@ -24,7 +24,7 @@
             "name": "destination"
         }
     }, 
-    "name": "move turtle core", 
+    "name": "move_single_step", 
     "outcomes": {
         "-2": {
             "__jsonqualname__": "rafcon.core.state_elements.logical_port.Outcome", 

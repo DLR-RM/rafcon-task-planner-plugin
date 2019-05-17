@@ -1,7 +1,7 @@
 {
-    "creation_time": "2015-06-03 16:11:18", 
-    "last_update": "2019-05-10 13:54:49", 
-    "root_state_storage_id": "move_turtle_core_MOVE_TO_POSITION", 
-    "state_machine_version": "None", 
+    "creation_time": "2019-03-12 12:32:24", 
+    "last_update": "2019-05-17 13:37:40", 
+    "root_state_storage_id": "move_to_position_LNHIGV", 
+    "state_machine_version": null, 
     "used_rafcon_version": "0.13.5"
 }
