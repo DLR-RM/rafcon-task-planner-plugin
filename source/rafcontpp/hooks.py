@@ -5,13 +5,9 @@
 # Christoph Suerig <christoph.suerig@dlr.de>
 # Version 12.11.2018
 import os
-import gi
-gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk
 from rafcontpp.view import planning_button
 from rafcontpp.view.pddl_action_tab import PddlActionTab
 from rafcon.gui.helpers.label import create_label_widget_with_icon, create_tab_header_label
-from rafcon.core.states.library_state import LibraryState
 from rafcon.utils import log
 logger = log.get_logger(__name__)
 
@@ -59,6 +55,8 @@ def post_state_editor_register_view(state_editor):
     action_tab = PddlActionTab(state).init_tab()
 
     #add tab, with lable to State Editor
-    state_editor_view["main_notebook_2"].append_page(
-        action_tab, create_label_widget_with_icon('f1ec', _(''),'PDDL Action definition'))
-    state_editor_view["main_notebook_2"].set_tab_reorderable(action_tab, True)
+    #f1ec is from font awesome
+    icon = {_('PDDL Action'): 'f1ec'} #its done like this, because the helper function needs a map as input
+    main_notebook_2 = state_editor_view["main_notebook_2"]
+    main_notebook_2.append_page(action_tab, create_tab_header_label('PDDL Action', icon))
+    main_notebook_2.set_tab_reorderable(action_tab, True)
