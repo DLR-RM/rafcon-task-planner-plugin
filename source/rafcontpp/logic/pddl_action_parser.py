@@ -6,7 +6,7 @@
 #
 # Contributors:
 # Christoph Suerig <christoph.suerig@dlr.de>
-# Version: 18.04.2019
+# Version: 17.05.2019
 import re
 from rafcontpp.model.pddl_action_representation import PddlActionRepresentation
 from rafcon.utils import log
@@ -38,8 +38,8 @@ class PddlActionParser:
         self.__type_pattern = re.compile('-\s+([^\s|^\)|^?|^-]+)')
         #matches only varialbes f.e. ?myVar
         self.__var_pattern = re.compile('\?[^\s|^\)]+')
-        #matches predicates
-        self.__predicate_pattern = re.compile('\({1}\s*[^\?|^\s][^\)|^\(]*\){1}')
+        #matches applied predicates
+        self.__predicate_pattern = re.compile('(\(\s*[^\?|^\s|^\(]+(\s+\?[^\)|^\(|^\s]*)+\s*\))')
         #matches the action name, ignores cases
         self.__action_name_pattern = re.compile('\(:action\s*([^\s|^:]+)', re.IGNORECASE)
         #a dictionary, which contains all variables and their types.
@@ -130,7 +130,7 @@ class PddlActionParser:
         '''
         #matches applied predicates
         a_pred_name_pattern = re.compile('\(([^\s]+)\s')
-        applied_predicates = re.findall(self.__predicate_pattern,self.__action_string)
+        applied_predicates = [i[0] for i in re.findall(self.__predicate_pattern,self.__action_string)]
 
         if not self.__var_type_dict:
             self.__create_var_type_dict()
