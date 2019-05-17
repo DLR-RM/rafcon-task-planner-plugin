@@ -3,7 +3,6 @@
 # Version 17.04.2019
 
 
-import re
 import os
 import gi
 gi.require_version('Gtk', '3.0')

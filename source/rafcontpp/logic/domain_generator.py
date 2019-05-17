@@ -4,7 +4,6 @@
 
 import os
 import json
-import re
 from rafcontpp.model.type_tree import TypeTree
 from rafcontpp.logic.predicate_merger import PredicateMerger
 from rafcontpp.logic.pddl_facts_parser import PddlFactsParser

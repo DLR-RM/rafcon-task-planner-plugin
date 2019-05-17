@@ -3,7 +3,6 @@
 # Version 17.04.2019
 
 
-import re
 import gi
 gi.require_version('Gtk', '3.0')
 import time
@@ -208,9 +207,7 @@ class PddlActionTabController:
         :return: Noting
         '''
 
-        pattern = re.compile('-{1}\s+[^\s\)]*')
         types = pddl_action.types
-
         #merge add unknown
         start, end = types_buffer.get_bounds()
         type_field = types_buffer.get_text(start, end, True)
