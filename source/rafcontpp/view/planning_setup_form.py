@@ -1,6 +1,6 @@
 # Contributors:
 # Christoph Suerig <christoph.suerig@dlr.de>
-# Version 17.04.2019
+# Version 24.05.2019
 
 import gi
 gi.require_version('Gtk', '3.0')
@@ -79,6 +79,7 @@ class PlanningSetupForm:
         self.__dialog.show_all()
         self.__builder.get_object('planning_form_start_button').connect('clicked', self.__call_controller_on_apply)
         self.__builder.get_object('planning_form_cancel_button').connect('clicked', self.__call_controller_on_destroy)
+        self.__builder.get_object('planning_form_show_preds_button').connect('clicked',self.__call_controller_on_show_predicates)
         state_pool_chooser.connect('file-set',self.__controller.on_choose_state_pool,self.__state_pool_chooser_entry)
         #automatically choose Other... if planner script is set.
         script_path_chooser.connect('file-set', lambda x: (planner_dropdown.set_active(len(planner_dropdown.get_model()) - 1)))
@@ -101,6 +102,14 @@ class PlanningSetupForm:
         '''
         self.__controller.on_destroy(button, self.__dialog, *self.__get_entered_data())
 
+    def __call_controller_on_show_predicates(self, button):
+        '''
+        this function is needed, to get the data when method is called, and not old data from declaration time.
+        :param button:
+        :return:
+        '''
+        self.__controller.on_show_predicates(button,  self.__init_predicates_window, *self.__get_entered_data())
+
 
     def __init_planning_wait_window(self):
         '''
@@ -121,6 +130,38 @@ class PlanningSetupForm:
         window_button = builder.get_object('rtpp_planning_wait_window_ok_button')
         window_button.connect('clicked', lambda x: planning_wait_dialog.destroy())
         return planning_wait_dialog
+
+
+    def __init_predicates_window(self, predicates, types_string):
+
+        predicates_dialog_path = os.path.abspath(
+            os.path.join(os.path.dirname(os.path.realpath(__file__)), "glade", "pddl_predicates_view.glade"))
+        builder = Gtk.Builder()
+        builder.add_from_file(predicates_dialog_path)
+        predicates_dialog = builder.get_object('rtpp_predicates_view_window')
+        predicates_dialog.set_title('Task Planner Plugin')
+        predicates_dialog.set_transient_for(self.__dialog)
+        predicates_dialog.set_position(Gtk.WindowPosition.CENTER_ALWAYS)
+        predicates_dialog.set_modal(self.__dialog)
+        predicates_dialog.set_size_request(*self.__dialog.get_size())
+        predicate_label = builder.get_object('rtpp_predicates_view_label')
+        types_label = builder.get_object('rtpp_predicates_view_type_label')
+
+        pred_text = ''
+        for predicate in predicates:
+            pred_text += predicate+'\r\n'
+
+        predicate_label.set_text(pred_text)
+        predicate_label.set_alignment(0,0)
+        types_label.set_text(types_string)
+        types_label.set_alignment(0,0)
+
+        window_button = builder.get_object('rtpp_predicates_view_close_button')
+        window_button.connect('clicked', lambda x: predicates_dialog.destroy())
+        predicates_dialog.show_all()
+        predicate_label.set_selectable(True)
+        types_label.set_selectable(True)
+
 
 
 
