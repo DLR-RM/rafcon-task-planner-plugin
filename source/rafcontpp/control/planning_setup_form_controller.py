@@ -103,6 +103,24 @@ class PlanningSetupFormController:
                           type_db_path, planner_text, planner_script_path, planner_argv_text,
                           facts_path, sm_name, sm_save_dir, keep_related_files, file_save_dir,
                           rt_data_path, as_reference):
+        '''
+
+        :param button:
+        :param call_back:
+        :param state_pool_string:
+        :param type_db_path:
+        :param planner_text:
+        :param planner_script_path:
+        :param planner_argv_text:
+        :param facts_path:
+        :param sm_name:
+        :param sm_save_dir:
+        :param keep_related_files:
+        :param file_save_dir:
+        :param rt_data_path:
+        :param as_reference:
+        :return:
+        '''
         available_predicates = []
         predicates_string = ''
         type_string = ''
