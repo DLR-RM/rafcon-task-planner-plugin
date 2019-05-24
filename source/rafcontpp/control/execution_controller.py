@@ -1,6 +1,6 @@
 # Contributors:
 # Christoph Suerig <christoph.suerig@dlr.de>
-# Version 17.05.2019
+# Version 24.05.2019
 
 import os
 import time
@@ -87,7 +87,7 @@ class ExecutionController:
 
             else:
                 logger.info("No Plan was found, therefore no state machine was generated!")
-        except Exception, e:
+        except Exception as e:
             traceback.print_exc()
             logger.error("Error during State machine generation Process! :: {}".format(e.message))
         finally:
