@@ -99,17 +99,19 @@ class PlanningSetupFormController:
 
 
     #start=========================================================================================
-    def on_show_predicates(self, button, call_back,state_pool_string,
-                                type_db_path, planner_text, planner_script_path, planner_argv_text,
-                                facts_path, sm_name, sm_save_dir, keep_related_files, file_save_dir,
-                                rt_data_path, as_reference):
+    def on_show_data_info(self, button, call_back, state_pool_string,
+                          type_db_path, planner_text, planner_script_path, planner_argv_text,
+                          facts_path, sm_name, sm_save_dir, keep_related_files, file_save_dir,
+                          rt_data_path, as_reference):
         available_predicates = []
+        predicates_string = ''
         type_string = ''
-
+        action_string = ''
         tmp_datastore = Datastore(None,None,None,None,None,None,None,None,None,None,)
         self.__prepare_datastore(tmp_datastore,state_pool_string,type_db_path,planner_text,planner_script_path,
                                  planner_argv_text,facts_path,sm_name,sm_save_dir,False,None,rt_data_path,True)
         merge_preds = True
+
         try:
             mapper = Mapper(tmp_datastore)
             mapper.generate_action_state_map()
@@ -124,8 +126,10 @@ class PlanningSetupFormController:
             merge_preds = False
             type_string = 'ERROR!: {}'.format(e.message)
 
-
-        for action in tmp_datastore.get_pddl_action_map().values():
+        action_names = []
+        for state in tmp_datastore.get_pddl_action_map():
+            action = tmp_datastore.get_pddl_action_map()[state]
+            action_names.append("{} (in state {})".format(action.name,state))
             for predicate in action.predicates:
                 if predicate not in available_predicates:
                     available_predicates.append(predicate)
@@ -135,7 +139,14 @@ class PlanningSetupFormController:
             available_predicates = pred_merger.merge_predicates(available_predicates)[0]
 
 
-        call_back(sorted(available_predicates),type_string)
+        for predicate in available_predicates:
+            predicates_string += predicate+'\r\n'
+
+        for action_name in sorted(action_names):
+            action_string+= action_name+'\r\n'
+
+
+        call_back(predicates_string,type_string, action_string)
 
     #end===========================================================================================
 

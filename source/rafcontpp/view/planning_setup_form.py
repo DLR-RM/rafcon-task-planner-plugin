@@ -108,7 +108,7 @@ class PlanningSetupForm:
         :param button:
         :return:
         '''
-        self.__controller.on_show_predicates(button,  self.__init_predicates_window, *self.__get_entered_data())
+        self.__controller.on_show_data_info(button, self.__show_data_info_window, *self.__get_entered_data())
 
 
     def __init_planning_wait_window(self):
@@ -132,35 +132,35 @@ class PlanningSetupForm:
         return planning_wait_dialog
 
 
-    def __init_predicates_window(self, predicates, types_string):
+    def __show_data_info_window(self, predicate_string, types_string, action_string):
 
-        predicates_dialog_path = os.path.abspath(
-            os.path.join(os.path.dirname(os.path.realpath(__file__)), "glade", "pddl_predicates_view.glade"))
+        data_info_dialog_path = os.path.abspath(
+            os.path.join(os.path.dirname(os.path.realpath(__file__)), "glade", "data_info_view.glade"))
         builder = Gtk.Builder()
-        builder.add_from_file(predicates_dialog_path)
-        predicates_dialog = builder.get_object('rtpp_predicates_view_window')
-        predicates_dialog.set_title('Task Planner Plugin')
-        predicates_dialog.set_transient_for(self.__dialog)
-        predicates_dialog.set_position(Gtk.WindowPosition.CENTER_ALWAYS)
-        predicates_dialog.set_modal(self.__dialog)
-        predicates_dialog.set_size_request(*self.__dialog.get_size())
-        predicate_label = builder.get_object('rtpp_predicates_view_label')
-        types_label = builder.get_object('rtpp_predicates_view_type_label')
+        builder.add_from_file(data_info_dialog_path)
+        data_info_dialog = builder.get_object('rtpp_data_info_view_window')
+        data_info_dialog.set_title('Task Planner Plugin')
+        data_info_dialog.set_transient_for(self.__dialog)
+        data_info_dialog.set_position(Gtk.WindowPosition.CENTER_ALWAYS)
+        data_info_dialog.set_modal(self.__dialog)
+        data_info_dialog.set_size_request(*self.__dialog.get_size())
+        predicate_label = builder.get_object('rtpp_data_info_view_predicates_label')
+        types_label = builder.get_object('rtpp_data_info_view_type_label')
+        action_label = builder.get_object('rtpp_data_info_view_action_label')
 
-        pred_text = ''
-        for predicate in predicates:
-            pred_text += predicate+'\r\n'
-
-        predicate_label.set_text(pred_text)
+        predicate_label.set_text(predicate_string)
         predicate_label.set_alignment(0,0)
         types_label.set_text(types_string)
         types_label.set_alignment(0,0)
+        action_label.set_text(action_string)
+        action_label.set_alignment(0,0)
 
         window_button = builder.get_object('rtpp_predicates_view_close_button')
-        window_button.connect('clicked', lambda x: predicates_dialog.destroy())
-        predicates_dialog.show_all()
+        window_button.connect('clicked', lambda x: data_info_dialog.destroy())
+        data_info_dialog.show_all()
         predicate_label.set_selectable(True)
         types_label.set_selectable(True)
+        action_label.set_selectable(True)
 
 
 
