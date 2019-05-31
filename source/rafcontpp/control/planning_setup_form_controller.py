@@ -135,34 +135,49 @@ class PlanningSetupFormController:
             mapper.generate_action_state_map()
             mapper.generate_state_action_map()
             mapper.generate_available_actions()
+
+        except Exception as e:
+            merge_preds = False
+            predicates_string = 'ERROR!: {}'.format(e.message)
+
+        try:
             loader = PddlActionLoader(tmp_datastore)
             loader.load_pddl_actions()
+
+        except Exception as e:
+            merge_preds = False
+            action_string = 'ERROR!: {}'.format(e.message)
+
+        try:
             type_merger = TypeMerger(tmp_datastore)
             type_tree = type_merger.merge_types()
             type_string = type_tree.get_as_string()
-        except LookupError as e:
+
+        except Exception as e:
             merge_preds = False
             type_string = 'ERROR!: {}'.format(e.message)
 
-        action_names = []
-        for state in tmp_datastore.get_pddl_action_map():
-            action = tmp_datastore.get_pddl_action_map()[state]
-            action_names.append("{} (in state {})".format(action.name,state))
-            for predicate in action.predicates:
-                if predicate not in available_predicates:
-                    available_predicates.append(predicate)
+        try:
+            action_names = []
+            for state in tmp_datastore.get_pddl_action_map():
+                action = tmp_datastore.get_pddl_action_map()[state]
+                action_names.append("{} (in state {})".format(action.name,state))
+                for predicate in action.predicates:
+                    if predicate not in available_predicates:
+                        available_predicates.append(predicate)
 
-        if merge_preds:
-            pred_merger = PredicateMerger(tmp_datastore)
-            available_predicates = pred_merger.merge_predicates(available_predicates)[0]
+            if merge_preds:
+                pred_merger = PredicateMerger(tmp_datastore)
+                available_predicates = pred_merger.merge_predicates(available_predicates)[0]
 
 
-        for predicate in available_predicates:
-            predicates_string += predicate+'\r\n'
+            for predicate in sorted(available_predicates):
+                predicates_string += predicate+'\r\n'
 
-        for action_name in sorted(action_names):
-            action_string+= action_name+'\r\n'
-
+            for action_name in sorted(action_names):
+                action_string+= action_name+'\r\n'
+        except Exception as e:
+            predicates_string += e.message
 
         call_back(predicates_string,type_string, action_string)
 
