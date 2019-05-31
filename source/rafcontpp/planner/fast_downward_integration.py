@@ -1,6 +1,6 @@
 # Contributors:
 # Christoph Suerig <christoph.suerig@dlr.de>
-# Version 11.04.2019
+# Version 31.05.2019
 import os
 import time
 import shutil
@@ -44,14 +44,14 @@ class FdIntegration(PlannerInterface):
         if fd_exit == 0:
             plan = self.__parse_raw_plan(plan_path)
 
-        self.__copy_and_clean(plan_path, outsas, storage_path)
+        copied_files = self.__copy_and_clean(plan_path, outsas, storage_path)
 
          #reset to old cwd
         os.chdir(old_cwd)
         os.rmdir(new_cwd)
         return PlanningReport(fd_exit < 4,
                               plan,
-                              ['sas_plan', 'output.sas'],
+                              copied_files,
                               str(fd_exit)
                               + ': ' + self.__translate_fd_exit_code(fd_exit) +" used command was: "+command)
 
@@ -88,11 +88,14 @@ class FdIntegration(PlannerInterface):
         return parsed_plan
 
     def __copy_and_clean(self, plan_path, outsas_path, storage_path):
-
+        copied_files = []
         if os.path.isfile(plan_path):
             shutil.move(plan_path, os.path.join(storage_path, 'sas_plan'))
+            copied_files.append('sas_plan')
         if os.path.isfile(outsas_path):
             shutil.move(outsas_path, os.path.join(storage_path, 'output.sas'))
+            copied_files.append('output.sas')
+        return copied_files
 
 
     def __translate_fd_exit_code(self,fd_exit):

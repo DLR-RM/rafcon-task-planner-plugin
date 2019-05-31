@@ -55,13 +55,12 @@ class Mapper:
                     action_string = str(sem_data[SEMANTIC_DATA_DICT_NAME]['pddl_action']).upper()
                     action_name = PddlActionParser(action_string).parse_action_name()
                     if action_name in action_state_map:
-                        logger.warning("Multiple association of action " + str(action_name)
-                                       + "! Associated with states " + str(action_state_map[action_name])
-                                       + " and " + str(state) + ". Using association with state " + str(action_state_map[action_name]))
+                        logger.warning("Multiple associations of action {}! Associated with states: {} and {}. Using association with {}."
+                                       .format(action_name, action_state_map[action_name], state, action_state_map[action_name]))
                     else:
                         action_state_map[action_name] = state
                 else:
-                    logger.warning("State " + state + " is not associated with any PDDL Action!")
+                    logger.warning("State {} is not associated with any PDDL Action!".format(state))
 
         if not action_state_map:
             logger.error("No States with semantic PDDL_Action data found!")
@@ -86,9 +85,10 @@ class Mapper:
             c_state = action_state_map[action]
 
             if c_state in state_action_map:
-                logger.warning("Multiple associations of state " + str(c_state)
-                               + " associated with actions: " + str(state_action_map[c_state])
-                               + " and " +str(c_state))
+                logger.warning("Multiple associations of state {}! Associated with actions {} and {}. Using association with {}"
+                               .format(c_state, state_action_map[c_state].name, action.name, state_action_map[c_state].name))
+
+
             else:
                 state_action_map[c_state] = action
 
