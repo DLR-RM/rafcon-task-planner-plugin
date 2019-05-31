@@ -29,7 +29,6 @@ class PlanningSetupForm:
         self.__state_pool_chooser_entry = None
         self.__runtime_data_reference = None
         self.__controller = PlanningSetupFormController(datastore)
-        self.__planning_wait_window = self.__init_planning_wait_window()
 
 
     def initialize(self):
@@ -100,7 +99,7 @@ class PlanningSetupForm:
         :return:
         '''
 
-        self.__controller.on_apply(button, self.__dialog, self.__planning_wait_window,*self.__get_entered_data())
+        self.__controller.on_apply(button, self.__dialog, *self.__get_entered_data())
 
     def __call_controller_on_destroy(self, button):
         '''
@@ -109,28 +108,6 @@ class PlanningSetupForm:
         :return:
         '''
         self.__controller.on_destroy(button, self.__dialog, *self.__get_entered_data())
-
-
-    def __init_planning_wait_window(self):
-        '''
-        a window that says, that planning needs a while...
-        :return: the dialog window
-        '''
-
-
-        planning_wait_dialog_path = os.path.abspath(
-            os.path.join(os.path.dirname(os.path.realpath(__file__)), "glade", "planning_wait_dialog.glade"))
-        builder = Gtk.Builder()
-        builder.add_from_file(planning_wait_dialog_path)
-        planning_wait_dialog = builder.get_object('rtpp_planning_wait_window')
-        planning_wait_dialog.set_title('Task Planner Plugin')
-        main_window = gui_singletons.main_window_controller.view['main_window']
-        planning_wait_dialog.set_transient_for(main_window)
-        planning_wait_dialog.set_position(Gtk.WindowPosition.CENTER_ALWAYS)
-        window_button = builder.get_object('rtpp_planning_wait_window_ok_button')
-        window_button.connect('clicked', lambda x: planning_wait_dialog.destroy())
-        return planning_wait_dialog
-
 
 
     def __init_drop_down(self,drop_down, script_path_chooser):

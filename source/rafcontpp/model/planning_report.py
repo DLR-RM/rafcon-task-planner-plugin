@@ -25,14 +25,12 @@ class PlanningReport:
 
     def planning_successful(self):
         '''
-
         :return: True if planning was successful, false otherwhise
         '''
         return self.__planning_successful
 
     def get_plan(self):
         '''
-
         :return: the plan as list of PlanStep
         '''
         return self.__plan

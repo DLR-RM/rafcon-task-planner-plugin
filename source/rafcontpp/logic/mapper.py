@@ -32,8 +32,7 @@ class Mapper:
 
     def generate_action_state_map(self):
         '''
-        generates a map, with pddl action names as key, and RAFCON States as Values.
-        :return: Noting, its writing the map into the datastore
+        generates a map, with pddl action names as key, and RAFCON States as Values. Writes the map into the datastore.
         '''
         state_libs = self.__datastore.get_state_pools()
         libraries = global_config.get_config_value("LIBRARY_PATHS")
@@ -75,8 +74,7 @@ class Mapper:
     def generate_state_action_map(self):
         '''
         generates a map with RAFCON States as Keys and PDDL Action names as values.
-        if no action_state_map exists, it calls generate action_state_map
-        :return: nothing, its writing the map into the datastore
+        if no action_state_map exists, it calls generate action_state_map. Its writing the map into the datastore
         '''
         if self.__datastore.get_action_state_map() is None:
             self.generate_action_state_map()
@@ -104,8 +102,7 @@ class Mapper:
     def generate_available_actions(self):
         '''
         takes the action_state_map, and extracts the keys, in order to get a list of all available PDDL Actions.
-        if no action_state_map exists, it calls generate_action_state_map() first.
-        :return: nothing, it writes the list with available actions into the datastore.
+        if no action_state_map exists, it calls generate_action_state_map() first. It writes the list with available actions into the datastore.
         '''
         if self.__datastore.get_action_state_map() is None:
             self.generate_action_state_map()

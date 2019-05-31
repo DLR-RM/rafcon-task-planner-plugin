@@ -18,13 +18,13 @@ logger = log.get_logger(__name__)
 
 #list with all pddl requirements
 requ_list = [':strips', ':adl', ':typing', ':equality',
-                ':negative-preconditions', ':disjunctive-preconditions',
+                ':negative-preconditions', ':disjunctive-preconditions', ':negative-preconditions'
                 ':conditional-effects', ':existential-preconditions',
                 ':universal-preconditions', ':derived-predicates',
                 ':action-costs', ':quantified-preconditions',
                 ':action-expansions', ':foreach-expansions',
-                ':dag-expansions', ':expression-evaluation', ':fluents', ':open-world',':true-negation']#todo: remove undecidable
-
+                ':dag-expansions', ':expression-evaluation', ':fluents', ':open-world',':true-negation',
+                'durative-actions', ':duration-inequalities', ':continous-effects']
 
 class PddlActionTab:
     '''PddlActionTabController
@@ -69,14 +69,14 @@ class PddlActionTab:
         self.__pddl_predicates_text_view = self.__gtk_builder.get_object('pddl_predicates_textview')
         self.__pddl_types_text_view = self.__gtk_builder.get_object('pddl_types_textview')
         view_port = self.__gtk_builder.get_object('requirements_viewport')
-        self.__auto_save_button = self.__gtk_builder.get_object('rtpp_action_tab_auto_save_checkbox')
+        self.__auto_apply_button = self.__gtk_builder.get_object('rtpp_action_tab_auto_save_checkbox')
         #__requ_bb_dict contains all requirements button boxes
         self.__requ_cb_dict = self.__add_requirements_boxes(view_port)
 
     def __del__(self):
         #remove the save button from the list, if the action tab was closed.
-        if self.__auto_save_button in PddlActionTabController.auto_save_check_buttons:
-            self.__controller.remove_auto_save_button(self.__auto_save_button)
+        if self.__auto_apply_button in PddlActionTabController.auto_apply_check_buttons:
+            self.__controller.remove_auto_apply_button(self.__auto_apply_button)
 
 
 
@@ -97,7 +97,7 @@ class PddlActionTab:
             self.__pddl_predicates_text_view.set_cursor_visible(False)
             self.__pddl_types_text_view.set_editable(False)
             self.__pddl_types_text_view.set_cursor_visible(False)
-            self.__auto_save_button.set_sensitive(False)
+            self.__auto_apply_button.set_sensitive(False)
             self.__gtk_builder.get_object('rtpp_pddl_tab_auto_fill_button').set_sensitive(False)
             self.__gtk_builder.get_object('rtpp_pddl_tab_apply').set_sensitive(False)
 
@@ -118,9 +118,9 @@ class PddlActionTab:
 
             apply_button.connect('clicked',self.__controller.on_apply_changes,
                                  desc_buf, action_buf, pred_buf, types_buf, req_dict)
-            self.__auto_save_button.set_active(PddlActionTabController.auto_save_enabled)
-            self.__auto_save_button.connect('toggled', self.__controller.auto_apply_toogled)
-            self.__controller.add_auto_save_button(self.__auto_save_button)
+            self.__auto_apply_button.set_active(PddlActionTabController.auto_apply_enabled)
+            self.__auto_apply_button.connect('toggled', self.__controller.auto_apply_toogled)
+            self.__controller.add_auto_apply_button(self.__auto_apply_button)
 
             self.__description_text_view.get_buffer().connect('changed',self.__controller.save_data,'description',False)
             self.__pddl_action_source_view.get_buffer().connect('changed', self.__controller.save_data,'pddl_action',False)
@@ -151,7 +151,6 @@ class PddlActionTab:
         row_counter = 1
         column_counter = 0
         for requirement in requ_list:
-
 
             check_button = Gtk.CheckButton.new_with_label(requirement)
             button_dict[requirement] = check_button

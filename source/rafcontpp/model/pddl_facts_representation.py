@@ -9,7 +9,14 @@ class PddlFactsRepresentation:
 
 
     def __init__(self, facts_string, obj_type_map, domain_name, problem_name):
-        self.__facts_string = facts_string
+        '''
+        This is the representation of the pddl facts file (not completed yet.)
+        :param facts_string: the facts file content as string.
+        :param obj_type_map: a map, containing all objects with their types.
+        :param domain_name: the name of the domain the facts file is for.
+        :param problem_name: the name of the problem / task.
+        '''
+        self.facts = facts_string
         #contains the objects of the facts file and their types as dict value.
         self.obj_type_map = obj_type_map
         self.domain_name = domain_name

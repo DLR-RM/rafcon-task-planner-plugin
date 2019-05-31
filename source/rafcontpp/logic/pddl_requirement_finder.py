@@ -1,3 +1,8 @@
+#
+#
+# Contributors:
+# Christoph Suerig <christoph.suerig@dlr.de>
+# Version 31.05.2019
 import re
 from rafcon.utils import log
 logger = log.get_logger(__name__)
@@ -5,6 +10,10 @@ logger = log.get_logger(__name__)
 
 
 class PddlRequirementFinder():
+    '''
+    The PddlRequirementFiner, tries to figure out requirments from a given action definition.
+    Its doing this according to PDDL 2.1. It's not completed yet.
+    '''
 
     def __init__(self, action_string):
         self.action = action_string
@@ -19,16 +28,18 @@ class PddlRequirementFinder():
         return self.action.find(' - ') > -1
 
     def disjunctive_preconditions(self):
-        not_pattern = re.compile(':precondition.*not.*:effect',re.IGNORECASE | re.MULTILINE | re.DOTALL)
-        imply_pattern = re.compile(':precondition.*imply.*:effect',re.IGNORECASE | re.MULTILINE | re.DOTALL)
-        return not_pattern.search(self.action) is not None or imply_pattern.search(self.action) is not None
+        not_pattern = re.compile(':precondition.*\(\s*not.*:effect',re.IGNORECASE | re.MULTILINE | re.DOTALL)
+        or_pattern = re.compile(':precondition.*\(\s*or.*:effect', re.IGNORECASE | re.MULTILINE | re.DOTALL)
+        imply_pattern = re.compile(':precondition.*\(\s*imply.*:effect',re.IGNORECASE | re.MULTILINE | re.DOTALL)
+        return not_pattern.search(self.action) is not None \
+               or imply_pattern.search(self.action) is not None or or_pattern.search(self.action) is not None
 
     def existential_preconditions(self):
-        pattern = re.compile(':precondition.*exists.*:effect', re.IGNORECASE | re.MULTILINE | re.DOTALL)
+        pattern = re.compile(':precondition.*\(\s*exists.*:effect', re.IGNORECASE | re.MULTILINE | re.DOTALL)
         return bool(pattern.search(self.action))
 
     def universal_preconditions(self):
-        pattern = re.compile(':precondition.*forall.*:effect', re.IGNORECASE | re.MULTILINE | re.DOTALL)
+        pattern = re.compile(':precondition.*\(\s*forall.*:effect', re.IGNORECASE | re.MULTILINE | re.DOTALL)
         return bool(pattern.search(self.action))
 
     def quantified_preconditions(self):

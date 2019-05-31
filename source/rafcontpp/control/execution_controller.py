@@ -21,7 +21,7 @@ logger = log.get_logger(__name__)
 class ExecutionController:
     """ExecutionController
        ExecutionController controls the execution of the planning pipeline, from mapping up to generating the state
-       machine
+       machine. It's structured in two parts: a pre-planning, and a post-planning part.
     """
 
     def __init__(self, datastore):
@@ -34,17 +34,20 @@ class ExecutionController:
 
 
     def on_execute_pre_planning(self):
-        """on_execute
-         on_execute executes the pipeline in order to plan a scenario and create a state machine for it
-        :return: the planning thread.
-        """
+        '''
+        on_execute_pre_planning prepares the Datastore and gets everything ready for the planning process. Therefore
+        it triggeres different modules to map actions with states, loads all available actions and generate a domain file.
+        In the end initiates the Planning Process, and returns its thread.
+        :return: InterruptableThread: The planning Thread.
+        '''
         try:
             #pipeline, after input reading...
             #prepare dicts
             logger.verbose('Main thread is: {}'.format(threading.current_thread().getName()))
             start_time = time.time()
             logger.debug('Handover to facts parser')
-            self.__parse_and_set_facts()
+            facts_repr = self.__parse_facts_file()
+            self.__datastore.set_pddl_facts_representation(facts_repr)
             logger.debug('Handover to mapper.')
             mapper = Mapper(self.__datastore)
             mapper.generate_action_state_map()                      #--> as_map
@@ -74,6 +77,11 @@ class ExecutionController:
 
 
     def on_execute_post_planning(self,planning_successful):
+        '''
+        on_execute_post_planning takes care of the post planning steps in the pipeline, e.g. it triggeres the state
+        machine generation procedure. typically its executed from another thread.
+        :param planning_successful: True if planning was successful, False otherwhise.
+        '''
 
         try:
             logger.verbose('post planning executed from thread: {}'.format(threading.current_thread().getName()))
@@ -102,7 +110,7 @@ class ExecutionController:
                     else:
                         logger.warning("Couldn't remove: " + str(file))
             else:
-                logger.debug('Keeping files')
+                logger.debug('Keeping files.')
 
             #remove the planning_thread at the end of the Task.
             if self.__planning_thread_register_time is not -1:
@@ -111,8 +119,11 @@ class ExecutionController:
                 else:
                     logger.debug('removed planning thread successfully.')
 
-    def __parse_and_set_facts(self):
+
+
+    def __parse_facts_file(self):
         '''
+        parses the facts file, and creates a facts representation.
         i do it here, because i have no better place, later on i will do it in a dedicated facts module
         TODO delete, and do somewhere else.
         :return:
@@ -123,4 +134,4 @@ class ExecutionController:
         obj_type_map = facts_parser.parse_objects()
         domain_name = facts_parser.parse_domain_name()
         problem_name = facts_parser.parse_problem_name()
-        self.__datastore.set_pddl_facts_representation(PddlFactsRepresentation(facts_string, obj_type_map, domain_name, problem_name))
+        return PddlFactsRepresentation(facts_string, obj_type_map, domain_name, problem_name)

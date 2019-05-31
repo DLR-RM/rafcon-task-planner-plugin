@@ -29,8 +29,8 @@ class PddlActionLoader:
     def load_pddl_actions(self):
         """
         load_pddl_actions reads the actions from the states and
-        parses them into the internal format (PddlActionRepresentation).
-        :return: Nothing, sets the pddl action map in datastore.
+        parses them into PddlActionRepresentations.
+        Then it sets the pddl action map in datastore.
         """
         state_libs = self.__datastore.get_state_pools()
         lib_names = []
@@ -89,7 +89,7 @@ class PddlActionLoader:
         parse_type_string gets a type string of fromat type1,type2 or type1 type2 and parses it into an
         array containing the types.
         :param type_string: a typestring of format type1,type2 or type1 type2.
-        :return: an array containing the types of the string, or an empty array if string is None or empty
+        :return: an array containing the types of the string, or an empty array if string is None or empty.
         '''
         ts = []
         if type_string:

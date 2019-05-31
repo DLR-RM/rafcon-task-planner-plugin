@@ -96,6 +96,11 @@ class FdIntegration(PlannerInterface):
 
 
     def __translate_fd_exit_code(self,fd_exit):
+        '''
+        receives an error code and returns the corresponding error message.
+        :param fd_exit: an exit code
+        :return: the corresponding error message.
+        '''
 
         translated_exit_code = str(fd_exit)
         codes = {

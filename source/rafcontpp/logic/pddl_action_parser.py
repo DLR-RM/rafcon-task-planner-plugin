@@ -50,8 +50,8 @@ class PddlActionParser:
     def parse_action(self):
         '''parse_action
         parse_action takes the given action string, and parses it into a PddlActionRepresenation,
-        raises ValueError, if action is none or empty.
-        :return: a PddlActionRepresentation of the pddl action
+        raises ValueError, if the action string is none or empty.
+        :return: a PddlActionRepresentation of the pddl action.
         '''
 
         self.__create_var_type_dict()
@@ -108,7 +108,7 @@ class PddlActionParser:
         '''create_var_type_dict
         create_var_type_dict creates a dictionary, which contains all variables with their type,
         defined in the action.
-        :return: a dictionary contining variable : type pairs.
+        :return: a dictionary containing variable : type pairs.
         '''
         type_vars = self.__type_var_pattern.findall(self.__action_string)
         for type_var in type_vars:
@@ -172,7 +172,13 @@ class PddlActionParser:
                 parsed_predicates[c_pred_name+type_concat] = generalized_predicate
         return parsed_predicates.values()
 
+
     def __is_built_in_pred(self,name):
+        '''
+        Checks if the Predicate is a PDDL built-in predicate.
+        :param name: the name of a predicate
+        :return: True if the predicate is a PDDL built-in predicate. false otherwhise.
+        '''
         is_built_in = False
         if name:
             is_built_in = True if name == '=' else is_built_in

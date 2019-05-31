@@ -9,6 +9,7 @@ from threading import Thread
 from rafcon.utils.gui_functions import call_gui_callback
 from rafcontpp.control.execution_controller import ExecutionController
 from rafcontpp.model.datastore import Datastore, DATASTORE_STORAGE_PATH
+from rafcontpp.view.planning_wait_window import PlanningWaitWindow
 from rafcon.utils import log
 
 logger = log.get_logger(__name__)
@@ -19,19 +20,47 @@ SEL_PLANNER = '-- Select planner --'
 #printed next to planner, if it is not available.
 NOT_AVAILABLE = ' (!) Unavailable'
 class PlanningSetupFormController:
+    '''
+    PlanningSetupFormController
+    This is the controller of the Planning Setup Form.
+    '''
 
 
 
 
     def __init__(self, datastore):
+        '''
+
+        :param datastore: a Datastore
+        '''
         assert isinstance(datastore, Datastore)
         self.__datastore = datastore
 
 
-    def on_apply(self, button, setup_form, planning_wait_window, state_pool_string,
+    def on_apply(self, button, setup_form, state_pool_string,
                             type_db_path,planner_text,planner_script_path,planner_argv_text,
                             facts_path,sm_name,sm_save_dir,keep_related_files, file_save_dir,
                                                                     rt_data_path, as_reference):
+        '''
+        on_apply filles the datastore with new data entered into the setup form, saves it in the configuration,
+        destroys the setup form, triggeres the pipeline e.g. the execution controller, and increments the plan task
+        button, to indicate a running task.
+        :param button: Not used.
+        :param setup_form: The setup form, to be able to destroy it.
+        :param state_pool_string: The statepool paths as colon seperated string.
+        :param type_db_path: The path of the type db file as string.
+        :param planner_text: The text of the planner field e.g. Other... or Fast-Downward Planning System.
+        :param planner_script_path: The path of a planner script, or an empty String if there is none.
+        :param planner_argv_text: An argv vector for the planner.
+        :param facts_path: The Path of the facts file as String.
+        :param sm_name: The desired name of the State machine.
+        :param sm_save_dir: The path where to save the State machine as string.
+        :param keep_related_files: True if related files should be keept, Fals if they should be deleted.
+        :param file_save_dir: The path where to save related files, or an empty string if files shouldn't be keept.
+        :param rt_data_path: The path where to find the runtime data file. Or an empty string if there is no runtime data.
+        :param as_reference: True if the runtime data path should be used as reference, False if it should directly be copied into the State. if rt_data_path is empty, this field is irrelevant.
+        '''
+
         #prepare datastore with new data from dialog.
         #save datastore to configuration file.
         #destroy dialog.
@@ -45,6 +74,7 @@ class PlanningSetupFormController:
             self.__datastore.validate_ds()
             self.__datastore.save_datastore_parts_in_file(DATASTORE_STORAGE_PATH)
             setup_form.hide()#its more smoothly to first hide and then destroy
+            planning_wait_window = PlanningWaitWindow()
             planning_wait_window.show()
             setup_form.destroy()
             from rafcontpp.view.planning_button import increment_button
@@ -62,25 +92,29 @@ class PlanningSetupFormController:
         else:
             logger.error(" Field missing! {}".format(not_filled))
 
-    def __wait_and_hide(self,thread, planning_wait_window):
-        '''
-        wait and hide should be executed in another thread, it joins the planning thread, closes the wait window
-        and decrements the planning button.
-        :param thread: the thread to wait for
-        '''
-        #logger.debug('wait_and_hide executed from thread: {}'.format(threading.current_thread().getName()))#todo remove
-        if thread and thread.is_alive():
-            thread.join()
-        call_gui_callback(planning_wait_window.hide)#its more smoothly to first hide and then destroy
-        call_gui_callback(planning_wait_window.destroy)
-        from rafcontpp.view.planning_button import decrement_button
-        call_gui_callback(decrement_button)# decrement button, to indicate, that the planning process is finish.
 
 
     def on_destroy(self, button, setup_form, state_pool_string,
                             type_db_path,planner_text,planner_script_path,planner_argv_text,
                             facts_path,sm_name,sm_save_dir,keep_related_files, file_save_dir,
                                                                     rt_data_path, as_reference):
+        '''
+        on_destroy destroys the setup form, but saves the current configuration into a file.
+        :param button: Not used.
+        :param setup_form: The setup form, to be able to destroy it.
+        :param state_pool_string: The statepool paths as colon seperated string.
+        :param type_db_path: The path of the type db file as string.
+        :param planner_text: The text of the planner field e.g. Other... or Fast-Downward Planning System.
+        :param planner_script_path: The path of a planner script, or an empty String if there is none.
+        :param planner_argv_text: An argv vector for the planner.
+        :param facts_path: The Path of the facts file as String.
+        :param sm_name: The desired name of the State machine.
+        :param sm_save_dir: The path where to save the State machine as string.
+        :param keep_related_files: True if related files should be keept, Fals if they should be deleted.
+        :param file_save_dir: The path where to save related files, or an empty string if files shouldn't be keept.
+        :param rt_data_path: The path where to find the runtime data file. Or an empty string if there is no runtime data.
+        :param as_reference: True if the runtime data path should be used as reference, False if it should directly be copied into the State. if rt_data_path is empty, this field is irrelevant.
+        '''
         #destroy dialog
         #save data to datastore
         #save datastore to file.
@@ -92,6 +126,7 @@ class PlanningSetupFormController:
             self.__datastore.save_datastore_parts_in_file(DATASTORE_STORAGE_PATH)
         finally:
             setup_form.destroy()
+
 
     def on_choose_state_pool(self,chooser, chooser_entry):
         '''
@@ -123,6 +158,23 @@ class PlanningSetupFormController:
                             type_db_path,planner_text,planner_script_path,planner_argv_text,
                             facts_path,sm_name,sm_save_dir,keep_related_files, file_save_dir,
                                                                     rt_data_path, as_reference):
+        '''
+        __prepare_datastore saves the given data into the datastore, and checks if data is missing.
+        :param setup_form: The setup form, to be able to destroy it.
+        :param state_pool_string: The statepool paths as colon seperated string.
+        :param type_db_path: The path of the type db file as string.
+        :param planner_text: The text of the planner field e.g. Other... or Fast-Downward Planning System.
+        :param planner_script_path: The path of a planner script, or an empty String if there is none.
+        :param planner_argv_text: An argv vector for the planner.
+        :param facts_path: The Path of the facts file as String.
+        :param sm_name: The desired name of the State machine.
+        :param sm_save_dir: The path where to save the State machine as string.
+        :param keep_related_files: True if related files should be keept, Fals if they should be deleted.
+        :param file_save_dir: The path where to save related files, or an empty string if files shouldn't be keept.
+        :param rt_data_path: The path where to find the runtime data file. Or an empty string if there is no runtime data.
+        :param as_reference: True if the runtime data path should be used as reference, False if it should directly be copied into the State. if rt_data_path is empty, this field is irrelevant.
+
+        '''
         #saves all data from the dialog into the datastore.
         #looks if everything necessary was filled.
         everything_filled = True
@@ -166,7 +218,28 @@ class PlanningSetupFormController:
 
         return (everything_filled,not_filled)
 
+    def __wait_and_hide(self, thread, planning_wait_window):
+        '''
+        wait and hide should be executed in another thread, it joins the planning thread, closes the wait window
+        and decrements the planning button.
+        :param thread: the thread to wait for
+        '''
+        # logger.debug('wait_and_hide executed from thread: {}'.format(threading.current_thread().getName()))#todo remove
+        if thread and thread.is_alive():
+            thread.join()
+        call_gui_callback(planning_wait_window.hide)  # its more smoothly to first hide and then destroy
+        call_gui_callback(planning_wait_window.destroy)
+        from rafcontpp.view.planning_button import decrement_button
+        call_gui_callback(decrement_button)  # decrement button, to indicate, that the planning process is finish.
+
 
     def __string_to_string_array(self,string):
-        # helper method for state pool text entry
-        return list(filter(None,string.split(':')))
+        '''
+        a little method, that splits a colon seperated string into a string array.
+        :param string: a string, containing colon seperated substrings.
+        :return: a list of substrings e.g. a:b:c --> [a,b,c]
+        '''
+        result = []
+        if string and len(string) >0:
+            result = list(filter(None,string.split(':')))
+        return result

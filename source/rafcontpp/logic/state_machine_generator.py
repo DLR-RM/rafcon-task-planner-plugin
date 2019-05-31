@@ -37,8 +37,7 @@ class StateMachineGenerator:
     def generate_state_machine(self):
         ''' generate_state_machine
         generate_state_machine generates a state machine, fills the data ports and opens the state machine in rafcon.
-        :param self:
-        :return: nothing
+
         '''
         sm_name = self.__datastore.get_sm_name()
         sm_name = self.__datastore.get_pddl_facts_representation.problem_name+'_state_machine' if len(sm_name) == 0 else sm_name
@@ -107,6 +106,12 @@ class StateMachineGenerator:
 
 
     def __open_state_machine(self,state_machine, state_machine_path):
+        '''
+        gets a state machine and opens it in rafcon. If an old version is still open, it closes it first.
+        :param state_machine: the name of the state machine
+        :param state_machine_path: the path of the state machine.
+        :return:
+        '''
 
         logger.debug('Opening state machine...')
         if state_machine_manager.is_state_machine_open(state_machine.file_system_path):
@@ -143,7 +148,8 @@ class StateMachineGenerator:
 
     def __get_runtime_data_init_state(self, data_init_file_path, use_as_ref):
         '''
-
+        creates an execution state, containing the, or a reference to the runtime data, as well as the code needed
+        to write it into a dictionary in the global variables.
         :param data_init_file_path: The path of a file containing a json dict
         :param use_as_ref: True if the path should be included as reference, False if the dictionary itself should be included.
         :return: an Execution state, that will update the rtpp_data dict in the global variables.

@@ -1,6 +1,6 @@
 # Contributors:
 # Christoph Suerig <christoph.suerig@dlr.de>
-# Version 17.05.2019
+# Version 31.05.2019
 
 import os
 import json
@@ -11,9 +11,8 @@ logger = log.get_logger(__name__)
 
 class DomainGenerator:
     '''DomainGenerator
-    The DomainGenerator uses the data, provided by the datastore to generate a domain.pddl file for the planner.
+    The DomainGenerator uses the data provided by the datastore to generate a domain.pddl file for the planner.
     '''
-    __datastore = None
 
     def __init__(self, datastore):
         if datastore is None:
@@ -25,10 +24,6 @@ class DomainGenerator:
     def generate_domain(self):
         """
         generateDomain generates a domain and returns its path.
-        :param domain_name: the name of the domain, mentioned in the facts file.
-        :param pddl_actions: a list of pddl acitons as PddlActionRepresentation.
-        :param type_dict: a type dictionary, with type:parent entries.
-        :param domain_dir: the location to save the generated domain file at.
         :return: the path of the generated domain file
         """
 
@@ -61,11 +56,11 @@ class DomainGenerator:
 
     def __get_head(self, domain_name):
         ''' get_head
-        takes a domain name, and returns the head of a pddl domain
+        takes a domain name, and returns the head of a pddl domain, e.g. "(define (domain test_domain)"
         :param domain_name: the name of the domain
         :return: the head of a pddl domain
         '''
-        return "(DEFINE (DOMAIN " + domain_name + ")"
+        return "(DEFINE (DOMAIN {})".format(domain_name)
 
     def __merge_requirements(self, pddl_actions):
         """
@@ -105,8 +100,8 @@ class DomainGenerator:
                 for type in action.types:
                     if tree:
                         if not tree.add_type_branch(type, type_dict) and not tree.is_in_tree(type):
-                            logger.error("no Type \"" + type + "\" found in type dictionary!")
-                            raise LookupError("no Type \"" + type + "\" found in type dictionary!")
+                            logger.error("No Type \"" + type + "\" found in type dictionary!")
+                            raise LookupError("No Type \"" + type + "\" found in type dictionary!")
                     else:
                         c_type = type
                         while c_type in type_dict.keys():
