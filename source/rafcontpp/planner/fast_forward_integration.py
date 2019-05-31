@@ -1,6 +1,6 @@
 # Contributors:
 # Christoph Suerig <christoph.suerig@dlr.de>
-# Version 11.04.2019
+# Version 31.05.2019
 import os
 import time
 import subprocess
@@ -38,6 +38,7 @@ class FfIntegration(PlannerInterface):
         (stdout, stderr) = ff_process.communicate()
         ff_exit = ff_process.returncode
         # read plan, if possible
+        files_to_delete = []
         if ff_exit == 0:
             parsed_console = self.__parse_console_output(stdout)
             plan = parsed_console[1]
@@ -47,13 +48,14 @@ class FfIntegration(PlannerInterface):
                 plan_file.write(line + '\r\n')
             plan_file.flush()
             plan_file.close()
+            files_to_delete = ['ff_plan']
         else:
             stderr = stdout
 
         # reset to old cwd
         os.chdir(old_cwd)
         os.rmdir(new_cwd)
-        return PlanningReport(ff_exit == 0, plan, ['ff_plan'], str(ff_exit) + ': ' + str(stderr))
+        return PlanningReport(ff_exit == 0, plan, files_to_delete, str(ff_exit) + ': ' + str(stderr))
 
     def is_available(self):
         '''
