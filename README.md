@@ -14,7 +14,7 @@ One important aspect is, that the Task Planner should be able to interface abrit
 ## Installation
 To install the Plugin two steps are required: 
 1. `git clone <repository>`
-2. Add the Plugin Path to Rafcons PLUGIN_PATH Variable. (see [RAFCON Doc](https://rafcon.readthedocs.io/en/latest/plugins.html)) `[repository_path]/source/rafcontpp` 
+2. Add the Plugin Path to Rafcons PLUGIN_PATH Variable. (see [RAFCON Doc](https://rafcon.readthedocs.io/en/latest/plugins.html)) `RAFCON_PLUGIN_PATH=$RAFCON_PLUGIN_PATH:[repository_path]/source/rafcontpp` 
 
 ## Usage
 An Introduction how to use the Plugin can be found in the first [Tutorial](/examples/restaurant_tutorial).
@@ -24,9 +24,9 @@ The Plugin Documentation can be found [here](https://wiki.robotic.dlr.de/RAFCON/
 
 ## Support
 ### Planner Support
-Currently the Task Planner Plugin supports two Planners as "built-in", namely The [Fast-Downward planning System](http://www.fast-downward.org/) and The [Fast-Forward Planning System V2.1](https://fai.cs.uni-saarland.de/hoffmann/ff.html). Even they are called "built-in", it doesn't mean, that they come with the Plugin. You have to install them separately according to the guide in the [Wiki]().  
+Currently the Task Planner Plugin supports two Planners as "built-in", namely The [Fast-Downward planning System](http://www.fast-downward.org/) and The [Fast-Forward Planning System V2.1](https://fai.cs.uni-saarland.de/hoffmann/ff.html). Even they are called "built-in", it doesn't mean that they come with the Plugin. You have to install them separately according to the guide in the [Wiki]().  
 
-If you want to use any other Planner, you have to integrate it yourself. But thats usually no Problem, and should be done in 10 to 15 minutes. If you have an awesome Planner, and think it should be a must-have in the Plugin, please contact us!
+If you want to use any other Planner, you have to [integrate it yourself](). But thats usually no Problem and should be done in 10 to 15 minutes. If you have an awesome Planner, and think it should be a must-have in the Plugin, please contact us!
 
 ### Python Support
 
