@@ -18,7 +18,7 @@ logger = log.get_logger(__name__)
 
 #list with all pddl requirements
 requ_list = [':strips', ':adl', ':typing', ':equality',
-                ':negative-preconditions', ':disjunctive-preconditions', ':negative-preconditions'
+                ':negative-preconditions', ':disjunctive-preconditions', ':negative-preconditions',
                 ':conditional-effects', ':existential-preconditions',
                 ':universal-preconditions', ':derived-predicates',
                 ':action-costs', ':quantified-preconditions',
