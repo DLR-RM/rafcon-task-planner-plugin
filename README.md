@@ -14,7 +14,7 @@ One important aspect is, that the Task Planner should be able to interface abrit
 ## Installation
 To install the Plugin two steps are required: 
 1. `git clone <repository>`
-2. Add the Plugin Path to Rafcons PLUGIN_PATH Variable. (see [RAFCON Doc](https://rafcon.readthedocs.io/en/latest/plugins.html)) `[repository_path]/source/rafcontpp` 
+2. Add the Plugin Path to Rafcons PLUGIN_PATH Variable. (see [RAFCON Doc](https://rafcon.readthedocs.io/en/latest/plugins.html)) `RAFCON_PLUGIN_PATH=$RAFCON_PLUGIN_PATH:[repository_path]/source/rafcontpp` 
 
 ## Usage
 An Introduction how to use the Plugin can be found in the first [Tutorial](/examples/restaurant_tutorial).
