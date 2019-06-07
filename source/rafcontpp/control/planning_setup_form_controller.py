@@ -1,6 +1,6 @@
 # Contributors:
 # Christoph Suerig <christoph.suerig@dlr.de>
-# Version 18.04.2019
+# Version 07.06.2019
 
 
 import os
@@ -166,16 +166,17 @@ class PlanningSetupFormController:
                     if predicate not in available_predicates:
                         available_predicates.append(predicate)
 
+
+            for action_name in sorted(action_names):
+                action_string+= action_name+'\r\n'
+
             if merge_preds:
                 pred_merger = PredicateMerger(tmp_datastore)
                 available_predicates = pred_merger.merge_predicates(available_predicates)[0]
 
-
             for predicate in sorted(available_predicates):
                 predicates_string += predicate+'\r\n'
 
-            for action_name in sorted(action_names):
-                action_string+= action_name+'\r\n'
         except Exception as e:
             predicates_string += e.message
 

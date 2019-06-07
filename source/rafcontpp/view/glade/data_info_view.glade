@@ -39,7 +39,7 @@
                         <property name="margin_right">5</property>
                         <property name="margin_top">5</property>
                         <property name="margin_bottom">10</property>
-                        <property name="label" translatable="yes">Available Types:</property>
+                        <property name="label" translatable="yes">Types:</property>
                         <attributes>
                           <attribute name="weight" value="bold"/>
                           <attribute name="scale" value="1.1000000000000001"/>
@@ -74,7 +74,7 @@
                         <property name="margin_right">5</property>
                         <property name="margin_top">5</property>
                         <property name="margin_bottom">10</property>
-                        <property name="label" translatable="yes">Available Actions:</property>
+                        <property name="label" translatable="yes">Actions:</property>
                         <attributes>
                           <attribute name="weight" value="bold"/>
                           <attribute name="scale" value="1.1000000000000001"/>
@@ -109,7 +109,7 @@
                         <property name="margin_right">5</property>
                         <property name="margin_top">5</property>
                         <property name="margin_bottom">10</property>
-                        <property name="label" translatable="yes">Available Predicates:</property>
+                        <property name="label" translatable="yes">Predicates:</property>
                         <attributes>
                           <attribute name="weight" value="bold"/>
                           <attribute name="scale" value="1.1000000000000001"/>
