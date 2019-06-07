@@ -1,9 +1,4 @@
-#
-#
-#
-#
-#
-#
+
 # Contributors:
 # Christoph Suerig <christoph.suerig@dlr.de>
 # Version: 07.06.2019

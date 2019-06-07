@@ -39,7 +39,7 @@
                         <property name="margin_right">5</property>
                         <property name="margin_top">5</property>
                         <property name="margin_bottom">10</property>
-                        <property name="label" translatable="yes">Available Predicates:</property>
+                        <property name="label" translatable="yes">Available Types:</property>
                         <attributes>
                           <attribute name="weight" value="bold"/>
                           <attribute name="scale" value="1.1000000000000001"/>
@@ -52,6 +52,20 @@
                       </packing>
                     </child>
                     <child>
+                      <object class="GtkLabel" id="rtpp_data_info_view_type_label">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="margin_left">5</property>
+                        <property name="margin_right">5</property>
+                        <property name="margin_top">5</property>
+                        <property name="margin_bottom">5</property>
+                      </object>
+                      <packing>
+                        <property name="left_attach">0</property>
+                        <property name="top_attach">1</property>
+                      </packing>
+                    </child>
+                    <child>
                       <object class="GtkLabel">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
@@ -60,7 +74,7 @@
                         <property name="margin_right">5</property>
                         <property name="margin_top">5</property>
                         <property name="margin_bottom">10</property>
-                        <property name="label" translatable="yes">Available Types:</property>
+                        <property name="label" translatable="yes">Available Actions:</property>
                         <attributes>
                           <attribute name="weight" value="bold"/>
                           <attribute name="scale" value="1.1000000000000001"/>
@@ -73,7 +87,7 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkLabel" id="rtpp_data_info_view_type_label">
+                      <object class="GtkLabel" id="rtpp_data_info_view_action_label">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="margin_left">5</property>
@@ -95,7 +109,7 @@
                         <property name="margin_right">5</property>
                         <property name="margin_top">5</property>
                         <property name="margin_bottom">10</property>
-                        <property name="label" translatable="yes">Available Actions:</property>
+                        <property name="label" translatable="yes">Available Predicates:</property>
                         <attributes>
                           <attribute name="weight" value="bold"/>
                           <attribute name="scale" value="1.1000000000000001"/>
@@ -105,20 +119,6 @@
                       <packing>
                         <property name="left_attach">0</property>
                         <property name="top_attach">4</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkLabel" id="rtpp_data_info_view_action_label">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="margin_left">5</property>
-                        <property name="margin_right">5</property>
-                        <property name="margin_top">5</property>
-                        <property name="margin_bottom">5</property>
-                      </object>
-                      <packing>
-                        <property name="left_attach">0</property>
-                        <property name="top_attach">5</property>
                       </packing>
                     </child>
                     <child>
@@ -132,7 +132,7 @@
                       </object>
                       <packing>
                         <property name="left_attach">0</property>
-                        <property name="top_attach">1</property>
+                        <property name="top_attach">5</property>
                       </packing>
                     </child>
                   </object>
