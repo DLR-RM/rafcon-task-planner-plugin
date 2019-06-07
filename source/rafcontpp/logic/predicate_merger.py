@@ -6,7 +6,7 @@
 #
 # Contributors:
 # Christoph Suerig <christoph.suerig@dlr.de>
-# Version: 20.02.2019
+# Version: 07.06.2019
 from rafcon.utils import log
 
 logger = log.get_logger(__name__)
@@ -149,15 +149,14 @@ class PredicateMerger:
         '''
 
         pred_string = '('+predicate_tuple[0]
-        variable_counter = 0 #need this counter do guarantee distinctly variable names.
+        tuple_counter = 0 #need this counter do guarantee distinct variable names.
         for type_tup in predicate_tuple[1]:
-            c_count = 0
-            while c_count < type_tup[1]:
-                pred_string += ' ?' + type_tup[0][:1] + str(variable_counter) + str(c_count)
+            variable_counter = 0
+            tuple_counter += 1
+            while variable_counter < type_tup[1]:# NUM_VARIABLES: type_tup[1] contains the number of variables of one type.
+                pred_string += ' ?' + type_tup[0][:1] + str(tuple_counter) + str(variable_counter)
                 variable_counter += 1
-                c_count += 1
             pred_string += ' - '+type_tup[0]
-
         pred_string += ')'
 
         return str(pred_string)
