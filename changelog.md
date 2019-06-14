@@ -1,3 +1,9 @@
+### version 1.4
+- added a chooser entry for the runtime data
+- added a state pool(s) info window
+- updated documentation
+- adjusted examples
+- fixed some bugs
 ### Version 1.3
 - added tooltips for a better understanding
 - added a state machine name into the setup form, so that the state machine that will be generated can now be named freely
