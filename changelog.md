@@ -1,4 +1,4 @@
-### version 1.4
+### Version 1.4
 - added a chooser entry for the runtime data
 - added a state pool(s) info window
 - updated documentation
