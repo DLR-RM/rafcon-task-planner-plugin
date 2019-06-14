@@ -36,9 +36,9 @@ class StateMachineLayouter:
         #increment_row is true if formatting digs down a row, and false if it climbs the next row up again.
         increment_row = True
         #the width of a state in the sm
-        state_width = 130.4
+        state_width = 100.
         #the height of a state in the sm
-        state_height = 88.4
+        state_height = 100.
         #format root state
         #root state width
         r_width = column_count * (x_gap+state_width)+3*x_gap
@@ -50,7 +50,7 @@ class StateMachineLayouter:
         #set root state in / out come position
         state_machine_m.root_state.income.meta['gui']['editor_gaphas']['rel_pos'] = (0., y_gap+state_height/4.)
         out_come = [oc for oc in state_machine_m.root_state.outcomes if oc.outcome.outcome_id >= 0].pop()
-        out_come.meta['gui']['editor_gaphas']['rel_pos'] = (r_width, y_gap)
+        out_come.meta['gui']['editor_gaphas']['rel_pos'] = (r_width, y_gap+state_height/4.)
 
         #positions where an income or an outcome can occure
         up_pos = (state_width/2.,0.)
@@ -119,7 +119,7 @@ class StateMachineLayouter:
         :return: the number of states per column.
         '''
 
-        height = math.sqrt(num_states/1.78)#claculates the hight for approximatly ratio of 16:9, which is 1.78:1
+        height = math.sqrt(num_states/1.78)#claculates the hight for approximatly ratio of 16:9, which is appr. 1.78:1
 
         return round(height)
 
