@@ -14,6 +14,7 @@
 import os
 import time
 import json
+from rafcontpp.logic.state_machine_layouter import StateMachineLayouter
 from rafcon.core.storage import storage
 from rafcon.core.singleton import library_manager
 from rafcon.core.singleton import state_machine_manager
@@ -46,6 +47,7 @@ class StateMachineGenerator:
         pddl_action_dict = self.__datastore.get_pddl_action_map()
         logger.info('Creating State machine \"'+sm_name+'\"...')
         start_time = time.time()
+        state_order_list = []
         # set root-state id to old root-state id, in case the state machine is replanned.
         # why is it important? - if you added the planned sm as a library, replan it and refresh it,
         # rafcon will throw an error, if the refreshed library has a different root-state id. 
@@ -63,6 +65,7 @@ class StateMachineGenerator:
             last_state = self.__get_runtime_data_init_state(runtime_data_path, self.__datastore.use_runtime_path_as_ref())
             root_state.add_state(last_state)
             root_state.set_start_state(last_state.state_id)
+            state_order_list.append(last_state.state_id)
         facts = self.__datastore.get_pddl_facts_representation()
         for plan_step in self.__datastore.get_plan():
             #the name of a plan step is an action name.
@@ -84,6 +87,7 @@ class StateMachineGenerator:
                                        +c_input_data_ports[key].name+", which is needed in State "+current_state.name)
                 #add state to state machine
                 root_state.add_state(current_state)
+                state_order_list.append(current_state.state_id)
                 if last_state is None:
                     root_state.set_start_state(current_state.state_id)
                 else:
@@ -100,6 +104,9 @@ class StateMachineGenerator:
         logger.info("State machine \"" + sm_name + "\" created.")
         logger.info(sm_name+" contains " + str(len(root_state.states)) + " states.")
         logger.info("State machine generation took {0:.4f} seconds.".format(time.time()- start_time))
+        #format state machine
+        layouter = StateMachineLayouter()
+        layouter.layout_state_machine(state_machine, state_order_list)
         #open state machine
         self.__open_state_machine(state_machine,sm_path)
 
@@ -119,6 +126,7 @@ class StateMachineGenerator:
             call_gui_callback(state_machine_manager.remove_state_machine, old_sm.state_machine_id)
         new_state_machine = storage.load_state_machine_from_path(state_machine_path)
         call_gui_callback(state_machine_manager.add_state_machine,new_state_machine)
+
 
 
 
