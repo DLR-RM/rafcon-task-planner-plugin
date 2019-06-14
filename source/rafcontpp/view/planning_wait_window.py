@@ -27,7 +27,7 @@ class PlanningWaitWindow:
         self.__planning_wait_dialog.set_transient_for(main_window)
         self.__planning_wait_dialog.set_position(Gtk.WindowPosition.CENTER_ALWAYS)
         window_button = builder.get_object('rtpp_planning_wait_window_ok_button')
-        window_button.connect('clicked', lambda x: planning_wait_dialog.destroy())
+        window_button.connect('clicked', lambda x: self.__planning_wait_dialog.destroy())
 
 
     def show(self):
