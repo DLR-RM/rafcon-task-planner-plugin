@@ -143,7 +143,7 @@ class DomainGenerator:
         types_in_pddl = ""
         if merged_types:
             types = "(:TYPES \r\n"
-            types_in_pddl = types + merged_types.get_as_string() + ")"
+            types_in_pddl = types + merged_types.get_as_pddl_string() + ")"
         return types_in_pddl
 
     def __merge_predicates(self, pddl_actions):

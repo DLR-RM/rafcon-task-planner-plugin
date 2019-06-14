@@ -2,7 +2,7 @@
 #
 # Contributors:
 # Christoph Suerig <christoph.suerig@dlr.de>
-# Version 20.02.2019
+# Version 14.06.2019
 
 
 class TypeTree:
@@ -96,9 +96,9 @@ class TypeTree:
 
         return inserted
 
-    def get_as_string(self):
+    def get_as_pddl_string(self):
         """
-        getAsString returns a string representation of the type-tree.
+        returns a string in pddl notation representing the type-tree.
         :return: returns the typetree as string.
         """
         as_string = ""
@@ -109,7 +109,7 @@ class TypeTree:
             as_string = as_string + "- " + self.type_name + "\r\n"
 
             for child in self.children:
-                child_string = child.get_as_string()
+                child_string = child.get_as_pddl_string()
                 if child_string != child.type_name:
                     as_string = as_string + child_string
         else:

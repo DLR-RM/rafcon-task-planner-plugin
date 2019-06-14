@@ -1,6 +1,6 @@
 # Contributors:
 # Christoph Suerig <christoph.suerig@dlr.de>
-# Version 07.06.2019
+# Version 14.06.2019
 
 
 import os
@@ -13,6 +13,7 @@ from rafcontpp.logic.mapper import Mapper
 from rafcontpp.logic.pddl_action_loader import PddlActionLoader
 from rafcontpp.logic.predicate_merger import PredicateMerger
 from rafcontpp.logic.type_merger import TypeMerger
+from rafcontpp.view.state_pool_info_window import StatePoolInfoWindow
 from rafcon.utils import log
 
 logger = log.get_logger(__name__)
@@ -98,15 +99,14 @@ class PlanningSetupFormController:
             setup_form.destroy()
 
 
-    #start=========================================================================================
-    def on_show_data_info(self, button, call_back, state_pool_string,
-                          type_db_path, planner_text, planner_script_path, planner_argv_text,
-                          facts_path, sm_name, sm_save_dir, keep_related_files, file_save_dir,
-                          rt_data_path, as_reference):
+    def on_show_state_pool_info(self, button, setup_form, state_pool_string,
+                                type_db_path, planner_text, planner_script_path, planner_argv_text,
+                                facts_path, sm_name, sm_save_dir, keep_related_files, file_save_dir,
+                                rt_data_path, as_reference):
         '''
 
-        :param button:
-        :param call_back:
+        :param button: not used.
+        :param setup_form: the setup form window
         :param state_pool_string:
         :param type_db_path:
         :param planner_text:
@@ -121,16 +121,15 @@ class PlanningSetupFormController:
         :param as_reference:
         :return:
         '''
+
         available_predicates = []
-        predicates_string = ''
-        type_string = ''
-        action_string = ''
+        type_tree = None
         tmp_datastore = Datastore(None,None,None,None,None,None,None,None,None,None,)
         self.__prepare_datastore(tmp_datastore,state_pool_string,type_db_path,planner_text,planner_script_path,
                                  planner_argv_text,facts_path,sm_name,sm_save_dir,False,None,rt_data_path,True)
         merge_preds = True
 
-        try:
+        try:# generate maps
             mapper = Mapper(tmp_datastore)
             mapper.generate_action_state_map()
             mapper.generate_state_action_map()
@@ -138,51 +137,46 @@ class PlanningSetupFormController:
 
         except Exception as e:
             merge_preds = False
-            predicates_string = 'ERROR!: {}'.format(e.message)
 
-        try:
+
+        try:# load actions
             loader = PddlActionLoader(tmp_datastore)
             loader.load_pddl_actions()
 
         except Exception as e:
             merge_preds = False
-            action_string = 'ERROR!: {}'.format(e.message)
 
-        try:
+
+        try:#generate type tree
             type_merger = TypeMerger(tmp_datastore)
             type_tree = type_merger.merge_types()
-            type_string = type_tree.get_as_string()
 
         except Exception as e:
             merge_preds = False
-            type_string = 'ERROR!: {}'.format(e.message)
 
-        try:
-            action_names = []
+
+        try:#generate available predicates.
             for state in tmp_datastore.get_pddl_action_map():
                 action = tmp_datastore.get_pddl_action_map()[state]
-                action_names.append("{} (in state {})".format(action.name,state))
                 for predicate in action.predicates:
                     if predicate not in available_predicates:
                         available_predicates.append(predicate)
-
-
-            for action_name in sorted(action_names):
-                action_string+= action_name+'\r\n'
 
             if merge_preds:
                 pred_merger = PredicateMerger(tmp_datastore)
                 available_predicates = pred_merger.merge_predicates(available_predicates)[0]
 
-            for predicate in sorted(available_predicates):
-                predicates_string += predicate+'\r\n'
 
         except Exception as e:
-            predicates_string += e.message
+            available_predicates = [e.message]
 
-        call_back(predicates_string,type_string, action_string)
+        state_pool_info = StatePoolInfoWindow(setup_form)
+        state_pool_info.set_state_pools(tmp_datastore.get_state_pools())
+        state_pool_info.set_types(type_tree)
+        state_pool_info.set_action_state_mapping(tmp_datastore.get_action_state_map())
+        state_pool_info.set_predicates(available_predicates)
+        state_pool_info.show()
 
-    #end===========================================================================================
 
     def on_choose_state_pool(self,chooser, chooser_entry):
         #append choosen state pool to state pool text entry.
