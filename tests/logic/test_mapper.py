@@ -1,7 +1,7 @@
 import pytest
 import os
-import testing_utils
-from testing_utils import call_gui_callback
+import utils
+from utils import call_gui_callback
 from rafcontpp.logic.mapper import Mapper
 from rafcontpp.model.datastore import datastore_from_file
 @pytest.fixture
@@ -35,7 +35,7 @@ def test_generate_action_state_map():
      #arrange
      ds = datastore()
      mapper = Mapper(ds)
-     testing_utils.run_gui(gui_config={'HISTORY_ENABLED': False, 'AUTO_BACKUP_ENABLED': False})
+     utils.run_gui(gui_config={'HISTORY_ENABLED': False, 'AUTO_BACKUP_ENABLED': False})
      # act
 
      try:
@@ -49,7 +49,7 @@ def test_generate_state_action_map():
      #arrange
      ds = datastore()
      mapper = Mapper(ds)
-     testing_utils.run_gui(gui_config={'HISTORY_ENABLED': False, 'AUTO_BACKUP_ENABLED': False})
+     utils.run_gui(gui_config={'HISTORY_ENABLED': False, 'AUTO_BACKUP_ENABLED': False})
      # act
 
      try:
@@ -63,7 +63,7 @@ def test_generate_available_actions():
      #arrange
      ds = datastore()
      mapper = Mapper(ds)
-     testing_utils.run_gui(gui_config={'HISTORY_ENABLED': False, 'AUTO_BACKUP_ENABLED': False})
+     utils.run_gui(gui_config={'HISTORY_ENABLED': False, 'AUTO_BACKUP_ENABLED': False})
      # act
 
      try:

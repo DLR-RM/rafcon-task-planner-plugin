@@ -1,6 +1,7 @@
 # Contributors:
 # Christoph Suerig <christoph.suerig@dlr.de>
-# Version 17.05.2019
+# Version 24.05.2019
+
 
 import gi
 gi.require_version('Gtk', '3.0')
@@ -86,6 +87,7 @@ class PlanningSetupForm:
         #connect
         self.__builder.get_object('planning_form_start_button').connect('clicked', self.__call_controller_on_apply)
         self.__builder.get_object('planning_form_cancel_button').connect('clicked', self.__call_controller_on_destroy)
+        self.__builder.get_object('planning_form_show_state_pool_info_button').connect('clicked', self.__call_controller_on_show_state_pool_info)
         state_pool_chooser.connect('file-set',self.__controller.on_choose_state_pool,self.__state_pool_chooser_entry)
         runtime_data_chooser.connect('file-set',self.__controller.on_choose_runtime_data,runtime_data_field)
         #automatically choose Other... if planner script is set.
@@ -108,6 +110,14 @@ class PlanningSetupForm:
         :return:
         '''
         self.__controller.on_destroy(button, self.__dialog, *self.__get_entered_data())
+
+    def __call_controller_on_show_state_pool_info(self, button):
+        '''
+        this function is needed, to get the data when method is called, and not old data from declaration time.
+        :param button:
+        :return:
+        '''
+        self.__controller.on_show_state_pool_info(button, self.__dialog, *self.__get_entered_data())
 
 
     def __init_drop_down(self,drop_down, script_path_chooser):

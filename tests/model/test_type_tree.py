@@ -136,7 +136,7 @@ def test_get_as_string(root_type,to_insert,expected):
     for type_name in to_insert:
         sut.add_type_branch(type_name,filled_type_dict())
     #act
-    tree_as_string = sut.get_as_string()
+    tree_as_string = sut.get_as_pddl_string()
     #assert
     assert expected == tree_as_string
 

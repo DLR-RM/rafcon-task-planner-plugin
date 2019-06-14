@@ -19,13 +19,15 @@ def get_type_tree():
 #BEWARE THIS Test is not stable, because of the variable names (e.g. ?C120)!
 @pytest.mark.parametrize("predicates,expected",[
     ([],[]),
-    (['(in ?a - Vehicle ?c - City)','(in ?a - Vehicle ?c - City)'], ['(in ?V00 - Vehicle ?C10 - City)']),
-    (['(in ?a - Car ?c - City)','(in ?a - Vehicle ?l - Location)'], ['(in ?V00 - Vehicle ?L10 - Location)']),
-    (['(in ?a - Vehicle ?c - City)','(in ?a - Car ?l - Location)'], ['(in ?V00 - Vehicle ?L10 - Location)']),
+    (['(in ?a - Vehicle ?c - City)','(in ?a - Vehicle ?c - City)'], ['(in ?V10 - Vehicle ?C20 - City)']),
+    (['(in ?a - Car ?c - City)','(in ?a - Vehicle ?l - Location)'], ['(in ?V10 - Vehicle ?L20 - Location)']),
+    (['(in ?a - Vehicle ?c - City)','(in ?a - Car ?l - Location)'], ['(in ?V10 - Vehicle ?L20 - Location)']),
     (['(in ?a - Vehicle ?c - City)','(at ?a - Car ?l - Location)'],
-     ['(in ?V00 - Vehicle ?C10 - City)', '(at ?C00 - Car ?L10 - Location)']),
-    (['(in ?a - Vehicle ?c - City)','(in ?a - Location ?l - City)'], ['(in ?O00 - Object ?C10 - City)']),
-    (['(in ?a - Car ?c - Location)','(in ?a - Location ?l - City)'], ['(in ?O00 - Object ?L10 - Location)'])
+     ['(in ?V10 - Vehicle ?C20 - City)', '(at ?C10 - Car ?L20 - Location)']),
+    (['(in ?a - Vehicle ?c - City)','(in ?a - Location ?l - City)'], ['(in ?O10 - Object ?C20 - City)']),
+    (['(in ?a - Car ?c - Location)','(in ?a - Location ?l - City)'], ['(in ?O10 - Object ?L20 - Location)']),
+    (['(equal ?a ?b - Car)','(equal ?a ?b - Vehicle)'],['(equal ?V10 ?V11 - Vehicle)']),
+    (['(test-pred ?a - Car ?b - City ?c - Car)'],['(test-pred ?C10 - Car ?C20 - City ?C30 - Car)'])
 
 ])
 def test_merge_predicates(predicates,expected):

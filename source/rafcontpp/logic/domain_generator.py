@@ -6,6 +6,7 @@ import os
 import json
 from rafcontpp.model.type_tree import TypeTree
 from rafcontpp.logic.predicate_merger import PredicateMerger
+from rafcontpp.logic.type_merger import TypeMerger
 from rafcon.utils import log
 logger = log.get_logger(__name__)
 
@@ -26,14 +27,14 @@ class DomainGenerator:
         generateDomain generates a domain and returns its path.
         :return: the path of the generated domain file
         """
-
         facts = self.__datastore.get_pddl_facts_representation()
         domain_name = facts.domain_name
         problem_name = facts.problem_name
-        type_dict = self.__dict_to_upper(json.load(open(self.__datastore.get_type_db_path(), "r")))
+
         pddl_actions = self.__datastore.get_pddl_action_map().values()
         domain_path = os.path.abspath(os.path.join(self.__datastore.get_file_save_dir(), domain_name + "_domain.pddl"))
-        type_tree = self.__merge_types(pddl_actions, type_dict)
+        type_merger = TypeMerger(self.__datastore)
+        type_tree = type_merger.merge_types()
         self.__datastore.set_available_types(type_tree)
         preds = self.__merge_predicates(pddl_actions)
         self.__datastore.set_available_predicates(preds[1])
@@ -87,28 +88,6 @@ class DomainGenerator:
             requirements_section = requirements_section + requirement + " "
         return requirements_section + ")"
 
-    def __merge_types(self, pddl_actions, type_dict):
-        """
-        merge types uses the typetree data structure, to create a type tree, with types needed in the actions.
-        :param pddl_actions: a list with PddlActionRepresentations
-        :param type_dict: a type dictionary
-        :return: a type tree containing all (relevant) types.
-        """
-        tree = None
-        if pddl_actions is not None and type_dict is not None:
-            for action in pddl_actions:
-                for type in action.types:
-                    if tree:
-                        if not tree.add_type_branch(type, type_dict) and not tree.is_in_tree(type):
-                            logger.error("No Type \"" + type + "\" found in type dictionary!")
-                            raise LookupError("No Type \"" + type + "\" found in type dictionary!")
-                    else:
-                        c_type = type
-                        while c_type in type_dict.keys():
-                            c_type = type_dict[c_type]
-                        tree = TypeTree(c_type)
-                        tree.recursive_insert(type, type_dict)
-        return tree
 
     def __get_types(self, merged_types):
         """
@@ -119,7 +98,7 @@ class DomainGenerator:
         types_in_pddl = ""
         if merged_types:
             types = "(:TYPES \r\n"
-            types_in_pddl = types + merged_types.get_as_string() + ")"
+            types_in_pddl = types + merged_types.get_as_pddl_string() + ")"
         return types_in_pddl
 
     def __merge_predicates(self, pddl_actions):
@@ -161,20 +140,5 @@ class DomainGenerator:
             actions += action.action + "\r\n\r\n"
         return actions
 
-
-    def __dict_to_upper(self, dict):
-        '''
-         receives a dict of string:string and returns it in upper case
-        :param dict: a string:string dict
-        :return: a new dict in upper case.
-        '''
-        upper_dict = dict
-
-        if dict:
-            upper_dict = {}
-
-            for key, value in dict.iteritems():
-                upper_dict[key.upper()] = value.upper()
-        return upper_dict
 
 

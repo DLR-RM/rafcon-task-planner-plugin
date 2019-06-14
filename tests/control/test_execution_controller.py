@@ -1,6 +1,6 @@
 import pytest
-import testing_utils
-from testing_utils import call_gui_callback
+import utils
+from utils import call_gui_callback
 import os
 from rafcontpp.model.datastore import datastore_from_file
 from rafcontpp.control.execution_controller import ExecutionController
@@ -28,7 +28,7 @@ def test_on_execute_pre_planning():
     plugin_path = os.path.join(plugin_path,'source','rafcontpp')
     os.environ['RAFCON_PLUGIN_PATH'] = plugin_path
 
-    testing_utils.run_gui(gui_config={'HISTORY_ENABLED': False, 'AUTO_BACKUP_ENABLED': False})
+    utils.run_gui(gui_config={'HISTORY_ENABLED': False, 'AUTO_BACKUP_ENABLED': False})
     sut = ExecutionController(datastore())
     #act
     try:

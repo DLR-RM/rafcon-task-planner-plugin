@@ -1,6 +1,8 @@
 # Contributors:
 # Christoph Suerig <christoph.suerig@dlr.de>
-# Version 17.05.2019
+
+# Version 14.06.2019
+
 
 
 import os
@@ -10,6 +12,12 @@ from rafcon.utils.gui_functions import call_gui_callback
 from rafcontpp.control.execution_controller import ExecutionController
 from rafcontpp.model.datastore import Datastore, DATASTORE_STORAGE_PATH
 from rafcontpp.view.planning_wait_window import PlanningWaitWindow
+from rafcontpp.view.state_pool_info_window import StatePoolInfoWindow
+from rafcontpp.logic.mapper import Mapper
+from rafcontpp.logic.pddl_action_loader import PddlActionLoader
+from rafcontpp.logic.predicate_merger import PredicateMerger
+from rafcontpp.logic.type_merger import TypeMerger
+
 from rafcon.utils import log
 
 logger = log.get_logger(__name__)
@@ -65,7 +73,7 @@ class PlanningSetupFormController:
         #save datastore to configuration file.
         #destroy dialog.
         #start the pipeline to generate a sm.
-        everything_filled, not_filled = self.__prepare_datastore(state_pool_string,
+        everything_filled, not_filled = self.__prepare_datastore(self.__datastore, state_pool_string,
                             type_db_path,planner_text,planner_script_path,planner_argv_text,
                             facts_path,sm_name,sm_save_dir,keep_related_files, file_save_dir,
                                                                     rt_data_path, as_reference)
@@ -119,13 +127,92 @@ class PlanningSetupFormController:
         #save data to datastore
         #save datastore to file.
         try:
-            self.__prepare_datastore(state_pool_string,
+            self.__prepare_datastore(self.__datastore,state_pool_string,
                             type_db_path,planner_text,planner_script_path,planner_argv_text,
                             facts_path,sm_name,sm_save_dir,keep_related_files, file_save_dir,
                                                                     rt_data_path, as_reference)
             self.__datastore.save_datastore_parts_in_file(DATASTORE_STORAGE_PATH)
         finally:
             setup_form.destroy()
+
+
+    def on_show_state_pool_info(self, button, setup_form, state_pool_string,
+                                type_db_path, planner_text, planner_script_path, planner_argv_text,
+                                facts_path, sm_name, sm_save_dir, keep_related_files, file_save_dir,
+                                rt_data_path, as_reference):
+        '''
+
+        :param button: not used.
+        :param setup_form: the setup form window
+        :param state_pool_string:
+        :param type_db_path:
+        :param planner_text:
+        :param planner_script_path:
+        :param planner_argv_text:
+        :param facts_path:
+        :param sm_name:
+        :param sm_save_dir:
+        :param keep_related_files:
+        :param file_save_dir:
+        :param rt_data_path:
+        :param as_reference:
+        :return:
+        '''
+
+        available_predicates = []
+        type_tree = None
+        tmp_datastore = Datastore(None,None,None,None,None,None,None,None,None,None,)
+        self.__prepare_datastore(tmp_datastore,state_pool_string,type_db_path,planner_text,planner_script_path,
+                                 planner_argv_text,facts_path,sm_name,sm_save_dir,False,None,rt_data_path,True)
+        merge_preds = True
+
+        try:# generate maps
+            mapper = Mapper(tmp_datastore)
+            mapper.generate_action_state_map()
+            mapper.generate_state_action_map()
+            mapper.generate_available_actions()
+
+        except Exception as e:
+            merge_preds = False
+
+
+        try:# load actions
+            loader = PddlActionLoader(tmp_datastore)
+            loader.load_pddl_actions()
+
+        except Exception as e:
+            merge_preds = False
+
+
+        try:#generate type tree
+            type_merger = TypeMerger(tmp_datastore)
+            type_tree = type_merger.merge_types()
+
+        except Exception as e:
+            merge_preds = False
+
+
+        try:#generate available predicates.
+            for state in tmp_datastore.get_pddl_action_map():
+                action = tmp_datastore.get_pddl_action_map()[state]
+                for predicate in action.predicates:
+                    if predicate not in available_predicates:
+                        available_predicates.append(predicate)
+
+            if merge_preds:
+                pred_merger = PredicateMerger(tmp_datastore)
+                available_predicates = pred_merger.merge_predicates(available_predicates)[0]
+
+
+        except Exception as e:
+            available_predicates = [e.message]
+
+        state_pool_info = StatePoolInfoWindow(setup_form)
+        state_pool_info.set_state_pools(tmp_datastore.get_state_pools())
+        state_pool_info.set_types(type_tree)
+        state_pool_info.set_action_state_mapping(tmp_datastore.get_action_state_map())
+        state_pool_info.set_predicates(available_predicates)
+        state_pool_info.show()
 
 
     def on_choose_state_pool(self,chooser, chooser_entry):
@@ -154,7 +241,7 @@ class PlanningSetupFormController:
 
 
 
-    def __prepare_datastore(self, state_pool_string,
+    def __prepare_datastore(self, datastore_to_prepare, state_pool_string,
                             type_db_path,planner_text,planner_script_path,planner_argv_text,
                             facts_path,sm_name,sm_save_dir,keep_related_files, file_save_dir,
                                                                     rt_data_path, as_reference):
@@ -177,11 +264,12 @@ class PlanningSetupFormController:
         '''
         #saves all data from the dialog into the datastore.
         #looks if everything necessary was filled.
+        dtp = datastore_to_prepare
         everything_filled = True
         not_filled = None
         logger.debug('State pool: ' + str(self.__string_to_string_array(state_pool_string)))
-        self.__datastore.add_state_pools(self.__string_to_string_array(state_pool_string),True)
-        self.__datastore.set_type_db_path(type_db_path)
+        dtp.add_state_pools(self.__string_to_string_array(state_pool_string),True)
+        dtp.set_type_db_path(type_db_path)
         choosen_planner = planner_text.replace(NOT_AVAILABLE,'')
         #set planner
         script_path = planner_script_path
@@ -191,27 +279,27 @@ class PlanningSetupFormController:
             everything_filled = False
             not_filled = 'a Planner'
         if choosen_planner != SEL_PLANNER:
-            self.__datastore.set_planner(choosen_planner)
-        self.__datastore.set_planner_script_path(script_path)
+            dtp.set_planner(choosen_planner)
+        dtp.set_planner_script_path(script_path)
         #set planner argv
         if len(planner_argv_text) > 0:
-            self.__datastore.set_planner_argv(planner_argv_text.split(' '))
+            dtp.set_planner_argv(planner_argv_text.split(' '))
         else:
-            self.__datastore.set_planner_argv([])
+            dtp.set_planner_argv([])
 
-        self.__datastore.set_facts_path(facts_path)
-        self.__datastore.set_sm_name(sm_name)
-        self.__datastore.set_sm_save_dir(sm_save_dir)
-        self.__datastore.set_keep_related_files(keep_related_files)
-        if self.__datastore.keep_related_files:
-            self.__datastore.set_file_save_dir(file_save_dir)
+        dtp.set_facts_path(facts_path)
+        dtp.set_sm_name(sm_name)
+        dtp.set_sm_save_dir(sm_save_dir)
+        dtp.set_keep_related_files(keep_related_files)
+        if dtp.keep_related_files:
+            dtp.set_file_save_dir(file_save_dir)
 
         #runtime section
         runtime_data_path = rt_data_path.strip()
-        self.__datastore.set_use_runtime_path_as_ref(as_reference)
-        self.__datastore.set_runtime_data_path(runtime_data_path)
-        if not self.__datastore.use_runtime_path_as_ref() and runtime_data_path and len(runtime_data_path)>0:
-            if not os.path.isfile(self.__datastore.get_runtime_data_path()):
+        dtp.set_use_runtime_path_as_ref(as_reference)
+        dtp.set_runtime_data_path(runtime_data_path)
+        if not dtp.use_runtime_path_as_ref() and runtime_data_path and len(runtime_data_path)>0:
+            if not os.path.isfile(dtp.get_runtime_data_path()):
                 everything_filled = False
                 not_filled = 'Runtime Data contains no valid Filepath!'
 

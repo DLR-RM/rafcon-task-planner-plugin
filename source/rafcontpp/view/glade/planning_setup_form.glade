@@ -16,16 +16,29 @@
         <child internal-child="action_area">
           <object class="GtkButtonBox" id="gtk_button_box">
             <property name="can_focus">False</property>
-            <property name="layout_style">end</property>
+            <property name="layout_style">expand</property>
             <child>
-              <object class="GtkButton" id="planning_form_start_button">
-                <property name="label">Generate State machine</property>
+              <object class="GtkBox">
                 <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
-                <property name="tooltip_text" translatable="yes">Starts the process, reads all input, plans the sceario and generates a state machine.</property>
-                <property name="margin_right">10</property>
+                <property name="can_focus">False</property>
+                <property name="halign">start</property>
+                <property name="margin_left">10</property>
                 <property name="margin_bottom">5</property>
+                <child>
+                  <object class="GtkButton" id="planning_form_show_state_pool_info_button">
+                    <property name="label" translatable="yes">State Pool Info</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <property name="tooltip_text" translatable="yes">The Info button opens a listing of all Types, Predicates and Actions usable within this configuration.</property>
+                    <property name="margin_right">5</property>
+                  </object>
+                  <packing>
+                    <property name="expand">True</property>
+                    <property name="fill">True</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
               </object>
               <packing>
                 <property name="expand">True</property>
@@ -34,20 +47,46 @@
               </packing>
             </child>
             <child>
-              <object class="GtkButton" id="planning_form_cancel_button">
-                <property name="label">gtk-cancel</property>
+              <object class="GtkBox">
                 <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
-                <property name="tooltip_text" translatable="yes">Cancels the process, BUT saves the current configuration! If you don't want to save the configuration please hit the x in the upper right corner.</property>
+                <property name="can_focus">False</property>
                 <property name="margin_right">10</property>
                 <property name="margin_bottom">5</property>
-                <property name="use_stock">True</property>
+                <child>
+                  <object class="GtkButton" id="planning_form_start_button">
+                    <property name="label">Generate State machine</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <property name="tooltip_text" translatable="yes">Starts the process, reads all input, plans the sceario and generates a state machine.</property>
+                    <property name="margin_right">10</property>
+                  </object>
+                  <packing>
+                    <property name="expand">True</property>
+                    <property name="fill">True</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkButton" id="planning_form_cancel_button">
+                    <property name="label">gtk-cancel</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <property name="tooltip_text" translatable="yes">Cancels the process, BUT saves the current configuration! If you don't want to save the configuration please hit the x in the upper right corner.</property>
+                    <property name="use_stock">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">True</property>
+                    <property name="fill">True</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
               </object>
               <packing>
                 <property name="expand">True</property>
                 <property name="fill">True</property>
-                <property name="position">1</property>
+                <property name="position">2</property>
               </packing>
             </child>
           </object>
