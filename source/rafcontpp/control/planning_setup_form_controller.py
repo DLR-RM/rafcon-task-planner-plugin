@@ -141,29 +141,29 @@ class PlanningSetupFormController:
                                 facts_path, sm_name, sm_save_dir, keep_related_files, file_save_dir,
                                 rt_data_path, as_reference):
         '''
-
-        :param button: not used.
-        :param setup_form: the setup form window
-        :param state_pool_string:
-        :param type_db_path:
-        :param planner_text:
-        :param planner_script_path:
-        :param planner_argv_text:
-        :param facts_path:
-        :param sm_name:
-        :param sm_save_dir:
-        :param keep_related_files:
-        :param file_save_dir:
-        :param rt_data_path:
-        :param as_reference:
-        :return:
+         Show state pool info, uses the provided state pools and the type file to collect details, and show
+         them in a state pool info window.
+        :param button: Not used.
+        :param setup_form: The setup form, to be able to set it as parent.
+        :param state_pool_string: The statepool paths as colon seperated string.
+        :param type_db_path: The path of the type db file as string.
+        :param planner_text: The text of the planner field e.g. Other... or Fast-Downward Planning System.
+        :param planner_script_path: The path of a planner script, or an empty String if there is none.
+        :param planner_argv_text: An argv vector for the planner.
+        :param facts_path: The Path of the facts file as String.
+        :param sm_name: The desired name of the State machine.
+        :param sm_save_dir: The path where to save the State machine as string.
+        :param keep_related_files: True if related files should be keept, Fals if they should be deleted.
+        :param file_save_dir: The path where to save related files, or an empty string if files shouldn't be keept.
+        :param rt_data_path: The path where to find the runtime data file. Or an empty string if there is no runtime data.
+        :param as_reference: True if the runtime data path should be used as reference, False if it should directly be copied into the State. if rt_data_path is empty, this field is irrelevant.
         '''
 
         available_predicates = []
         type_tree = None
         tmp_datastore = Datastore(None,None,None,None,None,None,None,None,None,None,)
-        self.__prepare_datastore(tmp_datastore,state_pool_string,type_db_path,planner_text,planner_script_path,
-                                 planner_argv_text,facts_path,sm_name,sm_save_dir,False,None,rt_data_path,True)
+        tmp_datastore.add_state_pools(self.__string_to_string_array(state_pool_string),True)
+        tmp_datastore.set_type_db_path(type_db_path)
         merge_preds = True
 
         try:# generate maps

@@ -30,8 +30,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
-                    <property name="tooltip_text" translatable="yes">This Button opens a listing of all Types, Predicates and Actions usable within this configuration.
-Note: you have to have the Statepools as well as the Type file set.</property>
+                    <property name="tooltip_text" translatable="yes">The Info button opens a listing of all Types, Predicates and Actions usable within this configuration.</property>
                     <property name="margin_right">5</property>
                   </object>
                   <packing>

@@ -50,7 +50,7 @@ class StateMachineLayouter:
         state_machine_m.root_state.meta['gui']['editor_gaphas']['size'] = (r_width, r_height)
         #set root state in / out come position
         state_machine_m.root_state.income.meta['gui']['editor_gaphas']['rel_pos'] = (0., y_gap+state_height/4.)
-        out_come = [oc for oc in state_machine_m.root_state.outcomes if oc.outcome.outcome_id >= 0].pop()
+        out_come = [oc for oc in state_machine_m.root_state.outcomes if oc.outcome.outcome_id == 0].pop()
         out_come.meta['gui']['editor_gaphas']['rel_pos'] = (r_width, y_gap+state_height/4.)
 
         #positions where an income or an outcome can occure
@@ -106,7 +106,7 @@ class StateMachineLayouter:
                 current_row = current_row + 1 if increment_row else current_row - 1
 
         #last state is a special case, its outcome should always be right.
-        out_come = [oc for oc in state_machine_m.root_state.states[state_order[-1]].outcomes if oc.outcome.outcome_id >= 0].pop()
+        out_come = [oc for oc in state_machine_m.root_state.states[state_order[-1]].outcomes if oc.outcome.outcome_id == 0].pop()
         out_come.meta['gui']['editor_gaphas']['rel_pos'] = right_pos
 
         #store the meta data.
@@ -118,7 +118,7 @@ class StateMachineLayouter:
 
     def __get_num_states_per_col(self, num_states):
         '''
-        gets a number of states, and returns a calculated row cound. e.g. how many states per column are desired.
+        gets a number of states, and returns a calculated row count. e.g. how many states per column are desired.
         :param num_states: number of states in a state machine.
         :return: the number of states per column.
         '''
