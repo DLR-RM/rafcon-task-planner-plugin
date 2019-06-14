@@ -27,6 +27,7 @@ class StateMachineLayouter:
         #number of rows of states.
         num_states = len(state_machine_m.root_state.states)
         row_count = self.__get_num_states_per_col(num_states)
+        logger.debug("States per column: {}".format(row_count))
         column_count = num_states / row_count
         current_row = 0
         current_column = 0
@@ -66,7 +67,10 @@ class StateMachineLayouter:
             income_pos = up_pos if increment_row else down_pos
             out_come_pos = down_pos if increment_row else up_pos
             #special cases e.g. the corners of the merlon structure.
-            if current_row == 0 and increment_row: # upper left corner
+            if current_row == 0 and current_row +1 >= row_count: # special case, if row_count = 1
+                income_pos = left_pos
+                out_come_pos = right_pos
+            elif current_row == 0 and increment_row: # upper left corner
                 income_pos = left_pos
                 out_come_pos = down_pos
             elif current_row == 0 and not increment_row: # upper right corner
