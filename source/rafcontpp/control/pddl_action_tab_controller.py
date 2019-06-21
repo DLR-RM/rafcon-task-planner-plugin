@@ -1,6 +1,6 @@
 # Contributors:
 # Christoph Suerig <christoph.suerig@dlr.de>
-# Version 31.05.2019
+# Version 21.06.2019
 
 
 import gi
@@ -184,8 +184,6 @@ class PddlActionTabController:
         requ_dict[':fluents'].set_active(need.fluents()or requ_dict[':fluents'].get_active())
         #requ_dict[':expression-evaluation'].set_active(need.expression_evaluation()or requ_dict[':expression-evaluation'].get_active())
 
-        self.save_requirements(requ_dict[':strips'],requ_dict,True)
-
 
 
     def __types_auto_complete(self, pddl_action, types_buffer):
@@ -209,7 +207,6 @@ class PddlActionTabController:
 
         #set type field.
         types_buffer.set_text(type_field.strip(',').strip())
-        self.save_data(types_buffer, 'pddl_types',True)
 
 
 
@@ -237,5 +234,4 @@ class PddlActionTabController:
 
         pred_field = pred_field.strip('\r\n')
         pred_field_buf.set_text(pred_field)
-        self.save_data(pred_field_buf,'pddl_predicates',True)
 

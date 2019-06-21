@@ -4,9 +4,9 @@
 
 
 import os
+import time
 import gi
 gi.require_version('Gtk', '3.0')
-import time
 from gi.repository import Gtk
 from rafcontpp.model.datastore import SEMANTIC_DATA_DICT_NAME
 from rafcontpp.logic.pddl_action_parser import PddlActionParser

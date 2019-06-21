@@ -42,8 +42,8 @@ def test_generate_action_state_map():
           call_gui_callback(mapper.generate_action_state_map)
           assert action_state_map() == ds.get_action_state_map()
      finally:
-          testing_utils.close_gui()
-          testing_utils.shutdown_environment(caplog=None)
+          utils.close_gui()
+          utils.shutdown_environment(caplog=None)
 
 def test_generate_state_action_map():
      #arrange
@@ -56,8 +56,8 @@ def test_generate_state_action_map():
           call_gui_callback(mapper.generate_state_action_map)
           assert state_action_map() == ds.get_state_action_map()
      finally:
-          testing_utils.close_gui()
-          testing_utils.shutdown_environment(caplog=None)
+          utils.close_gui()
+          utils.shutdown_environment(caplog=None)
 
 def test_generate_available_actions():
      #arrange
@@ -70,5 +70,5 @@ def test_generate_available_actions():
           call_gui_callback(mapper.generate_available_actions)
           assert available_actions() == ds.get_available_actions()
      finally:
-          testing_utils.close_gui()
-          testing_utils.shutdown_environment(caplog=None)
+          utils.close_gui()
+          utils.shutdown_environment(caplog=None)

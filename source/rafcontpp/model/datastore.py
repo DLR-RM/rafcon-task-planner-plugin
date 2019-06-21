@@ -209,7 +209,6 @@ class Datastore:
 
         :param state_pools: the state pools to add
         :param set_pool: if true, state pools are not added, but set, and old list gets lost.
-        :return: nothing
         '''
         if not state_pools:
             logger.error("state_pools can't be None")

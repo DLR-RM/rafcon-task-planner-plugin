@@ -35,5 +35,5 @@ def test_on_execute_pre_planning():
         planning_thread = call_gui_callback(sut.on_execute_pre_planning)
         planning_thread.join()
     finally:
-        testing_utils.close_gui()
-        testing_utils.shutdown_environment(caplog=None)
+        utils.close_gui()
+        utils.shutdown_environment(caplog=None)
