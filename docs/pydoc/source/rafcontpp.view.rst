@@ -36,6 +36,14 @@ rafcontpp\.view\.planning\_wait\_window module
     :undoc-members:
     :show-inheritance:
 
+rafcontpp\.view\.state\_pool\_info\_window module
+-------------------------------------------------
+
+.. automodule:: rafcontpp.view.state_pool_info_window
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

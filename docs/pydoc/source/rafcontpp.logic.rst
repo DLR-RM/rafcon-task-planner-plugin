@@ -68,6 +68,22 @@ rafcontpp\.logic\.state\_machine\_generator module
     :undoc-members:
     :show-inheritance:
 
+rafcontpp\.logic\.state\_machine\_layouter module
+-------------------------------------------------
+
+.. automodule:: rafcontpp.logic.state_machine_layouter
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+rafcontpp\.logic\.type\_merger module
+-------------------------------------
+
+.. automodule:: rafcontpp.logic.type_merger
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------
