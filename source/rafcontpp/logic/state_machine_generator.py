@@ -7,7 +7,7 @@
 #
 # Contributors:
 # Christoph Suerig <christoph.suerig@dlr.de>
-# Version 25.04.1019
+# Version 21.06.1019
 
 
 
@@ -15,6 +15,7 @@ import os
 import time
 import json
 from rafcontpp.logic.state_machine_layouter import StateMachineLayouter
+from rafcontpp.model.datastore import SEMANTIC_DATA_DICT_NAME
 from rafcon.core.storage import storage
 from rafcon.core.singleton import library_manager
 from rafcon.core.singleton import state_machine_manager
@@ -48,15 +49,7 @@ class StateMachineGenerator:
         logger.info('Creating State machine \"'+sm_name+'\"...')
         start_time = time.time()
         state_order_list = []
-        # set root-state id to old root-state id, in case the state machine is replanned.
-        # why is it important? - if you added the planned sm as a library, replan it and refresh it,
-        # rafcon will throw an error, if the refreshed library has a different root-state id. 
-        if os.path.isdir(sm_path):
-            # rootstate id of rootstate in old sm.
-            old_sm_rs_id = storage.load_state_machine_from_path(sm_path).root_state.state_id
-            root_state = HierarchyState(name=sm_name, state_id=old_sm_rs_id)
-        else:
-            root_state = HierarchyState(sm_name)
+        state_machine, root_state = self.__validate_and_get_root_state_and_state_machine(None,sm_name,sm_path)
 
         last_state = None
         # add global data init state and set start state
@@ -98,7 +91,6 @@ class StateMachineGenerator:
                 raise LookupError("No State found for action: \"" + plan_step.name + "\"")
         root_state.add_transition(last_state.state_id, 0, root_state.state_id, 0)
         # everything connected, create statemachine object and save.
-        state_machine = StateMachine(root_state=root_state)
         storage.save_state_machine_to_path(state_machine, sm_path)
         library_manager.refresh_libraries()
         logger.info("State machine \"" + sm_name + "\" created.")
@@ -153,6 +145,48 @@ class StateMachineGenerator:
                 break
 
         return return_state
+
+    def __validate_and_get_root_state_and_state_machine(self, root_state, sm_name, sm_path):
+        '''
+        validates a given root state. e.g. it looks if its a hierarchy state, and if its empty.
+        if its not, it will clear the given state, if it has the permission to do so. If None is provided,
+        it will create a new root state and a new state machine.
+        :param root_state: A state to use as root state, or None if there is no root state yet.
+        :param sm_name: the name of the state machine
+        :param sm_path: the path of the state machine
+        :return: (State_machine, valid_Root_state)
+        '''
+        valid_root_state = None
+        state_machine = None
+        if root_state == None:
+            # set root-state id to old root-state id, in case the state machine is replanned.
+            # why is it important? - if you added the planned sm as a library, replan it and refresh it,
+            # rafcon will throw an error, if the refreshed library has a different root-state id.
+            if os.path.isdir(sm_path):
+                # rootstate id of rootstate in old sm.
+                old_sm_rs_id = storage.load_state_machine_from_path(sm_path).root_state.state_id
+                valid_root_state = HierarchyState(name=sm_name, state_id=old_sm_rs_id)
+            else:
+                valid_root_state = HierarchyState(sm_name)
+            state_machine = StateMachine(root_state=valid_root_state)
+
+        elif isinstance(root_state,HierarchyState):
+            if len(root_state.states) == 0 or root_state.semantic_data[SEMANTIC_DATA_DICT_NAME]['allow_override'] == 'True':
+                logger.error("Not implemented yet!")
+                logger.info("Creating independent State machine...")
+                state_machine, valid_root_state = self.__validate_and_get_root_state_and_state_machine(None, sm_name, sm_path)
+            else:
+                logger.error("Can't plan into None empty Hierarchy State without permission!")
+                logger.info("Creating independent State machine...")
+                state_machine, valid_root_state = self.__validate_and_get_root_state_and_state_machine(None, sm_name, sm_path)
+
+
+        else:
+            logger.error("Can't Plan into State {}, can only plan into Hierarchystates.".format(root_state))
+            logger.info("Creating independent State machine...")
+            state_machine, valid_root_state = self.__validate_and_get_root_state_and_state_machine(None, sm_name, sm_path)
+
+        return (state_machine, valid_root_state)
 
     def __get_runtime_data_init_state(self, data_init_file_path, use_as_ref):
         '''
