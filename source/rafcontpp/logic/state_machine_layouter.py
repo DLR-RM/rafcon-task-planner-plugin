@@ -1,6 +1,6 @@
 # Contributors:
 # Christoph Suerig <christoph.suerig@dlr.de>
-# Version 14.06.1019
+# Version 21.06.1019
 
 import math
 import time
@@ -124,7 +124,7 @@ class StateMachineLayouter:
         '''
 
         height = math.sqrt(num_states/1.78)#claculates the hight for approximatly ratio of 16:9, which is appr. 1.78:1
-
-        return round(height)
+        height = round(height) if height > 1 else 1
+        return height
 
 
