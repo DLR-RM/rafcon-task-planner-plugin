@@ -120,9 +120,9 @@ class PlanningController:
                     else:
                         logger.info("Planning Successful, but no Plan was found!")
                 else:
-                    logger.error("Planning failed! :: " + planning_report.get_error_message())
-
-                self.__datastore.add_generated_file(planning_report.get_generated_files())
+                    logger.error("Planning failed! Planner reported:: " + planning_report.get_error_message())
+                if planning_report.get_generated_files():
+                    self.__datastore.add_generated_file(planning_report.get_generated_files())
                 callback_function(planning_report.planning_successful())
             else:
                 logger.error('Planner provided no Planning Report!')

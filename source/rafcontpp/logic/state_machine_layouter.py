@@ -42,16 +42,17 @@ class StateMachineLayouter:
         state_height = 100.
         #format root state
         #root state width
-        r_width = column_count * (x_gap+state_width)+3*x_gap
+        r_width = column_count * (x_gap+state_width)+4*x_gap
         #root state height
-        r_height = row_count * (y_gap+state_height)+1*y_gap
+        r_height = row_count * (y_gap+state_height)+y_gap
+        logger.debug("Root state size: height: {} width: {}".format(r_height,r_width))
         #set root state size
         state_machine_m.root_state.meta['gui']['editor_opengl']['size'] = (r_width, r_height)
         state_machine_m.root_state.meta['gui']['editor_gaphas']['size'] = (r_width, r_height)
         #set root state in / out come position
-        state_machine_m.root_state.income.meta['gui']['editor_gaphas']['rel_pos'] = (0., y_gap+state_height/4.)
+        state_machine_m.root_state.income.meta['gui']['editor_gaphas']['rel_pos'] = (0.,y_gap+state_height/4.)
         out_come = [oc for oc in state_machine_m.root_state.outcomes if oc.outcome.outcome_id == 0].pop()
-        out_come.meta['gui']['editor_gaphas']['rel_pos'] = (r_width, y_gap+state_height/4.)
+        out_come.meta['gui']['editor_gaphas']['rel_pos'] = (r_width,y_gap+state_height/4.)
 
         #positions where an income or an outcome can occure
         up_pos = (state_width/2.,0.)
@@ -82,6 +83,11 @@ class StateMachineLayouter:
             elif current_row +1 >= row_count and not increment_row: # lower right corner
                 income_pos = left_pos
                 out_come_pos= up_pos
+
+
+            #set state size
+            state_m.meta['gui']['editor_opengl']['size'] = (state_width, state_height)
+            state_m.meta['gui']['editor_gaphas']['size'] = (state_width, state_height)
 
             #set position of income and outcome
             state_m.income.meta['gui']['editor_gaphas']['rel_pos'] = income_pos
