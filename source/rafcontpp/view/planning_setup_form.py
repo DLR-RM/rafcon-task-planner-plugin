@@ -53,6 +53,8 @@ class PlanningSetupForm:
         script_path_chooser = self.__builder.get_object('script_path_chooser')
         planner_argv_entry = self.__builder.get_object('planner_argv_entry')
         facts_file_chooser = self.__builder.get_object('facts_file_chooser')
+        self.__sm_into_selected_state = self.__builder.get_object('rtpp_planning_setup_form_selected_state')
+        sm_into_independent_sm = self.__builder.get_object('rtpp_planning_setup-form_independent_sm_radio')
         sm_name_entry = self.__builder.get_object('rtpp_sm_name_entry')
         sm_save_dir = self.__builder.get_object('sm_save_dir_chooser')
         keep_related_files = self.__builder.get_object('keep_produced_files_checkbox')
@@ -68,6 +70,8 @@ class PlanningSetupForm:
         self.__init_drop_down(planner_dropdown, script_path_chooser)
         planner_argv_entry.set_text(''.join(e+" " for e in self.__datastore.get_planner_argv()).rstrip())
         facts_file_chooser.set_filename(self.__datastore.get_facts_path())
+        self.__sm_into_selected_state.set_active(self.__datastore.generate_into_state())
+        sm_into_independent_sm.set_active(not self.__datastore.generate_into_state())
         sm_name_entry.set_text(self.__datastore.get_sm_name())
         sm_save_dir.set_filename(self.__datastore.get_sm_save_dir())
         keep_related_files.set_active(self.__datastore.keep_related_files())
@@ -78,11 +82,9 @@ class PlanningSetupForm:
             runtime_data_field.set_text(runtime_data_path)
             if os.path.isfile(runtime_data_path):
                 runtime_data_chooser.set_filename(runtime_data_path)
+            self.__runtime_data_reference.set_active(self.__datastore.use_runtime_path_as_ref())
+            runtime_data_direct.set_active(not self.__datastore.use_runtime_path_as_ref())
 
-        if self.__datastore.use_runtime_path_as_ref():
-            self.__runtime_data_reference.set_active(True)
-        else:
-            runtime_data_direct.set_active(True)
         self.__dialog.show_all()
         #connect
         self.__builder.get_object('planning_form_start_button').connect('clicked', self.__call_controller_on_apply)
@@ -92,7 +94,6 @@ class PlanningSetupForm:
         runtime_data_chooser.connect('file-set',self.__controller.on_choose_runtime_data,runtime_data_field)
         #automatically choose Other... if planner script is set.
         script_path_chooser.connect('file-set', lambda x: (planner_dropdown.set_active(len(planner_dropdown.get_model()) - 1)))
-
 
     def __call_controller_on_apply(self, button):
         '''
@@ -155,6 +156,7 @@ class PlanningSetupForm:
         planner_script_path = self.__builder.get_object('script_path_chooser').get_filename()
         planner_argv = self.__builder.get_object('planner_argv_entry').get_text()
         facts_path = self.__builder.get_object('facts_file_chooser').get_filename()
+        generate_into_state = self.__sm_into_selected_state.get_active()
         sm_name = self.__builder.get_object('rtpp_sm_name_entry').get_text()
         sm_save_dir = self.__builder.get_object('sm_save_dir_chooser').get_filename()
         keep_related_files = self.__builder.get_object('keep_produced_files_checkbox').get_active()
@@ -162,7 +164,8 @@ class PlanningSetupForm:
         rt_data_path = self.__builder.get_object('rtpp_planning_setup_form_runtime_data_path_entry').get_text()
         as_reference = self.__runtime_data_reference.get_active()
         return (state_pool_text, type_db_path, planner_text, planner_script_path, planner_argv,
-                facts_path, sm_name, sm_save_dir, keep_related_files, file_save_dir, rt_data_path, as_reference)
+                facts_path,generate_into_state, sm_name, sm_save_dir, keep_related_files,
+                file_save_dir, rt_data_path, as_reference)
 
 
     def __string_array_to_string(self,list):

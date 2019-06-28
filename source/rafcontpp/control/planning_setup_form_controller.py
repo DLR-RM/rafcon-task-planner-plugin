@@ -1,7 +1,7 @@
 # Contributors:
 # Christoph Suerig <christoph.suerig@dlr.de>
 
-# Version 14.06.2019
+# Version 28.06.2019
 
 
 
@@ -9,6 +9,7 @@ import os
 import threading
 from threading import Thread
 from rafcon.utils.gui_functions import call_gui_callback
+from rafcon.gui.singleton import state_machine_manager_model
 from rafcontpp.control.execution_controller import ExecutionController
 from rafcontpp.model.datastore import Datastore, DATASTORE_STORAGE_PATH
 from rafcontpp.view.planning_wait_window import PlanningWaitWindow
@@ -47,7 +48,7 @@ class PlanningSetupFormController:
 
     def on_apply(self, button, setup_form, state_pool_string,
                             type_db_path,planner_text,planner_script_path,planner_argv_text,
-                            facts_path,sm_name,sm_save_dir,keep_related_files, file_save_dir,
+                            facts_path,generate_into_state,sm_name,sm_save_dir,keep_related_files, file_save_dir,
                                                                     rt_data_path, as_reference):
         '''
         on_apply filles the datastore with new data entered into the setup form, saves it in the configuration,
@@ -75,7 +76,7 @@ class PlanningSetupFormController:
         #start the pipeline to generate a sm.
         everything_filled, not_filled = self.__prepare_datastore(self.__datastore, state_pool_string,
                             type_db_path,planner_text,planner_script_path,planner_argv_text,
-                            facts_path,sm_name,sm_save_dir,keep_related_files, file_save_dir,
+                            facts_path,generate_into_state,sm_name,sm_save_dir,keep_related_files, file_save_dir,
                                                                     rt_data_path, as_reference)
 
         if everything_filled:
@@ -104,7 +105,7 @@ class PlanningSetupFormController:
 
     def on_destroy(self, button, setup_form, state_pool_string,
                             type_db_path,planner_text,planner_script_path,planner_argv_text,
-                            facts_path,sm_name,sm_save_dir,keep_related_files, file_save_dir,
+                            facts_path,generate_into_state,sm_name,sm_save_dir,keep_related_files, file_save_dir,
                                                                     rt_data_path, as_reference):
         '''
         on_destroy destroys the setup form, but saves the current configuration into a file.
@@ -129,7 +130,7 @@ class PlanningSetupFormController:
         try:
             self.__prepare_datastore(self.__datastore,state_pool_string,
                             type_db_path,planner_text,planner_script_path,planner_argv_text,
-                            facts_path,sm_name,sm_save_dir,keep_related_files, file_save_dir,
+                            facts_path,generate_into_state,sm_name,sm_save_dir,keep_related_files, file_save_dir,
                                                                     rt_data_path, as_reference)
             self.__datastore.save_datastore_parts_in_file(DATASTORE_STORAGE_PATH)
         finally:
@@ -138,7 +139,7 @@ class PlanningSetupFormController:
 
     def on_show_state_pool_info(self, button, setup_form, state_pool_string,
                                 type_db_path, planner_text, planner_script_path, planner_argv_text,
-                                facts_path, sm_name, sm_save_dir, keep_related_files, file_save_dir,
+                                facts_path,generate_into_state, sm_name, sm_save_dir, keep_related_files, file_save_dir,
                                 rt_data_path, as_reference):
         '''
          Show state pool info, uses the provided state pools and the type file to collect details, and show
@@ -243,7 +244,7 @@ class PlanningSetupFormController:
 
     def __prepare_datastore(self, datastore_to_prepare, state_pool_string,
                             type_db_path,planner_text,planner_script_path,planner_argv_text,
-                            facts_path,sm_name,sm_save_dir,keep_related_files, file_save_dir,
+                            facts_path,generate_into_state,sm_name,sm_save_dir,keep_related_files, file_save_dir,
                                                                     rt_data_path, as_reference):
         '''
         __prepare_datastore saves the given data into the datastore, and checks if data is missing.
@@ -288,6 +289,14 @@ class PlanningSetupFormController:
             dtp.set_planner_argv([])
 
         dtp.set_facts_path(facts_path)
+        dtp.set_generate_into_state(generate_into_state)
+        if generate_into_state:
+            selected_state = self.__get_current_selected_state()
+            if selected_state:
+               dtp.set_target_state(selected_state)
+            else:
+                everything_filled = False
+                not_filled = 'State to plan in not accurately selected!'
         dtp.set_sm_name(sm_name)
         dtp.set_sm_save_dir(sm_save_dir)
         dtp.set_keep_related_files(keep_related_files)
@@ -331,3 +340,18 @@ class PlanningSetupFormController:
         if string and len(string) >0:
             result = list(filter(None,string.split(':')))
         return result
+
+
+    def __get_current_selected_state(self):
+        selected_state = None
+        selected_sm = state_machine_manager_model.get_selected_state_machine_model()
+        if selected_sm and selected_sm.selection.states:
+            if len(selected_sm.selection.states) == 1:
+                selected_state_model = selected_sm.selection.get_selected_state()
+                selected_state = selected_state_model.state
+            else:
+                logger.error("Multiple States selected!")
+        else:
+            logger.error("No State selected!")
+
+        return selected_state

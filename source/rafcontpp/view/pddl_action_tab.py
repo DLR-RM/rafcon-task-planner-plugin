@@ -177,7 +177,7 @@ class PddlActionTab:
         '''
 
         rtpp_dict = self.__state.semantic_data[SEMANTIC_DATA_DICT_NAME]
-
+        rtpp_dict['allow_override']#its only there to add the key into the dictionary
         if is_library_state:
             rtpp_dict = self.__state.state_copy.semantic_data[SEMANTIC_DATA_DICT_NAME]
 

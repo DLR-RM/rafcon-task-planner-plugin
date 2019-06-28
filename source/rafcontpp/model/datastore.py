@@ -2,7 +2,7 @@
 #
 # Contributors:
 # Christoph Suerig <christoph.suerig@dlr.de>
-# Version 17.05.2019
+# Version 28.06.2019
 import os
 import json
 import threading
@@ -67,8 +67,10 @@ def datastore_from_file(file_path):
                      data['file_save_dir'])
         runtime_data_path = data['runtime_data_path'] if 'runtime_data_path' in data else '' #To provide backward compatibility.
         runtime_as_ref = data['runtime_as_ref'] if 'runtime_as_ref' in data else False #To provide backward compatibility.
+        plan_into_state = data['plan_into_state'] if 'plan_into_state' in data else False #To provide backward compatibility.
         ds.set_runtime_data_path(runtime_data_path)
         ds.set_use_runtime_path_as_ref(runtime_as_ref)
+        ds.set_generate_into_state(plan_into_state)
 
         logger.info("Read configuration successfully!")
     return ds
@@ -139,6 +141,10 @@ class Datastore:
         self.__runtime_data_path = None
         # if true the runtime_data is red during runtime, otherwhise its red when generating the sm.
         self.__use_runtime_data_path_as_reference = False
+        #target state, the state to plan into.
+        self.__target_state = None
+        #true, if the state machine should be generated into the target state. false if independent sm should be used.
+        self.__generate_into_state = False
 
 
 
@@ -402,6 +408,18 @@ class Datastore:
         self.__available_predicates = available_predicates
 
 
+    def get_target_state(self):
+        return self.__target_state
+
+    def set_target_state(self, target_state):
+        self.__target_state = target_state
+
+    def generate_into_state(self):
+        return self.__generate_into_state
+
+    def set_generate_into_state(self, plan_into_state):
+        self.__generate_into_state = plan_into_state
+
 
 
     def save_datastore_parts_in_file(self, file_path):
@@ -418,6 +436,7 @@ class Datastore:
             'planner_script_path': self.__planner_script_path,
             'planner_argv': self.__planner_argv,
             'facts_path': self.__facts_path,
+            'plan_into_state':self.__generate_into_state,
             'sm_name': self.__sm_name,
             'sm_save_dir': self.__sm_save_dir,
             'keep_related_files': self.__keep_related_files,

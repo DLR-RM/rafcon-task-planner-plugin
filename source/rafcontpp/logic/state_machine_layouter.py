@@ -8,6 +8,7 @@ from gaphas.solver import Variable
 from rafcon.utils import log
 from rafcon.gui.utils import constants
 from rafcon.gui.models.state_machine import StateMachineModel
+from rafcon.gui.singleton import state_machine_manager_model
 logger = log.get_logger(__name__)
 
 class StateMachineLayouter:
@@ -17,7 +18,7 @@ class StateMachineLayouter:
 
 
 
-    def layout_state_machine(self, state_machine, state_order):
+    def layout_state_machine(self, state_machine, target_state, state_order):
         '''
          This function will format the state machine in a merlon like format.
         :param state_machine: a state machine to layout
@@ -26,9 +27,14 @@ class StateMachineLayouter:
         start_time = time.time()
         logger.info("Layouting state machine...")
         #the state machine model.
-        state_machine_m = StateMachineModel(state_machine)
+        state_machine_m = None
+        if state_machine.state_machine_id in state_machine_manager_model.state_machines:
+            state_machine_m = state_machine_manager_model.state_machines[state_machine.state_machine_id]
+        else:
+            state_machine_m = StateMachineModel(state_machine)
+        target_state_m = self.__get_target_state_model(state_machine_m,target_state.id)
         #number of rows of states.
-        num_states = len(state_machine_m.root_state.states)
+        num_states = len(target_state_m.states)
         row_count = self.__get_num_states_per_col(num_states)
         logger.debug("States per column: {}".format(row_count))
         column_count = num_states / row_count
@@ -48,15 +54,15 @@ class StateMachineLayouter:
         canvas_width = (column_count+1) * (x_gap+state_width)+x_gap
         canvas_height = row_count * (y_gap+state_height)
         #root state width, height, and root state border size.
-        r_width, r_height, border_size = self.__get_root_state_dimensions(canvas_width, canvas_height)
+        r_width, r_height, border_size = self.__get_target_state_dimensions(canvas_width, canvas_height)
 
         logger.debug("Root state size: height: {} width: {}".format(r_height,r_width))
         #set root state size
-        state_machine_m.root_state.meta['gui']['editor_opengl']['size'] = (r_width, r_height)
-        state_machine_m.root_state.meta['gui']['editor_gaphas']['size'] = (r_width, r_height)
+        target_state_m.meta['gui']['editor_opengl']['size'] = (r_width, r_height)
+        target_state_m.meta['gui']['editor_gaphas']['size'] = (r_width, r_height)
         #set root state in / out come position
-        state_machine_m.root_state.income.meta['gui']['editor_gaphas']['rel_pos'] = (0.,border_size+y_gap+state_height/4.)
-        out_come = [oc for oc in state_machine_m.root_state.outcomes if oc.outcome.outcome_id == 0].pop()
+        target_state_m.income.meta['gui']['editor_gaphas']['rel_pos'] = (0.,border_size+y_gap+state_height/4.)
+        out_come = [oc for oc in target_state_m.outcomes if oc.outcome.outcome_id == 0].pop()
         out_come.meta['gui']['editor_gaphas']['rel_pos'] = (r_width,border_size+y_gap+state_height/4.)
 
         #positions where an income or an outcome can occure
@@ -67,7 +73,7 @@ class StateMachineLayouter:
         #format states
         for c_state_id in state_order:#state_machine_m.root_state.states.values():
             #gui model of state
-            state_m = state_machine_m.root_state.states[c_state_id]
+            state_m = target_state_m.states[c_state_id]
 
             #decide position of income and outcome
             income_pos = up_pos if increment_row else down_pos
@@ -117,11 +123,11 @@ class StateMachineLayouter:
                 current_row = current_row + 1 if increment_row else current_row - 1
 
         #last state is a special case, its outcome should always be right.
-        out_come = [oc for oc in state_machine_m.root_state.states[state_order[-1]].outcomes if oc.outcome.outcome_id == 0].pop()
+        out_come = [oc for oc in target_state_m.states[state_order[-1]].outcomes if oc.outcome.outcome_id == 0].pop()
         out_come.meta['gui']['editor_gaphas']['rel_pos'] = right_pos
 
         #store the meta data.
-        state_machine_m.store_meta_data()
+        state_machine_m.store_meta_data()#TODO find solution, if state machine was never saved bevore.
         logger.info("State machine layouting took {0:.4f} seconds.".format(time.time()- start_time))
 
 
@@ -138,7 +144,7 @@ class StateMachineLayouter:
         height = round(height) if height > 1 else 1
         return height
 
-    def __get_root_state_dimensions(self, canvas_width, canvas_height):
+    def __get_target_state_dimensions(self, canvas_width, canvas_height):
         '''
         get_root_state_dimensions receives a desired canvas width and height, and returns the overall rootstate size,
         and the border width.
@@ -159,5 +165,18 @@ class StateMachineLayouter:
             border_width = Variable(min(r_width, r_height) / constants.BORDER_WIDTH_STATE_SIZE_FACTOR)
 
         return (r_width, r_height, border_width)
+
+    def __get_target_state_model(self, state_machine_m, target_state_id):
+        target_state_m = None
+        if state_machine_m.root_state.state.id == target_state_id:
+            target_state_m = state_machine_m.root_state
+        elif target_state_id in state_machine_m.root_state.states:
+            target_state_m = state_machine_m.root_state.states[target_state_id]
+        else:
+            raise NotImplementedError("need to implement in the furure")
+
+        return target_state_m
+
+
 
 

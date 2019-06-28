@@ -7,7 +7,7 @@
 #
 # Contributors:
 # Christoph Suerig <christoph.suerig@dlr.de>
-# Version 21.06.1019
+# Version 28.06.1019
 
 
 
@@ -16,6 +16,8 @@ import time
 import json
 from rafcontpp.logic.state_machine_layouter import StateMachineLayouter
 from rafcontpp.model.datastore import SEMANTIC_DATA_DICT_NAME
+from rafcon.gui.models.signals import MetaSignalMsg
+from rafcon.gui.singleton import state_machine_manager_model
 from rafcon.core.storage import storage
 from rafcon.core.singleton import library_manager
 from rafcon.core.singleton import state_machine_manager
@@ -49,8 +51,11 @@ class StateMachineGenerator:
         logger.info('Creating State machine \"'+sm_name+'\"...')
         start_time = time.time()
         state_order_list = []
-        state_machine, root_state = self.__validate_and_get_root_state_and_state_machine(None,sm_name,sm_path)
-
+        #!IMPORTANT: root state is not necessarily the root state of the sm, but the state we generate our sm into.
+        state_machine, root_state, is_independent_sm = self.__validate_and_get_root_state_and_state_machine(
+                                                                    self.__datastore.get_target_state(),sm_name,sm_path)
+        if not is_independent_sm:
+            pass #DISABLE DRAWING
         last_state = None
         # add global data init state and set start state
         runtime_data_path = self.__datastore.get_runtime_data_path()
@@ -89,18 +94,28 @@ class StateMachineGenerator:
             else:
                 logger.error("No State found for action: \"" + plan_step.name + "\"")
                 raise LookupError("No State found for action: \"" + plan_step.name + "\"")
+
         root_state.add_transition(last_state.state_id, 0, root_state.state_id, 0)
         # everything connected, create statemachine object and save.
-        storage.save_state_machine_to_path(state_machine, sm_path)
+        storage.save_state_machine_to_path(state_machine, state_machine.file_system_path)
         library_manager.refresh_libraries()
         logger.info("State machine \"" + sm_name + "\" created.")
         logger.info(sm_name+" contains " + str(len(root_state.states)) + " states.")
         logger.info("State machine generation took {0:.4f} seconds.".format(time.time()- start_time))
         #format state machine
         layouter = StateMachineLayouter()
-        layouter.layout_state_machine(state_machine, state_order_list)
+        layouter.layout_state_machine(state_machine, root_state, state_order_list)
         #open state machine
-        self.__open_state_machine(state_machine,sm_path)
+        if is_independent_sm:
+            self.__open_state_machine(state_machine, state_machine.file_system_path)
+        else:
+            #ENABLE DRAWING
+            state_machine_m = state_machine_manager_model.state_machines[state_machine.state_machine_id]
+            state_machine_m.root_state.meta_signal.emit(MetaSignalMsg("meta_action", "all", True))
+
+
+
+
 
 
 
@@ -158,6 +173,7 @@ class StateMachineGenerator:
         '''
         valid_root_state = None
         state_machine = None
+        is_independent = False
         if root_state == None:
             # set root-state id to old root-state id, in case the state machine is replanned.
             # why is it important? - if you added the planned sm as a library, replan it and refresh it,
@@ -169,24 +185,31 @@ class StateMachineGenerator:
             else:
                 valid_root_state = HierarchyState(sm_name)
             state_machine = StateMachine(root_state=valid_root_state)
+            storage.save_state_machine_to_path(state_machine, sm_path)
+            is_independent = True
 
         elif isinstance(root_state,HierarchyState):
             if len(root_state.states) == 0 or root_state.semantic_data[SEMANTIC_DATA_DICT_NAME]['allow_override'] == 'True':
-                logger.error("Not implemented yet!")
-                logger.info("Creating independent State machine...")
-                state_machine, valid_root_state = self.__validate_and_get_root_state_and_state_machine(None, sm_name, sm_path)
+                #empty the root state!
+                for state in root_state.states.values():
+                    root_state.remove_state(state.state_id,True,True,True)
+                valid_root_state = root_state
+                state_machine = root_state.get_state_machine()
+
             else:
                 logger.error("Can't plan into None empty Hierarchy State without permission!")
                 logger.info("Creating independent State machine...")
-                state_machine, valid_root_state = self.__validate_and_get_root_state_and_state_machine(None, sm_name, sm_path)
+                state_machine, valid_root_state, is_independent = self.__validate_and_get_root_state_and_state_machine(
+                                                                                                None, sm_name, sm_path)
 
 
         else:
-            logger.error("Can't Plan into State {}, can only plan into Hierarchystates.".format(root_state))
+            logger.error("Can't Plan into State {}, can only plan into Hierarchystate!".format(root_state))
             logger.info("Creating independent State machine...")
-            state_machine, valid_root_state = self.__validate_and_get_root_state_and_state_machine(None, sm_name, sm_path)
+            state_machine, valid_root_state, is_independent = self.__validate_and_get_root_state_and_state_machine(
+                                                                                                None, sm_name, sm_path)
 
-        return (state_machine, valid_root_state)
+        return (state_machine, valid_root_state, is_independent)
 
     def __get_runtime_data_init_state(self, data_init_file_path, use_as_ref):
         '''
