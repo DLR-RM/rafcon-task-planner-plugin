@@ -4,7 +4,9 @@
 
 import math
 import time
+from gaphas.solver import Variable
 from rafcon.utils import log
+from rafcon.gui.utils import constants
 from rafcon.gui.models.state_machine import StateMachineModel
 logger = log.get_logger(__name__)
 
@@ -22,6 +24,7 @@ class StateMachineLayouter:
         :param state_order: the order of the states in the machine
         '''
         start_time = time.time()
+        logger.info("Layouting state machine...")
         #the state machine model.
         state_machine_m = StateMachineModel(state_machine)
         #number of rows of states.
@@ -41,18 +44,20 @@ class StateMachineLayouter:
         #the height of a state in the sm
         state_height = 100.
         #format root state
-        #root state width
-        r_width = column_count * (x_gap+state_width)+4*x_gap
-        #root state height
-        r_height = row_count * (y_gap+state_height)+4*y_gap
+
+        canvas_width = (column_count+1) * (x_gap+state_width)+x_gap
+        canvas_height = row_count * (y_gap+state_height)
+        #root state width, height, and root state border size.
+        r_width, r_height, border_size = self.__get_root_state_dimensions(canvas_width, canvas_height)
+
         logger.debug("Root state size: height: {} width: {}".format(r_height,r_width))
         #set root state size
         state_machine_m.root_state.meta['gui']['editor_opengl']['size'] = (r_width, r_height)
         state_machine_m.root_state.meta['gui']['editor_gaphas']['size'] = (r_width, r_height)
         #set root state in / out come position
-        state_machine_m.root_state.income.meta['gui']['editor_gaphas']['rel_pos'] = (0.,y_gap+state_height/4.)
+        state_machine_m.root_state.income.meta['gui']['editor_gaphas']['rel_pos'] = (0.,border_size+y_gap+state_height/4.)
         out_come = [oc for oc in state_machine_m.root_state.outcomes if oc.outcome.outcome_id == 0].pop()
-        out_come.meta['gui']['editor_gaphas']['rel_pos'] = (r_width,y_gap+state_height/4.)
+        out_come.meta['gui']['editor_gaphas']['rel_pos'] = (r_width,border_size+y_gap+state_height/4.)
 
         #positions where an income or an outcome can occure
         up_pos = (state_width/2., 0.)
@@ -95,8 +100,8 @@ class StateMachineLayouter:
             out_come.meta['gui']['editor_gaphas']['rel_pos'] = out_come_pos
 
             #set position of state
-            current_x = current_column*(x_gap+state_width)+x_gap
-            current_y = current_row*(y_gap+state_height)+y_gap
+            current_x = current_column*(x_gap+state_width)+x_gap+border_size
+            current_y = current_row*(y_gap+state_height)+y_gap+border_size
             state_m.meta['gui']['editor_opengl']['rel_pos'] = (current_x, current_y)
             state_m.meta['gui']['editor_gaphas']['rel_pos'] = (current_x, current_y)
             logger.debug("x: {} y: {}".format(current_x, current_y))
@@ -110,40 +115,6 @@ class StateMachineLayouter:
                 current_column += 1
             else:
                 current_row = current_row + 1 if increment_row else current_row - 1
-
-        # =========================new start==========================
-        if row_count == 1:
-            for c_state_id in state_order:  # state_machine_m.root_state.states.values():
-                # gui model of state
-                state_m = state_machine_m.root_state.states[c_state_id]
-                # set state size
-                state_m.meta['gui']['editor_opengl']['size'] = (state_width, state_height)
-                state_m.meta['gui']['editor_gaphas']['size'] = (state_width, state_height)
-                # set position of income and outcome
-                state_m.income.meta['gui']['editor_gaphas']['rel_pos'] = left_pos
-                out_come = [oc for oc in state_m.outcomes if oc.outcome.outcome_id >= 0].pop()
-                out_come.meta['gui']['editor_gaphas']['rel_pos'] = right_pos
-
-                # set position of state
-                current_x = current_column * (x_gap + state_width) + x_gap
-                current_y = y_gap
-                state_m.meta['gui']['editor_opengl']['rel_pos'] = (current_x, current_y)
-                state_m.meta['gui']['editor_gaphas']['rel_pos'] = (current_x, current_y)
-                logger.debug("x: {} y: {}".format(current_x, current_y))
-
-                # loop trailer, in / decrement rhow and column counter, decide if to increment row next.
-                if current_row <= 0 and not increment_row:
-                    increment_row = True
-                    current_column += 1
-                elif current_row + 1 >= row_count and increment_row:
-                    increment_row = False
-                    current_column += 1
-                else:
-                    current_row = current_row + 1 if increment_row else current_row - 1
-
-        else:
-
-        # =========================new end  ==========================
 
         #last state is a special case, its outcome should always be right.
         out_come = [oc for oc in state_machine_m.root_state.states[state_order[-1]].outcomes if oc.outcome.outcome_id == 0].pop()
@@ -166,5 +137,27 @@ class StateMachineLayouter:
         height = math.sqrt(num_states/1.78)#claculates the hight for approximatly ratio of 16:9, which is appr. 1.78:1
         height = round(height) if height > 1 else 1
         return height
+
+    def __get_root_state_dimensions(self, canvas_width, canvas_height):
+        '''
+        get_root_state_dimensions receives a desired canvas width and height, and returns the overall rootstate size,
+        and the border width.
+        :param canvas_width:
+        :param canvas_height:
+        :return: (width, height, border_width)
+        '''
+
+
+        border_width = Variable(min(canvas_width, canvas_height) / constants.BORDER_WIDTH_STATE_SIZE_FACTOR)
+        r_width = canvas_width + 2 * border_width
+        r_height = canvas_height + 2 * border_width
+        border_width = Variable(min(r_width, r_height) / constants.BORDER_WIDTH_STATE_SIZE_FACTOR)
+
+        while (r_width - 2 * border_width) < canvas_width and (r_height - 2 * border_width) < canvas_height:
+            r_width = r_width + 2 * border_width
+            r_height = r_height + 2 * border_width
+            border_width = Variable(min(r_width, r_height) / constants.BORDER_WIDTH_STATE_SIZE_FACTOR)
+
+        return (r_width, r_height, border_width)
 
 
