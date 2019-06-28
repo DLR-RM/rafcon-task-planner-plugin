@@ -31,8 +31,8 @@ class StateMachineLayouter:
         column_count = num_states / row_count
         current_row = 0
         current_column = 0
-        x_gap = 50 # a gap between the state columns
-        y_gap = 50 # a gap between the state rows                             _   _
+        x_gap = 25 # a gap between the state columns
+        y_gap = 25 # a gap between the state rows                             _   _
         # the sm will be layouted column by column, in merlon shape. Like: |_| |_| |_|
         #increment_row is true if formatting digs down a row, and false if it climbs the next row up again.
         increment_row = True
@@ -44,7 +44,7 @@ class StateMachineLayouter:
         #root state width
         r_width = column_count * (x_gap+state_width)+4*x_gap
         #root state height
-        r_height = row_count * (y_gap+state_height)+y_gap
+        r_height = row_count * (y_gap+state_height)+4*y_gap
         logger.debug("Root state size: height: {} width: {}".format(r_height,r_width))
         #set root state size
         state_machine_m.root_state.meta['gui']['editor_opengl']['size'] = (r_width, r_height)
@@ -55,10 +55,10 @@ class StateMachineLayouter:
         out_come.meta['gui']['editor_gaphas']['rel_pos'] = (r_width,y_gap+state_height/4.)
 
         #positions where an income or an outcome can occure
-        up_pos = (state_width/2.,0.)
-        down_pos = (state_width/2.,state_height)
+        up_pos = (state_width/2., 0.)
+        down_pos = (state_width/2., state_height)
         left_pos = (0., state_height/4.)
-        right_pos = (state_width, state_height /4.)
+        right_pos = (state_width, state_height/4.)
         #format states
         for c_state_id in state_order:#state_machine_m.root_state.states.values():
             #gui model of state
@@ -82,7 +82,7 @@ class StateMachineLayouter:
                 out_come_pos = right_pos
             elif current_row +1 >= row_count and not increment_row: # lower right corner
                 income_pos = left_pos
-                out_come_pos= up_pos
+                out_come_pos = up_pos
 
 
             #set state size
