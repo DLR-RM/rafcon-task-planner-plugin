@@ -111,6 +111,40 @@ class StateMachineLayouter:
             else:
                 current_row = current_row + 1 if increment_row else current_row - 1
 
+        # =========================new start==========================
+        if row_count == 1:
+            for c_state_id in state_order:  # state_machine_m.root_state.states.values():
+                # gui model of state
+                state_m = state_machine_m.root_state.states[c_state_id]
+                # set state size
+                state_m.meta['gui']['editor_opengl']['size'] = (state_width, state_height)
+                state_m.meta['gui']['editor_gaphas']['size'] = (state_width, state_height)
+                # set position of income and outcome
+                state_m.income.meta['gui']['editor_gaphas']['rel_pos'] = left_pos
+                out_come = [oc for oc in state_m.outcomes if oc.outcome.outcome_id >= 0].pop()
+                out_come.meta['gui']['editor_gaphas']['rel_pos'] = right_pos
+
+                # set position of state
+                current_x = current_column * (x_gap + state_width) + x_gap
+                current_y = y_gap
+                state_m.meta['gui']['editor_opengl']['rel_pos'] = (current_x, current_y)
+                state_m.meta['gui']['editor_gaphas']['rel_pos'] = (current_x, current_y)
+                logger.debug("x: {} y: {}".format(current_x, current_y))
+
+                # loop trailer, in / decrement rhow and column counter, decide if to increment row next.
+                if current_row <= 0 and not increment_row:
+                    increment_row = True
+                    current_column += 1
+                elif current_row + 1 >= row_count and increment_row:
+                    increment_row = False
+                    current_column += 1
+                else:
+                    current_row = current_row + 1 if increment_row else current_row - 1
+
+        else:
+
+        # =========================new end  ==========================
+
         #last state is a special case, its outcome should always be right.
         out_come = [oc for oc in state_machine_m.root_state.states[state_order[-1]].outcomes if oc.outcome.outcome_id == 0].pop()
         out_come.meta['gui']['editor_gaphas']['rel_pos'] = right_pos
