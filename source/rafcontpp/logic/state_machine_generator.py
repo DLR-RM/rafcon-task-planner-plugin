@@ -16,7 +16,7 @@ import time
 import json
 from rafcontpp.logic.state_machine_layouter import StateMachineLayouter
 from rafcontpp.model.datastore import ALLOW_OVERRIDE_NAME, SEMANTIC_DATA_DICT_NAME
-from rafcon.gui.models.signals import MetaSignalMsg, ActionSignalMsg
+from rafcon.gui.models.signals import ActionSignalMsg
 from rafcon.gui.singleton import state_machine_manager_model
 from rafcon.gui.utils import wait_for_gui
 from rafcon.core.storage import storage
@@ -57,6 +57,13 @@ class StateMachineGenerator:
         state_machine, root_state, is_independent_sm = self.__validate_and_get_root_state_and_state_machine(
                                                                     self.__datastore.get_target_state(),sm_name,sm_path)
         self.__gui_involved = not is_independent_sm
+
+        if self.__gui_involved:#emit signal, to stop gui drawing in order to speed up the process.
+            state_machine_m = state_machine_manager_model.state_machines[state_machine.state_machine_id]
+            root_state_m = state_machine_m.get_state_model_by_path(root_state.get_path())
+            root_state_m.action_signal.emit(ActionSignalMsg(action='substitute_state', origin='model',
+                                                            action_parent_m=root_state_m,
+                                                            affected_models=[root_state_m], after=False))
         last_state = None
         # add global data init state and set start state
         runtime_data_path = self.__datastore.get_runtime_data_path()
@@ -115,20 +122,23 @@ class StateMachineGenerator:
         if is_independent_sm:
             self.__open_state_machine(state_machine, state_machine.file_system_path)
         else:
-            state_machine_m = state_machine_manager_model.state_machines[state_machine.state_machine_id]
-            state_machine_m.root_state.meta_signal.emit(MetaSignalMsg("meta_action", "all", True))
-
+            root_state_m.action_signal.emit(ActionSignalMsg(action='substitute_state', origin='model',
+                                                            action_parent_m=root_state_m,
+                                                            affected_models=[root_state_m], after=True))
 
     def __gui_wrapper(self, function, *args):
+        '''
+        if the state we plan into is already opened in the gui, all functions to do so have to be executed in a
+        call_gui_callback. this warpper will execute the function normally if gui is not involved, else wrapped in
+        a call_gui_callback.
+        :param function: a gui sensitive function that should be executed
+        :param args: the args of the function
+        '''
+
         if self.__gui_involved:
             call_gui_callback(function,*args)
         else:
             function(*args)
-
-
-
-
-
 
 
     def __open_state_machine(self,state_machine, state_machine_path):
@@ -204,8 +214,7 @@ class StateMachineGenerator:
             if len(root_state.states) == 0 \
                     or root_state.semantic_data[SEMANTIC_DATA_DICT_NAME][ALLOW_OVERRIDE_NAME] == 'True':
                 #empty the root state!
-                for state in root_state.states.values():
-                    call_gui_callback(root_state.remove_state,state.state_id,True,True,True)
+                self.__clear_state(root_state)
                 valid_root_state = root_state
                 state_machine = root_state.get_state_machine()
 
@@ -223,6 +232,25 @@ class StateMachineGenerator:
                                                                                                 None, sm_name, sm_path)
 
         return (state_machine, valid_root_state, is_independent)
+
+
+    def __clear_state(self, root_state):
+        '''
+        gets a state and removes all its child states with respect to the gui.
+        :param root_state: the state to clear
+        '''
+        state_machine = root_state.get_state_machine()
+        state_machine_m = state_machine_manager_model.state_machines[state_machine.state_machine_id]
+        state_m = state_machine_m.get_state_model_by_path(root_state.get_path())
+        state_m.action_signal.emit(ActionSignalMsg(action='substitute_state', origin='model',
+                                                        action_parent_m=state_m,
+                                                        affected_models=[state_m], after=False))
+        for state in root_state.states.values():
+           call_gui_callback(root_state.remove_state, state.state_id, True, True, True)
+
+        state_m.action_signal.emit(ActionSignalMsg(action='substitute_state', origin='model',
+                                                        action_parent_m=state_m,
+                                                        affected_models=[state_m], after=True))
 
     def __get_runtime_data_init_state(self, data_init_file_path, use_as_ref):
         '''
@@ -248,4 +276,5 @@ class StateMachineGenerator:
 
         data_init_state.script_text = data_init_state.script_text.replace('self.logger.debug("Hello world")',execute_str)
         return data_init_state
+
 

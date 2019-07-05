@@ -296,6 +296,7 @@ class PlanningSetupFormController:
             selected_state = self.__get_current_selected_state_if_valid()
             if selected_state:
                dtp.set_target_state(selected_state)
+               sm_name = selected_state.name
             else:
                 everything_filled = False
                 not_filled = 'State to plan in not accurately selected!'
