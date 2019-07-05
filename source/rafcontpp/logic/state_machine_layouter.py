@@ -18,10 +18,12 @@ class StateMachineLayouter:
 
 
 
-    def layout_state_machine(self, state_machine, target_state, state_order):
+    def layout_state_machine(self, state_machine, target_state, fixed_size, state_order):
         '''
-         This function will format the state machine in a merlon like format.
+                 This function will format the state machine in a merlon like format.
         :param state_machine: a state machine to layout
+        :param target_state: the "root state" all content in the state will be formated, it needs to be tube like
+        :param fixed_size: True if the size of the root state is fixed.
         :param state_order: the order of the states in the machine
         '''
         start_time = time.time()
@@ -36,30 +38,37 @@ class StateMachineLayouter:
         #number of rows of states.
         num_states = len(target_state_m.states)
         row_count = self.__get_num_states_per_col(num_states)
-        logger.debug("States per column: {}".format(row_count))
-        column_count = num_states / row_count
-        current_row = 0
-        current_column = 0
+        column_count = math.ceil(num_states / row_count)
+
         x_gap = 25 # a gap between the state columns
         y_gap = 25 # a gap between the state rows                             _   _
         # the sm will be layouted column by column, in merlon shape. Like: |_| |_| |_|
-        #increment_row is true if formatting digs down a row, and false if it climbs the next row up again.
-        increment_row = True
         #the width of a state in the sm
         state_width = 100.
         #the height of a state in the sm
         state_height = 100.
         #format root state
+        canvas_height = 0
+        canvas_width = 0
+        r_width = 0
+        r_height = 0
+        border_size = 0
+        if fixed_size:
+            r_width, r_height = target_state_m.meta['gui']['editor_gaphas']['size']
+            border_size = Variable(min(r_width, r_height) / constants.BORDER_WIDTH_STATE_SIZE_FACTOR)
+            canvas_height = r_height - 2 * border_size
+            canvas_width = r_width - 2 * border_size
+            state_width, state_height, x_gap, y_gap = self.__get_state_dimensions(canvas_width, canvas_height, column_count+1, row_count)
+        else:
+            canvas_width = (column_count+1) * (x_gap+state_width)+x_gap
+            canvas_height = row_count * (y_gap+state_height)
+            #root state width, height, and root state border size.
+            r_width, r_height, border_size = self.__get_target_state_dimensions(canvas_width, canvas_height)
 
-        canvas_width = (column_count+1) * (x_gap+state_width)+x_gap
-        canvas_height = row_count * (y_gap+state_height)
-        #root state width, height, and root state border size.
-        r_width, r_height, border_size = self.__get_target_state_dimensions(canvas_width, canvas_height)
-
-        logger.debug("Root state size: height: {} width: {}".format(r_height,r_width))
-        #set root state size
-        target_state_m.meta['gui']['editor_opengl']['size'] = (r_width, r_height)
-        target_state_m.meta['gui']['editor_gaphas']['size'] = (r_width, r_height)
+            logger.debug("Root state size: height: {} width: {}".format(r_height,r_width))
+            #set root state size
+            target_state_m.meta['gui']['editor_opengl']['size'] = (r_width, r_height)
+            target_state_m.meta['gui']['editor_gaphas']['size'] = (r_width, r_height)
         #set root state in / out come position
         target_state_m.income.meta['gui']['editor_gaphas']['rel_pos'] = (0.,border_size+y_gap+state_height/4.)
         out_come = [oc for oc in target_state_m.outcomes if oc.outcome.outcome_id == 0].pop()
@@ -70,6 +79,11 @@ class StateMachineLayouter:
         down_pos = (state_width/2., state_height)
         left_pos = (0., state_height/4.)
         right_pos = (state_width, state_height/4.)
+
+        current_row = 0
+        current_column = 0
+        # increment_row is true if formatting digs down a row, and false if it climbs the next row up again.
+        increment_row = True
         #format states
         for c_state_id in state_order:#state_machine_m.root_state.states.values():
             #gui model of state
@@ -168,5 +182,25 @@ class StateMachineLayouter:
         return (r_width, r_height, border_width)
 
 
+    def __get_state_dimensions(self, canvas_width, canvas_height, col_count, row_count):
+        '''
+        get_state_dimensions reveives a fixed canvas width and height, a col and a row count and calcualtes a possible
+        state size. adds an additional x_gap.
+        :param canvas_width:
+        :param canvas_height:
+        :return: (state_width, state_height, x_gap, y_gap)
+        '''
+        num_xgap = 1+col_count
+        num_ygap = 1+row_count
+
+        state_width = max(canvas_width /(0.25 * num_xgap + col_count),1)
+        state_height = max (canvas_height / (0.25*num_ygap + row_count),1)
+        state_width = min(state_width, state_height)
+        state_height = min(state_width, state_height)
+        x_gap = 0.25 * state_width
+        y_gap = 0.25 * state_height
+        logger.debug((canvas_width, canvas_height, col_count, row_count))
+        logger.debug((state_width, state_height, x_gap, y_gap))
+        return state_width, state_height, x_gap, y_gap
 
 
