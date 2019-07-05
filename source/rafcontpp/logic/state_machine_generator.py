@@ -16,8 +16,9 @@ import time
 import json
 from rafcontpp.logic.state_machine_layouter import StateMachineLayouter
 from rafcontpp.model.datastore import ALLOW_OVERRIDE_NAME, SEMANTIC_DATA_DICT_NAME
-from rafcon.gui.models.signals import MetaSignalMsg
+from rafcon.gui.models.signals import MetaSignalMsg, ActionSignalMsg
 from rafcon.gui.singleton import state_machine_manager_model
+from rafcon.gui.utils import wait_for_gui
 from rafcon.core.storage import storage
 from rafcon.core.singleton import library_manager
 from rafcon.core.singleton import state_machine_manager
@@ -37,6 +38,7 @@ class StateMachineGenerator:
 
     def __init__(self, datastore):
             self.__datastore = datastore
+            self.__gui_involved = False
 
     def generate_state_machine(self):
         ''' generate_state_machine
@@ -54,16 +56,16 @@ class StateMachineGenerator:
         #!IMPORTANT: root state is not necessarily the root state of the sm, but the state we generate our sm into.
         state_machine, root_state, is_independent_sm = self.__validate_and_get_root_state_and_state_machine(
                                                                     self.__datastore.get_target_state(),sm_name,sm_path)
-        if not is_independent_sm:
-            pass #DISABLE DRAWING
+        self.__gui_involved = not is_independent_sm
         last_state = None
         # add global data init state and set start state
         runtime_data_path = self.__datastore.get_runtime_data_path()
         if runtime_data_path and len(runtime_data_path)>0:
             last_state = self.__get_runtime_data_init_state(runtime_data_path, self.__datastore.use_runtime_path_as_ref())
-            root_state.add_state(last_state)
-            root_state.set_start_state(last_state.state_id)
+            self.__gui_wrapper(root_state.add_state, last_state)
+            self.__gui_wrapper(root_state.set_start_state,last_state.state_id)
             state_order_list.append(last_state.state_id)
+
         facts = self.__datastore.get_pddl_facts_representation()
         for plan_step in self.__datastore.get_plan():
             #the name of a plan step is an action name.
@@ -84,18 +86,22 @@ class StateMachineGenerator:
                            logger.warn("Action "+c_pddl_action.name+" has no Parameter "
                                        +c_input_data_ports[key].name+", which is needed in State "+current_state.name)
                 #add state to state machine
-                root_state.add_state(current_state)
+                self.__gui_wrapper(root_state.add_state, current_state)
+                
                 state_order_list.append(current_state.state_id)
                 if last_state is None:
-                    root_state.set_start_state(current_state.state_id)
+                    self.__gui_wrapper(root_state.set_start_statecurrent_state.state_id)
                 else:
-                    root_state.add_transition(last_state.state_id, 0, current_state.state_id, None)
+                    self.__gui_wrapper(root_state.add_transition,last_state.state_id, 0, current_state.state_id, None)
+                    
                 last_state = current_state
             else:
                 logger.error("No State found for action: \"" + plan_step.name + "\"")
                 raise LookupError("No State found for action: \"" + plan_step.name + "\"")
 
-        root_state.add_transition(last_state.state_id, 0, root_state.state_id, 0)
+        #at the end add transition from last state to outcome of root state.
+        self.__gui_wrapper(root_state.add_transition,last_state.state_id, 0, root_state.state_id, 0)
+        
         # everything connected, create statemachine object and save.
         storage.save_state_machine_to_path(state_machine, state_machine.file_system_path)
         library_manager.refresh_libraries()
@@ -104,14 +110,20 @@ class StateMachineGenerator:
         logger.info("State machine generation took {0:.4f} seconds.".format(time.time()- start_time))
         #format state machine
         layouter = StateMachineLayouter()
-        layouter.layout_state_machine(state_machine, root_state, state_order_list)
+        self.__gui_wrapper(layouter.layout_state_machine, state_machine, root_state, state_order_list)
         #open state machine
         if is_independent_sm:
             self.__open_state_machine(state_machine, state_machine.file_system_path)
         else:
-            #ENABLE DRAWING
             state_machine_m = state_machine_manager_model.state_machines[state_machine.state_machine_id]
             state_machine_m.root_state.meta_signal.emit(MetaSignalMsg("meta_action", "all", True))
+
+
+    def __gui_wrapper(self, function, *args):
+        if self.__gui_involved:
+            call_gui_callback(function,*args)
+        else:
+            function(*args)
 
 
 
@@ -193,7 +205,7 @@ class StateMachineGenerator:
                     or root_state.semantic_data[SEMANTIC_DATA_DICT_NAME][ALLOW_OVERRIDE_NAME] == 'True':
                 #empty the root state!
                 for state in root_state.states.values():
-                    root_state.remove_state(state.state_id,True,True,True)
+                    call_gui_callback(root_state.remove_state,state.state_id,True,True,True)
                 valid_root_state = root_state
                 state_machine = root_state.get_state_machine()
 

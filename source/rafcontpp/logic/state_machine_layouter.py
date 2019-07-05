@@ -32,7 +32,7 @@ class StateMachineLayouter:
             state_machine_m = state_machine_manager_model.state_machines[state_machine.state_machine_id]
         else:
             state_machine_m = StateMachineModel(state_machine)
-        target_state_m = self.__get_target_state_model(state_machine_m,target_state.id)
+        target_state_m = state_machine_m.get_state_model_by_path(target_state.get_path())
         #number of rows of states.
         num_states = len(target_state_m.states)
         row_count = self.__get_num_states_per_col(num_states)
@@ -110,7 +110,7 @@ class StateMachineLayouter:
             current_y = current_row*(y_gap+state_height)+y_gap+border_size
             state_m.meta['gui']['editor_opengl']['rel_pos'] = (current_x, current_y)
             state_m.meta['gui']['editor_gaphas']['rel_pos'] = (current_x, current_y)
-            logger.debug("x: {} y: {}".format(current_x, current_y))
+            #logger.debug("x: {} y: {}".format(current_x, current_y))
 
             #loop trailer, in / decrement rhow and column counter, decide if to increment row next.
             if current_row <= 0 and not increment_row:
@@ -165,17 +165,6 @@ class StateMachineLayouter:
             border_width = Variable(min(r_width, r_height) / constants.BORDER_WIDTH_STATE_SIZE_FACTOR)
 
         return (r_width, r_height, border_width)
-
-    def __get_target_state_model(self, state_machine_m, target_state_id):
-        target_state_m = None
-        if state_machine_m.root_state.state.id == target_state_id:
-            target_state_m = state_machine_m.root_state
-        elif target_state_id in state_machine_m.root_state.states:
-            target_state_m = state_machine_m.root_state.states[target_state_id]
-        else:
-            raise NotImplementedError("need to implement in the furure")
-
-        return target_state_m
 
 
 
