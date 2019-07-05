@@ -1,7 +1,7 @@
 {
     "creation_time": "2018-12-17 08:21:50", 
-    "last_update": "2019-02-21 07:50:47", 
+    "last_update": "2019-07-05 07:42:49", 
     "root_state_storage_id": "Eat_UFIMZP", 
     "state_machine_version": null, 
-    "used_rafcon_version": "0.13.5a1"
+    "used_rafcon_version": "0.13.5"
 }

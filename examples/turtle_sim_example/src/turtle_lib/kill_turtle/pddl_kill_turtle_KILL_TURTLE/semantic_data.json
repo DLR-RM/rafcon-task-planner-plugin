@@ -1,9 +1,11 @@
 {
-    "RAFCONTPP_PDDL_ACTION": {
-        "description": "", 
-        "pddl_action": "(:action kill\n    :parameters ( ?turtle - Turtle)\n    :precondition (alive ?turtle)\n    :effect (and (dead ?turtle)(not (alive ?turtle)))\n)", 
-        "pddl_predicates": "(alive ?turtle - Turtle)\r\n(dead ?turtle - Turtle)", 
-        "pddl_types": "Turtle", 
-        "requirements": "[':typing', ':strips']"
+    "RAFCONTPP": {
+        "PDDL_ACTION": {
+            "description": "", 
+            "pddl_action": "(:action kill\n    :parameters ( ?turtle - Turtle)\n    :precondition (alive ?turtle)\n    :effect (and (dead ?turtle)(not (alive ?turtle)))\n)", 
+            "pddl_predicates": "(alive ?turtle - Turtle)\r\n(dead ?turtle - Turtle)", 
+            "pddl_types": "Turtle", 
+            "requirements": "[':typing', ':strips']"
+        }
     }
 }

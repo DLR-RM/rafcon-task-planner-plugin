@@ -7,7 +7,7 @@
 #
 # Contributors:
 # Christoph Suerig <christoph.suerig@dlr.de>
-# Version 28.06.1019
+# Version 05.07.1019
 
 
 
@@ -15,7 +15,7 @@ import os
 import time
 import json
 from rafcontpp.logic.state_machine_layouter import StateMachineLayouter
-from rafcontpp.model.datastore import SEMANTIC_DATA_DICT_NAME
+from rafcontpp.model.datastore import ALLOW_OVERRIDE_NAME, SEMANTIC_DATA_DICT_NAME
 from rafcon.gui.models.signals import MetaSignalMsg
 from rafcon.gui.singleton import state_machine_manager_model
 from rafcon.core.storage import storage
@@ -189,7 +189,8 @@ class StateMachineGenerator:
             is_independent = True
 
         elif isinstance(root_state,HierarchyState):
-            if len(root_state.states) == 0 or root_state.semantic_data[SEMANTIC_DATA_DICT_NAME]['allow_override'] == 'True':
+            if len(root_state.states) == 0 \
+                    or root_state.semantic_data[SEMANTIC_DATA_DICT_NAME][ALLOW_OVERRIDE_NAME] == 'True':
                 #empty the root state!
                 for state in root_state.states.values():
                     root_state.remove_state(state.state_id,True,True,True)

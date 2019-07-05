@@ -2,7 +2,7 @@
 #
 # Contributors:
 # Christoph Suerig <christoph.suerig@dlr.de>
-# Version 28.06.2019
+# Version 05.07.2019
 import os
 import json
 import threading
@@ -20,8 +20,13 @@ built_in_planners = {
 }
 #The storage path of the config file.
 DATASTORE_STORAGE_PATH = os.path.join(os.path.expanduser('~'), os.path.normpath('.config/rafcon/rafcontpp_conf.json'))
+
 #The name of the semantic data dict in rafcon state
-SEMANTIC_DATA_DICT_NAME = 'RAFCONTPP_PDDL_ACTION'
+SEMANTIC_DATA_DICT_NAME = 'RAFCONTPP'
+#The name of the sub dictionary, where the pddl action is stored in.
+PDDL_ACTION_SUB_DICT_NAME = 'PDDL_ACTION'
+#The key to allow the Override of the State Content
+ALLOW_OVERRIDE_NAME = 'Allow_Override'
 
 #A lock to synchronize planning thread map accesses.
 planning_threads_lock = threading.Lock()

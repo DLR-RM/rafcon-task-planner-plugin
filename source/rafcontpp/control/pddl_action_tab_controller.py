@@ -7,7 +7,7 @@ import gi
 gi.require_version('Gtk', '3.0')
 import time
 from gi.repository import Gtk
-from rafcontpp.model.datastore import SEMANTIC_DATA_DICT_NAME
+from rafcontpp.model.datastore import SEMANTIC_DATA_DICT_NAME, PDDL_ACTION_SUB_DICT_NAME
 from rafcontpp.logic.pddl_action_parser import PddlActionParser
 from rafcontpp.logic.pddl_requirement_finder import PddlRequirementFinder
 from rafcon.core.states.library_state import LibraryState
@@ -71,7 +71,7 @@ class PddlActionTabController:
         if saved_manually or PddlActionTabController.auto_apply_enabled:
             start, end = buffer.get_bounds()
             to_save = buffer.get_text(start, end,True).strip('\n')
-            self.__state.add_semantic_data([SEMANTIC_DATA_DICT_NAME],to_save,key)
+            self.__state.add_semantic_data([SEMANTIC_DATA_DICT_NAME,PDDL_ACTION_SUB_DICT_NAME], to_save, key)
 
 
 
@@ -86,7 +86,7 @@ class PddlActionTabController:
         :param saved_manually: True if saved manually, false otherwhise
         '''
         if saved_manually or PddlActionTabController.auto_apply_enabled:
-            self.__state.add_semantic_data([SEMANTIC_DATA_DICT_NAME], str(self.__get_requirements(req_dict)), 'requirements')
+            self.__state.add_semantic_data([SEMANTIC_DATA_DICT_NAME,PDDL_ACTION_SUB_DICT_NAME], str(self.__get_requirements(req_dict)), 'requirements')
 
 
 

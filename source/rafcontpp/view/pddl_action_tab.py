@@ -1,6 +1,6 @@
 # Contributors:
 # Christoph Suerig <christoph.suerig@dlr.de>
-# Version 17.04.2019
+# Version 05.07.2019
 
 
 import os
@@ -8,7 +8,7 @@ import time
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
-from rafcontpp.model.datastore import SEMANTIC_DATA_DICT_NAME
+from rafcontpp.model.datastore import SEMANTIC_DATA_DICT_NAME, PDDL_ACTION_SUB_DICT_NAME
 from rafcontpp.logic.pddl_action_parser import PddlActionParser
 from rafcontpp.logic.pddl_requirement_finder import PddlRequirementFinder
 from rafcontpp.control.pddl_action_tab_controller import PddlActionTabController
@@ -80,6 +80,7 @@ class PddlActionTab:
 
 
 
+
     def init_tab(self):
         '''
         loads the data into the action tab and subscribes on signals of some gui elements.
@@ -105,6 +106,7 @@ class PddlActionTab:
             for c_button in self.__requ_cb_dict.values():
                 c_button.set_sensitive(False)
         else:
+            self.__copy_and_clear_old_dict(self.__state)#to change from old to new dict, remove in the future!
             self.__load_from_semantic_section(False)
             #observe parts
             auto_fill_button = self.__gtk_builder.get_object('rtpp_pddl_tab_auto_fill_button')
@@ -176,10 +178,10 @@ class PddlActionTab:
         :return: Nothing
         '''
 
-        rtpp_dict = self.__state.semantic_data[SEMANTIC_DATA_DICT_NAME]
-        rtpp_dict['allow_override']#its only there to add the key into the dictionary
+        rtpp_dict = self.__state.semantic_data[SEMANTIC_DATA_DICT_NAME][PDDL_ACTION_SUB_DICT_NAME]
+
         if is_library_state:
-            rtpp_dict = self.__state.state_copy.semantic_data[SEMANTIC_DATA_DICT_NAME]
+            rtpp_dict = self.__state.state_copy.semantic_data[SEMANTIC_DATA_DICT_NAME][PDDL_ACTION_SUB_DICT_NAME]
 
         self.__description_text_view.get_buffer().set_text(self.__filter_input(str(rtpp_dict['description'])))
         source_view_string = self.__filter_input(str(rtpp_dict['pddl_action']))
@@ -217,3 +219,27 @@ class PddlActionTab:
         action_text = self.__pddl_action_source_view.get_buffer().get_text(start, end, True).strip()
         action = PddlActionParser(action_text).parse_action()
         return action
+
+    #TODO remove this method!
+    def __get_right_dict(self, state):
+        dict_to_return = None
+
+        if SEMANTIC_DATA_DICT_NAME in state.semantic_data:
+            dict_to_return = state.semantic_data[SEMANTIC_DATA_DICT_NAME][PDDL_ACTION_SUB_DICT_NAME]
+        else:
+            dict_to_return = state.semantic_data['RAFCONTPP_PDDL_ACTION']
+        return dict_to_return
+
+
+    def __copy_and_clear_old_dict(self, state):
+        '''
+            this method removes the old dict, and copies it into a new one.
+        :param state:
+        :return:
+        '''
+
+        if 'RAFCONTPP_PDDL_ACTION' in state.semantic_data:
+            if not SEMANTIC_DATA_DICT_NAME in state.semantic_data:
+                dict_to_return = state.semantic_data[SEMANTIC_DATA_DICT_NAME][PDDL_ACTION_SUB_DICT_NAME]
+                state.add_semantic_data([SEMANTIC_DATA_DICT_NAME], state.semantic_data['RAFCONTPP_PDDL_ACTION'], PDDL_ACTION_SUB_DICT_NAME)
+            state.remove_semantic_data(['RAFCONTPP_PDDL_ACTION'])

@@ -1,17 +1,19 @@
 # Contributors:
 # Christoph Suerig <christoph.suerig@dlr.de>
 
-# Version 28.06.2019
+# Version 05.07.2019
 
 
 
 import os
 import threading
 from threading import Thread
+from rafcon.core.states.hierarchy_state import HierarchyState
 from rafcon.utils.gui_functions import call_gui_callback
 from rafcon.gui.singleton import state_machine_manager_model
 from rafcontpp.control.execution_controller import ExecutionController
 from rafcontpp.model.datastore import Datastore, DATASTORE_STORAGE_PATH
+from rafcontpp.model.datastore import SEMANTIC_DATA_DICT_NAME, ALLOW_OVERRIDE_NAME
 from rafcontpp.view.planning_wait_window import PlanningWaitWindow
 from rafcontpp.view.state_pool_info_window import StatePoolInfoWindow
 from rafcontpp.logic.mapper import Mapper
@@ -291,7 +293,7 @@ class PlanningSetupFormController:
         dtp.set_facts_path(facts_path)
         dtp.set_generate_into_state(generate_into_state)
         if generate_into_state:
-            selected_state = self.__get_current_selected_state()
+            selected_state = self.__get_current_selected_state_if_valid()
             if selected_state:
                dtp.set_target_state(selected_state)
             else:
@@ -342,16 +344,33 @@ class PlanningSetupFormController:
         return result
 
 
-    def __get_current_selected_state(self):
-        selected_state = None
+    def __get_current_selected_state_if_valid(self):
+        '''
+        takes and validated the current selected state. Returns None if no, multiple or no valid state is selected.
+        :return: a valid root state or None
+        '''
         selected_sm = state_machine_manager_model.get_selected_state_machine_model()
-        if selected_sm and selected_sm.selection.states:
-            if len(selected_sm.selection.states) == 1:
-                selected_state_model = selected_sm.selection.get_selected_state()
-                selected_state = selected_state_model.state
-            else:
-                logger.error("Multiple States selected!")
-        else:
+
+        if not (selected_sm and selected_sm.selection.states):
             logger.error("No State selected!")
+            return None
+        if not len(selected_sm.selection.states) == 1:
+            logger.error("Multiple States selected!")
+            return None
+
+        selected_state_model = selected_sm.selection.get_selected_state()
+        selected_state = selected_state_model.state
+
+        if not isinstance(selected_state, HierarchyState):
+            logger.error("Can only plan into Hierarchy States!")
+            return None
+        permission_granted = selected_state.semantic_data[SEMANTIC_DATA_DICT_NAME][ALLOW_OVERRIDE_NAME] == 'True'
+        if not (permission_granted or len(selected_state.states) == 0):
+            logger.error("Can't plan into None empty Hierarchy State without permission!")
+            return None
 
         return selected_state
+
+
+
+

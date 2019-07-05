@@ -1,9 +1,11 @@
 {
-    "RAFCONTPP_PDDL_ACTION": {
-        "description": "Cooking: \n- The precondition is, that the Chef wants to cook the food (e.g. has to cook it) f.e. if the waiter ordered some food for the guests.\n- The effect is, that the Chef has the food available now, and (because he cooked it) dosen't want it anymore.\n- Modeling is really inaccurate, and  ends here. e.g. the Chef needs not to be in the kitchen, needs no ingredients and so on...\n--> In this Action Food can be created", 
-        "pddl_action": "(:action cook\n    :parameters (?chef - Chef ?food - Food)\n    :precondition (wants ?chef ?food)\n    :effect (and (has ?chef ?food)(not(wants ?chef ?food)))\n)", 
-        "pddl_predicates": "(wants ?chef - Chef ?food - Food)\r\n(has ?chef - Chef ?food - Food)", 
-        "pddl_types": "Chef, Food", 
-        "requirements": "[':typing', ':strips']"
+    "RAFCONTPP": {
+        "PDDL_ACTION": {
+            "description": "Cooking: \n- The precondition is, that the Chef wants to cook the food (e.g. has to cook it) f.e. if the waiter ordered some food for the guests.\n- The effect is, that the Chef has the food available now, and (because he cooked it) dosen't want it anymore.\n- Modeling is really inaccurate, and  ends here. e.g. the Chef needs not to be in the kitchen, needs no ingredients and so on...\n--> In this Action Food can be created", 
+            "pddl_action": "(:action cook\n    :parameters (?chef - Chef ?food - Food)\n    :precondition (wants ?chef ?food)\n    :effect (and (has ?chef ?food)(not(wants ?chef ?food)))\n)", 
+            "pddl_predicates": "(wants ?chef - Chef ?food - Food)\r\n(has ?chef - Chef ?food - Food)", 
+            "pddl_types": "Chef, Food", 
+            "requirements": "[':typing', ':strips']"
+        }
     }
 }

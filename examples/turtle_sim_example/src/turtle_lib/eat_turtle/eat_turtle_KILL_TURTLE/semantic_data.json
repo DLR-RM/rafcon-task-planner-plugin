@@ -1,9 +1,11 @@
 {
-    "RAFCONTPP_PDDL_ACTION": {
-        "description": "", 
-        "pddl_action": "(:action eat\n    :parameters ( ?eater ?turtle - Turtle ?loc - location)\n    :precondition (and (at ?loc ?eater)(at ?loc ?turtle)(alive ?turtle)(alive ?eater)\n                       (hungry ?eater)(not(= ?eater ?turtle))\n                  )\n    :effect (and (dead ?turtle)(eaten ?turtle)(not (alive ?turtle))\n    (not (hungry ?eater))\n    )\n)", 
-        "pddl_predicates": "(eaten ?turtle - Turtle)\r\n(alive ?turtle - Turtle)\r\n(at ?loc - location ?turtle - Turtle)\r\n(hungry ?eater - Turtle)\r\n(dead ?turtle - Turtle)", 
-        "pddl_types": "Turtle, location", 
-        "requirements": "[':typing', ':disjunctive-preconditions', ':strips', ':equality']"
+    "RAFCONTPP": {
+        "PDDL_ACTION": {
+            "description": "", 
+            "pddl_action": "(:action eat\n    :parameters ( ?eater ?turtle - Turtle ?loc - location)\n    :precondition (and (at ?loc ?eater)(at ?loc ?turtle)(alive ?turtle)(alive ?eater)\n                       (hungry ?eater)(not(= ?eater ?turtle))\n                  )\n    :effect (and (dead ?turtle)(eaten ?turtle)(not (alive ?turtle))\n    (not (hungry ?eater))\n    )\n)", 
+            "pddl_predicates": "(eaten ?turtle - Turtle)\r\n(alive ?turtle - Turtle)\r\n(at ?loc - location ?turtle - Turtle)\r\n(hungry ?eater - Turtle)\r\n(dead ?turtle - Turtle)", 
+            "pddl_types": "Turtle, location", 
+            "requirements": "[':typing', ':disjunctive-preconditions', ':strips', ':equality']"
+        }
     }
 }
