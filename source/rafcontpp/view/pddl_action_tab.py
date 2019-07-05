@@ -8,7 +8,7 @@ import time
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
-from rafcontpp.model.datastore import SEMANTIC_DATA_DICT_NAME, PDDL_ACTION_SUB_DICT_NAME
+from rafcontpp.model.datastore import SEMANTIC_DATA_DICT_NAME, PDDL_ACTION_SUB_DICT_NAME, ALLOW_OVERRIDE_NAME
 from rafcontpp.logic.pddl_action_parser import PddlActionParser
 from rafcontpp.logic.pddl_requirement_finder import PddlRequirementFinder
 from rafcontpp.control.pddl_action_tab_controller import PddlActionTabController
@@ -177,6 +177,9 @@ class PddlActionTab:
         :param is_library_state: true, if state is a library state
         :return: Nothing
         '''
+        # to add the key to the dictionary, find a Better place
+        if self.__state.semantic_data[SEMANTIC_DATA_DICT_NAME][ALLOW_OVERRIDE_NAME] != "True":
+            self.__state.add_semantic_data([SEMANTIC_DATA_DICT_NAME],"False",ALLOW_OVERRIDE_NAME)
 
         rtpp_dict = self.__state.semantic_data[SEMANTIC_DATA_DICT_NAME][PDDL_ACTION_SUB_DICT_NAME]
 
