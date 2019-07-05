@@ -16,6 +16,7 @@ import time
 import json
 from rafcontpp.logic.state_machine_layouter import StateMachineLayouter
 from rafcontpp.model.datastore import ALLOW_OVERRIDE_NAME, SEMANTIC_DATA_DICT_NAME
+from rafcontpp.model import interruptable_thread
 from rafcon.gui.models.signals import ActionSignalMsg
 from rafcon.gui.singleton import state_machine_manager_model
 from rafcon.gui.utils import wait_for_gui
@@ -74,8 +75,11 @@ class StateMachineGenerator:
             state_order_list.append(last_state.state_id)
 
         facts = self.__datastore.get_pddl_facts_representation()
+        current_thread = interruptable_thread.current_thread()
         for plan_step in self.__datastore.get_plan():
             #the name of a plan step is an action name.
+            if current_thread and current_thread.is_interrupted():
+                break
             if plan_step.name in a_s_map:
                 #load and prepare state
                 current_state = self.__load_state(a_s_map[plan_step.name])
@@ -106,25 +110,32 @@ class StateMachineGenerator:
                 logger.error("No State found for action: \"" + plan_step.name + "\"")
                 raise LookupError("No State found for action: \"" + plan_step.name + "\"")
 
-        #at the end add transition from last state to outcome of root state.
-        self.__gui_wrapper(root_state.add_transition,last_state.state_id, 0, root_state.state_id, 0)
-        library_manager.refresh_libraries()
-        # everything connected, save statemachine object.
-        if state_machine.file_system_path:
-            storage.save_state_machine_to_path(state_machine, state_machine.file_system_path)
-        logger.info("State machine \"" + sm_name + "\" created.")
-        logger.info(sm_name+" contains " + str(len(root_state.states)) + " states.")
-        logger.info("State machine generation took {0:.4f} seconds.".format(time.time()- start_time))
-        #format state machine
-        layouter = StateMachineLayouter()
-        self.__gui_wrapper(layouter.layout_state_machine, state_machine, root_state, state_order_list)
-        #open state machine
-        if is_independent_sm:
-            self.__open_state_machine(state_machine, state_machine.file_system_path)
-        else:
+        if current_thread and not current_thread.is_interrupted():
+            #at the end add transition from last state to outcome of root state.
+            self.__gui_wrapper(root_state.add_transition,last_state.state_id, 0, root_state.state_id, 0)
+            library_manager.refresh_libraries()
+            # everything connected, save statemachine object.
+            if state_machine.file_system_path:
+                storage.save_state_machine_to_path(state_machine, state_machine.file_system_path)
+            logger.info("State machine \"" + sm_name + "\" created.")
+            logger.info(sm_name+" contains " + str(len(root_state.states)) + " states.")
+            logger.info("State machine generation took {0:.4f} seconds.".format(time.time()- start_time))
+            #format state machine
+            layouter = StateMachineLayouter()
+            self.__gui_wrapper(layouter.layout_state_machine, state_machine, root_state, state_order_list)
+            #open state machine
+            if is_independent_sm:
+                self.__open_state_machine(state_machine, state_machine.file_system_path)
+            else:
+                root_state_m.action_signal.emit(ActionSignalMsg(action='substitute_state', origin='model',
+                                                                action_parent_m=root_state_m,
+                                                                affected_models=[root_state_m], after=True))
+        elif self.__gui_involved:
             root_state_m.action_signal.emit(ActionSignalMsg(action='substitute_state', origin='model',
-                                                            action_parent_m=root_state_m,
-                                                            affected_models=[root_state_m], after=True))
+                                                                action_parent_m=root_state_m,
+                                                                affected_models=[root_state_m], after=True))
+
+
 
     def __gui_wrapper(self, function, *args):
         '''

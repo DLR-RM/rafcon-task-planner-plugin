@@ -7,6 +7,7 @@ import os
 import signal
 import sys
 from multiprocessing import Process, Queue, current_process
+from rafcontpp.model import interruptable_thread
 from rafcontpp.model.interruptable_thread import InterruptableThread
 from rafcon.utils import log
 
@@ -70,7 +71,7 @@ class PlanningController:
         return planning_thread
 
 
-    def __plan_and_report(self,current_thread,callback_function, planner):
+    def __plan_and_report(self,callback_function, planner):
         '''
         plan and report triggers the planner, and evaluates the planning report
         e.g. storing the plan in the datastore. Due planning could take a long time
@@ -96,6 +97,7 @@ class PlanningController:
             queue.put(planning_report)
 
         #---------------------------------------------------------------------------------------------------------------
+        current_thread = interruptable_thread.current_thread()
         logger.debug("planner argv: " + str(self.__datastore.get_planner_argv()))
         start_time = time.time()
         planning_report = None
