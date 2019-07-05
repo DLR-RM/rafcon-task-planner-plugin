@@ -108,10 +108,10 @@ class StateMachineGenerator:
 
         #at the end add transition from last state to outcome of root state.
         self.__gui_wrapper(root_state.add_transition,last_state.state_id, 0, root_state.state_id, 0)
-        
-        # everything connected, create statemachine object and save.
-        storage.save_state_machine_to_path(state_machine, state_machine.file_system_path)
         library_manager.refresh_libraries()
+        # everything connected, save statemachine object.
+        if state_machine.file_system_path:
+            storage.save_state_machine_to_path(state_machine, state_machine.file_system_path)
         logger.info("State machine \"" + sm_name + "\" created.")
         logger.info(sm_name+" contains " + str(len(root_state.states)) + " states.")
         logger.info("State machine generation took {0:.4f} seconds.".format(time.time()- start_time))

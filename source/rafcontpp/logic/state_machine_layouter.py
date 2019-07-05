@@ -127,7 +127,8 @@ class StateMachineLayouter:
         out_come.meta['gui']['editor_gaphas']['rel_pos'] = right_pos
 
         #store the meta data.
-        state_machine_m.store_meta_data()#TODO find solution, if state machine was never saved bevore.
+        if state_machine.file_system_path:
+            state_machine_m.store_meta_data()#TODO find solution, if state machine was never saved bevore.
         logger.info("State machine layouting took {0:.4f} seconds.".format(time.time()- start_time))
 
 
