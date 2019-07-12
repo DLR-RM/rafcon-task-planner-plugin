@@ -1,8 +1,8 @@
 # Contributors:
 # Christoph Suerig <christoph.suerig@dlr.de>
-# Version 01.11.2018
+# Version 05.07.2019
 import os
-from rafcontpp.model.datastore import SEMANTIC_DATA_DICT_NAME
+from rafcontpp.model.datastore import SEMANTIC_DATA_DICT_NAME, PDDL_ACTION_SUB_DICT_NAME
 from rafcontpp.logic.pddl_action_parser import PddlActionParser
 from rafcon.core.singleton import library_manager
 from rafcon.core.config import global_config
@@ -50,9 +50,8 @@ class Mapper:
                 lib_state = library_manager.get_library_instance(lib_name, state)
                 sem_data = lib_state.state_copy.semantic_data
 
-                if SEMANTIC_DATA_DICT_NAME in sem_data \
-                        and isinstance(sem_data[SEMANTIC_DATA_DICT_NAME]['pddl_action'], unicode):
-                    action_string = str(sem_data[SEMANTIC_DATA_DICT_NAME]['pddl_action']).upper()
+                if isinstance(sem_data[SEMANTIC_DATA_DICT_NAME][PDDL_ACTION_SUB_DICT_NAME]['pddl_action'], unicode):
+                    action_string = str(sem_data[SEMANTIC_DATA_DICT_NAME][PDDL_ACTION_SUB_DICT_NAME]['pddl_action']).upper()
                     action_name = PddlActionParser(action_string).parse_action_name()
                     if action_name in action_state_map:
                         logger.warning("Multiple associations of action {}! Associated with states: {} and {}. Using association with {}."

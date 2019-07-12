@@ -1,9 +1,9 @@
 # Contributors:
 # Christoph Suerig <christoph.suerig@dlr.de>
-# Version 01.12.2018
+# Version 05.07.2019
 import os
 import unicodedata
-from rafcontpp.model.datastore import SEMANTIC_DATA_DICT_NAME
+from rafcontpp.model.datastore import SEMANTIC_DATA_DICT_NAME, PDDL_ACTION_SUB_DICT_NAME
 from rafcontpp.model.pddl_action_representation import PddlActionRepresentation
 from rafcontpp.model.pddl_action_representation import action_to_upper
 from rafcontpp.logic.pddl_action_parser import PddlActionParser
@@ -46,16 +46,16 @@ class PddlActionLoader:
 
                 if SEMANTIC_DATA_DICT_NAME in sem_data \
                         and str(state) in self.__datastore.get_state_action_map().keys():
-                    raw_action = sem_data[SEMANTIC_DATA_DICT_NAME]
+                    action_dict = sem_data[SEMANTIC_DATA_DICT_NAME][PDDL_ACTION_SUB_DICT_NAME]
                     # parse from unicode to string r means raw
-                    r_pred_str = unicodedata.normalize('NFKD', raw_action["pddl_predicates"]).encode('utf-8', 'ignore')
-                    r_action = unicodedata.normalize('NFKD', raw_action["pddl_action"]).encode('utf-8', 'ignore')
+                    r_pred_str = unicodedata.normalize('NFKD', action_dict["pddl_predicates"]).encode('utf-8', 'ignore')
+                    r_action = unicodedata.normalize('NFKD', action_dict["pddl_action"]).encode('utf-8', 'ignore')
                     r_types = ''
                     r_reqs = ''
-                    if isinstance(raw_action["pddl_types"], unicode):
-                        r_types = unicodedata.normalize('NFKD', raw_action["pddl_types"]).encode('utf-8', 'ignore')
-                    if isinstance(raw_action["requirements"], unicode):
-                        r_reqs = unicodedata.normalize('NFKD', raw_action["requirements"]).encode('utf-8', 'ignore')
+                    if isinstance(action_dict["pddl_types"], unicode):
+                        r_types = unicodedata.normalize('NFKD', action_dict["pddl_types"]).encode('utf-8', 'ignore')
+                    if isinstance(action_dict["requirements"], unicode):
+                        r_reqs = unicodedata.normalize('NFKD', action_dict["requirements"]).encode('utf-8', 'ignore')
 
                     action_parser = PddlActionParser(r_action)
                     action_name = action_parser.parse_action_name().upper()

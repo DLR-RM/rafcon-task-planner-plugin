@@ -1,18 +1,23 @@
 # Contributors:
 # Christoph Suerig <christoph.suerig@dlr.de>
 
-# Version 14.06.2019
+# Version 05.07.2019
 
 
 
 import os
 import threading
 from threading import Thread
+from rafcon.core.states.hierarchy_state import HierarchyState
 from rafcon.utils.gui_functions import call_gui_callback
+import rafcon.gui.singleton as gui_singletons
+from rafcon.gui.singleton import state_machine_manager_model
 from rafcontpp.control.execution_controller import ExecutionController
 from rafcontpp.model.datastore import Datastore, DATASTORE_STORAGE_PATH
-from rafcontpp.view.planning_wait_window import PlanningWaitWindow
+from rafcontpp.model.datastore import SEMANTIC_DATA_DICT_NAME, ALLOW_OVERRIDE_NAME
+from rafcontpp.view.confirm_dialog import ConfirmDialog
 from rafcontpp.view.state_pool_info_window import StatePoolInfoWindow
+from rafcontpp.view.confirm_dialog import ConfirmDialog
 from rafcontpp.logic.mapper import Mapper
 from rafcontpp.logic.pddl_action_loader import PddlActionLoader
 from rafcontpp.logic.predicate_merger import PredicateMerger
@@ -27,6 +32,15 @@ OTHER = 'Other...'
 SEL_PLANNER = '-- Select planner --'
 #printed next to planner, if it is not available.
 NOT_AVAILABLE = ' (!) Unavailable'
+#the content of the planning wait window
+WAIT_WINDOW_CONTENT = 'Planning State machine, please wait...\r\n\r\n ' \
+                      'This could take a long time. If you want,\r\n ' \
+                      'you can close this Window, and use rafcon\r\n' \
+                      'while the Task is planned in the background.\r\n ' \
+                      'If you generate into a State, please stay in the Tab,\r\n' \
+                      'and don\'t close the State machine.\r\n'
+
+
 class PlanningSetupFormController:
     '''
     PlanningSetupFormController
@@ -47,7 +61,7 @@ class PlanningSetupFormController:
 
     def on_apply(self, button, setup_form, state_pool_string,
                             type_db_path,planner_text,planner_script_path,planner_argv_text,
-                            facts_path,sm_name,sm_save_dir,keep_related_files, file_save_dir,
+                            facts_path,generate_into_state,sm_name,sm_save_dir,keep_related_files, file_save_dir,
                                                                     rt_data_path, as_reference):
         '''
         on_apply filles the datastore with new data entered into the setup form, saves it in the configuration,
@@ -75,14 +89,15 @@ class PlanningSetupFormController:
         #start the pipeline to generate a sm.
         everything_filled, not_filled = self.__prepare_datastore(self.__datastore, state_pool_string,
                             type_db_path,planner_text,planner_script_path,planner_argv_text,
-                            facts_path,sm_name,sm_save_dir,keep_related_files, file_save_dir,
+                            facts_path,generate_into_state,sm_name,sm_save_dir,keep_related_files, file_save_dir,
                                                                     rt_data_path, as_reference)
 
         if everything_filled:
             self.__datastore.validate_ds()
             self.__datastore.save_datastore_parts_in_file(DATASTORE_STORAGE_PATH)
             setup_form.hide()#its more smoothly to first hide and then destroy
-            planning_wait_window = PlanningWaitWindow()
+            main_window = gui_singletons.main_window_controller.view['main_window']
+            planning_wait_window = ConfirmDialog(main_window,WAIT_WINDOW_CONTENT)
             planning_wait_window.show()
             setup_form.destroy()
             from rafcontpp.view.planning_button import increment_button
@@ -99,12 +114,14 @@ class PlanningSetupFormController:
 
         else:
             logger.error(" Field missing! {}".format(not_filled))
+            ConfirmDialog(setup_form," ERROR Field missing!\r\n\r\n {}".format(not_filled)).show()
+
 
 
 
     def on_destroy(self, button, setup_form, state_pool_string,
                             type_db_path,planner_text,planner_script_path,planner_argv_text,
-                            facts_path,sm_name,sm_save_dir,keep_related_files, file_save_dir,
+                            facts_path,generate_into_state,sm_name,sm_save_dir,keep_related_files, file_save_dir,
                                                                     rt_data_path, as_reference):
         '''
         on_destroy destroys the setup form, but saves the current configuration into a file.
@@ -129,7 +146,7 @@ class PlanningSetupFormController:
         try:
             self.__prepare_datastore(self.__datastore,state_pool_string,
                             type_db_path,planner_text,planner_script_path,planner_argv_text,
-                            facts_path,sm_name,sm_save_dir,keep_related_files, file_save_dir,
+                            facts_path,generate_into_state,sm_name,sm_save_dir,keep_related_files, file_save_dir,
                                                                     rt_data_path, as_reference)
             self.__datastore.save_datastore_parts_in_file(DATASTORE_STORAGE_PATH)
         finally:
@@ -138,7 +155,7 @@ class PlanningSetupFormController:
 
     def on_show_state_pool_info(self, button, setup_form, state_pool_string,
                                 type_db_path, planner_text, planner_script_path, planner_argv_text,
-                                facts_path, sm_name, sm_save_dir, keep_related_files, file_save_dir,
+                                facts_path,generate_into_state, sm_name, sm_save_dir, keep_related_files, file_save_dir,
                                 rt_data_path, as_reference):
         '''
          Show state pool info, uses the provided state pools and the type file to collect details, and show
@@ -243,7 +260,7 @@ class PlanningSetupFormController:
 
     def __prepare_datastore(self, datastore_to_prepare, state_pool_string,
                             type_db_path,planner_text,planner_script_path,planner_argv_text,
-                            facts_path,sm_name,sm_save_dir,keep_related_files, file_save_dir,
+                            facts_path,generate_into_state,sm_name,sm_save_dir,keep_related_files, file_save_dir,
                                                                     rt_data_path, as_reference):
         '''
         __prepare_datastore saves the given data into the datastore, and checks if data is missing.
@@ -288,6 +305,14 @@ class PlanningSetupFormController:
             dtp.set_planner_argv([])
 
         dtp.set_facts_path(facts_path)
+        dtp.set_generate_into_state(generate_into_state)
+        if generate_into_state:
+            selected_state = self.__get_current_selected_state_if_valid()
+            if selected_state:
+               dtp.set_target_state(selected_state)
+            else:
+                everything_filled = False
+                not_filled = 'State to plan into not accurately selected! None or multiple States selected!'
         dtp.set_sm_name(sm_name)
         dtp.set_sm_save_dir(sm_save_dir)
         dtp.set_keep_related_files(keep_related_files)
@@ -331,3 +356,35 @@ class PlanningSetupFormController:
         if string and len(string) >0:
             result = list(filter(None,string.split(':')))
         return result
+
+
+    def __get_current_selected_state_if_valid(self):
+        '''
+        takes and validated the current selected state. Returns None if no, multiple or no valid state is selected.
+        :return: a valid root state or None
+        '''
+        selected_sm = state_machine_manager_model.get_selected_state_machine_model()
+
+        if not (selected_sm and selected_sm.selection.states):
+            logger.error("No State selected!")
+            return None
+        if not len(selected_sm.selection.states) == 1:
+            logger.error("Multiple States selected!")
+            return None
+
+        selected_state_model = selected_sm.selection.get_selected_state()
+        selected_state = selected_state_model.state
+
+        if not isinstance(selected_state, HierarchyState):
+            logger.error("Can only plan into Hierarchy States!")
+            return None
+        permission_granted = selected_state.semantic_data[SEMANTIC_DATA_DICT_NAME][ALLOW_OVERRIDE_NAME] == 'True'
+        if not (permission_granted or len(selected_state.states) == 0):
+            logger.error("Can't plan into None empty Hierarchy State without permission!")
+            return None
+
+        return selected_state
+
+
+
+
