@@ -1,6 +1,6 @@
 # Contributors:
 # Christoph Suerig <christoph.suerig@dlr.de>
-# Version 18.04.2019
+# Version 12.07.2019
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
@@ -112,6 +112,7 @@ def __on_show_menu(button):
             if label_thread[label].is_alive():
                 logger.info('Canceling Task: {}'.format(label))
                 label_thread[label].interrupt()
+                logger.info('Interrupted Task: {}'.format(label))
             else:
                 logger.info('Task {} already terminated.'.format(label))
 
