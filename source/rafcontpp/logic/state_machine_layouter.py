@@ -37,8 +37,8 @@ class StateMachineLayouter:
         target_state_m = state_machine_m.get_state_model_by_path(target_state.get_path())
         #number of rows of states.
         num_states = len(target_state_m.states)
-        row_count = self.__get_num_rows(num_states)
-        column_count = math.ceil(num_states / row_count)
+        row_count = 0
+        column_count = 0
 
         x_gap = 25 # a gap between the state columns
         y_gap = 25 # a gap between the state rows                             _   _
@@ -62,6 +62,8 @@ class StateMachineLayouter:
             column_count = math.ceil(num_states / row_count)
             state_width, state_height, x_gap, y_gap = self.__get_state_dimensions(canvas_width, canvas_height, column_count+1, row_count)
         else:
+            row_count = self.__get_num_rows(num_states)
+            column_count = math.ceil(num_states / row_count)
             canvas_width = (column_count+1) * (x_gap+state_width)+x_gap
             canvas_height = row_count * (y_gap+state_height)
             #root state width, height, and root state border size.
@@ -163,8 +165,8 @@ class StateMachineLayouter:
             width = 16.
             height = 9.
 
-        ratio = width / height
-        logger.debug(ratio)
+        ratio = round(width / height,2)
+        logger.debug('Width / Height Ratio: {}:1'.format(ratio))
         row_count = math.sqrt(num_states/ratio)#claculates the hight for approximatly ratio of 16:9, which is appr. 1.78:1
         row_count = round(row_count) if row_count > 1 else 1
         return row_count
@@ -209,8 +211,6 @@ class StateMachineLayouter:
         state_height = min(state_width, state_height)
         x_gap = 0.25 * state_width
         y_gap = 0.25 * state_height
-        logger.debug((canvas_width, canvas_height, col_count, row_count))
-        logger.debug((state_width, state_height, x_gap, y_gap))
         return state_width, state_height, x_gap, y_gap
 
 

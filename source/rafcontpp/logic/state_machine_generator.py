@@ -20,6 +20,7 @@ from rafcontpp.model import interruptable_thread
 from rafcon.gui.models.signals import ActionSignalMsg
 from rafcon.gui.singleton import state_machine_manager_model
 from rafcon.gui.utils import wait_for_gui
+from rafcon.gui.config import global_gui_config
 from rafcon.core.storage import storage
 from rafcon.core.singleton import library_manager
 from rafcon.core.singleton import state_machine_manager
@@ -61,6 +62,7 @@ class StateMachineGenerator:
         logger.info('Creating State machine \"' + sm_name + '\"...')
 
         if self.__gui_involved:#emit signal, to stop gui drawing in order to speed up the process.
+            call_gui_callback(global_gui_config.set_config_value,'HISTORY_ENABLED', False)
             state_machine_m = state_machine_manager_model.state_machines[state_machine.state_machine_id]
             root_state_m = state_machine_m.get_state_model_by_path(root_state.get_path())
             root_state_m.action_signal.emit(ActionSignalMsg(action='substitute_state', origin='model',
@@ -137,6 +139,7 @@ class StateMachineGenerator:
             root_state_m.action_signal.emit(ActionSignalMsg(action='substitute_state', origin='model',
                                                                 action_parent_m=root_state_m,
                                                                 affected_models=[root_state_m], after=True))
+            call_gui_callback(global_gui_config.set_config_value,'HISTORY_ENABLED', True)
 
 
 
