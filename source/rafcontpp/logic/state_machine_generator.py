@@ -47,111 +47,134 @@ class StateMachineGenerator:
         generate_state_machine generates a state machine, fills the data ports and opens the state machine in rafcon.
 
         '''
+
         sm_name = self.__datastore.get_sm_name()
-        sm_name = self.__datastore.get_pddl_facts_representation.problem_name+'_state_machine' if len(sm_name) == 0 else sm_name
+        sm_name = self.__datastore.get_pddl_facts_representation.problem_name + '_state_machine' if len(
+            sm_name) == 0 else sm_name
         sm_path = os.path.abspath(os.path.join(self.__datastore.get_sm_save_dir(), sm_name))
+        logger.info('Creating State machine \"' + sm_name + '\"...')
+        start_time = time.time()
+        # !IMPORTANT: root state is not necessarily the root state of the sm, but the state we generate our sm into.
+        state_machine, target_state, is_independent_sm = self.__validate_and_get_root_state_and_state_machine(
+            self.__datastore.get_target_state(), sm_name, sm_path)
+        self.__gui_involved = not is_independent_sm
+
+        layouter = StateMachineLayouter()
+        if is_independent_sm:
+            root_state, state_order_list = self.__generate_core_machine(sm_name, target_state)
+            if root_state:
+                logger.info("State machine \"" + sm_name + "\" created.")
+                logger.info(sm_name + " contains " + str(len(root_state.states)) + " states.")
+                logger.info("State machine generation took {0:.4f} seconds.".format(time.time() - start_time))
+                storage.save_state_machine_to_path(state_machine, state_machine.file_system_path)
+                layouter.layout_state_machine(state_machine, root_state, False, state_order_list)
+                self.__open_state_machine(state_machine, state_machine.file_system_path)
+
+        else:
+            sm_name = target_state.name
+            root_state, state_order_list = self.__generate_core_machine(sm_name)
+
+            if root_state:
+                #suppress gui
+                state_machine_m = state_machine_manager_model.state_machines[state_machine.state_machine_id]
+                target_state_m = state_machine_m.get_state_model_by_path(target_state.get_path())
+                target_state_m.action_signal.emit(ActionSignalMsg(action='substitute_state', origin='model',
+                                                                action_parent_m=target_state_m,
+                                                                affected_models=[target_state_m], after=False))
+                call_gui_callback(target_state.add_state, root_state)
+                call_gui_callback(target_state.set_start_state, root_state.state_id)
+                call_gui_callback(target_state.add_transition, root_state.state_id, 0, target_state.state_id, 0)
+                if state_machine.file_system_path:
+                    storage.save_state_machine_to_path(state_machine, state_machine.file_system_path)
+                logger.info("State machine \"" + sm_name + "\" created.")
+                logger.info(sm_name + " contains " + str(len(root_state.states)) + " states.")
+                logger.info("State machine generation took {0:.4f} seconds.".format(time.time() - start_time))
+                #have to set the size and pos of the root state, to make it fit the target state. (bit dirty)
+                t_width, t_height = target_state_m.meta['gui']['editor_gaphas']['size']
+                root_state_m = state_machine_m.get_state_model_by_path(root_state.get_path())
+                root_state_m.meta['gui']['editor_opengl']['size'] = (0.8*t_width, 0.8*t_height)
+                root_state_m.meta['gui']['editor_gaphas']['size'] = (0.8*t_width, 0.8*t_height)
+                root_state_m.meta['gui']['editor_opengl']['rel_pos'] = (0.1*t_width, 0.1*t_height)
+                root_state_m.meta['gui']['editor_gaphas']['rel_pos'] = (0.1*t_width, 0.1*t_height)
+                call_gui_callback(layouter.layout_state_machine, state_machine,root_state,True,state_order_list)
+                #enable gui
+                target_state_m.action_signal.emit(ActionSignalMsg(action='substitute_state', origin='model',
+                                                                action_parent_m=target_state_m,
+                                                                affected_models=[target_state_m], after=True))
+
+
+
+    def __generate_core_machine(self, sm_name, root_state=None):
+        '''
+        takes a root state, and generates the state machine into it.
+        if no root state is given, it creates a new root state with the sm name as name.
+        :param sm_name: the name of the root state, only needed if root_state is none.
+        :param root_state: the root state, if None a new root state will be given.
+        :return:(root_state, state_order list) the root state containing the state machine, and the state order list is a list
+        of all states in the sm in right order. Can return (None,[]) if process was interrupted.
+        '''
+        #this is the state everything is generated in.
+        root_state = root_state if root_state else HierarchyState(sm_name)
         a_s_map = self.__datastore.get_action_state_map()
         pddl_action_dict = self.__datastore.get_pddl_action_map()
-        start_time = time.time()
+        facts = self.__datastore.get_pddl_facts_representation()
+        current_thread = interruptable_thread.current_thread()
         state_order_list = []
-        #!IMPORTANT: root state is not necessarily the root state of the sm, but the state we generate our sm into.
-        state_machine, root_state, is_independent_sm = self.__validate_and_get_root_state_and_state_machine(
-                                                                    self.__datastore.get_target_state(),sm_name,sm_path)
-        self.__gui_involved = not is_independent_sm
-        sm_name = sm_name if is_independent_sm else root_state.name # set sm name to root state name if planning into a selected machine.
-        logger.info('Creating State machine \"' + sm_name + '\"...')
-
-        if self.__gui_involved:#emit signal, to stop gui drawing in order to speed up the process.
-            state_machine_m = state_machine_manager_model.state_machines[state_machine.state_machine_id]
-            state_machine_m.history.busy = True
-            root_state_m = state_machine_m.get_state_model_by_path(root_state.get_path())
-            root_state_m.action_signal.emit(ActionSignalMsg(action='substitute_state', origin='model',
-                                                            action_parent_m=root_state_m,
-                                                            affected_models=[root_state_m], after=False))
         last_state = None
         # add global data init state and set start state
         runtime_data_path = self.__datastore.get_runtime_data_path()
-        if runtime_data_path and len(runtime_data_path)>0:
-            last_state = self.__get_runtime_data_init_state(runtime_data_path, self.__datastore.use_runtime_path_as_ref())
-            self.__gui_wrapper(root_state.add_state, last_state)
-            self.__gui_wrapper(root_state.set_start_state,last_state.state_id)
+        if runtime_data_path and len(runtime_data_path) > 0:
+            last_state = self.__get_runtime_data_init_state(runtime_data_path,
+                                                            self.__datastore.use_runtime_path_as_ref())
+            root_state.add_state(last_state)
+            root_state.set_start_state(last_state.state_id)
             state_order_list.append(last_state.state_id)
 
-        facts = self.__datastore.get_pddl_facts_representation()
-        current_thread = interruptable_thread.current_thread()
         for plan_step in self.__datastore.get_plan():
-            #the name of a plan step is an action name.
+            # the name of a plan step is an action name.
             if current_thread and current_thread.is_interrupted():
                 break
             if plan_step.name in a_s_map:
-                #load and prepare state
+                # load and prepare state
                 current_state = self.__load_state(a_s_map[plan_step.name])
                 if current_state.input_data_port_runtime_values:
-                   c_pddl_action = pddl_action_dict[plan_step.name]
-                   c_input_data_ports = current_state.input_data_ports
-                   for key in c_input_data_ports.keys():
-                       #c_pddl_action.parameters contains parameter names
-                       if c_input_data_ports[key].name in c_pddl_action.parameters:
-                           index = c_pddl_action.parameters.index(c_input_data_ports[key].name)
-                           #plan_step.parameter contains parameter values
-                           current_state.input_data_port_runtime_values[key] = \
-                                                            facts.get_original_object_name(plan_step.parameter[index])
-                       else:
-                           logger.warn("Action "+c_pddl_action.name+" has no Parameter "
-                                       +c_input_data_ports[key].name+", which is needed in State "+current_state.name)
-                #add state to state machine
-                self.__gui_wrapper(root_state.add_state, current_state)
-                
+                    c_pddl_action = pddl_action_dict[plan_step.name]
+                    c_input_data_ports = current_state.input_data_ports
+                    for key in c_input_data_ports.keys():
+                        # c_pddl_action.parameters contains parameter names
+                        if c_input_data_ports[key].name in c_pddl_action.parameters:
+                            index = c_pddl_action.parameters.index(c_input_data_ports[key].name)
+                            # plan_step.parameter contains parameter values
+                            current_state.input_data_port_runtime_values[key] = \
+                                facts.get_original_object_name(plan_step.parameter[index])
+                        else:
+                            logger.warn("Action " + c_pddl_action.name + " has no Parameter "
+                                        + c_input_data_ports[
+                                            key].name + ", which is needed in State " + current_state.name)
+                # add state to state machine
+                root_state.add_state( current_state)
+                # add the state to the order list (for later formatting)
                 state_order_list.append(current_state.state_id)
+                #add transitions.
                 if last_state is None:
-                    self.__gui_wrapper(root_state.set_start_statecurrent_state.state_id)
+                    root_state.set_start_state(current_state.state_id)
                 else:
-                    self.__gui_wrapper(root_state.add_transition,last_state.state_id, 0, current_state.state_id, None)
-                    
+                    root_state.add_transition(last_state.state_id, 0, current_state.state_id, None)
+
                 last_state = current_state
             else:
                 logger.error("No State found for action: \"" + plan_step.name + "\"")
                 raise LookupError("No State found for action: \"" + plan_step.name + "\"")
 
-        if current_thread and not current_thread.is_interrupted():
-            #at the end add transition from last state to outcome of root state.
-            self.__gui_wrapper(root_state.add_transition,last_state.state_id, 0, root_state.state_id, 0)
-            library_manager.refresh_libraries()
-            # everything connected, save statemachine object.
-            if state_machine.file_system_path:
-                storage.save_state_machine_to_path(state_machine, state_machine.file_system_path)
-            logger.info("State machine \"" + sm_name + "\" created.")
-            logger.info(sm_name+" contains " + str(len(root_state.states)) + " states.")
-            logger.info("State machine generation took {0:.4f} seconds.".format(time.time()- start_time))
-            #format state machine
-            layouter = StateMachineLayouter()
-            fixed_size = root_state.id() != state_machine.root_state.id()
-            self.__gui_wrapper(layouter.layout_state_machine, state_machine, root_state,fixed_size, state_order_list)
-            #open state machine
-            if is_independent_sm:
-                self.__open_state_machine(state_machine, state_machine.file_system_path)
+        # at the end add transition from last state to outcome of root state.
+        root_state.add_transition(last_state.state_id, 0, root_state.state_id, 0)
+        library_manager.refresh_libraries()
 
-        if self.__gui_involved:
-            root_state_m.action_signal.emit(ActionSignalMsg(action='substitute_state', origin='model',
-                                                                action_parent_m=root_state_m,
-                                                                affected_models=[root_state_m], after=True))
-            state_machine_m.history.busy = False
+        if not current_thread or current_thread.is_interrupted():
+            root_state = None
+            state_order_list = []
 
-
-
-    def __gui_wrapper(self, function, *args):
-        '''
-        if the state we plan into is already opened in the gui, all functions to do so have to be executed in a
-        call_gui_callback. this warpper will execute the function normally if gui is not involved, else wrapped in
-        a call_gui_callback.
-        :param function: a gui sensitive function that should be executed
-        :param args: the args of the function
-        '''
-
-        if self.__gui_involved:
-            call_gui_callback(function,*args)
-        else:
-            function(*args)
+        return (root_state,state_order_list)
 
 
     def __open_state_machine(self,state_machine, state_machine_path):
