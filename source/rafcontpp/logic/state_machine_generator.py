@@ -7,7 +7,7 @@
 #
 # Contributors:
 # Christoph Suerig <christoph.suerig@dlr.de>
-# Version 05.07.1019
+# Version 12.07.1019
 
 
 
@@ -51,13 +51,14 @@ class StateMachineGenerator:
         sm_path = os.path.abspath(os.path.join(self.__datastore.get_sm_save_dir(), sm_name))
         a_s_map = self.__datastore.get_action_state_map()
         pddl_action_dict = self.__datastore.get_pddl_action_map()
-        logger.info('Creating State machine \"'+sm_name+'\"...')
         start_time = time.time()
         state_order_list = []
         #!IMPORTANT: root state is not necessarily the root state of the sm, but the state we generate our sm into.
         state_machine, root_state, is_independent_sm = self.__validate_and_get_root_state_and_state_machine(
                                                                     self.__datastore.get_target_state(),sm_name,sm_path)
         self.__gui_involved = not is_independent_sm
+        sm_name = sm_name if is_independent_sm else root_state.name # set sm name to root state name if planning into a selected machine.
+        logger.info('Creating State machine \"' + sm_name + '\"...')
 
         if self.__gui_involved:#emit signal, to stop gui drawing in order to speed up the process.
             state_machine_m = state_machine_manager_model.state_machines[state_machine.state_machine_id]
@@ -132,6 +133,7 @@ class StateMachineGenerator:
                                                                 action_parent_m=root_state_m,
                                                                 affected_models=[root_state_m], after=True))
         elif self.__gui_involved:
+            logger.info("")
             root_state_m.action_signal.emit(ActionSignalMsg(action='substitute_state', origin='model',
                                                                 action_parent_m=root_state_m,
                                                                 affected_models=[root_state_m], after=True))

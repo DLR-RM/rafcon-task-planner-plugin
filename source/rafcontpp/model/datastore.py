@@ -2,7 +2,7 @@
 #
 # Contributors:
 # Christoph Suerig <christoph.suerig@dlr.de>
-# Version 05.07.2019
+# Version 12.07.2019
 import os
 import json
 import threading
@@ -189,10 +189,12 @@ class Datastore:
 
         with planning_threads_lock:
             register_time = time.time()#unix timestamp
-            #set task name to sm name, or problem name, if no sm name is available.
-            planning_threads[register_time] = (interruptable_thread,
-                                               self.get_pddl_facts_representation().problem_name if len(self.get_sm_name()) == 0 else self.get_sm_name(),
-                                               self.get_planner())
+            #set task name to sm name, or problem name, if no sm name is available, and to state name if the sm is planned
+            #into a state.
+            task_name = self.get_pddl_facts_representation().problem_name if len(self.get_sm_name()) == 0 else self.get_sm_name()
+            if self.__target_state:
+                task_name = self.__target_state.name
+            planning_threads[register_time] = (interruptable_thread,task_name, self.get_planner())
         return register_time
 
     def remove_thread(self, key):
