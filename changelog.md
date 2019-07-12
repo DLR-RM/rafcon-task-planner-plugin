@@ -1,3 +1,14 @@
+### version 1.5
+- Plan Into state: Now its possible to plan a state machine into a selected hierarchy state of an existing one!
+- Layouter: added a layouter, which formats the state machine after its generation!
+- Restructured the semantic data section (the tab is saved in)
+- Added a "allow_override" permission flag for the plan into state feature to avoid accidents.
+- The runtime data of a state machine is now not set, but added to the global dictionary, this allows multiple planned state machines with runtime data to be executed at the same time, or use data from previous ones.
+- Ported the restaurant tutorial to git.
+- Added a Turtle Sim Example, to explain how the runtime data feature works.
+- updated documentation.
+- Fixed major and minor bugs
+- Added a state pool info view, which allows to show a summary of all configured PDDL data e.g. which pddl actions are inside of the cofigured state pool, which types are configured, and which predicates are available to write a facts file. 
 ### Version 1.4
 - added a chooser entry for the runtime data
 - added a state pool(s) info window
