@@ -1,7 +1,7 @@
 {
     "creation_time": "2018-12-17 08:57:41", 
-    "last_update": "2018-12-17 12:49:31", 
+    "last_update": "2019-07-12 08:54:32", 
     "root_state_storage_id": "Cook_RODJFO", 
     "state_machine_version": null, 
-    "used_rafcon_version": "0.13.0a1"
+    "used_rafcon_version": "0.13.5"
 }
