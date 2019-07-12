@@ -1,22 +1,25 @@
 # Contributors:
 # Christoph Suerig <christoph.suerig@dlr.de>
-# Version 05.07.2019
-import threading
+# Version 12.07.2019
+
+logger = log.get_logger(__name__)
 
 #A lock to synchronize planning thread map accesses.
 interruptable_threads_lock = threading.Lock()
-#a dictionary of all interruptable threads.
+#a dictionary of all running interruptable threads.
 interruptable_threads = {}
 
 def current_thread():
     '''
     :return: the current interruptable thread, or None if current thread is not interruptable.
     '''
-    current_thread = threading.current_thread().ident
+
+    current_thread_id = threading.current_thread().ident
+    current_thread = None
     with interruptable_threads_lock:
-        if current_thread in interruptable_threads:
-            return interruptable_threads[current_thread]
-    return None
+        if current_thread_id in interruptable_threads:
+            current_thread = interruptable_threads[current_thread_id]
+    return current_thread
 
 
 class InterruptableThread(threading.Thread):
@@ -35,10 +38,6 @@ class InterruptableThread(threading.Thread):
         self.__interrupted_flag = threading.Event()
 
 
-    def __del__(self):
-
-            with interruptable_threads_lock:
-                interruptable_threads.pop(threading.get_ident())
 
     def run(self):
         # add new thread to list of all interruptable threads
@@ -47,9 +46,9 @@ class InterruptableThread(threading.Thread):
             interruptable_threads[self.ident] = self
 
         super(InterruptableThread, self).run()
-        
 
-
+        with interruptable_threads_lock:
+            elem = interruptable_threads.pop(self.ident, None)
 
 
     def interrupt(self):

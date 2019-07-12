@@ -1,6 +1,6 @@
 # Contributors:
 # Christoph Suerig <christoph.suerig@dlr.de>
-# Version 25.04.2019
+# Version 12.07.2019
 import inspect
 import time
 import os

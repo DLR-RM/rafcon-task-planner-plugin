@@ -122,7 +122,8 @@ class StateMachineGenerator:
             logger.info("State machine generation took {0:.4f} seconds.".format(time.time()- start_time))
             #format state machine
             layouter = StateMachineLayouter()
-            self.__gui_wrapper(layouter.layout_state_machine, state_machine, root_state,self.__gui_involved, state_order_list)
+            fixed_size = root_state.id() != state_machine.root_state.id()
+            self.__gui_wrapper(layouter.layout_state_machine, state_machine, root_state,fixed_size, state_order_list)
             #open state machine
             if is_independent_sm:
                 self.__open_state_machine(state_machine, state_machine.file_system_path)

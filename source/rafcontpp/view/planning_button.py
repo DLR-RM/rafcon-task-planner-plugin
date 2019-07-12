@@ -77,7 +77,6 @@ def decrement_button():
 
 
 def __on_button_clicked(button):
-    logger.debug('opening planning form!')
     PlanningSetupForm(datastore_from_file(DATASTORE_STORAGE_PATH)).initialize()
 
 
