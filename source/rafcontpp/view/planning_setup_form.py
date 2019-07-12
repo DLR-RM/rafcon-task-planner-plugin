@@ -1,6 +1,6 @@
 # Contributors:
 # Christoph Suerig <christoph.suerig@dlr.de>
-# Version 24.05.2019
+# Version 12.07.2019
 
 
 import gi
@@ -45,7 +45,6 @@ class PlanningSetupForm:
         self.__dialog.set_title('Task Planner Plugin Configuration')
         main_window = gui_singletons.main_window_controller.view['main_window']
         self.__dialog.set_transient_for(main_window)
-        self.__dialog.set_modal(main_window)
         state_pool_chooser = self.__builder.get_object('state_pools_chooser')
         self.__state_pool_chooser_entry = self.__builder.get_object('state_pools_chooser_entry')
         type_db_chooser = self.__builder.get_object('type_db_chooser')

@@ -10,12 +10,14 @@ import threading
 from threading import Thread
 from rafcon.core.states.hierarchy_state import HierarchyState
 from rafcon.utils.gui_functions import call_gui_callback
+import rafcon.gui.singleton as gui_singletons
 from rafcon.gui.singleton import state_machine_manager_model
 from rafcontpp.control.execution_controller import ExecutionController
 from rafcontpp.model.datastore import Datastore, DATASTORE_STORAGE_PATH
 from rafcontpp.model.datastore import SEMANTIC_DATA_DICT_NAME, ALLOW_OVERRIDE_NAME
-from rafcontpp.view.planning_wait_window import PlanningWaitWindow
+from rafcontpp.view.confirm_dialog import ConfirmDialog
 from rafcontpp.view.state_pool_info_window import StatePoolInfoWindow
+from rafcontpp.view.confirm_dialog import ConfirmDialog
 from rafcontpp.logic.mapper import Mapper
 from rafcontpp.logic.pddl_action_loader import PddlActionLoader
 from rafcontpp.logic.predicate_merger import PredicateMerger
@@ -30,6 +32,15 @@ OTHER = 'Other...'
 SEL_PLANNER = '-- Select planner --'
 #printed next to planner, if it is not available.
 NOT_AVAILABLE = ' (!) Unavailable'
+#the content of the planning wait window
+WAIT_WINDOW_CONTENT = 'Planning State machine, please wait...\r\n\r\n ' \
+                      'This could take a long time. If you want,\r\n ' \
+                      'you can close this Window, and use rafcon\r\n' \
+                      'while the Task is planned in the background.\r\n ' \
+                      'If you generate into a State, please stay in the Tab,\r\n' \
+                      'and don\'t close the State machine.\r\n'
+
+
 class PlanningSetupFormController:
     '''
     PlanningSetupFormController
@@ -85,7 +96,8 @@ class PlanningSetupFormController:
             self.__datastore.validate_ds()
             self.__datastore.save_datastore_parts_in_file(DATASTORE_STORAGE_PATH)
             setup_form.hide()#its more smoothly to first hide and then destroy
-            planning_wait_window = PlanningWaitWindow()
+            main_window = gui_singletons.main_window_controller.view['main_window']
+            planning_wait_window = ConfirmDialog(main_window,WAIT_WINDOW_CONTENT)
             planning_wait_window.show()
             setup_form.destroy()
             from rafcontpp.view.planning_button import increment_button
@@ -102,6 +114,8 @@ class PlanningSetupFormController:
 
         else:
             logger.error(" Field missing! {}".format(not_filled))
+            ConfirmDialog(setup_form," ERROR Field missing!\r\n\r\n {}".format(not_filled)).show()
+
 
 
 
@@ -298,7 +312,7 @@ class PlanningSetupFormController:
                dtp.set_target_state(selected_state)
             else:
                 everything_filled = False
-                not_filled = 'State to plan in not accurately selected!'
+                not_filled = 'State to plan into not accurately selected! None or multiple States selected!'
         dtp.set_sm_name(sm_name)
         dtp.set_sm_save_dir(sm_save_dir)
         dtp.set_keep_related_files(keep_related_files)
