@@ -1,8 +1,8 @@
 # Contributors:
 # Christoph Suerig <christoph.suerig@dlr.de>
 # Version 12.07.2019
+import threading
 
-logger = log.get_logger(__name__)
 
 #A lock to synchronize planning thread map accesses.
 interruptable_threads_lock = threading.Lock()

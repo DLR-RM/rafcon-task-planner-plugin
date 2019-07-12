@@ -37,7 +37,7 @@ class StateMachineLayouter:
         target_state_m = state_machine_m.get_state_model_by_path(target_state.get_path())
         #number of rows of states.
         num_states = len(target_state_m.states)
-        row_count = self.__get_num_states_per_col(num_states)
+        row_count = self.__get_num_rows(num_states)
         column_count = math.ceil(num_states / row_count)
 
         x_gap = 25 # a gap between the state columns
@@ -58,6 +58,8 @@ class StateMachineLayouter:
             border_size = Variable(min(r_width, r_height) / constants.BORDER_WIDTH_STATE_SIZE_FACTOR)
             canvas_height = r_height - 2 * border_size
             canvas_width = r_width - 2 * border_size
+            row_count = self.__get_num_rows(num_states, canvas_width, canvas_height)
+            column_count = math.ceil(num_states / row_count)
             state_width, state_height, x_gap, y_gap = self.__get_state_dimensions(canvas_width, canvas_height, column_count+1, row_count)
         else:
             canvas_width = (column_count+1) * (x_gap+state_width)+x_gap
@@ -148,16 +150,24 @@ class StateMachineLayouter:
 
 
 
-    def __get_num_states_per_col(self, num_states):
+    def __get_num_rows(self, num_states, width=16., height=9.):
         '''
-        gets a number of states, and returns a calculated row count. e.g. how many states per column are desired.
-        :param num_states: number of states in a state machine.
-        :return: the number of states per column.
+        Get num rows, receives the number of states, a width and a height. it uses the width and the height to calculate
+        a ratio, to be able to calculate the number of rows to use the given space optimal.
+        :param num_states: the number of the states used
+        :param width: The width of the available space. if this or height <= 0 automatically set to 16.
+        :param height: The height of the available space if this or heigt <= 0 automatically set to 9.
+        :return: the number of rows optimal in the sm
         '''
+        if width <= 0 or height <= 0:
+            width = 16.
+            height = 9.
 
-        height = math.sqrt(num_states/1.78)#claculates the hight for approximatly ratio of 16:9, which is appr. 1.78:1
-        height = round(height) if height > 1 else 1
-        return height
+        ratio = width / height
+        logger.debug(ratio)
+        row_count = math.sqrt(num_states/ratio)#claculates the hight for approximatly ratio of 16:9, which is appr. 1.78:1
+        row_count = round(row_count) if row_count > 1 else 1
+        return row_count
 
     def __get_target_state_dimensions(self, canvas_width, canvas_height):
         '''
