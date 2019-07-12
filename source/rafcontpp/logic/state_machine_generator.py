@@ -49,10 +49,8 @@ class StateMachineGenerator:
         '''
 
         sm_name = self.__datastore.get_sm_name()
-        sm_name = self.__datastore.get_pddl_facts_representation.problem_name + '_state_machine' if len(
-            sm_name) == 0 else sm_name
+        sm_name = self.__datastore.get_pddl_facts_representation().problem_name + '_state_machine' if len(sm_name) == 0 else sm_name
         sm_path = os.path.abspath(os.path.join(self.__datastore.get_sm_save_dir(), sm_name))
-        logger.info('Creating State machine \"' + sm_name + '\"...')
         start_time = time.time()
         # !IMPORTANT: root state is not necessarily the root state of the sm, but the state we generate our sm into.
         state_machine, target_state, is_independent_sm = self.__validate_and_get_root_state_and_state_machine(
@@ -61,6 +59,7 @@ class StateMachineGenerator:
 
         layouter = StateMachineLayouter()
         if is_independent_sm:
+            logger.info('Creating State machine \"' + sm_name + '\"...')
             root_state, state_order_list = self.__generate_core_machine(sm_name, target_state)
             if root_state:
                 logger.info("State machine \"" + sm_name + "\" created.")
@@ -69,9 +68,11 @@ class StateMachineGenerator:
                 storage.save_state_machine_to_path(state_machine, state_machine.file_system_path)
                 layouter.layout_state_machine(state_machine, root_state, False, state_order_list)
                 self.__open_state_machine(state_machine, state_machine.file_system_path)
+                logger.info("Generated and opened State machine: {}.".format(sm_name))
 
         else:
             sm_name = target_state.name
+            logger.info('Creating State machine \"' + sm_name + '\"...')
             root_state, state_order_list = self.__generate_core_machine(sm_name)
 
             if root_state:
@@ -97,6 +98,7 @@ class StateMachineGenerator:
                 root_state_m.meta['gui']['editor_opengl']['rel_pos'] = (0.1*t_width, 0.1*t_height)
                 root_state_m.meta['gui']['editor_gaphas']['rel_pos'] = (0.1*t_width, 0.1*t_height)
                 call_gui_callback(layouter.layout_state_machine, state_machine,root_state,True,state_order_list)
+                logger.info("Generated and integrated State machine: {}.".format(sm_name))
                 #enable gui
                 target_state_m.action_signal.emit(ActionSignalMsg(action='substitute_state', origin='model',
                                                                 action_parent_m=target_state_m,
@@ -304,13 +306,12 @@ class StateMachineGenerator:
             data_init_state.script_text = 'import json{}'.format(data_init_state.script_text)
         else:
             data_to_load = json.dumps(json.load(open(data_init_file_path, "r")), indent=2, separators=(',', ': '))
-        execute_str = "self.logger.info('Updating rtpp_data.')\r\n"
+        execute_str = "def execute(self, inputs, outputs, gvm):\r\n"
+        execute_str = "{}    self.logger.info('Updating rtpp_data.')\r\n".format(execute_str)
         execute_str = "{}    rtpp_data = gvm.get_variable('rtpp_data')\r\n".format(execute_str)
         execute_str = "{}    rtpp_data = rtpp_data if rtpp_data else {}\r\n".format(execute_str,{})
         execute_str = "{}    rtpp_data.update({})\r\n".format(execute_str, data_to_load)
-        execute_str = '{}    gvm.set_variable(\'{}\',{})'.format(execute_str,'rtpp_data',' rtpp_data')
-
-        data_init_state.script_text = data_init_state.script_text.replace('self.logger.debug("Hello world")',execute_str)
+        execute_str = '{}    gvm.set_variable(\'{}\',{})\r\n'.format(execute_str,'rtpp_data',' rtpp_data')
+        execute_str = "{}    return \"success\"".format(execute_str)
+        data_init_state.script_text = execute_str
         return data_init_state
-
-
