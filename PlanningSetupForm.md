@@ -1,7 +1,7 @@
 
 # The Planning Setup Form
 
-INTERT PICTURE
+INSTERT PICTURE
 
 The Planning setup form can be opened by clicking the "Plan Task" Button in the Menu bar of [RAFCON](https://dlr-rm.github.io/RAFCON/).  
 It's the main Window of the Plugin, and the part where to configure a new Task, or get information about the current configuration.
@@ -58,8 +58,33 @@ In this file, 'Location' is derived from 'Object', and the types 'City' and 'Cou
 derived from Location. 'Object' is the root type.
 ```
 ### Planner
-This 
+In this field it's settled which built-in planner should be used to Plan a particular Task, or a separate planner script should be used. If a built-in planner is not correctly installed, a notification is shown.  
+The Planner field is a Drop-down entry Chooser, where you can select one Planner. If you choose `Other...`, you indicate that you will provide a planner script in the 'Planner script Location' field, and use your own planner.  
+Important: If you forget to choose `Other...` your planner script will not be taken into consideration, but the choosen Planner will be used instead.
+
+**Example**
+
+Field Value | Description
+---|-----
+Fast Downward Planning System | The Fast Downward Planning System is used for Planning.
+Fast Downward Planning System (!) Unavailable | The Fast Downward System is not (correctly) installed.
+Other... | A Planner script provided in the 'Planner script Location' field will be usd.
+
 ### Planner Script Location
+This field expects a python script, which will be responsible for the planning part of a Task. How to implement such a script can be found in this [Section](ToDO: provide LINK).  
+The Planner Script Location field is a file chooser. The file choosen here will be used for Planning.  
+Important: If `Other...` is not selected in the 'Planner' field, this field will be stored, but ignored during Task process.
+
+**Example**
+
+```
+Field value: /my/scripts/my_planner_script.py
+
+If Planner Scrip Location contains the value above, and 'Other...' is selected in the Planner field, 
+the script 'my_planner_script.py' will be used for Planning in the Task.
+
+```
+
 ### Planner Argv
 ### Facts File
 ### Generate State Machine Into
