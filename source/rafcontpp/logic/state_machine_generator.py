@@ -107,6 +107,7 @@ class StateMachineGenerator:
 
 
 
+
     def __generate_core_machine(self, sm_name, root_state=None):
         '''
         takes a root state, and generates the state machine into it.
