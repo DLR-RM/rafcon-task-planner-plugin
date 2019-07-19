@@ -99,7 +99,7 @@ Other... | A Planner script provided in the 'Planner script Location' field will
 
 ### Planner Script Location
 
-This field expects a python script, which will be responsible for the planning part of a Task. How to implement such a script can be found in this [Section](ToDO: provide LINK).  
+This field expects a python script, which will be responsible for the planning part of a Task. How to implement such a script can be found in The [Planner Integration Section](PlannerIntegration.md).  
 The Planner Script Location field is a file chooser. The file choosen here will be used for Planning.  
 **Important:** If `Other...` is not selected in the 'Planner' field, this field will be stored, but ignored during Task process.
 
