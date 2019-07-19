@@ -53,7 +53,6 @@ class StateMachineGenerator:
         sm_name = self.__datastore.get_pddl_facts_representation().problem_name + '_state_machine' if len(sm_name) == 0 else sm_name
         sm_path = os.path.abspath(os.path.join(self.__datastore.get_sm_save_dir(), sm_name))
         start_time = time.time()
-        # !IMPORTANT: root state is not necessarily the root state of the sm, but the state we generate our sm into.
         state_machine, target_state, is_independent_sm = self.__validate_and_get_root_state_and_state_machine(
             self.__datastore.get_target_state(), sm_name, sm_path)
         self.__gui_involved = not is_independent_sm
@@ -94,9 +93,7 @@ class StateMachineGenerator:
                 #have to set the size and pos of the root state, to make it fit the target state. (bit dirty)
                 t_width, t_height = target_state_m.meta['gui']['editor_gaphas']['size']
                 root_state_m = state_machine_m.get_state_model_by_path(root_state.get_path())
-                root_state_m.meta['gui']['editor_opengl']['size'] = (0.8*t_width, 0.8*t_height)
                 root_state_m.meta['gui']['editor_gaphas']['size'] = (0.8*t_width, 0.8*t_height)
-                root_state_m.meta['gui']['editor_opengl']['rel_pos'] = (0.1*t_width, 0.1*t_height)
                 root_state_m.meta['gui']['editor_gaphas']['rel_pos'] = (0.1*t_width, 0.1*t_height)
                 call_gui_callback(layouter.layout_state_machine, state_machine,root_state,True,state_order_list)
                 logger.info("Generated and integrated State machine: {}.".format(sm_name))
@@ -104,6 +101,7 @@ class StateMachineGenerator:
                 target_state_m.action_signal.emit(ActionSignalMsg(action='substitute_state', origin='model',
                                                                 action_parent_m=target_state_m,
                                                                 affected_models=[target_state_m], after=True))
+
 
 
 

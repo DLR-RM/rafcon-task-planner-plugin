@@ -71,10 +71,9 @@ class StateMachineLayouter:
 
             logger.debug("Root state size: height: {} width: {}".format(r_height,r_width))
             #set root state size
-            target_state_m.meta['gui']['editor_opengl']['size'] = (r_width, r_height)
             target_state_m.meta['gui']['editor_gaphas']['size'] = (r_width, r_height)
         #set root state in / out come position
-        target_state_m.income.meta['gui']['editor_gaphas']['rel_pos'] = (0.,border_size+y_gap+state_height/4.)
+        target_state_m.income.set_meta_data_editor('rel_pos', (0.,border_size+y_gap+state_height/4.))
         out_come = [oc for oc in target_state_m.outcomes if oc.outcome.outcome_id == 0].pop()
         out_come.meta['gui']['editor_gaphas']['rel_pos'] = (r_width,border_size+y_gap+state_height/4.)
 
@@ -95,38 +94,36 @@ class StateMachineLayouter:
 
             #decide position of income and outcome
             income_pos = up_pos if increment_row else down_pos
-            out_come_pos = down_pos if increment_row else up_pos
+            outcome_pos = down_pos if increment_row else up_pos
             #special cases e.g. the corners of the merlon structure.
             if current_row == 0 and current_row +1 >= row_count: # special case, if row_count = 1
                 income_pos = left_pos
-                out_come_pos = right_pos
+                outcome_pos = right_pos
             elif current_row == 0 and increment_row: # upper left corner
                 income_pos = left_pos
-                out_come_pos = down_pos
+                outcome_pos = down_pos
             elif current_row == 0 and not increment_row: # upper right corner
                 income_pos = down_pos
-                out_come_pos = right_pos
+                outcome_pos = right_pos
             elif current_row +1 >= row_count and increment_row: # lower left corner
                 income_pos = up_pos
-                out_come_pos = right_pos
+                outcome_pos = right_pos
             elif current_row +1 >= row_count and not increment_row: # lower right corner
                 income_pos = left_pos
-                out_come_pos = up_pos
+                outcome_pos = up_pos
 
 
             #set state size
-            state_m.meta['gui']['editor_opengl']['size'] = (state_width, state_height)
             state_m.meta['gui']['editor_gaphas']['size'] = (state_width, state_height)
 
             #set position of income and outcome
-            state_m.income.meta['gui']['editor_gaphas']['rel_pos'] = income_pos
+            state_m.income.set_meta_data_editor('rel_pos', income_pos)
             out_come = [oc for oc in state_m.outcomes if oc.outcome.outcome_id >= 0].pop()
-            out_come.meta['gui']['editor_gaphas']['rel_pos'] = out_come_pos
+            out_come.meta['gui']['editor_gaphas']['rel_pos'] = outcome_pos
 
             #set position of state
             current_x = current_column*(x_gap+state_width)+x_gap+border_size
             current_y = current_row*(y_gap+state_height)+y_gap+border_size
-            state_m.meta['gui']['editor_opengl']['rel_pos'] = (current_x, current_y)
             state_m.meta['gui']['editor_gaphas']['rel_pos'] = (current_x, current_y)
             #logger.debug("x: {} y: {}".format(current_x, current_y))
 

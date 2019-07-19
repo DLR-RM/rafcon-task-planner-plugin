@@ -18,13 +18,13 @@ logger = log.get_logger(__name__)
 
 #list with all pddl requirements
 requ_list = [':strips', ':adl', ':typing', ':equality',
-                ':negative-preconditions', ':disjunctive-preconditions', ':negative-preconditions',
+                ':negative-preconditions', ':disjunctive-preconditions',
                 ':conditional-effects', ':existential-preconditions',
                 ':universal-preconditions', ':derived-predicates',
                 ':action-costs', ':quantified-preconditions',
                 ':action-expansions', ':foreach-expansions',
                 ':dag-expansions', ':expression-evaluation', ':fluents', ':open-world',':true-negation',
-                'durative-actions', ':duration-inequalities', ':continous-effects']
+                ':durative-actions', ':duration-inequalities', ':continous-effects']
 
 class PddlActionTab:
     '''PddlActionTabController
@@ -103,6 +103,7 @@ class PddlActionTab:
             self.__gtk_builder.get_object('rtpp_pddl_tab_apply').set_sensitive(False)
 
             #disable requirements check boxes
+            logger.debug("##################contains: {}".format(':negative-preconditions' in self.__requ_cb_dict.keys()))
             for c_button in self.__requ_cb_dict.values():
                 c_button.set_sensitive(False)
         else:
