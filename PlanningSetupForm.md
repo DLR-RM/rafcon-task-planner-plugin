@@ -189,7 +189,7 @@ This directory chooser specifies the path in which generated files should be sto
 
 ## Runtime Section
 
-In This Context Runtime dosen't refere to the runtime of the Task, but rather to the runtime of the State machine, e.g. when its executed. This section was added to introduce Object resolution to the Plugin. since Pddl works identifiers e.g. robot1, munich or turtle_bob instead of complex Objects, a system to resolve these names during runtime was needed. How it works in detail can be seen in this [Section](TODO insert link). The Runtime Section part of the Configuration file specifies, if and how Object definitions should be added to the state machine.   
+In This Context Runtime dosen't refere to the runtime of the Task, but rather to the runtime of the State machine, e.g. when its executed. This section was added to introduce Object resolution to the Plugin. since Pddl works identifiers e.g. robot1, munich or turtle_bob instead of complex Objects, a system to resolve these names during runtime was needed. How it works in detail can be seen in the [Data transfer section](DataTransfer.md). The Runtime Section part of the Configuration file specifies, if and how Object definitions should be added to the state machine.   
 
 
 ### Runtime Data
