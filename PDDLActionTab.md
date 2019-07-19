@@ -4,9 +4,23 @@
 The Plugin introduces a new Tab in the State Editor, it's called the Pddl Action Tab, and its Symbol is a little Calculator.  
 The Tabs gives the possibility to annotate a state with a [PDDL](https://en.wikipedia.org/wiki/Planning_Domain_Definition_Language) Action, and so to make it usable for the plugin and so for planning.
 
-INSERT PICTURE
+![Rafcon With the PDDL Action Tab](media/img/PDDLActionTab.png "A open RAFCON window with the PDDL Action Tab in the right.")
 
-INSERT TOC
+
+- [Tab Fields](#tab-fields)
+  * [Description](#description)
+  * [PDDL](#pddl)
+  * [Predicates](#predicates)
+  * [Types](#types)
+  * [Requirements](#requirements)
+- [Buttons](#buttons)
+  * [Auto Complete](#auto-complete)
+  * [Apply](#apply)
+  * [Enable Auto Apply](#enable-auto-apply)
+
+<small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
+
+
 ## Tab Fields
 
 The Tab consists of several fields, describing the States semantic in PDDL. This section explains the fields in Detail. 
