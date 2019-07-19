@@ -17,8 +17,9 @@ The example is base on rafcons [turtle demo](https://rafcon.readthedocs.io/en/la
     + [2.4.1.2 Type file](#2412-type-file)
     + [2.4.1.3 Planner](#2413-planner)
     + [2.4.1.4 Facts file](#2414-facts-file)
-    + [2.4.1.5 State machine name](#2415-state-machine-name)
-    + [2.4.1.6 Save state machine in](#2416-save-state-machine-in)
+    + [2.4.1.5 Generate State machine Into](#2415-generate-state-machine-into)
+    + [2.4.1.6 State machine name](#2416-state-machine-name)
+    + [2.4.1.7 Save state machine in](#2417-save-state-machine-in)
   * [2.4.2 Runtime](#242-runtime)
     + [2.4.2.1 Runtime Data](#2421-runtime-data)
     + [2.4.2.2 Include](#2422-include)
@@ -93,10 +94,13 @@ Use as Planner the **Fast Downward Planning System**.
 The facts files location is `[repository_PATH]/rafcon_task_planner_plugin/examples/turtle_sim_example/src/turtle_sim_facts.pddl`.
 Feel free to play around with it later!
 
-#### 2.4.1.5 State machine name
+#### 2.4.1.5 Generate State machine Into
+At this radio button group, we can decide if we want to generate an independent State machine, or plan into a given e.g. the current selected state. Since we use the core as library, we Select `independent State machine`.
+
+#### 2.4.1.6 State machine name
 Since we want to (re)plan the `turtle_sim_core_machine`, we should give our state machine the same name i.e. `turtle_sim_core_machine`.
 
-#### 2.4.1.6 Save state machine in
+#### 2.4.1.7 Save state machine in
 We want to replan the turtle_sim_core_machine e.g. overwriting it, therefor we should save our State machine in `[repository_PATH]/rafcon_task_planner_plugin/examples/turtle_sim_example/`
 
 ### 2.4.2 Runtime
@@ -107,7 +111,7 @@ As we know a planner would return something like **move bob middle** and not **m
 Feel free to have a look into the file, and see all object definitions.
 
 #### 2.4.2.2 Include
-At this radio button group we can decide, if we want to add the data directly into the state, or if we only want to reference the data file. This can be usefull in lots of situations, but in our scenario its unimportant. So you can try both if you want. 
+At this radio button group, we can decide if we want to add the data directly into the state, or if we only want to reference the data file. This can be usefull in lots of situations, but in our scenario its unimportant. So you can try both if you want. 
 
 Now we can generate the core state machine.
 
