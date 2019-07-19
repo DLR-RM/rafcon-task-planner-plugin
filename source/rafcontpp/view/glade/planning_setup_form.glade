@@ -429,11 +429,13 @@ disable to delete all additional files, when the state machine is generated.</pr
               <object class="GtkLabel" id="generate_into_label">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="tooltip_text" translatable="yes">selected State:
+                <property name="tooltip_text" translatable="yes">Selected State:
 If "selected State" is selected, the State machine will be generated into the currently selected State.
-WARNING: This action will delete all child States of the selected one!
+WARNING: If permitted, this action will delete all child States of the selected one!
 
-independent State machine: 
+Permission can be granted, by setting the value of "Allow_override" in the "RAFCONTPP" Dict in the "SEMANTIC DATA" section to True.
+
+Independent State machine: 
 If "independent State machine" is selected, the State machine will be generated into a completely new State machine, saved in the State machine path, specified in "Save state machine in"</property>
                 <property name="label" translatable="yes">Generate State machine Into*</property>
               </object>
@@ -455,7 +457,8 @@ If "independent State machine" is selected, the State machine will be generated 
                     <property name="can_focus">True</property>
                     <property name="receives_default">False</property>
                     <property name="tooltip_text" translatable="yes">If "selected State" is selected, the State machine will be generated into the currently selected State.
-WARNING: This action will delete all child States of the selected one!</property>
+WARNING: If permitted, this action will delete all child States of the selected one!
+Permission can be granted, by setting the value of "Allow_override" in the "RAFCONTPP" Dict in the "SEMANTIC DATA" section to True.</property>
                     <property name="margin_top">5</property>
                     <property name="margin_bottom">5</property>
                     <property name="active">True</property>

@@ -1,7 +1,7 @@
 # Contributors:
 # Christoph Suerig <christoph.suerig@dlr.de>
 
-# Version 05.07.2019
+# Version 19.07.2019
 
 
 
@@ -312,7 +312,8 @@ class PlanningSetupFormController:
                dtp.set_target_state(selected_state)
             else:
                 everything_filled = False
-                not_filled = 'State to plan into not accurately selected! None or multiple States selected!'
+                not_filled = 'State to plan into not accurately selected:' \
+                             ' None or multiple States selected, or no Permission!'
         dtp.set_sm_name(sm_name)
         dtp.set_sm_save_dir(sm_save_dir)
         dtp.set_keep_related_files(keep_related_files)
