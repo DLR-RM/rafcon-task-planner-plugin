@@ -86,7 +86,27 @@ the script 'my_planner_script.py' will be used for Planning in the Task.
 ```
 
 ### Planner Argv
+
+If you want to configure the Planner e.g. The Fast Downward Planning system, you can insert an argument vector here. 
+This field is an text entry, and it behaves like entering arugment into the console, e.g. Values enterd into this field are given to the planner script as space separated array. So all built in planners can be configured as specified in the original Planner documentation.
+
+**Example**
+
+```
+When using the Fast Downward Planning System:
+Possible planner Argv field value: --search "astar(lmcut())"
+```
+
 ### Facts File
+This Filechooser expects a Facts File written in Pddl. A Planning Task usually consits of a facts, and a domain file. Since the Plugin is using the State pools, as well as the type file to auto generate the domain file, you are only allowed to use elements provided in these two sources (state pools and type file), to write your Facts file. If you are not sure aboute which elements you configured, you can list them by clicking onto the 'State Pool Info' Button in the left corner of the Task Planner Plugin configuration window. 
+
+**Example**
+
+```
+If Selecting /home/my_facts.pddl,
+this file will be used as facts file during the Planning Process.
+```
+
 ### Generate State Machine Into
 ### State Machine Name
 ### Save State Machine In
@@ -95,4 +115,10 @@ the script 'my_planner_script.py' will be used for Planning in the Task.
 ## Runtime
 ### Runtime Data
 ### Include
+## Buttons
+### Generate State machine
+### Cancel
+### X In upper Right
+### State Pool Info
+
 
