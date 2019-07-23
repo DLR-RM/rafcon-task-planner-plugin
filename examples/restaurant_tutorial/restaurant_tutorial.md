@@ -1,6 +1,6 @@
 # 1. Restaurant Tutorial
 
-This tutorial introduces the **base functionality** of the Task Planner Plugin (Tpp), by leading through a little example.
+This tutorial introduces the **basic functionality** of the Task Planner Plugin (Tpp), by leading through a little example.
 
 
 - [1.1 Scenario description](#11-scenario-description)
@@ -44,14 +44,12 @@ At first, the plugin has to be registered in RAFCON. To do so, `[RAFCON̙-TASK-P
 `RAFCON_PLUGIN_PATH=$RAFCON_PLUGIN_PATH:[RAFCON̙-TASK-PLANNER-PLUGIN̠-REPOSITORY̠-PATH]/source/rafcontpp`
 
 
-If you did this successfully, RAFCON should now have an extra menu button called "Plan Task", and a new tab called "PDDL Action" at the right, below the Semantic Data tab.
-RAFCON with loaded RAFCON Task Planner Plugin.
-
+If you did this successfully, RAFCON should now have an extra menu button called "Plan Task", and a new tab called "PDDL Action" at the right, below the Semantic Data tab. The image shows RAFCON with the Task Planner Plugin loaded.
 
 ![Restaurant_example_rtpp_loaded](doc/Rafcon_rtpp_loaded.png "Plugin loaded")
 
 ## 1.4 Preparing some States
-All in all five States are involved in the process. You have to create and store them in a directory of your choice. 
+All in all five States are involved in the process. You have to create and store them in a directory of your choice, from now on referenced as [your_folder]. 
 
 ### 1.4.1 Eat
 To give Alice the ability to eat her pizza, we have to create the state eat. To do soː
@@ -86,13 +84,13 @@ To give Alice the ability to eat her pizza, we have to create the state eat. To 
     )
     ```     
     The action is called eat, and has also two parametersː ?person of type Person and ?food of type Food  
-    **IMPORTANT**ː the names of the variables ?person and ?food have to match with the names of the states input ports person and food. But not every parameter of the action has to have an corresponding input port in the state and vice versa. 
+    **IMPORTANT**ː the names of the variables ?person and ?food have to match with the names of the state's input ports person and food. But not every parameter of the action has to have an corresponding input port in the state and vice versa. 
 
-8. In further states you can click auto complete, (bewareː auto complete is just a best effort approach, it works fine in most cases (I don't know a case yet, where it doesn't work), nevertheless you should check the results.) but in this first state i want to explain the other fields.
+8. In further states you can click auto complete, (bewareː auto complete is just a best effort approach, it works fine in most cases (I don't know a case yet, where it doesn't work), nevertheless you should check the results.) but in this first state I will explain all fields.
 
 9. In the **Predicates section** you have to insert the predicates, which are used by the action. In this case, the predicates are "be-full" and "has". They are used for example as "(has ?person ?food)". The complete predicate (we have to insert the complete predicate into the field) would be "(has ?person - Person ?food - Food)".  
    In this section variable names don't matter, just the predicate name and its types. So (has ?person - Person ?food - Food) and (has ?dosent - Person ?matter - Food) are the same predicate, but (has ?person - Object ?food - Food) would be a different one (because it differs in the type "Object").  
-   According to this information, we have to insert the following into the Predicate Sectionː
+   According to this, we have to insert the following into the Predicate Sectionː
     ```Pddl
     (be-full ?person - Person)
     (has ?person - Person ?food - Food) 
@@ -106,7 +104,7 @@ To give Alice the ability to eat her pizza, we have to create the state eat. To 
     ```
     check the fields: ːtyping and ːstrips
     ```
-12. Save the State into a folder of your choice. 
+12. Save the State into [your_folder]. 
 
 Once you are finish your state should look like in the figure below.
 
@@ -251,11 +249,11 @@ Once your are finish, you should have a folder, containing this five states.
 }
 ```
 
-The structure of the file is a dictionary with types as Keys, and their parents as values. For example, the type "Waiter" is extending the type "Person", and "Person" is extending "Object", which is the root type and has no parent. 
+The structure of the file is a dictionary with types as keys, and their parents as values. For example, the type "Waiter" is extending the type "Person", and "Person" is extending "Object", which is the root type and has no parent. 
 
 ## 1.6 Facts Facts Facts
 
-As final Step, we have to describe our problem, or better our goal, our initial state (init), and all "objects", which are present in our world. In this case the **objects** are James the Waiter, Bob the chef, Alice the Guest, a pizza, the kitchen, the table and the entrance of the restaurant. At the beginning of our Situation (**init**) Bob is where chefs areː in the kitchen. James is standing at the entrance, waiting for new guests and Alice is sitting at a table. She is really hungry and wants a pizza. The **goal** is to bring Alice her pizza and make her feel full. Written in pddl, this could look like thisː 
+As final step, we have to describe our problem, or better our goal, our initial state (init), and all "objects", which are present in our world. In this case the **objects** are James the Waiter, Bob the chef, Alice the Guest, a pizza, the kitchen, the table and the entrance of the restaurant. At the beginning of our situation (**init**) Bob is where chefs areː in the kitchen. James is standing at the entrance, waiting for new guests and Alice is sitting at a table. She is really hungry and wants a pizza. The **goal** is to bring Alice her pizza and make her feel full. Written in pddl, this could look like thisː 
 ```Pddl
 (define (problem alice_is_hungry)(:domain restaurant)
 (:objects 
@@ -307,7 +305,7 @@ If we hit the "Generate State machine" button now, the planner will try to solve
 
 ![Restaurant_example_state_machine](doc/Rtpp_restaurant_statemachine.png "Restaurant State machine")
 
-To beautify the state machine you can use the Auto layout plugin, or you leave it that way and just execute it. The console output should look like below, as you can see Alice got her pizzaǃ 
+To beautify the state machine you can use the Auto layout plugin, or you leave it that way and just execute it. The console output should look like below, as you can see Alice is getting her pizzaǃ 
 ```consoleOutput
 INFO - Go to: james is moving to table
 INFO - Order: alice is ordering pizza from james
@@ -321,7 +319,7 @@ INFO - Eat: alice is eating pizza
 ```
 
 
-You can't just plan this one state machine, but a whole groupǃ Let's for example assume Alice brought her friend Eve, who wants a soup, and Bob who wants to eat a sandwich at work. The facts file would look like below, but feel free to play around, test other scenarios, and try to plan them. 
+You can't just plan this one state machine, but arbitrary manyǃ For example, let's assume Alice brought her friend Eve, who wants a soup, and Bob who wants to eat a sandwich at work. The facts file would look like below, but feel free to play around, test other scenarios, and try to plan them. 
 ```Pddl
 (define (problem serve_guest) (:domain restaurant)
 (:objects 
@@ -349,4 +347,4 @@ You can't just plan this one state machine, but a whole groupǃ Let's for exampl
 ## 1.8 Solution
 
 A solution for this tutorial is provided in `[repository_path]/examples/restaurant_tutorial/src`.
-There you find all described files, and states as well as a executable restaurant_state_machine and all related files, generated during the planning process.
+There you find all described files, and states as well as an executable restaurant_state_machine and all related files, generated during the planning process.
