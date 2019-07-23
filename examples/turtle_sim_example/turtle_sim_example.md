@@ -1,8 +1,8 @@
 
 # 2. Turtle Sim Example
 
-This example should demonstrate how the **data flow** can work in a planned state machine and how **flexible** they are even when using them with **Ros**.
-The example is base on rafcons [turtle demo](https://rafcon.readthedocs.io/en/latest/tutorials.html#starting-the-basic-turtle-demo-state-machine-using-ros), but the states were modified to use the plugins data flow style, and enriched with PDDL actions.
+This example demonstrates how the **data flow** can work in a planned state machine and how **flexible** they are even when using them with **ROS**.
+The example is base on RAFCON's [turtle demo](https://rafcon.readthedocs.io/en/latest/tutorials.html#starting-the-basic-turtle-demo-state-machine-using-ros), but the states were modified to use the plugins data flow style and are enriched with PDDL actions.
 
 
 - [2.1 Scenario description](#21-scenario-description)
@@ -42,7 +42,7 @@ The scenario consists of:
 With the following rules:
 - turtles can only move between connected points
 - if a turtle moves it gets hungry
-- if turtles are hungry they can eat eachother
+- if turtles are hungry they can eat each other
 
 In this example, Alice, Bob and Eve will wander arround in the map, but Bob is a cannibal, therefore he will eat Alice and Eve at some point.
 
@@ -52,8 +52,8 @@ In this example, Alice, Bob and Eve will wander arround in the map, but Bob is a
  - RAFCONː `pip install --user rafcon` orː `git clone git@rmc-github.robotic.dlr.de:common/rafcon.git` (for information about how to install rafcon see: https://github.com/DLR-RM/RAFCON)
  - The Rafcon Task Planner Pluginː `git clone git@rmc-github.robotic.dlr.de:moro/rafcon_task_planner_plugin.git`
  - The Fast Downward Planning Systemː `pip install --user downward-dlr --no-compile` (evt. you have to install the wheel package first) 
- - A running ROS core (as described in rafcons [turtle demo](https://rafcon.readthedocs.io/en/latest/tutorials.html#starting-the-basic-turtle-demo-state-machine-using-ros))
- - A running turtlesim node (also as described in rafcons [turtle demo](https://rafcon.readthedocs.io/en/latest/tutorials.html#starting-the-basic-turtle-demo-state-machine-using-ros))
+ - ROS (as described in rafcons [turtle demo](https://rafcon.readthedocs.io/en/latest/tutorials.html#starting-the-basic-turtle-demo-state-machine-using-ros))
+ - The ROS turtlesim simulation (also as described in rafcons [turtle demo](https://rafcon.readthedocs.io/en/latest/tutorials.html#starting-the-basic-turtle-demo-state-machine-using-ros))
 
 ## 2.3 Setup
 1. Start the ROS core: `roscore`
@@ -65,18 +65,18 @@ In this example, Alice, Bob and Eve will wander arround in the map, but Bob is a
 
 If we have a look into the **turtle_sim_example** Library, we can see **turtle_lib** as well as the two state machines **turtle_sim_core_machine** and **turtle_sim_state_machine**.
 
-### 2.3.1 trutle_sim_state_machine  
+### 2.3.1 turtle_sim_state_machine  
 turtle_sim_state_machine is the one we will execute later. If you open it now, you will see that it just initializes a ros node, and then executing the turtle_sim_core_machine. If you want you can execute it now, but since we didn't plan the core machine yet, nothing spectacular will happen.
 
 ### 2.3.2 turtle_sim_core_machine   
-This is the machine we will plan, and also the one where everything happens. Inside of the Core Turtles are spawned, moved and eaten.
+This is the machine we will plan, and also the one where everything happens. Inside of this state machine turtles are spawned, moved and eaten.
 
 ### 2.3.3 turtle_lib  
 This folder contains a bunch of states. These are the bricks used to plan our scenario. Most of them are enriched with a PDDL action, but not all. So don't be surprised, if the plugin warns you later on during the planning process. 
 
 ## 2.4 Planning
 
-Now we are ready to plan the core state machine. Because this is an example, and not a tutorial everything was prepared for you, and you only have to configure the Task Planner Plugin by hiting **Plan Task**
+Now we are ready to plan the core state machine. Because this is an example, and not a basic tutorial everything was prepared for you, and you only have to configure the Task Planner Plugin by hiting **Plan Task**.
 
 ### 2.4.1 Planning
 The data we enter in this section is important during the Planning and generation process.
@@ -95,28 +95,28 @@ The facts files location is `[repository_PATH]/rafcon_task_planner_plugin/exampl
 Feel free to play around with it later!
 
 #### 2.4.1.5 Generate State machine Into
-At this radio button group, we can decide if we want to generate an independent State machine, or plan into a given e.g. the current selected state. Since we use the core as library, we Select `independent State machine`.
+At this radio button group, we can decide if we want to generate an independent state machine, or plan into a given e.g. the current selected state. Since we use the core as library, we select `independent State machine`.
 
 #### 2.4.1.6 State machine name
 Since we want to (re)plan the `turtle_sim_core_machine`, we should give our state machine the same name i.e. `turtle_sim_core_machine`.
 
 #### 2.4.1.7 Save state machine in
-We want to replan the turtle_sim_core_machine e.g. overwriting it, therefor we should save our State machine in `[repository_PATH]/rafcon_task_planner_plugin/examples/turtle_sim_example/`
+We want to replan the turtle_sim_core_machine e.g. overwriting it, therefor we should save our state machine in `[repository_PATH]/rafcon_task_planner_plugin/examples/turtle_sim_example/src`
 
 ### 2.4.2 Runtime
 This section is not important during the planning process, but during runtime of the state machine we plan.
 #### 2.4.2.1 Runtime Data
 If we enter a path to a json file here, the plugin will add a data initialization state as first state of the planned state machine.
-As we know a planner would return something like **move bob middle** and not **move bob x=5, y=5**. However, ROS needs coordinates, and don't know where **middle** is. To solve this issue, we use **middle** as an object identifier, and define the object in a file. Its path is `[repository_PATH]/rafcon_task_planner_plugin/examples/turtle_sim_example/turtle_demo_data.json`.
+As we know a planner would return something like **move bob middle** and not **move bob x=5, y=5**. However, ROS needs coordinates, and don't know where **middle** is. To solve this issue, we use **middle** as an object identifier, and define the object in a file. Its path is `[repository_PATH]/rafcon_task_planner_plugin/examples/turtle_sim_example/src/turtle_demo_data.json`.
 Feel free to have a look into the file, and see all object definitions.
 
 #### 2.4.2.2 Include
-At this radio button group, we can decide if we want to add the data directly into the state, or if we only want to reference the data file. This can be usefull in lots of situations, but in our scenario its unimportant. So you can try both if you want. 
+At this radio button group, we can decide if we want to add the data directly into the state, or if we only want to reference the data file. This can be usefull in a lot of situations, but in our scenario it is unimportant. So you can try both if you want. 
 
 Now we can generate the core state machine.
 
 ## 2.5 Execution
-Finally, we have planned the core machine, and are ready to watch turtles moving around. Just open the **turtle_sim_state_machine**, and refresh it bevore execution. 
+Finally, we have planned the core machine, and are ready to watch turtles moving around. Just open the **turtle_sim_state_machine**, and refresh it before execution. 
 
 Have fun!
 
@@ -125,7 +125,7 @@ Have fun!
 
 As we have seen above we get somehow an object identifier in our states, and somewhere is a definition for this identifier stored in a json file. But how does this actually work? - It's like this:
 
-All definitions you made in the file are available during runtime in a dictionary called **rtpp_data**, which is stored as a global variable in RAFCON. For example let's assume you got the object identifier `top_left` (which is a location of our example), and want to know the locations x-coordinate: 
+All definitions you made in the json file are available during runtime in a dictionary called **rtpp_data**, which is stored as a global variable in RAFCON. For example let's assume you got the object identifier `top_left` (which is a location of our example), and want to know the locations x-coordinate: 
 
 1. At first you would like to get the rtpp_data dictionary:   
    `rtpp_data = gvm.get_variable('rtpp_data')`
