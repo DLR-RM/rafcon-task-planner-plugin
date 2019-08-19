@@ -27,7 +27,6 @@ class PddlActionParser:
             logger.error('Can not parse action from None or Empty String!')
             raise ValueError('Can not parse action from None or Empty String!')
 
-
         # matches variables with types e.g ?obj - Physobj
         self.__type_var_pattern = re.compile('((\?[^\s|^\)|^\(]+\s+)+-\s+[^\s|^\)|^\(]+)')
         # matches only type strings result  f.e. Location
@@ -58,14 +57,13 @@ class PddlActionParser:
 
         return PddlActionRepresentation(name, self.__action_string, predicates, types, [], parameters)
 
-
     def parse_action_name(self):
         """parse_action_name
         parse_action_name reads the action form the given action and returns it.
 
         :return: The name of the action as string
         """
-        parsed = re.findall(self.__action_name_pattern,self.__action_string)
+        parsed = re.findall(self.__action_name_pattern, self.__action_string)
         if len(parsed) == 0:
             logger.error("Couldn't parse action name from \"{}\"".format(self.__action_string))
             raise ValueError("Couldn't parse action name!")
@@ -87,8 +85,8 @@ class PddlActionParser:
                     for var in self.__var_pattern.findall(type_var[0]):
                         params.append(var.strip('?'))
         else:
-            logger.error('No Parameters found in: '+self.__action_string)
-            raise ValueError('No Parameters found in: '+self.__action_string)
+            logger.error('No Parameters found in: ' + self.__action_string)
+            raise ValueError('No Parameters found in: ' + self.__action_string)
         return params
 
     def __clean_comments(self, action_string):
@@ -97,8 +95,7 @@ class PddlActionParser:
         :return: the action string without comments
         """
         comment_pattern = re.compile('(;[^\n]*)')
-        return comment_pattern.sub('',action_string)
-
+        return comment_pattern.sub('', action_string)
 
     def __create_var_type_dict(self):
         """create_var_type_dict
@@ -111,9 +108,8 @@ class PddlActionParser:
             types = self.__type_pattern.findall(type_var[0])
             type = types[0]
             for var in self.__var_pattern.findall(type_var[0]):
-                 self.__var_type_dict[var] = type
+                self.__var_type_dict[var] = type
         return self.__var_type_dict
-
 
     def __parse_and_generalize_predicates(self):
         """parse and generalize predicates
@@ -126,7 +122,7 @@ class PddlActionParser:
         """
         # matches applied predicates
         a_pred_name_pattern = re.compile('\(([^\s]+)\s')
-        applied_predicates = [i[0] for i in re.findall(self.__predicate_pattern,self.__action_string)]
+        applied_predicates = [i[0] for i in re.findall(self.__predicate_pattern, self.__action_string)]
 
         if not self.__var_type_dict:
             self.__create_var_type_dict()
@@ -153,23 +149,22 @@ class PddlActionParser:
                             last_type = c_type
                             type_concat += c_type
                         if last_type != c_type:
-                            generalized_predicate += ' - '+last_type
+                            generalized_predicate += ' - ' + last_type
                             last_type = c_type
                             type_concat += c_type
-                        generalized_predicate += ' '+c_pred_var
+                        generalized_predicate += ' ' + c_pred_var
                     else:
-                        logger.error('Variable: ' + c_pred_var+' not defined!')
-                        raise ValueError('Variable: ' + c_pred_var+' not defined!')
+                        logger.error('Variable: ' + c_pred_var + ' not defined!')
+                        raise ValueError('Variable: ' + c_pred_var + ' not defined!')
                 generalized_predicate += ' - ' + last_type + ')'
                 # add predicate to a dictionary, to eliminate duplicats.
                 # two predicates with the same name, but different types are handled as two
                 # predicates at this time. Because of unknowen type hierarchies, its not decidable
                 # at this time how to merge the predicates.
-                parsed_predicates[c_pred_name+type_concat] = generalized_predicate
+                parsed_predicates[c_pred_name + type_concat] = generalized_predicate
         return parsed_predicates.values()
 
-
-    def __is_built_in_pred(self,name):
+    def __is_built_in_pred(self, name):
         """
         Checks if the Predicate is a PDDL built-in predicate.
         :param name: the name of a predicate
@@ -180,6 +175,3 @@ class PddlActionParser:
             is_built_in = True if name == '=' else is_built_in
 
         return is_built_in
-
-
-

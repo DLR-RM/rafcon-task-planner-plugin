@@ -63,7 +63,7 @@ class FfIntegration(PlannerInterface):
         :return: True, if the planner is available in the system, false otherwhise.
         """
         devnull = open(os.devnull, "wb")
-        process = subprocess.Popen('ff',stdout=devnull, stderr=devnull,shell=True)
+        process = subprocess.Popen('ff', stdout=devnull, stderr=devnull, shell=True)
         process.wait()
         status = process.returncode
         devnull.close()
@@ -90,4 +90,3 @@ class FfIntegration(PlannerInterface):
                 parsed_plan.append(PlanStep(parts[0], parts[1:]))
                 start_index += 1
         return (raw_plan, parsed_plan)
-

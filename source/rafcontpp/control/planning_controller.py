@@ -15,6 +15,7 @@ from rafcontpp.model.interruptable_thread import InterruptableThread
 
 logger = log.get_logger(__name__)
 
+
 class PlanningController:
     """PlanningController
        PlanningController handles everything about the topic planning. it loads built-in scripts as well, als
@@ -23,13 +24,12 @@ class PlanningController:
 
     """
 
-    def __init__(self,datastore):
+    def __init__(self, datastore):
         """
 
         :param datastore:  a datastore, containing all necessary data.
         """
         self.__datastore = datastore
-
 
     def execute_planning(self, callback_func):
         """execute_planning
@@ -55,13 +55,13 @@ class PlanningController:
                 to_import = None
 
         if to_import is None:
-            logger.error("Couldn't discover planner "+planner_choice)
-            raise ImportError("Couldn't discover planner "+planner_choice)
+            logger.error("Couldn't discover planner " + planner_choice)
+            raise ImportError("Couldn't discover planner " + planner_choice)
 
         logger.debug('Try to Import planner')
-        script_import = __import__(to_import[0],fromlist=(to_import[1]))
-        PlannerModule = getattr(script_import,to_import[1])
-        logger.info('Using Planner script: '+str(to_import[0]))
+        script_import = __import__(to_import[0], fromlist=(to_import[1]))
+        PlannerModule = getattr(script_import, to_import[1])
+        logger.info('Using Planner script: ' + str(to_import[0]))
         planner = PlannerModule()
 
         planning_thread = InterruptableThread(target=self.__plan_and_report,
@@ -72,8 +72,7 @@ class PlanningController:
 
         return planning_thread
 
-
-    def __plan_and_report(self,callback_function, planner):
+    def __plan_and_report(self, callback_function, planner):
         """
         plan and report triggers the planner, and evaluates the planning report
         e.g. storing the plan in the datastore. Due planning could take a long time
@@ -83,6 +82,7 @@ class PlanningController:
         :param planner: the planner to plan with
         :return: nothing
         """
+
         # ---------------------------------------------------------------------------------------------------------------
         def execute_in_sub_process(queue):
             """
@@ -90,7 +90,7 @@ class PlanningController:
             should be executed in a sub process.(this decision was made, to be able to kill the planning process)
             :param queue: a message queue, which will contain the planning report
             """
-            os.setsid()# give a new process group id, to be able to kill the whole group resulting from this sub process and the planner.
+            os.setsid()  # give a new process group id, to be able to kill the whole group resulting from this sub process and the planner.
             planning_report = planner.plan_scenario(self.__datastore.get_domain_path(),
                                                     self.__datastore.get_facts_path(),
                                                     self.__datastore.get_planner_argv(),
@@ -103,7 +103,7 @@ class PlanningController:
         logger.debug("planner argv: " + str(self.__datastore.get_planner_argv()))
         start_time = time.time()
         planning_report = None
-        queue = Queue()# for interprocess communication, to get the planning_report
+        queue = Queue()  # for interprocess communication, to get the planning_report
         planning_process = Process(target=execute_in_sub_process, args=[queue], name='PlanningSubprocess')
         planning_process.daemon = True
         planning_process.start()
@@ -139,22 +139,17 @@ class PlanningController:
             times_waited = 1
             max_wait = 3
             while planning_process and planning_process.is_alive():
-                logger.info('Waiting for the Planner to terminate({}/{})...'.format(times_waited,max_wait))
+                logger.info('Waiting for the Planner to terminate({}/{})...'.format(times_waited, max_wait))
                 if times_waited == max_wait:
                     logger.info('Killing Planner...')
-                    os.killpg(planning_process_pgid, signal.SIGKILL)# somethimes terminating is not enough.
+                    os.killpg(planning_process_pgid, signal.SIGKILL)  # somethimes terminating is not enough.
                 planning_process.join(2)
-                times_waited +=1
-
+                times_waited += 1
 
             logger.info("Planning was canceled after {0:.4f} seconds.".format(time.time() - start_time))
             callback_function(False)
 
-
-
-
-
-    def __split_and_add_to_path(self,script_path):
+    def __split_and_add_to_path(self, script_path):
         """
             splits the script path into the directory path, and the script name, adds the directory Path to
             PYTHONPATH and returns the scripname
@@ -190,8 +185,6 @@ class PlanningController:
                         class_name = cname
                         break
         return (script, class_name)
-
-
 
     def __get_built_in_script(self, shortcut):
         """ get_built_in_script

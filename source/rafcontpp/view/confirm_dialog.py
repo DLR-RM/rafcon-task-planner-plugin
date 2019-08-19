@@ -2,11 +2,14 @@
 # Christoph Suerig <christoph.suerig@dlr.de>
 # Version 12.07.2019
 import gi
+
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 import os
 from rafcon.utils import log
+
 logger = log.get_logger(__name__)
+
 
 class ConfirmDialog:
     """
@@ -14,7 +17,6 @@ class ConfirmDialog:
     """
 
     def __init__(self, parent, content):
-
         confirm_dialog_path = os.path.abspath(
             os.path.join(os.path.dirname(os.path.realpath(__file__)), "glade", "confirm_dialog.glade"))
         builder = Gtk.Builder()
@@ -27,7 +29,6 @@ class ConfirmDialog:
         window_button = builder.get_object('rtpp_planning_confirm_dialog_ok_button')
         window_button.connect('clicked', lambda x: self.__confirm_dialog.destroy())
 
-
     def show(self):
         """
         shows the planning wait window.
@@ -39,7 +40,6 @@ class ConfirmDialog:
         hides the planning_wait_window
         """
         self.__confirm_dialog.hide()
-
 
     def destroy(self):
         """

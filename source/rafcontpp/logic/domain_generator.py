@@ -11,6 +11,7 @@ from rafcontpp.logic.type_merger import TypeMerger
 
 logger = log.get_logger(__name__)
 
+
 class DomainGenerator:
     """DomainGenerator
     The DomainGenerator uses the data provided by the datastore to generate a domain.pddl file for the planner.
@@ -41,7 +42,7 @@ class DomainGenerator:
         self.__datastore.set_available_predicates(preds[1])
         merged_preds = preds[0]
         merged_requirs = self.__merge_requirements(pddl_actions)
-        logger.debug('writing domain file to: '+str(domain_path))
+        logger.debug('writing domain file to: ' + str(domain_path))
         domain_file = open(domain_path, "w")
         domain_file.write(self.__get_head(domain_name) + "\r\n")
         domain_file.write(self.__get_requirements(merged_requirs) + "\r\n")
@@ -54,7 +55,6 @@ class DomainGenerator:
         self.__datastore.set_domain_path(domain_path)
         self.__datastore.add_generated_file(domain_name + "_domain.pddl")
         return domain_path
-
 
     def __get_head(self, domain_name):
         """ get_head
@@ -88,7 +88,6 @@ class DomainGenerator:
         for requirement in requirements:
             requirements_section = requirements_section + requirement + " "
         return requirements_section + ")"
-
 
     def __get_types(self, merged_types):
         """
@@ -140,6 +139,3 @@ class DomainGenerator:
         for action in pddl_actions:
             actions += action.action + "\r\n\r\n"
         return actions
-
-
-

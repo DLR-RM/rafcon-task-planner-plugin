@@ -9,12 +9,12 @@ from rafcontpp.model.type_tree import TypeTree
 
 logger = log.get_logger(__name__)
 
+
 class TypeMerger:
 
     def __init__(self, datastore):
 
         self.__datastore = datastore
-
 
     def merge_types(self):
         """
@@ -38,7 +38,6 @@ class TypeMerger:
                         tree = TypeTree(c_type)
                         tree.recursive_insert(type, type_dict)
         return tree
-
 
     def __dict_to_upper(self, dict):
         """

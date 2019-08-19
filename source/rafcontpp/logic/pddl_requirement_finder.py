@@ -10,7 +10,6 @@ from rafcon.utils import log
 logger = log.get_logger(__name__)
 
 
-
 class PddlRequirementFinder():
     """
     The PddlRequirementFiner, tries to figure out requirments from a given action definition.
@@ -30,9 +29,9 @@ class PddlRequirementFinder():
         return self.action.find(' - ') > -1
 
     def disjunctive_preconditions(self):
-        not_pattern = re.compile(':precondition.*\(\s*not.*:effect',re.IGNORECASE | re.MULTILINE | re.DOTALL)
+        not_pattern = re.compile(':precondition.*\(\s*not.*:effect', re.IGNORECASE | re.MULTILINE | re.DOTALL)
         or_pattern = re.compile(':precondition.*\(\s*or.*:effect', re.IGNORECASE | re.MULTILINE | re.DOTALL)
-        imply_pattern = re.compile(':precondition.*\(\s*imply.*:effect',re.IGNORECASE | re.MULTILINE | re.DOTALL)
+        imply_pattern = re.compile(':precondition.*\(\s*imply.*:effect', re.IGNORECASE | re.MULTILINE | re.DOTALL)
         return not_pattern.search(self.action) is not None \
                or imply_pattern.search(self.action) is not None or or_pattern.search(self.action) is not None
 
@@ -61,7 +60,7 @@ class PddlRequirementFinder():
         if self.foreach_expansions():
             return True
         expansions_pattern = re.compile(':expansion', re.IGNORECASE)
-        if re.search(expansions_pattern,self.action):
+        if re.search(expansions_pattern, self.action):
             return True
         return False
 
@@ -69,9 +68,9 @@ class PddlRequirementFinder():
         requires = False
         expansions_pattern = re.compile(':expansion', re.IGNORECASE)
         if expansions_pattern.search(self.action):
-            expansion = self.action[re.search(expansions_pattern,self.action).start():]
-            foreach_pattern = re.compile('foreach',re.IGNORECASE)
-            requires = re.search(foreach_pattern,expansion) is not None
+            expansion = self.action[re.search(expansions_pattern, self.action).start():]
+            foreach_pattern = re.compile('foreach', re.IGNORECASE)
+            requires = re.search(foreach_pattern, expansion) is not None
         return requires
 
     def dag_expansions(self):
@@ -85,8 +84,9 @@ class PddlRequirementFinder():
 
     def fluents(self):
         requires = False
-        in_dec_pattern = re.compile('effect.*\(\s*(increase|decrease)[\s+|\(]', re.IGNORECASE | re.MULTILINE | re.DOTALL)
-        if re.search(in_dec_pattern,self.action):
+        in_dec_pattern = re.compile('effect.*\(\s*(increase|decrease)[\s+|\(]',
+                                    re.IGNORECASE | re.MULTILINE | re.DOTALL)
+        if re.search(in_dec_pattern, self.action):
             requires = True
 
         return requires
@@ -116,6 +116,3 @@ class PddlRequirementFinder():
             return False
 
         return True
-
-
-

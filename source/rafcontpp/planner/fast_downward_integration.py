@@ -16,15 +16,14 @@ class FdIntegration(PlannerInterface):
     This is the integration Script for the Fast downward Planning System by Malte Helmert Et al. (fast-downward.org)
     """
 
-
     def plan_scenario(self, domain_path, facts_path, planner_argv, storage_path):
         # get own directory for creating files in and so on...
         old_cwd = os.getcwd()
-        new_cwd = os.path.join(old_cwd,'fd_planning_tmp {0:.8f}'.format(time.time()))
+        new_cwd = os.path.join(old_cwd, 'fd_planning_tmp {0:.8f}'.format(time.time()))
         os.mkdir(new_cwd)
         os.chdir(new_cwd)
 
-        command ='fast-downward '+domain_path+' '+facts_path+' '
+        command = 'fast-downward ' + domain_path + ' ' + facts_path + ' '
         plan_path = os.path.abspath(os.path.join(os.curdir, "sas_plan"))
         outsas = os.path.abspath(os.path.join(os.curdir, "output.sas"))
         plan = []
@@ -32,7 +31,7 @@ class FdIntegration(PlannerInterface):
             command += '--search \"astar(blind())\"'
         else:
             for arg in planner_argv:
-                command +=arg+' '
+                command += arg + ' '
             command = command.rstrip()
 
         # run Fast-downward
@@ -46,27 +45,27 @@ class FdIntegration(PlannerInterface):
 
         copied_files = self.__copy_and_clean(plan_path, outsas, storage_path)
 
-         # reset to old cwd
+        # reset to old cwd
         os.chdir(old_cwd)
         os.rmdir(new_cwd)
         return PlanningReport(fd_exit < 4,
                               plan,
                               copied_files,
                               str(fd_exit)
-                              + ': ' + self.__translate_fd_exit_code(fd_exit) +" used command was: "+command)
+                              + ': ' + self.__translate_fd_exit_code(fd_exit) + " used command was: " + command)
 
     def is_available(self):
         """
         :return: True, if the planner is available in the system, false otherwhise.
         """
         devnull = open(os.devnull, "wb")
-        process = subprocess.Popen('fast-downward',stdout=devnull, stderr=devnull,shell=True)
+        process = subprocess.Popen('fast-downward', stdout=devnull, stderr=devnull, shell=True)
         process.wait()
         status = process.returncode
         devnull.close()
-        return status != 127 # 127 is the code for command not found.
+        return status != 127  # 127 is the code for command not found.
 
-    def __parse_raw_plan(self,plan_path):
+    def __parse_raw_plan(self, plan_path):
         """
 
         :param plan_path: the path of the plan file
@@ -97,8 +96,7 @@ class FdIntegration(PlannerInterface):
             copied_files.append('output.sas')
         return copied_files
 
-
-    def __translate_fd_exit_code(self,fd_exit):
+    def __translate_fd_exit_code(self, fd_exit):
         """
         receives an error code and returns the corresponding error message.
         :param fd_exit: an exit code
@@ -107,10 +105,10 @@ class FdIntegration(PlannerInterface):
 
         translated_exit_code = str(fd_exit)
         codes = {
-            0:  "No Error!",
-            1:  "at least one plan was found and another component ran out of memory.",
-            2:  "at least one plan was found and another component ran out of time.",
-            3:  "at least one plan was found, another component ran out of memory, and yet another one ran out of time. ",
+            0: "No Error!",
+            1: "at least one plan was found and another component ran out of memory.",
+            2: "at least one plan was found and another component ran out of time.",
+            3: "at least one plan was found, another component ran out of memory, and yet another one ran out of time. ",
             10: "Translator proved task to be unsolvable.",
             11: "Task is provably unsolvable with current bound.",
             12: "Search ended without finding a solution. ",
@@ -119,7 +117,7 @@ class FdIntegration(PlannerInterface):
             22: "Search, Memory exhausted.",
             23: "Search, Timeout occurred. Not supported on Windows because we use SIGXCPU to kill the planner. ",
             24: "Search, one component ran out of memory and another one out of time. ",
-            30:  "Critical error: something went wrong (e.g. translator bug, but also malformed PDDL input).",
+            30: "Critical error: something went wrong (e.g. translator bug, but also malformed PDDL input).",
             31: "Usage error: wrong command line options",
             32: "Something went wrong that should not have gone wrong (e.g. planner bug).",
             33: "Wrong command line options or SAS+ file.",
@@ -134,8 +132,3 @@ class FdIntegration(PlannerInterface):
             translated_exit_code = str(fd_exit) + " => " + codes.get(fd_exit, "Unknown")
 
         return translated_exit_code
-
-
-
-
-

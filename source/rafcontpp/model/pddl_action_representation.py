@@ -7,9 +7,11 @@ from rafcon.utils import log
 
 logger = log.get_logger(__name__)
 
+
 class PddlActionRepresentation:
     """Represents a PDDL-Action.
     """
+
     def __init__(self, name, action, predicates, types, requirements, parameters):
         """
 
@@ -31,7 +33,6 @@ class PddlActionRepresentation:
         return "name: " + self.name + "\r\naction: " + self.action + "\r\npredicates: " + str(self.predicates)
 
 
-
 def action_to_upper(action):
     """
      action to upper receives a action in pddl_action_representation, and retuns it in upper case
@@ -47,5 +48,3 @@ def action_to_upper(action):
         action.action = action.action.upper()
 
     return action
-
-

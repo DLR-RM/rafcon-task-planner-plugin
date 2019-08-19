@@ -18,7 +18,7 @@ logger = log.get_logger(__name__)
 # a map containing all built in planners e.g. planners with integration script.
 built_in_planners = {
     'Fast Downward Planning System': ('rafcontpp.planner.fast_downward_integration', 'FdIntegration'),
-    'Fast-Forward Planning System v2.3': ('rafcontpp.planner.fast_forward_integration','FfIntegration')
+    'Fast-Forward Planning System v2.3': ('rafcontpp.planner.fast_forward_integration', 'FfIntegration')
 }
 # The storage path of the config file.
 DATASTORE_STORAGE_PATH = os.path.join(os.path.expanduser('~'), os.path.normpath('.config/rafcon/rafcontpp_conf.json'))
@@ -35,6 +35,7 @@ planning_threads_lock = threading.Lock()
 # tuples of all registered (currently running) planning threads format: (thread,problem name)
 planning_threads = {}
 
+
 def get_planning_threads():
     """
     :return: a copy of the planning_threads dict.
@@ -42,6 +43,7 @@ def get_planning_threads():
     with planning_threads_lock:
         copy = planning_threads.copy()
     return copy
+
 
 def datastore_from_file(file_path):
     """ datastore_from_file
@@ -55,26 +57,29 @@ def datastore_from_file(file_path):
         logger.warning("Can't restore configuration from: {}".format(file_path))
         logger.info("Creating default configuration...")
         default_dir = str(os.path.expanduser('~'))
-        ds = Datastore([default_dir],'',
+        ds = Datastore([default_dir], '',
                        default_dir, built_in_planners.keys()[0], default_dir, [], default_dir, default_dir, False)
 
     else:
         data = json.load(open(file_path, "r"))
-        logger.debug('Loading Configuration form: '+file_path)
-        sm_name = data['sm_name'] if 'sm_name' in data else '' # To provide backward compatibility.
+        logger.debug('Loading Configuration form: ' + file_path)
+        sm_name = data['sm_name'] if 'sm_name' in data else ''  # To provide backward compatibility.
         ds = Datastore(data['state_pools'],
-                     sm_name,
-                     data['sm_save_dir'],
-                     data['planner'],
-                     data['planner_script_path'],
-                     data['planner_argv'],
-                     data['facts_path'],
-                     data['type_db_path'],
-                     data['keep_related_files'],
-                     data['file_save_dir'])
-        runtime_data_path = data['runtime_data_path'] if 'runtime_data_path' in data else '' # To provide backward compatibility.
-        runtime_as_ref = data['runtime_as_ref'] if 'runtime_as_ref' in data else False # To provide backward compatibility.
-        plan_into_state = data['plan_into_state'] if 'plan_into_state' in data else False # To provide backward compatibility.
+                       sm_name,
+                       data['sm_save_dir'],
+                       data['planner'],
+                       data['planner_script_path'],
+                       data['planner_argv'],
+                       data['facts_path'],
+                       data['type_db_path'],
+                       data['keep_related_files'],
+                       data['file_save_dir'])
+        runtime_data_path = data[
+            'runtime_data_path'] if 'runtime_data_path' in data else ''  # To provide backward compatibility.
+        runtime_as_ref = data[
+            'runtime_as_ref'] if 'runtime_as_ref' in data else False  # To provide backward compatibility.
+        plan_into_state = data[
+            'plan_into_state'] if 'plan_into_state' in data else False  # To provide backward compatibility.
         ds.set_runtime_data_path(runtime_data_path)
         ds.set_use_runtime_path_as_ref(runtime_as_ref)
         ds.set_generate_into_state(plan_into_state)
@@ -88,8 +93,8 @@ class Datastore:
     Datastore is a datastore, which holds all data of the plugin. Every module can get, and store its data here.
     """
 
-    def __init__(self, state_pools,sm_name,sm_save_dir, planner,planner_script_path, planner_argv,
-               facts_path,type_db_path,keep_related_files, file_save_dir='/tmp'):
+    def __init__(self, state_pools, sm_name, sm_save_dir, planner, planner_script_path, planner_argv,
+                 facts_path, type_db_path, keep_related_files, file_save_dir='/tmp'):
         """
          Constructor of Datastore
         :param state_pools: a list of file paths.
@@ -153,10 +158,7 @@ class Datastore:
         # true, if the state machine should be generated into the target state. false if independent sm should be used.
         self.__generate_into_state = False
 
-
-
-
-    def validate_ds(self): # TODO validate everything!
+    def validate_ds(self):  # TODO validate everything!
 
         # validate state_pools
         for dir in self.__state_pools:
@@ -180,9 +182,7 @@ class Datastore:
             logger.error("file save dir is not a directory: " + str(self.__file_save_dir))
             raise ValueError('Is not a directory: ' + str(self.__file_save_dir))
 
-
-
-    def register_thread(self,interruptable_thread):
+    def register_thread(self, interruptable_thread):
         """
         gets a thread, addes it synchronized to a global map, and returns the map key (which is the register time.).
         :param interruptable_thread: a thread, the Datastore should store
@@ -190,13 +190,14 @@ class Datastore:
         """
 
         with planning_threads_lock:
-            register_time = time.time()# unix timestamp
+            register_time = time.time()  # unix timestamp
             # set task name to sm name, or problem name, if no sm name is available, and to state name if the sm is planned
             # into a state.
-            task_name = self.get_pddl_facts_representation().problem_name if len(self.get_sm_name()) == 0 else self.get_sm_name()
+            task_name = self.get_pddl_facts_representation().problem_name if len(
+                self.get_sm_name()) == 0 else self.get_sm_name()
             if self.__target_state:
                 task_name = self.__target_state.name
-            planning_threads[register_time] = (interruptable_thread,task_name, self.get_planner())
+            planning_threads[register_time] = (interruptable_thread, task_name, self.get_planner())
         return register_time
 
     def remove_thread(self, key):
@@ -214,12 +215,10 @@ class Datastore:
 
         return successful
 
-
-
     def get_state_pools(self):
         return self.__state_pools
 
-    def add_state_pools(self,state_pools,set_pool):
+    def add_state_pools(self, state_pools, set_pool):
         """
 
         :param state_pools: the state pools to add
@@ -230,23 +229,21 @@ class Datastore:
             raise ValueError("state_pools can't be None")
         if set_pool:
             self.__state_pools = []
-        if state_pools and isinstance(state_pools,str):
+        if state_pools and isinstance(state_pools, str):
             if state_pools not in self.__state_pools:
                 self.__state_pools.append(state_pools)
         elif state_pools:
             for state_pool in state_pools:
-                    self.add_state_pools(state_pool,False)
-
+                self.add_state_pools(state_pool, False)
 
     def get_file_save_dir(self):
         return self.__file_save_dir
 
-    def set_file_save_dir(self,file_save_dir):
+    def set_file_save_dir(self, file_save_dir):
         if self.__keep_related_files and not os.path.isdir(file_save_dir):
             logger.error('file_save_dir must be a directory')
-            raise ValueError('Is not a directory: '+str(file_save_dir))
+            raise ValueError('Is not a directory: ' + str(file_save_dir))
         self.__file_save_dir = file_save_dir
-
 
     def get_sm_name(self):
         return self.__sm_name
@@ -260,11 +257,11 @@ class Datastore:
     def set_sm_save_dir(self, sm_save_dir):
         if not os.path.isdir(sm_save_dir):
             logger.error('state machine save directory must be a directory!')
-            raise ValueError('Is not a direcotry: '+str(sm_save_dir))
+            raise ValueError('Is not a direcotry: ' + str(sm_save_dir))
         self.__sm_save_dir = sm_save_dir
 
     def get_domain_path(self):
-            return self.__domain_path
+        return self.__domain_path
 
     def set_domain_path(self, domain_path):
         if not os.path.isfile(domain_path):
@@ -277,23 +274,23 @@ class Datastore:
 
     def set_facts_path(self, facts_path):
         if not os.path.isfile(facts_path):
-            logger.error('No facts file: '+str(facts_path))
-            raise ValueError('Is not a File: '+str(facts_path))
+            logger.error('No facts file: ' + str(facts_path))
+            raise ValueError('Is not a File: ' + str(facts_path))
         self.__facts_path = facts_path
 
     def get_type_db_path(self):
         return self.__type_db_path
 
-    def set_type_db_path(self,type_db):
+    def set_type_db_path(self, type_db):
         if not os.path.isfile(type_db):
-            logger.error('No type db found at: '+ str(type_db))
-            raise ValueError('Is not a File: '+str(type_db))
+            logger.error('No type db found at: ' + str(type_db))
+            raise ValueError('Is not a File: ' + str(type_db))
         self.__type_db_path = type_db
 
     def get_planner_argv(self):
         return self.__planner_argv
 
-    def set_planner_argv(self,planner_argv):
+    def set_planner_argv(self, planner_argv):
         if planner_argv is None:
             logger.error("can't set None value as planner_argv")
             raise ValueError("can't set None value as planner_argv")
@@ -305,11 +302,10 @@ class Datastore:
     def set_planner(self, planner):
         self.__planner = planner
 
-
     def get_action_state_map(self):
         return self.__action_state_map
 
-    def set_action_state_map(self,action_state_map):
+    def set_action_state_map(self, action_state_map):
         if action_state_map is None:
             logger.error("can't set None value as action_state_map")
             raise ValueError("can't set None value as action_state_map")
@@ -318,7 +314,7 @@ class Datastore:
     def get_state_action_map(self):
         return self.__state_action_map
 
-    def set_state_action_map(self,state_action_map):
+    def set_state_action_map(self, state_action_map):
         if state_action_map is None:
             logger.error("can't set None value as state_action_map.")
             raise ValueError("can't set None value as state_action_map.")
@@ -327,7 +323,7 @@ class Datastore:
     def get_available_actions(self):
         return self.__available_actions
 
-    def set_available_actions(self,available_actions):
+    def set_available_actions(self, available_actions):
         if available_actions is None:
             logger.error("Can't set None value as available_actions.")
             raise ValueError("Can't set None value as available_actions.")
@@ -359,11 +355,11 @@ class Datastore:
     def get_plan(self):
         return self.__plan
 
-    def set_plan(self,plan):
+    def set_plan(self, plan):
         if plan is None:
             logger.error("can't set None value as plan.")
             raise ValueError("can't set None value as plan.")
-        if len(plan) > 0 and (not isinstance(plan[0],PlanStep)):
+        if len(plan) > 0 and (not isinstance(plan[0], PlanStep)):
             logger.error("plan hast to be of type [PlanStep].")
             raise TypeError("plan hast to be of type [PlanStep].")
         self.__plan = plan
@@ -371,18 +367,17 @@ class Datastore:
     def keep_related_files(self):
         return self.__keep_related_files
 
-    def set_keep_related_files(self,keep_related_files):
+    def set_keep_related_files(self, keep_related_files):
         self.__keep_related_files = keep_related_files
 
     def get_built_in_planners(self):
         return built_in_planners
 
-    def add_generated_file(self,file_name):
-        if file_name and isinstance(file_name,str):
+    def add_generated_file(self, file_name):
+        if file_name and isinstance(file_name, str):
             self.__generated_files.append(file_name)
         elif file_name:
             self.__generated_files.extend(file_name)
-
 
     def get_generated_files(self):
         return self.__generated_files
@@ -390,14 +385,14 @@ class Datastore:
     def get_planner_script_path(self):
         return self.__planner_script_path
 
-    def set_planner_script_path(self,psp):
+    def set_planner_script_path(self, psp):
         self.__planner_script_path = psp
 
     def get_pddl_action_map(self):
         return self.__pddl_action_map
 
-    def set_pddl_action_map(self,action_map):
-        if action_map and isinstance(action_map.values()[0],PddlActionRepresentation):
+    def set_pddl_action_map(self, action_map):
+        if action_map and isinstance(action_map.values()[0], PddlActionRepresentation):
             self.__pddl_action_map = action_map
         else:
             logger.error("pddl action map has to be of type Dict{str:PddlActionRepresentation}")
@@ -406,16 +401,15 @@ class Datastore:
     def get_available_types(self):
         return self.__available_types
 
-    def set_available_types(self,availabe_types):
-        assert isinstance(availabe_types,TypeTree)
+    def set_available_types(self, availabe_types):
+        assert isinstance(availabe_types, TypeTree)
         self.__available_types = availabe_types
 
     def get_available_predicates(self):
         return self.__available_predicates
 
-    def set_available_predicates(self,available_predicates):
+    def set_available_predicates(self, available_predicates):
         self.__available_predicates = available_predicates
-
 
     def get_target_state(self):
         return self.__target_state
@@ -429,8 +423,6 @@ class Datastore:
     def set_generate_into_state(self, plan_into_state):
         self.__generate_into_state = plan_into_state
 
-
-
     def save_datastore_parts_in_file(self, file_path):
         """ save_datastore_parts_in_file
         save_datastore_parts_in_file saves all plugin inputs, which are present in the datastore in a file.
@@ -441,24 +433,21 @@ class Datastore:
         data_to_save = {
             'state_pools': self.__state_pools,
             'type_db_path': self.__type_db_path,
-            'planner' : self.__planner,
+            'planner': self.__planner,
             'planner_script_path': self.__planner_script_path,
             'planner_argv': self.__planner_argv,
             'facts_path': self.__facts_path,
-            'plan_into_state':self.__generate_into_state,
+            'plan_into_state': self.__generate_into_state,
             'sm_name': self.__sm_name,
             'sm_save_dir': self.__sm_save_dir,
             'keep_related_files': self.__keep_related_files,
             'file_save_dir': self.__file_save_dir,
-            'runtime_data_path':self.__runtime_data_path,
-            'runtime_as_ref':self.__use_runtime_data_path_as_reference
+            'runtime_data_path': self.__runtime_data_path,
+            'runtime_as_ref': self.__use_runtime_data_path_as_reference
         }
-        logger.debug('Writing Configuration to path: '+file_path)
+        logger.debug('Writing Configuration to path: ' + file_path)
         conf_file = open(file_path, "w")
-        conf_file.write(json.dumps(data_to_save, indent=2,sort_keys=True, separators=(',', ': ')))
+        conf_file.write(json.dumps(data_to_save, indent=2, sort_keys=True, separators=(',', ': ')))
         conf_file.flush()
         conf_file.close()
         logger.info('Saved Configuration successfully!')
-
-
-

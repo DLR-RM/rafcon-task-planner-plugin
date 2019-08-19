@@ -25,8 +25,6 @@ class TypeTree:
         self.type_name = type_name
         self.children = []
 
-
-
     def add_type_branch(self, type_name, type_dict):
         """
         addTypeBranch does not only add the type, but also the whole branch.
@@ -36,9 +34,9 @@ class TypeTree:
         :param type_dict: a type dictionary, containing the type.
         :return: true if insert was successfull, false otherwhise.
         """
-        inserted = self.recursive_insert(type_name,type_dict)
+        inserted = self.recursive_insert(type_name, type_dict)
         for_inserted = True
-        if inserted :
+        if inserted:
             for key in type_dict.keys():
                 if type_dict[key] == type_name:
                     for_inserted = for_inserted & self.add_type_branch(key, type_dict)
@@ -72,7 +70,7 @@ class TypeTree:
         :param parent_name: the direct parent of the type to insert
         :return: true if insert was successfull, false otherwhise. (for example if the parent is not in the tree yet.)
         """
-        inserted =  self.is_in_tree(type_name)
+        inserted = self.is_in_tree(type_name)
         if (not type_name is None) & (not inserted):
             inserted = self.__insert(type_name, parent_name)
         return inserted
@@ -129,7 +127,6 @@ class TypeTree:
             type_list.extend(child.get_as_list())
         return type_list
 
-
     def is_in_tree(self, type_to_search):
         """
         isInTree searchs the typeTree for a specific type, and returns true,
@@ -140,7 +137,7 @@ class TypeTree:
         """
         return self.get_sub_tree(type_to_search) is not None
 
-    def get_sub_tree(self,type_to_search):
+    def get_sub_tree(self, type_to_search):
         """ get_sub_tree
         get_sub_tree gets a type, and returns the subtree, with the type as root.
         :param type_to_search: the root of the subtree to get
@@ -158,8 +155,7 @@ class TypeTree:
 
         return sub_tree
 
-
-    def is_parent_of(self,parent,child):
+    def is_parent_of(self, parent, child):
         """ is_parent_of
         is_parent_of receives two types, and returns true,
         if the first type it the parent of the second type.
@@ -177,8 +173,6 @@ class TypeTree:
 
         return is_parent
 
-
-
     def get_parent_of(self, type_name):
         """
         get_parent_of gets a type name, and returns its parent.
@@ -186,7 +180,7 @@ class TypeTree:
         :param type_name: a type name
         :return: the parent or None if the type has no parent or is not in tree.
         """
-        parent  = None
+        parent = None
         # look, if this node the parent
         for child in self.children:
             if type_name == child.type_name:

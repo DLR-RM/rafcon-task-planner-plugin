@@ -10,8 +10,6 @@
 # Version 12.07.1019
 
 
-
-
 import json
 import os
 import time
@@ -41,8 +39,8 @@ class StateMachineGenerator:
     """
 
     def __init__(self, datastore):
-            self.__datastore = datastore
-            self.__gui_involved = False
+        self.__datastore = datastore
+        self.__gui_involved = False
 
     def generate_state_machine(self):
         """ generate_state_machine
@@ -51,7 +49,8 @@ class StateMachineGenerator:
         """
 
         sm_name = self.__datastore.get_sm_name()
-        sm_name = self.__datastore.get_pddl_facts_representation().problem_name + '_state_machine' if len(sm_name) == 0 else sm_name
+        sm_name = self.__datastore.get_pddl_facts_representation().problem_name + '_state_machine' if len(
+            sm_name) == 0 else sm_name
         sm_path = os.path.abspath(os.path.join(self.__datastore.get_sm_save_dir(), sm_name))
         start_time = time.time()
         state_machine, target_state, is_independent_sm = self.__validate_and_get_root_state_and_state_machine(
@@ -81,8 +80,8 @@ class StateMachineGenerator:
                 state_machine_m = state_machine_manager_model.state_machines[state_machine.state_machine_id]
                 target_state_m = state_machine_m.get_state_model_by_path(target_state.get_path())
                 target_state_m.action_signal.emit(ActionSignalMsg(action='substitute_state', origin='model',
-                                                                action_parent_m=target_state_m,
-                                                                affected_models=[target_state_m], after=False))
+                                                                  action_parent_m=target_state_m,
+                                                                  affected_models=[target_state_m], after=False))
                 call_gui_callback(target_state.add_state, root_state)
                 call_gui_callback(target_state.set_start_state, root_state.state_id)
                 call_gui_callback(target_state.add_transition, root_state.state_id, 0, target_state.state_id, 0)
@@ -94,18 +93,14 @@ class StateMachineGenerator:
                 # have to set the size and pos of the root state, to make it fit the target state. (bit dirty)
                 t_width, t_height = target_state_m.meta['gui']['editor_gaphas']['size']
                 root_state_m = state_machine_m.get_state_model_by_path(root_state.get_path())
-                root_state_m.meta['gui']['editor_gaphas']['size'] = (0.8*t_width, 0.8*t_height)
-                root_state_m.meta['gui']['editor_gaphas']['rel_pos'] = (0.1*t_width, 0.1*t_height)
-                call_gui_callback(layouter.layout_state_machine, state_machine,root_state,True,state_order_list)
+                root_state_m.meta['gui']['editor_gaphas']['size'] = (0.8 * t_width, 0.8 * t_height)
+                root_state_m.meta['gui']['editor_gaphas']['rel_pos'] = (0.1 * t_width, 0.1 * t_height)
+                call_gui_callback(layouter.layout_state_machine, state_machine, root_state, True, state_order_list)
                 logger.info("Generated and integrated State machine: {}.".format(sm_name))
                 # enable gui
                 target_state_m.action_signal.emit(ActionSignalMsg(action='substitute_state', origin='model',
-                                                                action_parent_m=target_state_m,
-                                                                affected_models=[target_state_m], after=True))
-
-
-
-
+                                                                  action_parent_m=target_state_m,
+                                                                  affected_models=[target_state_m], after=True))
 
     def __generate_core_machine(self, sm_name, root_state=None):
         """
@@ -155,7 +150,7 @@ class StateMachineGenerator:
                                         + c_input_data_ports[
                                             key].name + ", which is needed in State " + current_state.name)
                 # add state to state machine
-                root_state.add_state( current_state)
+                root_state.add_state(current_state)
                 # add the state to the order list (for later formatting)
                 state_order_list.append(current_state.state_id)
                 # add transitions.
@@ -177,10 +172,9 @@ class StateMachineGenerator:
             root_state = None
             state_order_list = []
 
-        return (root_state,state_order_list)
+        return (root_state, state_order_list)
 
-
-    def __open_state_machine(self,state_machine, state_machine_path):
+    def __open_state_machine(self, state_machine, state_machine_path):
         """
         gets a state machine and opens it in rafcon. If an old version is still open, it closes it first.
         :param state_machine: the name of the state machine
@@ -193,10 +187,7 @@ class StateMachineGenerator:
             old_sm = state_machine_manager.get_open_state_machine_of_file_system_path(state_machine.file_system_path)
             call_gui_callback(state_machine_manager.remove_state_machine, old_sm.state_machine_id)
         new_state_machine = storage.load_state_machine_from_path(state_machine_path)
-        call_gui_callback(state_machine_manager.add_state_machine,new_state_machine)
-
-
-
+        call_gui_callback(state_machine_manager.add_state_machine, new_state_machine)
 
     def __load_state(self, wanted_state):
         """load_state
@@ -249,7 +240,7 @@ class StateMachineGenerator:
             storage.save_state_machine_to_path(state_machine, sm_path)
             is_independent = True
 
-        elif isinstance(root_state,HierarchyState):
+        elif isinstance(root_state, HierarchyState):
             if len(root_state.states) == 0 \
                     or root_state.semantic_data[SEMANTIC_DATA_DICT_NAME][ALLOW_OVERRIDE_NAME] == 'True':
                 # empty the root state!
@@ -261,17 +252,16 @@ class StateMachineGenerator:
                 logger.error("Can't plan into None empty Hierarchy State without permission!")
                 logger.info("Creating independent State machine...")
                 state_machine, valid_root_state, is_independent = self.__validate_and_get_root_state_and_state_machine(
-                                                                                                None, sm_name, sm_path)
+                    None, sm_name, sm_path)
 
 
         else:
             logger.error("Can't Plan into State {}, can only plan into Hierarchystate!".format(root_state))
             logger.info("Creating independent State machine...")
             state_machine, valid_root_state, is_independent = self.__validate_and_get_root_state_and_state_machine(
-                                                                                                None, sm_name, sm_path)
+                None, sm_name, sm_path)
 
         return (state_machine, valid_root_state, is_independent)
-
 
     def __clear_state(self, root_state):
         """
@@ -282,14 +272,14 @@ class StateMachineGenerator:
         state_machine_m = state_machine_manager_model.state_machines[state_machine.state_machine_id]
         state_m = state_machine_m.get_state_model_by_path(root_state.get_path())
         state_m.action_signal.emit(ActionSignalMsg(action='substitute_state', origin='model',
-                                                        action_parent_m=state_m,
-                                                        affected_models=[state_m], after=False))
+                                                   action_parent_m=state_m,
+                                                   affected_models=[state_m], after=False))
         for state in root_state.states.values():
-           call_gui_callback(root_state.remove_state, state.state_id, True, True, True)
+            call_gui_callback(root_state.remove_state, state.state_id, True, True, True)
 
         state_m.action_signal.emit(ActionSignalMsg(action='substitute_state', origin='model',
-                                                        action_parent_m=state_m,
-                                                        affected_models=[state_m], after=True))
+                                                   action_parent_m=state_m,
+                                                   affected_models=[state_m], after=True))
 
     def __get_runtime_data_init_state(self, data_init_file_path, use_as_ref):
         """
@@ -310,9 +300,9 @@ class StateMachineGenerator:
         execute_str = "def execute(self, inputs, outputs, gvm):\r\n"
         execute_str = "{}    self.logger.info('Updating rtpp_data.')\r\n".format(execute_str)
         execute_str = "{}    rtpp_data = gvm.get_variable('rtpp_data')\r\n".format(execute_str)
-        execute_str = "{}    rtpp_data = rtpp_data if rtpp_data else {}\r\n".format(execute_str,{})
+        execute_str = "{}    rtpp_data = rtpp_data if rtpp_data else {}\r\n".format(execute_str, {})
         execute_str = "{}    rtpp_data.update({})\r\n".format(execute_str, data_to_load)
-        execute_str = '{}    gvm.set_variable(\'{}\',{})\r\n'.format(execute_str,'rtpp_data',' rtpp_data')
+        execute_str = '{}    gvm.set_variable(\'{}\',{})\r\n'.format(execute_str, 'rtpp_data', ' rtpp_data')
         execute_str = "{}    return \"success\"".format(execute_str)
         data_init_state.script_text = execute_str
         return data_init_state

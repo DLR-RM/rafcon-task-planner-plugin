@@ -4,10 +4,12 @@
 
 
 import gi
+
 gi.require_version('Gtk', '3.0')
 from rafcontpp.model.datastore import SEMANTIC_DATA_DICT_NAME, PDDL_ACTION_SUB_DICT_NAME
 from rafcontpp.logic.pddl_requirement_finder import PddlRequirementFinder
 from rafcon.utils import log
+
 logger = log.get_logger(__name__)
 
 
@@ -33,13 +35,11 @@ class PddlActionTabController:
     # it has to do nothing, despite resetting the semaphore.
     auto_apply_semaphore = 0
 
-
     def __init__(self, state):
         """
         :param state: the state, it belongs to.
         """
         self.__state = state
-
 
     def add_auto_apply_button(self, button):
         """
@@ -55,7 +55,6 @@ class PddlActionTabController:
         """
         PddlActionTabController.auto_apply_check_buttons.remove(button)
 
-
     def save_data(self, buffer, key, saved_manually):
         """
         reads the values of the tab elements and saves them under the specified key in the semantic section,
@@ -66,12 +65,8 @@ class PddlActionTabController:
         """
         if saved_manually or PddlActionTabController.auto_apply_enabled:
             start, end = buffer.get_bounds()
-            to_save = buffer.get_text(start, end,True).strip('\n')
-            self.__state.add_semantic_data([SEMANTIC_DATA_DICT_NAME,PDDL_ACTION_SUB_DICT_NAME], to_save, key)
-
-
-
-
+            to_save = buffer.get_text(start, end, True).strip('\n')
+            self.__state.add_semantic_data([SEMANTIC_DATA_DICT_NAME, PDDL_ACTION_SUB_DICT_NAME], to_save, key)
 
     def save_requirements(self, checkbox, req_dict, saved_manually):
         """
@@ -82,11 +77,10 @@ class PddlActionTabController:
         :param saved_manually: True if saved manually, false otherwhise
         """
         if saved_manually or PddlActionTabController.auto_apply_enabled:
-            self.__state.add_semantic_data([SEMANTIC_DATA_DICT_NAME,PDDL_ACTION_SUB_DICT_NAME], str(self.__get_requirements(req_dict)), 'requirements')
+            self.__state.add_semantic_data([SEMANTIC_DATA_DICT_NAME, PDDL_ACTION_SUB_DICT_NAME],
+                                           str(self.__get_requirements(req_dict)), 'requirements')
 
-
-
-    def on_apply_changes(self,button,desc_buf,action_buf,pred_buf,types_buf,req_dict):
+    def on_apply_changes(self, button, desc_buf, action_buf, pred_buf, types_buf, req_dict):
         """
         saves all changes to the rafcon semantic tab.
         :param button: not used.
@@ -102,16 +96,14 @@ class PddlActionTabController:
         self.save_data(types_buf, 'pddl_types', True)
         self.save_requirements(None, req_dict, True)
 
-
-
-    def auto_apply_toogled(self,checkbox):
+    def auto_apply_toogled(self, checkbox):
         """
         enables and disables the auto apply checkboxes in all action tabs of all states.
         :param checkbox: the caller checkbox, containing the up to date state of auto apply.
         """
         # count semaphore up
         # this semaphore does not help for multi threading, but for recursive calls.
-        PddlActionTabController.auto_apply_semaphore+=1
+        PddlActionTabController.auto_apply_semaphore += 1
         # only modify if you are the first one
         if PddlActionTabController.auto_apply_semaphore == 1:
             PddlActionTabController.auto_apply_enabled = checkbox.get_active()
@@ -121,10 +113,7 @@ class PddlActionTabController:
         if PddlActionTabController.auto_apply_semaphore >= len(PddlActionTabController.auto_apply_check_buttons):
             PddlActionTabController.auto_apply_semaphore = 0
 
-
-
-
-    def auto_complete(self, button,pred_buf, types_buf, requ_dict, pddl_action):
+    def auto_complete(self, button, pred_buf, types_buf, requ_dict, pddl_action):
         """
         tries to auto complete the predicates, types and Requirements fields, sets and saves them.
         :param button: unused
@@ -135,10 +124,9 @@ class PddlActionTabController:
         :return: Nothing
         """
 
-        self.__predicates_auto_complete(pddl_action,pred_buf)
+        self.__predicates_auto_complete(pddl_action, pred_buf)
         self.__types_auto_complete(pddl_action, types_buf)
         self.__requirements_auto_complete(pddl_action.action, requ_dict)
-
 
     def __get_requirements(self, req_dict):
         """
@@ -164,23 +152,26 @@ class PddlActionTabController:
         # represents the hierarchy specified in pddl 1.2
         requ_dict[':adl'].set_active(need.adl() or requ_dict[':adl'].get_active())
         if not need.adl():
-            requ_dict[':strips'].set_active(need.strips()or requ_dict[':strips'].get_active())
-            requ_dict[':typing'].set_active(need.typing()or requ_dict[':typing'].get_active())
-            requ_dict[':equality'].set_active(need.equality()or requ_dict[':equality'].get_active())
-            requ_dict[':conditional-effects'].set_active(need.conditional_effects()or requ_dict[':conditional-effects'].get_active())
-            requ_dict[':disjunctive-preconditions'].set_active(need.disjunctive_preconditions()or requ_dict[':disjunctive-preconditions'].get_active())
-            requ_dict[':quantified-preconditions'].set_active(need.quantified_preconditions()or requ_dict[':quantified-preconditions'].get_active())
+            requ_dict[':strips'].set_active(need.strips() or requ_dict[':strips'].get_active())
+            requ_dict[':typing'].set_active(need.typing() or requ_dict[':typing'].get_active())
+            requ_dict[':equality'].set_active(need.equality() or requ_dict[':equality'].get_active())
+            requ_dict[':conditional-effects'].set_active(
+                need.conditional_effects() or requ_dict[':conditional-effects'].get_active())
+            requ_dict[':disjunctive-preconditions'].set_active(
+                need.disjunctive_preconditions() or requ_dict[':disjunctive-preconditions'].get_active())
+            requ_dict[':quantified-preconditions'].set_active(
+                need.quantified_preconditions() or requ_dict[':quantified-preconditions'].get_active())
             if not need.quantified_preconditions():
-                requ_dict[':existential-preconditions'].set_active(need.existential_preconditions()or requ_dict[':existential-preconditions'].get_active())
-                requ_dict[':universal-preconditions'].set_active(need.universal_preconditions()or requ_dict[':universal-preconditions'].get_active())
+                requ_dict[':existential-preconditions'].set_active(
+                    need.existential_preconditions() or requ_dict[':existential-preconditions'].get_active())
+                requ_dict[':universal-preconditions'].set_active(
+                    need.universal_preconditions() or requ_dict[':universal-preconditions'].get_active())
 
         # requ_dict[':foreach-expansions'].set_active(need.foreach_expansions()or requ_dict[':foreach-expansions'].get_active())
         # requ_dict[':dag-expansions'].set_active(need.dag_expansions()or requ_dict[':dag-expansions'].get_active())
         # requ_dict[':action-expansions'].set_active(need.action_expansions()or requ_dict[':action-expansions'].get_active())
-        requ_dict[':fluents'].set_active(need.fluents()or requ_dict[':fluents'].get_active())
+        requ_dict[':fluents'].set_active(need.fluents() or requ_dict[':fluents'].get_active())
         # requ_dict[':expression-evaluation'].set_active(need.expression_evaluation()or requ_dict[':expression-evaluation'].get_active())
-
-
 
     def __types_auto_complete(self, pddl_action, types_buffer):
         """
@@ -195,16 +186,14 @@ class PddlActionTabController:
         start, end = types_buffer.get_bounds()
         type_field = types_buffer.get_text(start, end, True)
         # to be able to compare
-        upper_type_field = ' '+ type_field.upper()+' '
-        upper_type_field = upper_type_field.replace(',',' ')
+        upper_type_field = ' ' + type_field.upper() + ' '
+        upper_type_field = upper_type_field.replace(',', ' ')
         for type in types:
-            if upper_type_field.find(' '+type.upper()+' ') == -1:
-                type_field = type_field + ", "+type
+            if upper_type_field.find(' ' + type.upper() + ' ') == -1:
+                type_field = type_field + ", " + type
 
         # set type field.
         types_buffer.set_text(type_field.strip(',').strip())
-
-
 
     def __predicates_auto_complete(self, pddl_action, pred_field_buf):
         """
@@ -224,9 +213,8 @@ class PddlActionTabController:
 
         for fpred in found_predicates:
             if upper_pred.find(fpred.upper()) == -1:
-                pred_field = pred_field +'\r\n' + fpred
+                pred_field = pred_field + '\r\n' + fpred
                 upper_pred = pred_field.upper()
-
 
         pred_field = pred_field.strip('\r\n')
         pred_field_buf.set_text(pred_field)

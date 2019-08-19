@@ -15,9 +15,7 @@ from rafcontpp.model.pddl_action_representation import action_to_upper
 logger = log.get_logger(__name__)
 
 
-
 class PddlActionLoader:
-
 
     def __init__(self, datastore):
         """
@@ -26,7 +24,6 @@ class PddlActionLoader:
         """
 
         self.__datastore = datastore
-
 
     def load_pddl_actions(self):
         """
@@ -61,7 +58,6 @@ class PddlActionLoader:
 
                     action_parser = PddlActionParser(r_action)
                     action_name = action_parser.parse_action_name().upper()
-
 
                     c_action = action_to_upper(PddlActionRepresentation(
                         action_name,
@@ -114,7 +110,7 @@ class PddlActionLoader:
             req_list = rs.split(',')
         return req_list
 
-    def parse_predicate_string(self,pred_string):
+    def parse_predicate_string(self, pred_string):
         """
         construct predicate array from predicate string.
         :param pred_string: A string containing all predicates of the action.
@@ -129,6 +125,5 @@ class PddlActionLoader:
             predicate_string = predicate_string[end_index:]
             start_index = predicate_string.find('(')
             end_index = predicate_string.find(')') + 1
-        logger.debug("predicates:  "+str(predicates))
+        logger.debug("predicates:  " + str(predicates))
         return predicates
-

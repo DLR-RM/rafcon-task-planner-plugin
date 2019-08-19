@@ -28,12 +28,10 @@ class ExecutionController:
 
     def __init__(self, datastore):
         """
-
         :param datastore: a datastore, containing all relevant data.
         """
         self.__datastore = datastore
         self.__planning_thread_register_time = -1
-
 
     def on_execute_pre_planning(self):
         """
@@ -52,9 +50,9 @@ class ExecutionController:
             self.__datastore.set_pddl_facts_representation(facts_repr)
             logger.debug('Handover to mapper.')
             mapper = Mapper(self.__datastore)
-            mapper.generate_action_state_map()                      # --> as_map
-            mapper.generate_state_action_map()                      # --> sa_map
-            mapper.generate_available_actions()                     # --> available actions
+            mapper.generate_action_state_map()  # --> as_map
+            mapper.generate_state_action_map()  # --> sa_map
+            mapper.generate_available_actions()  # --> available actions
             # load actions into datastore
             logger.debug('Handover to action loader.')
             loader = PddlActionLoader(self.__datastore)
@@ -62,11 +60,11 @@ class ExecutionController:
             # create domain
             logger.debug('Handover to domain generator.')
             domain_generator = DomainGenerator(self.__datastore)
-            domain_generator.generate_domain()                      # --> domain
+            domain_generator.generate_domain()  # --> domain
             # generate plan
             logger.debug('Handover to planning controller')
             planning_controller = PlanningController(self.__datastore)
-            logger.info('Planning preparation took {0:.4f} seconds.'.format(time.time()-start_time))
+            logger.info('Planning preparation took {0:.4f} seconds.'.format(time.time() - start_time))
             planning_thread = planning_controller.execute_planning(self.on_execute_post_planning)
             self.__planning_thread_register_time = self.__datastore.register_thread(planning_thread)
             return planning_thread
@@ -76,9 +74,7 @@ class ExecutionController:
             traceback.print_exc()
             self.on_execute_post_planning(False)
 
-
-
-    def on_execute_post_planning(self,planning_successful):
+    def on_execute_post_planning(self, planning_successful):
         """
         on_execute_post_planning takes care of the post planning steps in the pipeline, e.g. it triggeres the state
         machine generation procedure. typically its executed from another thread.
@@ -120,8 +116,6 @@ class ExecutionController:
                     logger.debug("could not remove planning thread.")
                 else:
                     logger.debug('removed planning thread successfully.')
-
-
 
     def __parse_facts_file(self):
         """

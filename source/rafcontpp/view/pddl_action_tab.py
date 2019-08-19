@@ -14,17 +14,19 @@ from rafcontpp.logic.pddl_action_parser import PddlActionParser
 from rafcontpp.control.pddl_action_tab_controller import PddlActionTabController
 from rafcon.core.states.library_state import LibraryState
 from rafcon.utils import log
+
 logger = log.get_logger(__name__)
 
 # list with all pddl requirements
 requ_list = [':strips', ':adl', ':typing', ':equality',
-                ':negative-preconditions', ':disjunctive-preconditions',
-                ':conditional-effects', ':existential-preconditions',
-                ':universal-preconditions', ':derived-predicates',
-                ':action-costs', ':quantified-preconditions',
-                ':action-expansions', ':foreach-expansions',
-                ':dag-expansions', ':expression-evaluation', ':fluents', ':open-world',':true-negation',
-                ':durative-actions', ':duration-inequalities', ':continous-effects']
+             ':negative-preconditions', ':disjunctive-preconditions',
+             ':conditional-effects', ':existential-preconditions',
+             ':universal-preconditions', ':derived-predicates',
+             ':action-costs', ':quantified-preconditions',
+             ':action-expansions', ':foreach-expansions',
+             ':dag-expansions', ':expression-evaluation', ':fluents', ':open-world', ':true-negation',
+             ':durative-actions', ':duration-inequalities', ':continous-effects']
+
 
 class PddlActionTab:
     """PddlActionTabController
@@ -47,7 +49,6 @@ class PddlActionTab:
     # if the semaphore equals the length of the list, its the indicator, that this button is the last one,
     # it has to do nothing, despite resetting the semaphore.
     auto_save_semaphore = 0
-
 
     def __init__(self, state):
         """
@@ -78,9 +79,6 @@ class PddlActionTab:
         if self.__auto_apply_button in PddlActionTabController.auto_apply_check_buttons:
             self.__controller.remove_auto_apply_button(self.__auto_apply_button)
 
-
-
-
     def init_tab(self):
         """
         loads the data into the action tab and subscribes on signals of some gui elements.
@@ -103,11 +101,12 @@ class PddlActionTab:
             self.__gtk_builder.get_object('rtpp_pddl_tab_apply').set_sensitive(False)
 
             # disable requirements check boxes
-            logger.debug("##################contains: {}".format(':negative-preconditions' in self.__requ_cb_dict.keys()))
+            logger.debug(
+                "##################contains: {}".format(':negative-preconditions' in self.__requ_cb_dict.keys()))
             for c_button in self.__requ_cb_dict.values():
                 c_button.set_sensitive(False)
         else:
-            self.__copy_and_clear_old_dict(self.__state)# to change from old to new dict, remove in the future!
+            self.__copy_and_clear_old_dict(self.__state)  # to change from old to new dict, remove in the future!
             self.__load_from_semantic_section(False)
             # observe parts
             auto_fill_button = self.__gtk_builder.get_object('rtpp_pddl_tab_auto_fill_button')
@@ -119,25 +118,28 @@ class PddlActionTab:
             desc_buf = self.__description_text_view.get_buffer()
             action_buf = self.__pddl_action_source_view.get_buffer()
 
-            apply_button.connect('clicked',self.__controller.on_apply_changes,
+            apply_button.connect('clicked', self.__controller.on_apply_changes,
                                  desc_buf, action_buf, pred_buf, types_buf, req_dict)
             self.__auto_apply_button.set_active(PddlActionTabController.auto_apply_enabled)
             self.__auto_apply_button.connect('toggled', self.__controller.auto_apply_toogled)
             self.__controller.add_auto_apply_button(self.__auto_apply_button)
 
-            self.__description_text_view.get_buffer().connect('changed',self.__controller.save_data,'description',False)
-            self.__pddl_action_source_view.get_buffer().connect('changed', self.__controller.save_data,'pddl_action',False)
-            self.__pddl_predicates_text_view.get_buffer().connect('changed', self.__controller.save_data,'pddl_predicates',False)
-            self.__pddl_types_text_view.get_buffer().connect('changed', self.__controller.save_data, 'pddl_types',False)
+            self.__description_text_view.get_buffer().connect('changed', self.__controller.save_data, 'description',
+                                                              False)
+            self.__pddl_action_source_view.get_buffer().connect('changed', self.__controller.save_data, 'pddl_action',
+                                                                False)
+            self.__pddl_predicates_text_view.get_buffer().connect('changed', self.__controller.save_data,
+                                                                  'pddl_predicates', False)
+            self.__pddl_types_text_view.get_buffer().connect('changed', self.__controller.save_data, 'pddl_types',
+                                                             False)
 
             # connect to requirements check boxes
             for c_button in self.__requ_cb_dict.values():
-                c_button.connect('toggled',self.__controller.save_requirements,req_dict, False)
+                c_button.connect('toggled', self.__controller.save_requirements, req_dict, False)
 
         action_tab = self.__gtk_builder.get_object('rtpp_action_box')
         action_tab.show_all()
         return action_tab
-
 
     def __add_requirements_boxes(self, gtk_viewport):
         """
@@ -145,7 +147,7 @@ class PddlActionTab:
         :param gtk_viewport: the base element, where to store the boxes in.
         :return: a dictionary, contining the information, which button box belongs to which requirement
         """
-        button_dict = {} # key: id value: checkButtonObject
+        button_dict = {}  # key: id value: checkButtonObject
         grid = Gtk.Grid()
         grid.insert_row(0)
         grid.insert_column(0)
@@ -164,12 +166,9 @@ class PddlActionTab:
                 grid.insert_row(row_counter)
                 row_counter += 1
 
-
         gtk_viewport.add(grid)
         grid.show_all()
         return button_dict
-
-
 
     def __load_from_semantic_section(self, is_library_state):
         """
@@ -180,7 +179,7 @@ class PddlActionTab:
         """
         # to add the key to the dictionary, find a Better place
         if self.__state.semantic_data[SEMANTIC_DATA_DICT_NAME][ALLOW_OVERRIDE_NAME] != "True":
-            self.__state.add_semantic_data([SEMANTIC_DATA_DICT_NAME],"False",ALLOW_OVERRIDE_NAME)
+            self.__state.add_semantic_data([SEMANTIC_DATA_DICT_NAME], "False", ALLOW_OVERRIDE_NAME)
 
         rtpp_dict = self.__state.semantic_data[SEMANTIC_DATA_DICT_NAME][PDDL_ACTION_SUB_DICT_NAME]
 
@@ -202,8 +201,7 @@ class PddlActionTab:
     def __call_controller_auto_complete(self, button, pred_buf, types_buf, req_dict):
         self.__controller.auto_complete(button, pred_buf, types_buf, req_dict, self.__get_pddl_action())
 
-
-    def __filter_input(self,input):
+    def __filter_input(self, input):
         """
         filters an input string
         :param input:
@@ -234,7 +232,6 @@ class PddlActionTab:
             dict_to_return = state.semantic_data['RAFCONTPP_PDDL_ACTION']
         return dict_to_return
 
-
     def __copy_and_clear_old_dict(self, state):
         """
             this method removes the old dict, and copies it into a new one.
@@ -245,5 +242,6 @@ class PddlActionTab:
         if 'RAFCONTPP_PDDL_ACTION' in state.semantic_data:
             if not SEMANTIC_DATA_DICT_NAME in state.semantic_data:
                 dict_to_return = state.semantic_data[SEMANTIC_DATA_DICT_NAME][PDDL_ACTION_SUB_DICT_NAME]
-                state.add_semantic_data([SEMANTIC_DATA_DICT_NAME], state.semantic_data['RAFCONTPP_PDDL_ACTION'], PDDL_ACTION_SUB_DICT_NAME)
+                state.add_semantic_data([SEMANTIC_DATA_DICT_NAME], state.semantic_data['RAFCONTPP_PDDL_ACTION'],
+                                        PDDL_ACTION_SUB_DICT_NAME)
             state.remove_semantic_data(['RAFCONTPP_PDDL_ACTION'])

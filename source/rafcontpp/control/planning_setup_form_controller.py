@@ -4,7 +4,6 @@
 # Version 19.07.2019
 
 
-
 import os
 from threading import Thread
 
@@ -46,9 +45,6 @@ class PlanningSetupFormController:
     This is the controller of the Planning Setup Form.
     """
 
-
-
-
     def __init__(self, datastore):
         """
 
@@ -57,11 +53,10 @@ class PlanningSetupFormController:
         assert isinstance(datastore, Datastore)
         self.__datastore = datastore
 
-
     def on_apply(self, button, setup_form, state_pool_string,
-                            type_db_path,planner_text,planner_script_path,planner_argv_text,
-                            facts_path,generate_into_state,sm_name,sm_save_dir,keep_related_files, file_save_dir,
-                                                                    rt_data_path, as_reference):
+                 type_db_path, planner_text, planner_script_path, planner_argv_text,
+                 facts_path, generate_into_state, sm_name, sm_save_dir, keep_related_files, file_save_dir,
+                 rt_data_path, as_reference):
         """
         on_apply filles the datastore with new data entered into the setup form, saves it in the configuration,
         destroys the setup form, triggeres the pipeline e.g. the execution controller, and increments the plan task
@@ -87,20 +82,22 @@ class PlanningSetupFormController:
         # destroy dialog.
         # start the pipeline to generate a sm.
         everything_filled, not_filled = self.__prepare_datastore(self.__datastore, state_pool_string,
-                            type_db_path,planner_text,planner_script_path,planner_argv_text,
-                            facts_path,generate_into_state,sm_name,sm_save_dir,keep_related_files, file_save_dir,
-                                                                    rt_data_path, as_reference)
+                                                                 type_db_path, planner_text, planner_script_path,
+                                                                 planner_argv_text,
+                                                                 facts_path, generate_into_state, sm_name, sm_save_dir,
+                                                                 keep_related_files, file_save_dir,
+                                                                 rt_data_path, as_reference)
 
         if everything_filled:
             self.__datastore.validate_ds()
             self.__datastore.save_datastore_parts_in_file(DATASTORE_STORAGE_PATH)
-            setup_form.hide()# its more smoothly to first hide and then destroy
+            setup_form.hide()  # its more smoothly to first hide and then destroy
             main_window = gui_singletons.main_window_controller.view['main_window']
-            planning_wait_window = ConfirmDialog(main_window,WAIT_WINDOW_CONTENT)
+            planning_wait_window = ConfirmDialog(main_window, WAIT_WINDOW_CONTENT)
             planning_wait_window.show()
             setup_form.destroy()
             from rafcontpp.view.planning_button import increment_button
-            increment_button()# increment the button, to indecate that a new planning process has started.
+            increment_button()  # increment the button, to indecate that a new planning process has started.
             # start pipeline
             logger.info("Start pipeline...")
             planning_thread = None
@@ -113,15 +110,12 @@ class PlanningSetupFormController:
 
         else:
             logger.error(" Field missing! {}".format(not_filled))
-            ConfirmDialog(setup_form," ERROR Field missing!\r\n\r\n {}".format(not_filled)).show()
-
-
-
+            ConfirmDialog(setup_form, " ERROR Field missing!\r\n\r\n {}".format(not_filled)).show()
 
     def on_destroy(self, button, setup_form, state_pool_string,
-                            type_db_path,planner_text,planner_script_path,planner_argv_text,
-                            facts_path,generate_into_state,sm_name,sm_save_dir,keep_related_files, file_save_dir,
-                                                                    rt_data_path, as_reference):
+                   type_db_path, planner_text, planner_script_path, planner_argv_text,
+                   facts_path, generate_into_state, sm_name, sm_save_dir, keep_related_files, file_save_dir,
+                   rt_data_path, as_reference):
         """
         on_destroy destroys the setup form, but saves the current configuration into a file.
         :param button: Not used.
@@ -143,18 +137,19 @@ class PlanningSetupFormController:
         # save data to datastore
         # save datastore to file.
         try:
-            self.__prepare_datastore(self.__datastore,state_pool_string,
-                            type_db_path,planner_text,planner_script_path,planner_argv_text,
-                            facts_path,generate_into_state,sm_name,sm_save_dir,keep_related_files, file_save_dir,
-                                                                    rt_data_path, as_reference)
+            self.__prepare_datastore(self.__datastore, state_pool_string,
+                                     type_db_path, planner_text, planner_script_path, planner_argv_text,
+                                     facts_path, generate_into_state, sm_name, sm_save_dir, keep_related_files,
+                                     file_save_dir,
+                                     rt_data_path, as_reference)
             self.__datastore.save_datastore_parts_in_file(DATASTORE_STORAGE_PATH)
         finally:
             setup_form.destroy()
 
-
     def on_show_state_pool_info(self, button, setup_form, state_pool_string,
                                 type_db_path, planner_text, planner_script_path, planner_argv_text,
-                                facts_path,generate_into_state, sm_name, sm_save_dir, keep_related_files, file_save_dir,
+                                facts_path, generate_into_state, sm_name, sm_save_dir, keep_related_files,
+                                file_save_dir,
                                 rt_data_path, as_reference):
         """
          Show state pool info, uses the provided state pools and the type file to collect details, and show
@@ -177,12 +172,12 @@ class PlanningSetupFormController:
 
         available_predicates = []
         type_tree = None
-        tmp_datastore = Datastore(None,None,None,None,None,None,None,None,None,None,)
-        tmp_datastore.add_state_pools(self.__string_to_string_array(state_pool_string),True)
+        tmp_datastore = Datastore(None, None, None, None, None, None, None, None, None, None, )
+        tmp_datastore.add_state_pools(self.__string_to_string_array(state_pool_string), True)
         tmp_datastore.set_type_db_path(type_db_path)
         merge_preds = True
 
-        try:# generate maps
+        try:  # generate maps
             mapper = Mapper(tmp_datastore)
             mapper.generate_action_state_map()
             mapper.generate_state_action_map()
@@ -191,21 +186,21 @@ class PlanningSetupFormController:
         except Exception as e:
             merge_preds = False
 
-        try:# load actions
+        try:  # load actions
             loader = PddlActionLoader(tmp_datastore)
             loader.load_pddl_actions()
 
         except Exception as e:
             merge_preds = False
 
-        try:# generate type tree
+        try:  # generate type tree
             type_merger = TypeMerger(tmp_datastore)
             type_tree = type_merger.merge_types()
 
         except Exception as e:
             merge_preds = False
 
-        try:# generate available predicates.
+        try:  # generate available predicates.
             for state in tmp_datastore.get_pddl_action_map():
                 action = tmp_datastore.get_pddl_action_map()[state]
                 for predicate in action.predicates:
@@ -226,8 +221,7 @@ class PlanningSetupFormController:
         state_pool_info.set_predicates(available_predicates)
         state_pool_info.show()
 
-
-    def on_choose_state_pool(self,chooser, chooser_entry):
+    def on_choose_state_pool(self, chooser, chooser_entry):
         """
         Receives a directory chooser and a text entry, reads the path, set in the chooser and appends it to the text of
         the text entry.
@@ -237,12 +231,11 @@ class PlanningSetupFormController:
         # append choosen state pool to state pool text entry.
         to_append = chooser.get_filename()
         pools = chooser_entry.get_text()
-        if len(pools)> 0 and pools[len(pools)-1] != ':':
-            pools+=':'
+        if len(pools) > 0 and pools[len(pools) - 1] != ':':
+            pools += ':'
         chooser_entry.set_text(pools + to_append + ':')
 
-
-    def on_choose_runtime_data(self,chooser,runtime_data_entry):
+    def on_choose_runtime_data(self, chooser, runtime_data_entry):
         """
         Receivs a file chooser and a text entry, reads the filepath of the chooser and sets it as text into the entry.
         :param chooser: a GtkFileChooserButton
@@ -250,11 +243,10 @@ class PlanningSetupFormController:
         """
         runtime_data_entry.set_text(chooser.get_filename())
 
-
     def __prepare_datastore(self, datastore_to_prepare, state_pool_string,
-                            type_db_path,planner_text,planner_script_path,planner_argv_text,
-                            facts_path,generate_into_state,sm_name,sm_save_dir,keep_related_files, file_save_dir,
-                                                                    rt_data_path, as_reference):
+                            type_db_path, planner_text, planner_script_path, planner_argv_text,
+                            facts_path, generate_into_state, sm_name, sm_save_dir, keep_related_files, file_save_dir,
+                            rt_data_path, as_reference):
         """
         __prepare_datastore saves the given data into the datastore, and checks if data is missing.
         :param setup_form: The setup form, to be able to destroy it.
@@ -278,9 +270,9 @@ class PlanningSetupFormController:
         everything_filled = True
         not_filled = None
         logger.debug('State pool: ' + str(self.__string_to_string_array(state_pool_string)))
-        dtp.add_state_pools(self.__string_to_string_array(state_pool_string),True)
+        dtp.add_state_pools(self.__string_to_string_array(state_pool_string), True)
         dtp.set_type_db_path(type_db_path)
-        choosen_planner = planner_text.replace(NOT_AVAILABLE,'')
+        choosen_planner = planner_text.replace(NOT_AVAILABLE, '')
         # set planner
         script_path = planner_script_path
         if choosen_planner == OTHER:
@@ -302,7 +294,7 @@ class PlanningSetupFormController:
         if generate_into_state:
             selected_state = self.__get_current_selected_state_if_valid()
             if selected_state:
-               dtp.set_target_state(selected_state)
+                dtp.set_target_state(selected_state)
             else:
                 everything_filled = False
                 not_filled = 'State to plan into not accurately selected:' \
@@ -317,14 +309,12 @@ class PlanningSetupFormController:
         runtime_data_path = rt_data_path.strip()
         dtp.set_use_runtime_path_as_ref(as_reference)
         dtp.set_runtime_data_path(runtime_data_path)
-        if not dtp.use_runtime_path_as_ref() and runtime_data_path and len(runtime_data_path)>0:
+        if not dtp.use_runtime_path_as_ref() and runtime_data_path and len(runtime_data_path) > 0:
             if not os.path.isfile(dtp.get_runtime_data_path()):
                 everything_filled = False
                 not_filled = 'Runtime Data contains no valid Filepath!'
 
-
-        return (everything_filled,not_filled)
-
+        return (everything_filled, not_filled)
 
     def __wait_and_hide(self, thread, planning_wait_window):
         """
@@ -340,18 +330,16 @@ class PlanningSetupFormController:
         from rafcontpp.view.planning_button import decrement_button
         call_gui_callback(decrement_button)  # decrement button, to indicate, that the planning process is finish.
 
-
-    def __string_to_string_array(self,string):
+    def __string_to_string_array(self, string):
         """
         a little method, that splits a colon seperated string into a string array.
         :param string: a string, containing colon seperated substrings.
         :return: a list of substrings e.g. a:b:c --> [a,b,c]
         """
         result = []
-        if string and len(string) >0:
-            result = list(filter(None,string.split(':')))
+        if string and len(string) > 0:
+            result = list(filter(None, string.split(':')))
         return result
-
 
     def __get_current_selected_state_if_valid(self):
         """

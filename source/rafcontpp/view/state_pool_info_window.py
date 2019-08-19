@@ -2,16 +2,17 @@
 # Christoph Suerig <christoph.suerig@dlr.de>
 # Version 14.06.2019
 import gi
+
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 import os
+
 
 class StatePoolInfoWindow:
     """
     The State Pool Infow Window is a info window displaying detailed information about the configured state pool(s)
     It for example shows the actions contained in the pools, the types used and the predicates available.
     """
-
 
     def __init__(self, parent):
         """
@@ -31,8 +32,7 @@ class StatePoolInfoWindow:
         window_button = self.__window_builder.get_object('rtpp_predicates_view_close_button')
         window_button.connect('clicked', lambda x: self.__state_pool_info_dialog.destroy())
 
-
-    def set_state_pools(self,state_pools):
+    def set_state_pools(self, state_pools):
         """
         Sets the statepools in the info window.
         :param statepools: a list containing all selected state pools.
@@ -45,9 +45,8 @@ class StatePoolInfoWindow:
 
         state_pool_label = self.__window_builder.get_object('rtpp_data_info_view_state_pools_label')
         state_pool_label.set_text(state_pool_string)
-        state_pool_label.set_alignment(0,0)
+        state_pool_label.set_alignment(0, 0)
         state_pool_label.set_selectable(True)
-
 
     def set_predicates(self, predicates):
         """
@@ -87,16 +86,15 @@ class StatePoolInfoWindow:
         asm_string = ''
 
         if action_state_map:
-            as_list = ["Action <----> State ",""]
+            as_list = ["Action <----> State ", ""]
             for action in sorted(action_state_map.keys()):
-                as_list.append("{} <----> {}".format(action,action_state_map[action]))
+                as_list.append("{} <----> {}".format(action, action_state_map[action]))
             asm_string = self.__list_to_multi_line_string(as_list)
 
         action_label = self.__window_builder.get_object('rtpp_data_info_view_action_state_label')
         action_label.set_text(asm_string)
         action_label.set_alignment(0, 0)
         action_label.set_selectable(True)
-
 
     def show(self):
         """
@@ -110,11 +108,6 @@ class StatePoolInfoWindow:
         destroys the dialog.
         """
         self.__state_pool_info_dialog.destroy()
-
-
-
-
-
 
     def __list_to_multi_line_string(self, list):
         """

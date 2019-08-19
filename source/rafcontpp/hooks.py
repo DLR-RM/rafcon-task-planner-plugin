@@ -34,8 +34,6 @@ def main_window_setup(main_window_controller):
     planning_button.initialize()
 
 
-
-
 def post_init(*args, **kwargs):
     """
     The post_init function of the execution hooks plugin. The observer of the execution hooks manager are initialized
@@ -59,7 +57,7 @@ def post_state_editor_register_view(state_editor):
 
     # add tab, with lable to State Editor
     # f1ec is from font awesome
-    icon = {_('PDDL Action'): 'f1ec'} # its done like this, because the helper function needs a map as input
+    icon = {_('PDDL Action'): 'f1ec'}  # its done like this, because the helper function needs a map as input
     main_notebook_2 = state_editor_view["main_notebook_2"]
     main_notebook_2.append_page(action_tab, create_tab_header_label('PDDL Action', icon))
     main_notebook_2.set_tab_reorderable(action_tab, True)

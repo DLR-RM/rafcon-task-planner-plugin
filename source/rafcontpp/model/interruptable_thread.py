@@ -3,11 +3,11 @@
 # Version 12.07.2019
 import threading
 
-
 # A lock to synchronize planning thread map accesses.
 interruptable_threads_lock = threading.Lock()
 # a dictionary of all running interruptable threads.
 interruptable_threads = {}
+
 
 def current_thread():
     """
@@ -28,16 +28,12 @@ class InterruptableThread(threading.Thread):
     In order to achieve this, it adds itself to the args of a given function.
     """
 
-
-
-    def __init__(self,group=None, target=None, name=None, args=(), kwargs={}):
+    def __init__(self, group=None, target=None, name=None, args=(), kwargs={}):
         """
         A thread that is interruptable.
         """
-        threading.Thread.__init__(self,group,target,name,args,kwargs)
+        threading.Thread.__init__(self, group, target, name, args, kwargs)
         self.__interrupted_flag = threading.Event()
-
-
 
     def run(self):
         # add new thread to list of all interruptable threads
@@ -50,7 +46,6 @@ class InterruptableThread(threading.Thread):
         with interruptable_threads_lock:
             elem = interruptable_threads.pop(self.ident, None)
 
-
     def interrupt(self):
         """
         Sets the Threads interrupted flag.
@@ -62,7 +57,3 @@ class InterruptableThread(threading.Thread):
         :return: True if the Interrupted Flag is set. False Otherwise.
         """
         return self.__interrupted_flag.is_set()
-
-
-
-

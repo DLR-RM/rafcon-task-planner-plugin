@@ -7,7 +7,6 @@
 
 class PddlFactsRepresentation:
 
-
     def __init__(self, facts_string, obj_type_map, domain_name, problem_name):
         """
         This is the representation of the pddl facts file (not completed yet.)
@@ -22,7 +21,6 @@ class PddlFactsRepresentation:
         self.domain_name = domain_name
         self.problem_name = problem_name
 
-
     def get_original_object_name(self, object_name):
         """
         takes the name of an object, which is now maybe uppercase, or lowercase, and returns the original format.
@@ -31,7 +29,7 @@ class PddlFactsRepresentation:
         """
         ori_obj_name = object_name
         if object_name:
-            object_name =  object_name.upper()
+            object_name = object_name.upper()
             for obj in self.obj_type_map.keys():
                 if obj.upper() == object_name:
                     ori_obj_name = obj
