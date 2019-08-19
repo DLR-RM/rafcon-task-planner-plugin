@@ -36,7 +36,6 @@ To be able to run this tutorial, you need:
  - **RAFCON**: `pip install --user rafcon` orː `git clone git@rmc-github.robotic.dlr.de:common/rafcon.git` (for information about how to install rafcon see: [install rafcon](https://github.com/DLR-RM/RAFCON))
  - **The Rafcon Task Planner Plugin**ː `git clone git@rmc-github.robotic.dlr.de:moro/rafcon_task_planner_plugin.git`
  - **The Fast Downward Planning System**ː `pip install --user downward-dlr --no-compile` (evt. you have to install the wheel package first)
- - **OPTIONAL** the **Auto Layout Plugin**ː `git clone git@rmc-github.robotic.dlr.de:beld-rc/rafcon_auto_layout_plugin.git`
  
 ## 1.3 First Step 
 At first, the plugin has to be registered in RAFCON. To do so, `[RAFCON̙-TASK-PLANNER-PLUGIN̠-REPOSITORY̠-PATH]/source/rafcontpp` has to be added to the `RAFCON_PLUGIN_PATH` environmental variable. If you want to use the auto Layout Plugin, also add its path. (See [RAFCON Docs](https://rafcon.readthedocs.io/en/latest/plugins.html))  
@@ -301,11 +300,10 @@ Let's hit the "Plan Task" Button:
 
 ![Restaurant_example_plugin_conf](doc/Rafcon_rtpp_configuration.png "Plugin Configuration")
 
-If we hit the "Generate State machine" button now, the planner will try to solve the scenario. Afterwards the found plan will be used to create a state machine, which has the same name as your problem in the facts.pddl. When you see it now, it looks a bit... messed up. 
-
+If we hit the "Generate State machine" button now, the planner will try to solve the scenario. Afterwards the found plan will be used to create a state machine.
 ![Restaurant_example_state_machine](doc/Rtpp_restaurant_statemachine.png "Restaurant State machine")
 
-To beautify the state machine you can use the Auto layout plugin, or you leave it that way and just execute it. The console output should look like below, as you can see Alice is getting her pizzaǃ 
+If we execute the state machine now, the console output should look like below, as you can see Alice is getting her pizzaǃ 
 ```consoleOutput
 INFO - Go to: james is moving to table
 INFO - Order: alice is ordering pizza from james
