@@ -1,8 +1,8 @@
 #
 #
-#Contributors:
-#Christoph Suerig <christoph.suerig@dlr.de>
-#Version 14.06.2019
+# Contributors:
+# Christoph Suerig <christoph.suerig@dlr.de>
+# Version 14.06.2019
 
 
 class TypeTree:
@@ -187,13 +187,13 @@ class TypeTree:
         :return: the parent or None if the type has no parent or is not in tree.
         """
         parent  = None
-        #look, if this node the parent
+        # look, if this node the parent
         for child in self.children:
             if type_name == child.type_name:
                 parent = self.type_name
                 break
 
-        #search in child nodes for parent
+        # search in child nodes for parent
         if parent is None:
             for child in self.children:
                 parent = child.get_parent_of(type_name)
@@ -214,15 +214,15 @@ class TypeTree:
         :return: the smallest parent, or None
         """
         smallest_parent = None
-        #fast fail if not in tree, or one is none
+        # fast fail if not in tree, or one is none
         if type_a is None or type_b is None:
             return None
         if not self.is_in_tree(type_a) or not self.is_in_tree(type_b):
             return None
-        #check if one is the parent of the other
+        # check if one is the parent of the other
         smallest_parent = type_a if self.is_parent_of(type_a, type_b) else smallest_parent
         smallest_parent = type_b if self.is_parent_of(type_b, type_a) else smallest_parent
-        #climb up branches until branch root
+        # climb up branches until branch root
         if smallest_parent is None:
             parent_a = self.get_parent_of(type_a)
             parent_b = self.get_parent_of(type_b)

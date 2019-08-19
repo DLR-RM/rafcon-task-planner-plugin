@@ -1,12 +1,12 @@
-#Contributors:
-#Christoph Suerig <christoph.suerig@dlr.de>
-#Version 12.07.2019
+# Contributors:
+# Christoph Suerig <christoph.suerig@dlr.de>
+# Version 12.07.2019
 import threading
 
 
-#A lock to synchronize planning thread map accesses.
+# A lock to synchronize planning thread map accesses.
 interruptable_threads_lock = threading.Lock()
-#a dictionary of all running interruptable threads.
+# a dictionary of all running interruptable threads.
 interruptable_threads = {}
 
 def current_thread():
@@ -40,8 +40,8 @@ class InterruptableThread(threading.Thread):
 
 
     def run(self):
-        #add new thread to list of all interruptable threads
-        #can't be done in init, because during init phase no ident is present.
+        # add new thread to list of all interruptable threads
+        # can't be done in init, because during init phase no ident is present.
         with interruptable_threads_lock:
             interruptable_threads[self.ident] = self
 

@@ -1,6 +1,6 @@
-#Contributors:
-#Christoph Suerig <christoph.suerig@dlr.de>
-#Version 21.06.2019
+# Contributors:
+# Christoph Suerig <christoph.suerig@dlr.de>
+# Version 21.06.2019
 
 
 import gi
@@ -22,19 +22,19 @@ class PddlActionTabController:
     of this tab is stored in. It also provides some auto fill wizzard for its elements.
 
     """
-    #true if auto save enabled
+    # true if auto save enabled
     auto_apply_enabled = True
-    #a list containing the auto apply buttons of all action tabs.
+    # a list containing the auto apply buttons of all action tabs.
     auto_apply_check_buttons = []
-    #a semaphore for the auto apply handler function
-    #this semaphore works as follows:
-    #all auto apply check buttons of all action tabs are connected to the change signal, and stored in the auto_apply_check_buttons array
-    #if one tab is changed, all tabs are. the initiator checkbutton will propagate the changes to the others and
-    #change their truth value.
-    #(all buttons add 1 to the semaphore)
-    #if the semaphores value is more then one, thats the indicator, that a button has to do nothing.
-    #if the semaphore equals the length of the list, its the indicator, that this button is the last one,
-    #it has to do nothing, despite resetting the semaphore.
+    # a semaphore for the auto apply handler function
+    # this semaphore works as follows:
+    # all auto apply check buttons of all action tabs are connected to the change signal, and stored in the auto_apply_check_buttons array
+    # if one tab is changed, all tabs are. the initiator checkbutton will propagate the changes to the others and
+    # change their truth value.
+    # (all buttons add 1 to the semaphore)
+    # if the semaphores value is more then one, thats the indicator, that a button has to do nothing.
+    # if the semaphore equals the length of the list, its the indicator, that this button is the last one,
+    # it has to do nothing, despite resetting the semaphore.
     auto_apply_semaphore = 0
 
 
@@ -113,15 +113,15 @@ class PddlActionTabController:
         enables and disables the auto apply checkboxes in all action tabs of all states.
         :param checkbox: the caller checkbox, containing the up to date state of auto apply.
         """
-        #count semaphore up
-        #this semaphore does not help for multi threading, but for recursive calls.
+        # count semaphore up
+        # this semaphore does not help for multi threading, but for recursive calls.
         PddlActionTabController.auto_apply_semaphore+=1
-        #only modify if you are the first one
+        # only modify if you are the first one
         if PddlActionTabController.auto_apply_semaphore == 1:
             PddlActionTabController.auto_apply_enabled = checkbox.get_active()
             for button in PddlActionTabController.auto_apply_check_buttons:
                 button.set_active(checkbox.get_active())
-        #reset semaphore if you are the last one
+        # reset semaphore if you are the last one
         if PddlActionTabController.auto_apply_semaphore >= len(PddlActionTabController.auto_apply_check_buttons):
             PddlActionTabController.auto_apply_semaphore = 0
 
@@ -165,7 +165,7 @@ class PddlActionTabController:
         :param req_dict: a dictionary, containing the requirements checkboxes and names as keys.
         """
         need = PddlRequirementFinder(raw_action)
-        #represents the hierarchy specified in pddl 1.2
+        # represents the hierarchy specified in pddl 1.2
         requ_dict[':adl'].set_active(need.adl() or requ_dict[':adl'].get_active())
         if not need.adl():
             requ_dict[':strips'].set_active(need.strips()or requ_dict[':strips'].get_active())
@@ -178,11 +178,11 @@ class PddlActionTabController:
                 requ_dict[':existential-preconditions'].set_active(need.existential_preconditions()or requ_dict[':existential-preconditions'].get_active())
                 requ_dict[':universal-preconditions'].set_active(need.universal_preconditions()or requ_dict[':universal-preconditions'].get_active())
 
-        #requ_dict[':foreach-expansions'].set_active(need.foreach_expansions()or requ_dict[':foreach-expansions'].get_active())
-        #requ_dict[':dag-expansions'].set_active(need.dag_expansions()or requ_dict[':dag-expansions'].get_active())
-        #requ_dict[':action-expansions'].set_active(need.action_expansions()or requ_dict[':action-expansions'].get_active())
+        # requ_dict[':foreach-expansions'].set_active(need.foreach_expansions()or requ_dict[':foreach-expansions'].get_active())
+        # requ_dict[':dag-expansions'].set_active(need.dag_expansions()or requ_dict[':dag-expansions'].get_active())
+        # requ_dict[':action-expansions'].set_active(need.action_expansions()or requ_dict[':action-expansions'].get_active())
         requ_dict[':fluents'].set_active(need.fluents()or requ_dict[':fluents'].get_active())
-        #requ_dict[':expression-evaluation'].set_active(need.expression_evaluation()or requ_dict[':expression-evaluation'].get_active())
+        # requ_dict[':expression-evaluation'].set_active(need.expression_evaluation()or requ_dict[':expression-evaluation'].get_active())
 
 
 
@@ -195,17 +195,17 @@ class PddlActionTabController:
         """
 
         types = pddl_action.types
-        #merge add unknown
+        # merge add unknown
         start, end = types_buffer.get_bounds()
         type_field = types_buffer.get_text(start, end, True)
-        #to be able to compare
+        # to be able to compare
         upper_type_field = ' '+ type_field.upper()+' '
         upper_type_field = upper_type_field.replace(',',' ')
         for type in types:
             if upper_type_field.find(' '+type.upper()+' ') == -1:
                 type_field = type_field + ", "+type
 
-        #set type field.
+        # set type field.
         types_buffer.set_text(type_field.strip(',').strip())
 
 
@@ -221,7 +221,7 @@ class PddlActionTabController:
 
         found_predicates = pddl_action.predicates
 
-        #merge add unknown
+        # merge add unknown
         start, end = pred_field_buf.get_bounds()
         pred_field = pred_field_buf.get_text(start, end, True)
         upper_pred = pred_field.upper()
@@ -234,4 +234,3 @@ class PddlActionTabController:
 
         pred_field = pred_field.strip('\r\n')
         pred_field_buf.set_text(pred_field)
-

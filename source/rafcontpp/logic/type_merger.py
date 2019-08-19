@@ -1,6 +1,6 @@
-#Contributors:
-#Christoph Suerig <christoph.suerig@dlr.de>
-#Version 24.05.2019
+# Contributors:
+# Christoph Suerig <christoph.suerig@dlr.de>
+# Version 24.05.2019
 import json
 from rafcontpp.model.type_tree import TypeTree
 from rafcon.utils import log

@@ -1,7 +1,7 @@
-#Contributors:
-#Christoph Suerig <christoph.suerig@dlr.de>
+# Contributors:
+# Christoph Suerig <christoph.suerig@dlr.de>
 
-#Version 19.07.2019
+# Version 19.07.2019
 
 
 
@@ -26,13 +26,13 @@ from rafcontpp.logic.type_merger import TypeMerger
 from rafcon.utils import log
 
 logger = log.get_logger(__name__)
-#other string, if other planner is choosen.
+# other string, if other planner is choosen.
 OTHER = 'Other...'
-#select planner string, if nothing is choosen.
+# select planner string, if nothing is choosen.
 SEL_PLANNER = '-- Select planner --'
-#printed next to planner, if it is not available.
+# printed next to planner, if it is not available.
 NOT_AVAILABLE = ' (!) Unavailable'
-#the content of the planning wait window
+# the content of the planning wait window
 WAIT_WINDOW_CONTENT = 'Planning State machine, please wait...\r\n\r\n ' \
                       'This could take a long time. If you want,\r\n ' \
                       'you can close this Window, and use rafcon\r\n' \
@@ -83,10 +83,10 @@ class PlanningSetupFormController:
         :param as_reference: True if the runtime data path should be used as reference, False if it should directly be copied into the State. if rt_data_path is empty, this field is irrelevant.
         """
 
-        #prepare datastore with new data from dialog.
-        #save datastore to configuration file.
-        #destroy dialog.
-        #start the pipeline to generate a sm.
+        # prepare datastore with new data from dialog.
+        # save datastore to configuration file.
+        # destroy dialog.
+        # start the pipeline to generate a sm.
         everything_filled, not_filled = self.__prepare_datastore(self.__datastore, state_pool_string,
                             type_db_path,planner_text,planner_script_path,planner_argv_text,
                             facts_path,generate_into_state,sm_name,sm_save_dir,keep_related_files, file_save_dir,
@@ -95,14 +95,14 @@ class PlanningSetupFormController:
         if everything_filled:
             self.__datastore.validate_ds()
             self.__datastore.save_datastore_parts_in_file(DATASTORE_STORAGE_PATH)
-            setup_form.hide()#its more smoothly to first hide and then destroy
+            setup_form.hide()# its more smoothly to first hide and then destroy
             main_window = gui_singletons.main_window_controller.view['main_window']
             planning_wait_window = ConfirmDialog(main_window,WAIT_WINDOW_CONTENT)
             planning_wait_window.show()
             setup_form.destroy()
             from rafcontpp.view.planning_button import increment_button
-            increment_button()#increment the button, to indecate that a new planning process has started.
-            #start pipeline
+            increment_button()# increment the button, to indecate that a new planning process has started.
+            # start pipeline
             logger.info("Start pipeline...")
             planning_thread = None
             try:
@@ -140,9 +140,9 @@ class PlanningSetupFormController:
         :param rt_data_path: The path where to find the runtime data file. Or an empty string if there is no runtime data.
         :param as_reference: True if the runtime data path should be used as reference, False if it should directly be copied into the State. if rt_data_path is empty, this field is irrelevant.
         """
-        #destroy dialog
-        #save data to datastore
-        #save datastore to file.
+        # destroy dialog
+        # save data to datastore
+        # save datastore to file.
         try:
             self.__prepare_datastore(self.__datastore,state_pool_string,
                             type_db_path,planner_text,planner_script_path,planner_argv_text,
@@ -183,7 +183,7 @@ class PlanningSetupFormController:
         tmp_datastore.set_type_db_path(type_db_path)
         merge_preds = True
 
-        try:#generate maps
+        try:# generate maps
             mapper = Mapper(tmp_datastore)
             mapper.generate_action_state_map()
             mapper.generate_state_action_map()
@@ -192,24 +192,21 @@ class PlanningSetupFormController:
         except Exception as e:
             merge_preds = False
 
-
-        try:#load actions
+        try:# load actions
             loader = PddlActionLoader(tmp_datastore)
             loader.load_pddl_actions()
 
         except Exception as e:
             merge_preds = False
 
-
-        try:#generate type tree
+        try:# generate type tree
             type_merger = TypeMerger(tmp_datastore)
             type_tree = type_merger.merge_types()
 
         except Exception as e:
             merge_preds = False
 
-
-        try:#generate available predicates.
+        try:# generate available predicates.
             for state in tmp_datastore.get_pddl_action_map():
                 action = tmp_datastore.get_pddl_action_map()[state]
                 for predicate in action.predicates:
@@ -219,7 +216,6 @@ class PlanningSetupFormController:
             if merge_preds:
                 pred_merger = PredicateMerger(tmp_datastore)
                 available_predicates = pred_merger.merge_predicates(available_predicates)[0]
-
 
         except Exception as e:
             available_predicates = [e.message]
@@ -239,7 +235,7 @@ class PlanningSetupFormController:
         :param chooser: a GtkFileChooserButton
         :param chooser_entry:  a GtkEntry
         """
-        #append choosen state pool to state pool text entry.
+        # append choosen state pool to state pool text entry.
         to_append = chooser.get_filename()
         pools = chooser_entry.get_text()
         if len(pools)> 0 and pools[len(pools)-1] != ':':
@@ -254,8 +250,6 @@ class PlanningSetupFormController:
         :param runtime_data_entry: a GtkEntry
         """
         runtime_data_entry.set_text(chooser.get_filename())
-
-
 
 
     def __prepare_datastore(self, datastore_to_prepare, state_pool_string,
@@ -279,8 +273,8 @@ class PlanningSetupFormController:
         :param as_reference: True if the runtime data path should be used as reference, False if it should directly be copied into the State. if rt_data_path is empty, this field is irrelevant.
 
         """
-        #saves all data from the dialog into the datastore.
-        #looks if everything necessary was filled.
+        # saves all data from the dialog into the datastore.
+        # looks if everything necessary was filled.
         dtp = datastore_to_prepare
         everything_filled = True
         not_filled = None
@@ -288,7 +282,7 @@ class PlanningSetupFormController:
         dtp.add_state_pools(self.__string_to_string_array(state_pool_string),True)
         dtp.set_type_db_path(type_db_path)
         choosen_planner = planner_text.replace(NOT_AVAILABLE,'')
-        #set planner
+        # set planner
         script_path = planner_script_path
         if choosen_planner == OTHER:
             choosen_planner = script_path
@@ -298,7 +292,7 @@ class PlanningSetupFormController:
         if choosen_planner != SEL_PLANNER:
             dtp.set_planner(choosen_planner)
         dtp.set_planner_script_path(script_path)
-        #set planner argv
+        # set planner argv
         if len(planner_argv_text) > 0:
             dtp.set_planner_argv(planner_argv_text.split(' '))
         else:
@@ -320,7 +314,7 @@ class PlanningSetupFormController:
         if dtp.keep_related_files():
             dtp.set_file_save_dir(file_save_dir)
 
-        #runtime section
+        # runtime section
         runtime_data_path = rt_data_path.strip()
         dtp.set_use_runtime_path_as_ref(as_reference)
         dtp.set_runtime_data_path(runtime_data_path)
@@ -332,19 +326,20 @@ class PlanningSetupFormController:
 
         return (everything_filled,not_filled)
 
+
     def __wait_and_hide(self, thread, planning_wait_window):
         """
         wait and hide should be executed in another thread, it joins the planning thread, closes the wait window
         and decrements the planning button.
         :param thread: the thread to wait for
         """
-        #logger.debug('wait_and_hide executed from thread: {}'.format(threading.current_thread().getName()))#todo remove
+        # logger.debug('wait_and_hide executed from thread: {}'.format(threading.current_thread().getName()))# todo remove
         if thread and thread.is_alive():
             thread.join()
-        call_gui_callback(planning_wait_window.hide)  #its more smoothly to first hide and then destroy
+        call_gui_callback(planning_wait_window.hide)  # its more smoothly to first hide and then destroy
         call_gui_callback(planning_wait_window.destroy)
         from rafcontpp.view.planning_button import decrement_button
-        call_gui_callback(decrement_button)  #decrement button, to indicate, that the planning process is finish.
+        call_gui_callback(decrement_button)  # decrement button, to indicate, that the planning process is finish.
 
 
     def __string_to_string_array(self,string):
@@ -385,7 +380,3 @@ class PlanningSetupFormController:
             return None
 
         return selected_state
-
-
-
-

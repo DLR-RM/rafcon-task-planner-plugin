@@ -1,6 +1,6 @@
-#Contributors:
-#Christoph Suerig <christoph.suerig@dlr.de>
-#Version 12.07.2019
+# Contributors:
+# Christoph Suerig <christoph.suerig@dlr.de>
+# Version 12.07.2019
 import inspect
 import time
 import os
@@ -81,14 +81,14 @@ class PlanningController:
         :param planner: the planner to plan with
         :return: nothing
         """
-        #---------------------------------------------------------------------------------------------------------------
+        # ---------------------------------------------------------------------------------------------------------------
         def execute_in_sub_process(queue):
             """
             This mehod executes the actual planning.
             should be executed in a sub process.(this decision was made, to be able to kill the planning process)
             :param queue: a message queue, which will contain the planning report
             """
-            os.setsid()#give a new process group id, to be able to kill the whole group resulting from this sub process and the planner.
+            os.setsid()# give a new process group id, to be able to kill the whole group resulting from this sub process and the planner.
             planning_report = planner.plan_scenario(self.__datastore.get_domain_path(),
                                                     self.__datastore.get_facts_path(),
                                                     self.__datastore.get_planner_argv(),
@@ -96,21 +96,21 @@ class PlanningController:
 
             queue.put(planning_report)
 
-        #---------------------------------------------------------------------------------------------------------------
+        # ---------------------------------------------------------------------------------------------------------------
         current_thread = interruptable_thread.current_thread()
         logger.debug("planner argv: " + str(self.__datastore.get_planner_argv()))
         start_time = time.time()
         planning_report = None
-        queue = Queue()#for interprocess communication, to get the planning_report
+        queue = Queue()# for interprocess communication, to get the planning_report
         planning_process = Process(target=execute_in_sub_process, args=[queue], name='PlanningSubprocess')
         planning_process.daemon = True
         planning_process.start()
         logger.info("Planning...")
-        #wait for the planning thread to terminate, check if thread was interrupted
+        # wait for the planning thread to terminate, check if thread was interrupted
         while not current_thread.is_interrupted() and planning_process.is_alive():
             planning_process.join(2)
 
-        #NOT interrupted path
+        # NOT interrupted path
         if not current_thread.is_interrupted():
             logger.info("Finished planning after {0:.4f} seconds.".format(time.time() - start_time))
             if not queue.empty():
@@ -129,10 +129,10 @@ class PlanningController:
             else:
                 logger.error('Planner provided no Planning Report!')
                 callback_function(False)
-        #Interrupted path
+        # Interrupted path
         else:
             planning_process_pgid = os.getpgid(planning_process.pid)
-            #terminate planning_process with all spawned sub processes
+            # terminate planning_process with all spawned sub processes
             os.killpg(planning_process_pgid, signal.SIGTERM)
             times_waited = 1
             max_wait = 3
@@ -140,7 +140,7 @@ class PlanningController:
                 logger.info('Waiting for the Planner to terminate({}/{})...'.format(times_waited,max_wait))
                 if times_waited == max_wait:
                     logger.info('Killing Planner...')
-                    os.killpg(planning_process_pgid, signal.SIGKILL)#somethimes terminating is not enough.
+                    os.killpg(planning_process_pgid, signal.SIGKILL)# somethimes terminating is not enough.
                 planning_process.join(2)
                 times_waited +=1
 
@@ -162,10 +162,10 @@ class PlanningController:
         """
         path = os.path.dirname(script_path)
         script_name = os.path.basename(script_path)
-        #remove file extension
+        # remove file extension
         if '.' in script_name:
             script_name = script_name.split('.')[0]
-        #add path to PYTHONPATH only if needed.
+        # add path to PYTHONPATH only if needed.
         if path not in sys.path:
             sys.path.append(path)
             logger.debug(sys.path)

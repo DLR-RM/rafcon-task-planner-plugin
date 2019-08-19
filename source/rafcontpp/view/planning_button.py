@@ -1,6 +1,6 @@
-#Contributors:
-#Christoph Suerig <christoph.suerig@dlr.de>
-#Version 12.07.2019
+# Contributors:
+# Christoph Suerig <christoph.suerig@dlr.de>
+# Version 12.07.2019
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
@@ -29,7 +29,7 @@ def initialize():
     lock = threading.Lock()
     global button_counter
     button_counter = 0
-    #add new button
+    # add new button
     global plan_sm_button
     plan_sm_button = Gtk.MenuToolButton(label='Plan Task')
     plan_sm_button.set_label_widget(create_label_widget_with_icon('f1ec', _(plan_task_label),tool_tip_text))
@@ -48,7 +48,7 @@ def increment_button():
     :return:
     """
     with lock:
-        #logger.debug('increment button executed from: {}'.format(threading.current_thread().getName()))#todo remove
+        # logger.debug('increment button executed from: {}'.format(threading.current_thread().getName()))# todo remove
         global button_counter
         button_counter += 1
         plan_sm_button.set_label_widget(create_label_widget_with_icon('f1ec',
@@ -64,7 +64,7 @@ def decrement_button():
     :return:
     """
     with lock:
-        #logger.debug('decrement button executed from: {}'.format(threading.current_thread().getName()))#todo remove
+        # logger.debug('decrement button executed from: {}'.format(threading.current_thread().getName()))# todo remove
         global button_counter
         button_counter -= 1
         if button_counter <= 0:
@@ -83,21 +83,21 @@ def __on_button_clicked(button):
 def __on_show_menu(button):
 
     cancel_task_menu = button.get_menu()
-    #first remove all entries (they could be outdated)
+    # first remove all entries (they could be outdated)
     for child in cancel_task_menu.get_children():
         cancel_task_menu.remove(child)
-    #now get all registered threads and display them with names, also register a on click for each menu item
+    # now get all registered threads and display them with names, also register a on click for each menu item
     planning_threads = get_planning_threads()
     current_time = time.time()
-    #a map containg all threads, with the created label as key
-    label_thread = {}  #label:thread
+    # a map containg all threads, with the created label as key
+    label_thread = {}  # label:thread
 
-    #-------------------------------------------------------------------------------------------------------------------
-    #a call back function for an activated menu item.
+    # -------------------------------------------------------------------------------------------------------------------
+    # a call back function for an activated menu item.
     def __on_menu_item_activate(menu_item):
-        #get label
+        # get label
         label = menu_item.get_label()
-        #load glade file
+        # load glade file
         cancel_dialog = Gtk.Dialog("Task Planner Plugin - Cancel Task",None,0,
                                    (Gtk.STOCK_YES, Gtk.ResponseType.YES, Gtk.STOCK_NO, Gtk.ResponseType.NO))
         cancel_dialog.set_default_size(400, 100)
@@ -117,12 +117,12 @@ def __on_show_menu(button):
                 logger.info('Task {} already terminated.'.format(label))
 
 
-    #-------------------------------------------------------------------------------------------------------------------
+    # -------------------------------------------------------------------------------------------------------------------
 
-    #fill menu:
+    # fill menu:
     for index, key in enumerate(planning_threads.keys()):
         label = planning_threads[key][1]+' ({0:.4f}s)'.format(current_time-key)
-        #to ensure, no labels are duplicates.
+        # to ensure, no labels are duplicates.
         label_counter = 1
         while label in label_thread.keys():
             label = label + '({})'.format(label_counter)

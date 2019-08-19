@@ -1,9 +1,9 @@
-#hooks.py
-#hooks.py is the plugins main file. These methods will be called from rafcon.
+# hooks.py
+# hooks.py is the plugins main file. These methods will be called from rafcon.
 #
-#Contributors:
-#Christoph Suerig <christoph.suerig@dlr.de>
-#Version 12.11.2018
+# Contributors:
+# Christoph Suerig <christoph.suerig@dlr.de>
+# Version 12.11.2018
 import os
 from rafcontpp.view import planning_button
 from rafcontpp.view.pddl_action_tab import PddlActionTab
@@ -27,7 +27,7 @@ def main_window_setup(main_window_controller):
     :return:
     """
     logger.info("Run main window setup of {0} plugin.".format(__file__.split(os.path.sep)[-2]))
-    #add the plan task button to rafcons menu bar.
+    # add the plan task button to rafcons menu bar.
     planning_button.initialize()
 
 
@@ -54,9 +54,9 @@ def post_state_editor_register_view(state_editor):
     state = state_editor.model.state
     action_tab = PddlActionTab(state).init_tab()
 
-    #add tab, with lable to State Editor
-    #f1ec is from font awesome
-    icon = {_('PDDL Action'): 'f1ec'} #its done like this, because the helper function needs a map as input
+    # add tab, with lable to State Editor
+    # f1ec is from font awesome
+    icon = {_('PDDL Action'): 'f1ec'} # its done like this, because the helper function needs a map as input
     main_notebook_2 = state_editor_view["main_notebook_2"]
     main_notebook_2.append_page(action_tab, create_tab_header_label('PDDL Action', icon))
     main_notebook_2.set_tab_reorderable(action_tab, True)

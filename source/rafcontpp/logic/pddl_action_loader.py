@@ -1,6 +1,6 @@
-#Contributors:
-#Christoph Suerig <christoph.suerig@dlr.de>
-#Version 05.07.2019
+# Contributors:
+# Christoph Suerig <christoph.suerig@dlr.de>
+# Version 05.07.2019
 import os
 import unicodedata
 from rafcontpp.model.datastore import SEMANTIC_DATA_DICT_NAME, PDDL_ACTION_SUB_DICT_NAME
@@ -47,7 +47,7 @@ class PddlActionLoader:
                 if SEMANTIC_DATA_DICT_NAME in sem_data \
                         and str(state) in self.__datastore.get_state_action_map().keys():
                     action_dict = sem_data[SEMANTIC_DATA_DICT_NAME][PDDL_ACTION_SUB_DICT_NAME]
-                    #parse from unicode to string r means raw
+                    # parse from unicode to string r means raw
                     r_pred_str = unicodedata.normalize('NFKD', action_dict["pddl_predicates"]).encode('utf-8', 'ignore')
                     r_action = unicodedata.normalize('NFKD', action_dict["pddl_action"]).encode('utf-8', 'ignore')
                     r_types = ''
@@ -75,14 +75,14 @@ class PddlActionLoader:
                     else:
                         pddl_actions[c_action.name] = c_action
 
-        #just check, if all needed actions could be parsed.
+        # just check, if all needed actions could be parsed.
         for action_name in self.__datastore.get_available_actions():
             if action_name not in pddl_actions.keys():
                 logger.error("No action found for action called: \"" + action_name + "\"")
 
         self.__datastore.set_pddl_action_map(pddl_actions)
 
-        #parse typestring, make a list out of one string...
+        # parse typestring, make a list out of one string...
 
     def parse_type_string(self, type_string):
         """parse_type_string

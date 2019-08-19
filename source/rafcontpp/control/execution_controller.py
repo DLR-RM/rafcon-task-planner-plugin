@@ -1,6 +1,6 @@
-#Contributors:
-#Christoph Suerig <christoph.suerig@dlr.de>
-#Version 24.05.2019
+# Contributors:
+# Christoph Suerig <christoph.suerig@dlr.de>
+# Version 24.05.2019
 
 import os
 import time
@@ -41,8 +41,8 @@ class ExecutionController:
         :return: InterruptableThread: The planning Thread.
         """
         try:
-            #pipeline, after input reading...
-            #prepare dicts
+            # pipeline, after input reading...
+            # prepare dicts
             logger.verbose('Main thread is: {}'.format(threading.current_thread().getName()))
             start_time = time.time()
             logger.debug('Handover to facts parser')
@@ -50,18 +50,18 @@ class ExecutionController:
             self.__datastore.set_pddl_facts_representation(facts_repr)
             logger.debug('Handover to mapper.')
             mapper = Mapper(self.__datastore)
-            mapper.generate_action_state_map()                      #--> as_map
-            mapper.generate_state_action_map()                      #--> sa_map
-            mapper.generate_available_actions()                     #--> available actions
-            #load actions into datastore
+            mapper.generate_action_state_map()                      # --> as_map
+            mapper.generate_state_action_map()                      # --> sa_map
+            mapper.generate_available_actions()                     # --> available actions
+            # load actions into datastore
             logger.debug('Handover to action loader.')
             loader = PddlActionLoader(self.__datastore)
             loader.load_pddl_actions()
-            #create domain
+            # create domain
             logger.debug('Handover to domain generator.')
             domain_generator = DomainGenerator(self.__datastore)
-            domain_generator.generate_domain()                      #--> domain
-            #generate plan
+            domain_generator.generate_domain()                      # --> domain
+            # generate plan
             logger.debug('Handover to planning controller')
             planning_controller = PlanningController(self.__datastore)
             logger.info('Planning preparation took {0:.4f} seconds.'.format(time.time()-start_time))
@@ -85,12 +85,12 @@ class ExecutionController:
 
         try:
             logger.verbose('post planning executed from thread: {}'.format(threading.current_thread().getName()))
-            #check if a plan was found.
+            # check if a plan was found.
             if planning_successful and len(self.__datastore.get_plan()) > 0:
                 logger.info('A Plan was found!')
                 sm_generator = StateMachineGenerator(self.__datastore)
                 logger.debug('Handover to state machine generator.')
-                sm_generator.generate_state_machine()  #--> generates state machine and opens it.
+                sm_generator.generate_state_machine()  # --> generates state machine and opens it.
 
 
             else:
@@ -112,7 +112,7 @@ class ExecutionController:
             else:
                 logger.debug('Keeping files.')
 
-            #remove the planning_thread at the end of the Task.
+            # remove the planning_thread at the end of the Task.
             if self.__planning_thread_register_time is not -1:
                 if not self.__datastore.remove_thread(self.__planning_thread_register_time):
                     logger.debug("could not remove planning thread.")

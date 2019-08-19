@@ -1,6 +1,6 @@
-#Contributors:
-#Christoph Suerig <christoph.suerig@dlr.de>
-#Version 12.07.2019
+# Contributors:
+# Christoph Suerig <christoph.suerig@dlr.de>
+# Version 12.07.2019
 
 
 import gi
@@ -40,7 +40,7 @@ class PlanningSetupForm:
         """
         glade_path = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), "glade", "planning_setup_form.glade"))
         self.__builder.add_from_file(glade_path)
-        #get items
+        # get items
         self.__dialog = self.__builder.get_object('plannig_setup_form_dialog')
         self.__dialog.set_title('Task Planner Plugin Configuration')
         main_window = gui_singletons.main_window_controller.view['main_window']
@@ -62,7 +62,7 @@ class PlanningSetupForm:
         runtime_data_chooser = self.__builder.get_object('rtpp_planning_setup_form_runtime_data_file_chooser')
         runtime_data_direct = self.__builder.get_object('rtpp_planning_setup_form_runtime_data_direct_radio')
         self.__runtime_data_reference = self.__builder.get_object('rtpp_planning_setup-form_runtime_data_reference_radio')
-        #init items
+        # init items
         state_pool_chooser.set_filename(self.__datastore.get_state_pools()[0])
         self.__state_pool_chooser_entry.set_text(self.__string_array_to_string(self.__datastore.get_state_pools()))
         type_db_chooser.set_filename(self.__datastore.get_type_db_path())
@@ -75,7 +75,7 @@ class PlanningSetupForm:
         sm_save_dir.set_filename(self.__datastore.get_sm_save_dir())
         keep_related_files.set_active(self.__datastore.keep_related_files())
         file_save_dir.set_filename(self.__datastore.get_file_save_dir())
-        #initialize runtime data section
+        # initialize runtime data section
         if self.__datastore.get_runtime_data_path():
             runtime_data_path = self.__datastore.get_runtime_data_path()
             runtime_data_field.set_text(runtime_data_path)
@@ -85,13 +85,13 @@ class PlanningSetupForm:
             runtime_data_direct.set_active(not self.__datastore.use_runtime_path_as_ref())
 
         self.__dialog.show_all()
-        #connect
+        # connect
         self.__builder.get_object('planning_form_start_button').connect('clicked', self.__call_controller_on_apply)
         self.__builder.get_object('planning_form_cancel_button').connect('clicked', self.__call_controller_on_destroy)
         self.__builder.get_object('planning_form_show_state_pool_info_button').connect('clicked', self.__call_controller_on_show_state_pool_info)
         state_pool_chooser.connect('file-set',self.__controller.on_choose_state_pool,self.__state_pool_chooser_entry)
         runtime_data_chooser.connect('file-set',self.__controller.on_choose_runtime_data,runtime_data_field)
-        #automatically choose Other... if planner script is set.
+        # automatically choose Other... if planner script is set.
         script_path_chooser.connect('file-set', lambda x: (planner_dropdown.set_active(len(planner_dropdown.get_model()) - 1)))
 
     def __call_controller_on_apply(self, button):
@@ -121,29 +121,29 @@ class PlanningSetupForm:
 
 
     def __init_drop_down(self,drop_down, script_path_chooser):
-        #initiates the planner drop down with all built in planners and the script path chooser for the planenr script
-        #look if planner is available
+        # initiates the planner drop down with all built in planners and the script path chooser for the planenr script
+        # look if planner is available
         active_index = 0
 
         drop_down.append_text(SEL_PLANNER)
 
         for index, planner in enumerate(self.__datastore.get_built_in_planners().keys()):
-            #dynamically import and check if planner is available.
+            # dynamically import and check if planner is available.
             to_import = self.__datastore.get_built_in_planners()[planner]
             script_import = __import__(to_import[0], fromlist=(to_import[1]))
             if getattr(script_import, to_import[1])().is_available():
-                drop_down.append_text(planner) #add planner to dropdown if available
+                drop_down.append_text(planner) # add planner to dropdown if available
             else:
-                drop_down.append_text(planner+ NOT_AVAILABLE) #also add if not availavle, but with a hint.
-            #set active planner to last used planner
+                drop_down.append_text(planner+ NOT_AVAILABLE) # also add if not availavle, but with a hint.
+            # set active planner to last used planner
             if planner == self.__datastore.get_planner():
                 active_index = index +1
 
         drop_down.append_text(OTHER)
-        #set active planner to Other if script was used last.
+        # set active planner to Other if script was used last.
         if active_index == 0 and self.__datastore.get_planner() is not None and len(self.__datastore.get_planner()) > 0:
             active_index = len(drop_down.get_model()) - 1
-        #initiate planner script field.
+        # initiate planner script field.
         script_path_chooser.set_filename(self.__datastore.get_planner_script_path())
         drop_down.set_active(active_index)
 
@@ -168,7 +168,7 @@ class PlanningSetupForm:
 
 
     def __string_array_to_string(self,list):
-        #helper method for state pool text entry
+        # helper method for state pool text entry
             toReturn = ''
 
             for element in list:

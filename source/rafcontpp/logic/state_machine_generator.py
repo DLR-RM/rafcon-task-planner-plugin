@@ -1,13 +1,13 @@
-#Copyright (C) 2014-2018 DLR
+# Copyright (C) 2014-2018 DLR
 #
-#All rights reserved. This program and the accompanying materials are made
-#available under the terms of the Eclipse Public License v1.0 which
-#accompanies this distribution, and is available at
-#http://www.eclipse.org/legal/epl-v10.html
+# All rights reserved. This program and the accompanying materials are made
+# available under the terms of the Eclipse Public License v1.0 which
+# accompanies this distribution, and is available at
+# http://www.eclipse.org/legal/epl-v10.html
 #
-#Contributors:
-#Christoph Suerig <christoph.suerig@dlr.de>
-#Version 12.07.1019
+# Contributors:
+# Christoph Suerig <christoph.suerig@dlr.de>
+# Version 12.07.1019
 
 
 
@@ -76,7 +76,7 @@ class StateMachineGenerator:
             root_state, state_order_list = self.__generate_core_machine(sm_name)
 
             if root_state:
-                #suppress gui
+                # suppress gui
                 state_machine_m = state_machine_manager_model.state_machines[state_machine.state_machine_id]
                 target_state_m = state_machine_m.get_state_model_by_path(target_state.get_path())
                 target_state_m.action_signal.emit(ActionSignalMsg(action='substitute_state', origin='model',
@@ -90,14 +90,14 @@ class StateMachineGenerator:
                 logger.info("State machine \"" + sm_name + "\" created.")
                 logger.info(sm_name + " contains " + str(len(root_state.states)) + " states.")
                 logger.info("State machine generation took {0:.4f} seconds.".format(time.time() - start_time))
-                #have to set the size and pos of the root state, to make it fit the target state. (bit dirty)
+                # have to set the size and pos of the root state, to make it fit the target state. (bit dirty)
                 t_width, t_height = target_state_m.meta['gui']['editor_gaphas']['size']
                 root_state_m = state_machine_m.get_state_model_by_path(root_state.get_path())
                 root_state_m.meta['gui']['editor_gaphas']['size'] = (0.8*t_width, 0.8*t_height)
                 root_state_m.meta['gui']['editor_gaphas']['rel_pos'] = (0.1*t_width, 0.1*t_height)
                 call_gui_callback(layouter.layout_state_machine, state_machine,root_state,True,state_order_list)
                 logger.info("Generated and integrated State machine: {}.".format(sm_name))
-                #enable gui
+                # enable gui
                 target_state_m.action_signal.emit(ActionSignalMsg(action='substitute_state', origin='model',
                                                                 action_parent_m=target_state_m,
                                                                 affected_models=[target_state_m], after=True))
@@ -115,7 +115,7 @@ class StateMachineGenerator:
         :return:(root_state, state_order list) the root state containing the state machine, and the state order list is a list
         of all states in the sm in right order. Can return (None,[]) if process was interrupted.
         """
-        #this is the state everything is generated in.
+        # this is the state everything is generated in.
         root_state = root_state if root_state else HierarchyState(sm_name)
         a_s_map = self.__datastore.get_action_state_map()
         pddl_action_dict = self.__datastore.get_pddl_action_map()
@@ -123,7 +123,7 @@ class StateMachineGenerator:
         current_thread = interruptable_thread.current_thread()
         state_order_list = []
         last_state = None
-        #add global data init state and set start state
+        # add global data init state and set start state
         runtime_data_path = self.__datastore.get_runtime_data_path()
         if runtime_data_path and len(runtime_data_path) > 0:
             last_state = self.__get_runtime_data_init_state(runtime_data_path,
@@ -133,31 +133,31 @@ class StateMachineGenerator:
             state_order_list.append(last_state.state_id)
 
         for plan_step in self.__datastore.get_plan():
-            #the name of a plan step is an action name.
+            # the name of a plan step is an action name.
             if current_thread and current_thread.is_interrupted():
                 break
             if plan_step.name in a_s_map:
-                #load and prepare state
+                # load and prepare state
                 current_state = self.__load_state(a_s_map[plan_step.name])
                 if current_state.input_data_port_runtime_values:
                     c_pddl_action = pddl_action_dict[plan_step.name]
                     c_input_data_ports = current_state.input_data_ports
                     for key in c_input_data_ports.keys():
-                        #c_pddl_action.parameters contains parameter names
+                        # c_pddl_action.parameters contains parameter names
                         if c_input_data_ports[key].name in c_pddl_action.parameters:
                             index = c_pddl_action.parameters.index(c_input_data_ports[key].name)
-                            #plan_step.parameter contains parameter values
+                            # plan_step.parameter contains parameter values
                             current_state.input_data_port_runtime_values[key] = \
                                 facts.get_original_object_name(plan_step.parameter[index])
                         else:
                             logger.warn("Action " + c_pddl_action.name + " has no Parameter "
                                         + c_input_data_ports[
                                             key].name + ", which is needed in State " + current_state.name)
-                #add state to state machine
+                # add state to state machine
                 root_state.add_state( current_state)
-                #add the state to the order list (for later formatting)
+                # add the state to the order list (for later formatting)
                 state_order_list.append(current_state.state_id)
-                #add transitions.
+                # add transitions.
                 if last_state is None:
                     root_state.set_start_state(current_state.state_id)
                 else:
@@ -168,7 +168,7 @@ class StateMachineGenerator:
                 logger.error("No State found for action: \"" + plan_step.name + "\"")
                 raise LookupError("No State found for action: \"" + plan_step.name + "\"")
 
-        #at the end add transition from last state to outcome of root state.
+        # at the end add transition from last state to outcome of root state.
         root_state.add_transition(last_state.state_id, 0, root_state.state_id, 0)
         library_manager.refresh_libraries()
 
@@ -235,11 +235,11 @@ class StateMachineGenerator:
         state_machine = None
         is_independent = False
         if root_state == None:
-            #set root-state id to old root-state id, in case the state machine is replanned.
-            #why is it important? - if you added the planned sm as a library, replan it and refresh it,
-            #rafcon will throw an error, if the refreshed library has a different root-state id.
+            # set root-state id to old root-state id, in case the state machine is replanned.
+            # why is it important? - if you added the planned sm as a library, replan it and refresh it,
+            # rafcon will throw an error, if the refreshed library has a different root-state id.
             if os.path.isdir(sm_path):
-                #rootstate id of rootstate in old sm.
+                # rootstate id of rootstate in old sm.
                 old_sm_rs_id = storage.load_state_machine_from_path(sm_path).root_state.state_id
                 valid_root_state = HierarchyState(name=sm_name, state_id=old_sm_rs_id)
             else:
@@ -251,7 +251,7 @@ class StateMachineGenerator:
         elif isinstance(root_state,HierarchyState):
             if len(root_state.states) == 0 \
                     or root_state.semantic_data[SEMANTIC_DATA_DICT_NAME][ALLOW_OVERRIDE_NAME] == 'True':
-                #empty the root state!
+                # empty the root state!
                 self.__clear_state(root_state)
                 valid_root_state = root_state
                 state_machine = root_state.get_state_machine()

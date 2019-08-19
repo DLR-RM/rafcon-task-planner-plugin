@@ -1,6 +1,6 @@
-#Contributors:
-#Christoph Suerig <christoph.suerig@dlr.de>
-#Version 31.05.2019
+# Contributors:
+# Christoph Suerig <christoph.suerig@dlr.de>
+# Version 31.05.2019
 import os
 import time
 import shutil
@@ -18,7 +18,7 @@ class FdIntegration(PlannerInterface):
 
 
     def plan_scenario(self, domain_path, facts_path, planner_argv, storage_path):
-        #get own directory for creating files in and so on...
+        # get own directory for creating files in and so on...
         old_cwd = os.getcwd()
         new_cwd = os.path.join(old_cwd,'fd_planning_tmp {0:.8f}'.format(time.time()))
         os.mkdir(new_cwd)
@@ -35,18 +35,18 @@ class FdIntegration(PlannerInterface):
                 command +=arg+' '
             command = command.rstrip()
 
-        #run Fast-downward
+        # run Fast-downward
         fd_process = subprocess.Popen([command], stdout=subprocess.PIPE, shell=True)
         (out, err) = fd_process.communicate()
         fd_exit = fd_process.returncode
 
-        #read plan, if possible
+        # read plan, if possible
         if fd_exit == 0:
             plan = self.__parse_raw_plan(plan_path)
 
         copied_files = self.__copy_and_clean(plan_path, outsas, storage_path)
 
-         #reset to old cwd
+         # reset to old cwd
         os.chdir(old_cwd)
         os.rmdir(new_cwd)
         return PlanningReport(fd_exit < 4,
@@ -64,7 +64,7 @@ class FdIntegration(PlannerInterface):
         process.wait()
         status = process.returncode
         devnull.close()
-        return status != 127 #127 is the code for command not found.
+        return status != 127 # 127 is the code for command not found.
 
     def __parse_raw_plan(self,plan_path):
         """
@@ -77,9 +77,9 @@ class FdIntegration(PlannerInterface):
             plan_file = open(plan_path, "r")
             raw_plan = plan_file.readlines()
             raw_plan.pop()
-            #parsing the action out of the raw file.
+            # parsing the action out of the raw file.
             for action in raw_plan:
-                #remove useless chars
+                # remove useless chars
                 action = action[:-2]
                 action = action[1:]
                 parts = action.split(" ")

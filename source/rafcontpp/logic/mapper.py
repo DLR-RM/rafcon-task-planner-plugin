@@ -1,6 +1,6 @@
-#Contributors:
-#Christoph Suerig <christoph.suerig@dlr.de>
-#Version 05.07.2019
+# Contributors:
+# Christoph Suerig <christoph.suerig@dlr.de>
+# Version 05.07.2019
 import os
 from rafcontpp.model.datastore import SEMANTIC_DATA_DICT_NAME, PDDL_ACTION_SUB_DICT_NAME
 from rafcontpp.logic.pddl_action_parser import PddlActionParser
@@ -42,7 +42,7 @@ class Mapper:
             lib_name = os.path.basename(pool)
             lib_names.append(lib_name)
             libraries[lib_name] = os.path.abspath(pool)
-        global_config.set_config_value("LIBRARY_PATHS", libraries)#also refreshes libraries
+        global_config.set_config_value("LIBRARY_PATHS", libraries)# also refreshes libraries
         action_state_map = {}
         for lib_name in lib_names:
             state_pool = library_manager.libraries[lib_name]

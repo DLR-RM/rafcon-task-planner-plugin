@@ -1,6 +1,6 @@
-#Contributors:
-#Christoph Suerig <christoph.suerig@dlr.de>
-#Version 31.05.2019
+# Contributors:
+# Christoph Suerig <christoph.suerig@dlr.de>
+# Version 31.05.2019
 
 import os
 import json
@@ -107,7 +107,7 @@ class DomainGenerator:
         :param pddl_actions: a list of PddlActionRepresentations.
         :return: a list of predicates, without dublicates.
         """
-        #pre merge predicates
+        # pre merge predicates
         predicates = []
         for action in pddl_actions:
             for predicate in action.predicates:

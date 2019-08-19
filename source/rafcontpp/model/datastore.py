@@ -1,8 +1,8 @@
 #
 #
-#Contributors:
-#Christoph Suerig <christoph.suerig@dlr.de>
-#Version 12.07.2019
+# Contributors:
+# Christoph Suerig <christoph.suerig@dlr.de>
+# Version 12.07.2019
 import os
 import json
 import threading
@@ -13,24 +13,24 @@ from rafcontpp.model.type_tree import TypeTree
 from rafcon.utils import log
 
 logger = log.get_logger(__name__)
-#a map containing all built in planners e.g. planners with integration script.
+# a map containing all built in planners e.g. planners with integration script.
 built_in_planners = {
     'Fast Downward Planning System': ('rafcontpp.planner.fast_downward_integration', 'FdIntegration'),
     'Fast-Forward Planning System v2.3': ('rafcontpp.planner.fast_forward_integration','FfIntegration')
 }
-#The storage path of the config file.
+# The storage path of the config file.
 DATASTORE_STORAGE_PATH = os.path.join(os.path.expanduser('~'), os.path.normpath('.config/rafcon/rafcontpp_conf.json'))
 
-#The name of the semantic data dict in rafcon state
+# The name of the semantic data dict in rafcon state
 SEMANTIC_DATA_DICT_NAME = 'RAFCONTPP'
-#The name of the sub dictionary, where the pddl action is stored in.
+# The name of the sub dictionary, where the pddl action is stored in.
 PDDL_ACTION_SUB_DICT_NAME = 'PDDL_ACTION'
-#The key to allow the Override of the State Content
+# The key to allow the Override of the State Content
 ALLOW_OVERRIDE_NAME = 'Allow_Override'
 
-#A lock to synchronize planning thread map accesses.
+# A lock to synchronize planning thread map accesses.
 planning_threads_lock = threading.Lock()
-#tuples of all registered (currently running) planning threads format: (thread,problem name)
+# tuples of all registered (currently running) planning threads format: (thread,problem name)
 planning_threads = {}
 
 def get_planning_threads():
@@ -59,7 +59,7 @@ def datastore_from_file(file_path):
     else:
         data = json.load(open(file_path, "r"))
         logger.debug('Loading Configuration form: '+file_path)
-        sm_name = data['sm_name'] if 'sm_name' in data else '' #To provide backward compatibility.
+        sm_name = data['sm_name'] if 'sm_name' in data else '' # To provide backward compatibility.
         ds = Datastore(data['state_pools'],
                      sm_name,
                      data['sm_save_dir'],
@@ -70,9 +70,9 @@ def datastore_from_file(file_path):
                      data['type_db_path'],
                      data['keep_related_files'],
                      data['file_save_dir'])
-        runtime_data_path = data['runtime_data_path'] if 'runtime_data_path' in data else '' #To provide backward compatibility.
-        runtime_as_ref = data['runtime_as_ref'] if 'runtime_as_ref' in data else False #To provide backward compatibility.
-        plan_into_state = data['plan_into_state'] if 'plan_into_state' in data else False #To provide backward compatibility.
+        runtime_data_path = data['runtime_data_path'] if 'runtime_data_path' in data else '' # To provide backward compatibility.
+        runtime_as_ref = data['runtime_as_ref'] if 'runtime_as_ref' in data else False # To provide backward compatibility.
+        plan_into_state = data['plan_into_state'] if 'plan_into_state' in data else False # To provide backward compatibility.
         ds.set_runtime_data_path(runtime_data_path)
         ds.set_use_runtime_path_as_ref(runtime_as_ref)
         ds.set_generate_into_state(plan_into_state)
@@ -101,79 +101,79 @@ class Datastore:
         :param file_save_dir: a path, where to save all related files.
         """
 
-        #a list of directories, containing states with pddl notation.
+        # a list of directories, containing states with pddl notation.
         self.__state_pools = state_pools
-        #the name of the state machine, which will be generated.
+        # the name of the state machine, which will be generated.
         self.__sm_name = sm_name
-        #the location, to save the generated state machine in.
+        # the location, to save the generated state machine in.
         self.__sm_save_dir = sm_save_dir
-        #the complete path of the facts file (e.g. /home/facts.pddl).
+        # the complete path of the facts file (e.g. /home/facts.pddl).
         self.__facts_path = facts_path
-        #the complete path of the type db file
+        # the complete path of the type db file
         self.__type_db_path = type_db_path
-        #True if files should be keeped, false otherwhise
+        # True if files should be keeped, false otherwhise
         self.__keep_related_files = keep_related_files
-        #the directory, where to save all produced files in
+        # the directory, where to save all produced files in
         self.__file_save_dir = file_save_dir
-        #the shortcut, or the name of the planner script
+        # the shortcut, or the name of the planner script
         self.__planner = planner
-        #additional arguments for the planner as string array.
+        # additional arguments for the planner as string array.
         self.__planner_argv = planner_argv
-        #the path of a custom planner script. this variable is not really useful for the plugin, and its not used, BUT:
-        #its useful for usability, to be able to save the script path persistent.
+        # the path of a custom planner script. this variable is not really useful for the plugin, and its not used, BUT:
+        # its useful for usability, to be able to save the script path persistent.
         self.__planner_script_path = planner_script_path
-        #the complete path of the domain file (e.g. /home/domain.pddl).
+        # the complete path of the domain file (e.g. /home/domain.pddl).
         self.__domain_path = None
-        #a map containing pddl action names as keys, and rafcon states as values.
+        # a map containing pddl action names as keys, and rafcon states as values.
         self.__action_state_map = None
-        #a map containing rafcon states as keys and pddl action names as values.
+        # a map containing rafcon states as keys and pddl action names as values.
         self.__state_action_map = None
-        #a map containing action names as keys and pddl action representations as values
+        # a map containing action names as keys and pddl action representations as values
         self.__pddl_action_map = None
-        #a list, contining the names of all available actions.
+        # a list, contining the names of all available actions.
         self.__available_actions = None
-        #a PddlFactsRepresentation Object, containing the parsed facts file.
+        # a PddlFactsRepresentation Object, containing the parsed facts file.
         self.__pddl_facts_representation = None
-        #a typeTree containing all available types
+        # a typeTree containing all available types
         self.__available_types = None
-        #a list of (String,[(String,integer)]) prediactes
+        # a list of (String,[(String,integer)]) prediactes
         self.__available_predicates = None
-        #the plan, as a list of plan steps.
+        # the plan, as a list of plan steps.
         self.__plan = None
-        #a list with the name of all files, generated during the pipeline execution.
+        # a list with the name of all files, generated during the pipeline execution.
         self.__generated_files = []
-        #the complete path of the runtime data dict, which holds data required during the run of the generated sm.
+        # the complete path of the runtime data dict, which holds data required during the run of the generated sm.
         self.__runtime_data_path = None
-        #if true the runtime_data is red during runtime, otherwhise its red when generating the sm.
+        # if true the runtime_data is red during runtime, otherwhise its red when generating the sm.
         self.__use_runtime_data_path_as_reference = False
-        #target state, the state to plan into.
+        # target state, the state to plan into.
         self.__target_state = None
-        #true, if the state machine should be generated into the target state. false if independent sm should be used.
+        # true, if the state machine should be generated into the target state. false if independent sm should be used.
         self.__generate_into_state = False
 
 
 
 
-    def validate_ds(self): #TODO validate everything!
+    def validate_ds(self): # TODO validate everything!
 
-        #validate state_pools
+        # validate state_pools
         for dir in self.__state_pools:
             if not os.path.isdir(dir):
                 logger.error("state pool directory not found: " + str(dir))
                 raise ValueError('Is not a directory: ' + str(dir))
-        #validate sm_save_dir
+        # validate sm_save_dir
         if not os.path.isdir(self.__sm_save_dir):
             logger.error("state machine save dir: directory not found! " + str(self.__sm_save_dir))
             raise ValueError('Is not a directory: ' + str(self.__sm_save_dir))
-        #validate facts_file
+        # validate facts_file
         if not os.path.isfile(self.__facts_path):
             logger.error("No facts file : " + str(self.__facts_path))
             raise ValueError('Is not a file: ' + str(self.__facts_path))
-        #validate type_db_path
+        # validate type_db_path
         if not os.path.isfile(self.__type_db_path):
             logger.error("No type database : " + str(self.__type_db_path))
             raise ValueError('Is not a file: ' + str(self.__type_db_path))
-        #validate file_save_dir
+        # validate file_save_dir
         if self.__keep_related_files and (not os.path.isdir(self.__file_save_dir)):
             logger.error("file save dir is not a directory: " + str(self.__file_save_dir))
             raise ValueError('Is not a directory: ' + str(self.__file_save_dir))
@@ -188,9 +188,9 @@ class Datastore:
         """
 
         with planning_threads_lock:
-            register_time = time.time()#unix timestamp
-            #set task name to sm name, or problem name, if no sm name is available, and to state name if the sm is planned
-            #into a state.
+            register_time = time.time()# unix timestamp
+            # set task name to sm name, or problem name, if no sm name is available, and to state name if the sm is planned
+            # into a state.
             task_name = self.get_pddl_facts_representation().problem_name if len(self.get_sm_name()) == 0 else self.get_sm_name()
             if self.__target_state:
                 task_name = self.__target_state.name

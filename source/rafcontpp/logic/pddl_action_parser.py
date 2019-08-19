@@ -1,6 +1,6 @@
-#Contributors:
-#Christoph Suerig <christoph.suerig@dlr.de>
-#Version: 17.05.2019
+# Contributors:
+# Christoph Suerig <christoph.suerig@dlr.de>
+# Version: 17.05.2019
 import re
 from rafcontpp.model.pddl_action_representation import PddlActionRepresentation
 from rafcon.utils import log
@@ -26,19 +26,19 @@ class PddlActionParser:
             raise ValueError('Can not parse action from None or Empty String!')
 
 
-        #matches variables with types e.g ?obj - Physobj
+        # matches variables with types e.g ?obj - Physobj
         self.__type_var_pattern = re.compile('((\?[^\s|^\)|^\(]+\s+)+-\s+[^\s|^\)|^\(]+)')
-        #matches only type strings result  f.e. Location
+        # matches only type strings result  f.e. Location
         self.__type_pattern = re.compile('-\s+([^\s|^\)|^?|^-]+)')
-        #matches only varialbes f.e. ?myVar
+        # matches only varialbes f.e. ?myVar
         self.__var_pattern = re.compile('\?[^\s|^\)]+')
-        #matches applied predicates
+        # matches applied predicates
         self.__predicate_pattern = re.compile('(\(\s*[^\?|^\s|^\(]+(\s+\?[^\)|^\(|^\s]*)+\s*\))')
-        #matches the action name, ignores cases
+        # matches the action name, ignores cases
         self.__action_name_pattern = re.compile('\(:action\s*([^\s|^:]+)', re.IGNORECASE)
-        #a dictionary, which contains all variables and their types.
+        # a dictionary, which contains all variables and their types.
         self.__var_type_dict = {}
-        #the pddl action as string, comments removed.
+        # the pddl action as string, comments removed.
         self.__action_string = self.__clean_comments(action_string)
 
     def parse_action(self):
@@ -122,28 +122,28 @@ class PddlActionParser:
 
         :return: a list with all parsed predicates.
         """
-        #matches applied predicates
+        # matches applied predicates
         a_pred_name_pattern = re.compile('\(([^\s]+)\s')
         applied_predicates = [i[0] for i in re.findall(self.__predicate_pattern,self.__action_string)]
 
         if not self.__var_type_dict:
             self.__create_var_type_dict()
 
-        #change applied predicates to normal ones
+        # change applied predicates to normal ones
 
         parsed_predicates = {}
-        #iterate through all used predicates
+        # iterate through all used predicates
         for applied_predicate in applied_predicates:
             generalized_predicate = '('
             c_pred_name = a_pred_name_pattern.findall(applied_predicate)[0]
             if not self.__is_built_in_pred(c_pred_name):
                 c_pred_vars = self.__var_pattern.findall(applied_predicate)
                 generalized_predicate += c_pred_name
-                #the last type used
+                # the last type used
                 last_type = ''
-                #a concatination of all types, used to produce an identifier for the predicate
+                # a concatination of all types, used to produce an identifier for the predicate
                 type_concat = ''
-                #iterate through all variables of the predicate
+                # iterate through all variables of the predicate
                 for c_pred_var in c_pred_vars:
                     if c_pred_var in self.__var_type_dict:
                         c_type = self.__var_type_dict[c_pred_var]
@@ -159,10 +159,10 @@ class PddlActionParser:
                         logger.error('Variable: ' + c_pred_var+' not defined!')
                         raise ValueError('Variable: ' + c_pred_var+' not defined!')
                 generalized_predicate += ' - ' + last_type + ')'
-                #add predicate to a dictionary, to eliminate duplicats.
-                #two predicates with the same name, but different types are handled as two
-                #predicates at this time. Because of unknowen type hierarchies, its not decidable
-                #at this time how to merge the predicates.
+                # add predicate to a dictionary, to eliminate duplicats.
+                # two predicates with the same name, but different types are handled as two
+                # predicates at this time. Because of unknowen type hierarchies, its not decidable
+                # at this time how to merge the predicates.
                 parsed_predicates[c_pred_name+type_concat] = generalized_predicate
         return parsed_predicates.values()
 

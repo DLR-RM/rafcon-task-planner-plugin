@@ -1,7 +1,7 @@
 
-#Contributors:
-#Christoph Suerig <christoph.suerig@dlr.de>
-#Version: 07.06.2019
+# Contributors:
+# Christoph Suerig <christoph.suerig@dlr.de>
+# Version: 07.06.2019
 from rafcon.utils import log
 
 logger = log.get_logger(__name__)
@@ -97,30 +97,30 @@ class PredicateMerger:
         :return: one predicate tuple, containing the most general types. of format ('LOCATED',[(VEHICLE,1),(PHYSOBJ,3)])
         """
         type_tree = self.__datastore.get_available_types()
-        #the resulting predicate
+        # the resulting predicate
         result_predicate = predicate_list[0]
 
         for predicate in predicate_list:
             err_str = "Can't merge predicates, they are Incompatible! (variable names where changed) first: " +\
                       self.__tuple_to_predicate_string(result_predicate) + \
                       " second: " + self.__tuple_to_predicate_string(predicate)
-            #cant merge, if they have different names, or different number of argument types.
+            # cant merge, if they have different names, or different number of argument types.
             if result_predicate[0] != predicate[0] or len(result_predicate[1]) != len(predicate[1]):
                 logger.error(err_str)
                 raise ValueError(err_str)
             for index, type_tuple in enumerate(predicate[1]):
-                #cant merge, if they have different number of arguments per type.
+                # cant merge, if they have different number of arguments per type.
                 if type_tuple[1] != result_predicate[1][index][1]:
                     logger.error(err_str)
                     raise ValueError(err_str)
 
-                #try to merge the types used in predicates e.g. Robot or Vehicle
+                # try to merge the types used in predicates e.g. Robot or Vehicle
                 if result_predicate[1][index][0] != type_tuple[0]:
                     smallest_parent = type_tree.get_smallest_parent(type_tuple[0], result_predicate[1][index][0])
                     if smallest_parent:
-                        #set smallest_parent type as predicate type
+                        # set smallest_parent type as predicate type
                         result_predicate[1][index] = (smallest_parent, result_predicate[1][index][1])
-                        #just to warn the user, that a predicate is a root-type-predicate.
+                        # just to warn the user, that a predicate is a root-type-predicate.
                         if (type_tree.get_parent_of(smallest_parent) is None):
                             logger.warn('Predicate merged to root Type predicate: ' + self.__tuple_to_predicate_string(
                                 result_predicate))
@@ -144,11 +144,11 @@ class PredicateMerger:
         """
 
         pred_string = '('+predicate_tuple[0]
-        tuple_counter = 0 #need this counter do guarantee distinct variable names.
+        tuple_counter = 0 # need this counter do guarantee distinct variable names.
         for type_tup in predicate_tuple[1]:
             variable_counter = 0
             tuple_counter += 1
-            while variable_counter < type_tup[1]:#NUM_VARIABLES: type_tup[1] contains the number of variables of one type.
+            while variable_counter < type_tup[1]:# NUM_VARIABLES: type_tup[1] contains the number of variables of one type.
                 pred_string += ' ?' + type_tup[0][:1] + str(tuple_counter) + str(variable_counter)
                 variable_counter += 1
             pred_string += ' - '+type_tup[0]

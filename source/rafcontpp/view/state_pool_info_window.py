@@ -1,6 +1,6 @@
-#Contributors:
-#Christoph Suerig <christoph.suerig@dlr.de>
-#Version 14.06.2019
+# Contributors:
+# Christoph Suerig <christoph.suerig@dlr.de>
+# Version 14.06.2019
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk

@@ -1,6 +1,6 @@
-#Contributors:
-#Christoph Suerig <christoph.suerig@dlr.de>
-#Version 12.07.1019
+# Contributors:
+# Christoph Suerig <christoph.suerig@dlr.de>
+# Version 12.07.1019
 
 import math
 import time
@@ -28,26 +28,26 @@ class StateMachineLayouter:
         """
         start_time = time.time()
         logger.info("Layouting state machine...")
-        #the state machine model.
+        # the state machine model.
         state_machine_m = None
         if state_machine.state_machine_id in state_machine_manager_model.state_machines:
             state_machine_m = state_machine_manager_model.state_machines[state_machine.state_machine_id]
         else:
             state_machine_m = StateMachineModel(state_machine)
         target_state_m = state_machine_m.get_state_model_by_path(target_state.get_path())
-        #number of rows of states.
+        # number of rows of states.
         num_states = len(target_state_m.states)
         row_count = 0
         column_count = 0
 
-        x_gap = 25 #a gap between the state columns
-        y_gap = 25 #a gap between the state rows                             _   _
-        #the sm will be layouted column by column, in merlon shape. Like: |_| |_| |_|
-        #the width of a state in the sm
+        x_gap = 25 # a gap between the state columns
+        y_gap = 25 # a gap between the state rows                             _   _
+        # the sm will be layouted column by column, in merlon shape. Like: |_| |_| |_|
+        # the width of a state in the sm
         state_width = 100.
-        #the height of a state in the sm
+        # the height of a state in the sm
         state_height = 100.
-        #format root state
+        # format root state
         canvas_height = 0
         canvas_width = 0
         r_width = 0
@@ -66,18 +66,18 @@ class StateMachineLayouter:
             column_count = math.ceil(num_states / row_count)
             canvas_width = (column_count+1) * (x_gap+state_width)+x_gap
             canvas_height = row_count * (y_gap+state_height)
-            #root state width, height, and root state border size.
+            # root state width, height, and root state border size.
             r_width, r_height, border_size = self.__get_target_state_dimensions(canvas_width, canvas_height)
 
             logger.debug("Root state size: height: {} width: {}".format(r_height,r_width))
-            #set root state size
+            # set root state size
             target_state_m.meta['gui']['editor_gaphas']['size'] = (r_width, r_height)
-        #set root state in / out come position
+        # set root state in / out come position
         target_state_m.income.set_meta_data_editor('rel_pos', (0.,border_size+y_gap+state_height/4.))
         out_come = [oc for oc in target_state_m.outcomes if oc.outcome.outcome_id == 0].pop()
         out_come.meta['gui']['editor_gaphas']['rel_pos'] = (r_width,border_size+y_gap+state_height/4.)
 
-        #positions where an income or an outcome can occure
+        # positions where an income or an outcome can occure
         up_pos = (state_width/2., 0.)
         down_pos = (state_width/2., state_height)
         left_pos = (0., state_height/4.)
@@ -85,49 +85,49 @@ class StateMachineLayouter:
 
         current_row = 0
         current_column = 0
-        #increment_row is true if formatting digs down a row, and false if it climbs the next row up again.
+        # increment_row is true if formatting digs down a row, and false if it climbs the next row up again.
         increment_row = True
-        #format states
-        for c_state_id in state_order:#state_machine_m.root_state.states.values():
-            #gui model of state
+        # format states
+        for c_state_id in state_order:# state_machine_m.root_state.states.values():
+            # gui model of state
             state_m = target_state_m.states[c_state_id]
 
-            #decide position of income and outcome
+            # decide position of income and outcome
             income_pos = up_pos if increment_row else down_pos
             outcome_pos = down_pos if increment_row else up_pos
-            #special cases e.g. the corners of the merlon structure.
-            if current_row == 0 and current_row +1 >= row_count: #special case, if row_count = 1
+            # special cases e.g. the corners of the merlon structure.
+            if current_row == 0 and current_row +1 >= row_count: # special case, if row_count = 1
                 income_pos = left_pos
                 outcome_pos = right_pos
-            elif current_row == 0 and increment_row: #upper left corner
+            elif current_row == 0 and increment_row: # upper left corner
                 income_pos = left_pos
                 outcome_pos = down_pos
-            elif current_row == 0 and not increment_row: #upper right corner
+            elif current_row == 0 and not increment_row: # upper right corner
                 income_pos = down_pos
                 outcome_pos = right_pos
-            elif current_row +1 >= row_count and increment_row: #lower left corner
+            elif current_row +1 >= row_count and increment_row: # lower left corner
                 income_pos = up_pos
                 outcome_pos = right_pos
-            elif current_row +1 >= row_count and not increment_row: #lower right corner
+            elif current_row +1 >= row_count and not increment_row: # lower right corner
                 income_pos = left_pos
                 outcome_pos = up_pos
 
 
-            #set state size
+            # set state size
             state_m.meta['gui']['editor_gaphas']['size'] = (state_width, state_height)
 
-            #set position of income and outcome
+            # set position of income and outcome
             state_m.income.set_meta_data_editor('rel_pos', income_pos)
             out_come = [oc for oc in state_m.outcomes if oc.outcome.outcome_id >= 0].pop()
             out_come.meta['gui']['editor_gaphas']['rel_pos'] = outcome_pos
 
-            #set position of state
+            # set position of state
             current_x = current_column*(x_gap+state_width)+x_gap+border_size
             current_y = current_row*(y_gap+state_height)+y_gap+border_size
             state_m.meta['gui']['editor_gaphas']['rel_pos'] = (current_x, current_y)
-            #logger.debug("x: {} y: {}".format(current_x, current_y))
+            # logger.debug("x: {} y: {}".format(current_x, current_y))
 
-            #loop trailer, in / decrement rhow and column counter, decide if to increment row next.
+            # loop trailer, in / decrement rhow and column counter, decide if to increment row next.
             if current_row <= 0 and not increment_row:
                 increment_row = True
                 current_column +=1
@@ -137,13 +137,13 @@ class StateMachineLayouter:
             else:
                 current_row = current_row + 1 if increment_row else current_row - 1
 
-        #last state is a special case, its outcome should always be right.
+        # last state is a special case, its outcome should always be right.
         out_come = [oc for oc in target_state_m.states[state_order[-1]].outcomes if oc.outcome.outcome_id == 0].pop()
         out_come.meta['gui']['editor_gaphas']['rel_pos'] = right_pos
 
-        #store the meta data.
+        # store the meta data.
         if state_machine.file_system_path:
-            state_machine_m.store_meta_data()#TODO find solution, if state machine was never saved bevore.
+            state_machine_m.store_meta_data()# TODO find solution, if state machine was never saved bevore.
         logger.info("State machine layouting took {0:.4f} seconds.".format(time.time()- start_time))
 
 
@@ -164,7 +164,7 @@ class StateMachineLayouter:
 
         ratio = round(width / height,2)
         logger.debug('Width / Height Ratio: {}:1'.format(ratio))
-        row_count = math.sqrt(num_states/ratio)#claculates the hight for approximatly ratio of 16:9, which is appr. 1.78:1
+        row_count = math.sqrt(num_states/ratio)# claculates the hight for approximatly ratio of 16:9, which is appr. 1.78:1
         row_count = round(row_count) if row_count > 1 else 1
         return row_count
 

@@ -1,8 +1,8 @@
 #
 #
-#Contributors:
-#Christoph Suerig <christoph.suerig@dlr.de>
-#Version 17.05.2019
+# Contributors:
+# Christoph Suerig <christoph.suerig@dlr.de>
+# Version 17.05.2019
 
 
 class PddlFactsRepresentation:
@@ -17,7 +17,7 @@ class PddlFactsRepresentation:
         :param problem_name: the name of the problem / task.
         """
         self.facts = facts_string
-        #contains the objects of the facts file and their types as dict value.
+        # contains the objects of the facts file and their types as dict value.
         self.obj_type_map = obj_type_map
         self.domain_name = domain_name
         self.problem_name = problem_name
