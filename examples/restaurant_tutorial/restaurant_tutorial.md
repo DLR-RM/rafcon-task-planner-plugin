@@ -346,4 +346,4 @@ You can't just plan this one state machine, but arbitrary manyǃ For example, le
 ## 1.8 Solution
 
 A solution for this tutorial is provided in `[repository_path]/examples/restaurant_tutorial/src`.
-There you find all described files, and states as well as an executable restaurant_state_machine and all related files, generated during the planning process. To load the restaurant_state_machine, with is located inside of the restaurant_state_pool, you must add the library path `[repository_path]/examples/restaurant_tutorial/src/restaurant_state_pool` with the key `restaurant_state_pool` to RAFCON.
+There you find all described files, and states as well as an executable restaurant_state_machine and all related files, generated during the planning process. To load the restaurant_state_machine, which is located inside of the restaurant_state_pool, you must add the library path `[repository_path]/examples/restaurant_tutorial/src/restaurant_state_pool` with the key `restaurant_state_pool` to RAFCON.
