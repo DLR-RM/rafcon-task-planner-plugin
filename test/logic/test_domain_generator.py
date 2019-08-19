@@ -1,11 +1,13 @@
-import pytest
 import os
+
+import pytest
+
 from rafcontpp.logic.domain_generator import DomainGenerator
-from rafcontpp.model.pddl_action_representation import PddlActionRepresentation
-from rafcontpp.model.pddl_facts_representation import PddlFactsRepresentation
 from rafcontpp.logic.pddl_facts_parser import PddlFactsParser
-from rafcontpp.model.pddl_action_representation import action_to_upper
 from rafcontpp.model.datastore import datastore_from_file
+from rafcontpp.model.pddl_action_representation import PddlActionRepresentation
+from rafcontpp.model.pddl_action_representation import action_to_upper
+from rafcontpp.model.pddl_facts_representation import PddlFactsRepresentation
 
 
 @pytest.fixture

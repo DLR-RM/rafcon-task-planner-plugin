@@ -5,10 +5,13 @@
 # Christoph Suerig <christoph.suerig@dlr.de>
 # Version 12.11.2018
 import os
+
+from rafcon.gui.helpers.label import create_tab_header_label
+from rafcon.utils import log
+
 from rafcontpp.view import planning_button
 from rafcontpp.view.pddl_action_tab import PddlActionTab
-from rafcon.gui.helpers.label import create_label_widget_with_icon, create_tab_header_label
-from rafcon.utils import log
+
 logger = log.get_logger(__name__)
 
 

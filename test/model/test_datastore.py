@@ -1,8 +1,12 @@
-import pytest
 import os
-from rafcontpp.model.datastore import datastore_from_file
+
+import pytest
+
 from rafcontpp.model.datastore import Datastore
+from rafcontpp.model.datastore import datastore_from_file
 from rafcontpp.model.interruptable_thread import InterruptableThread
+
+
 @pytest.fixture
 def datastore_file_path():
     return os.path.join(os.path.dirname(os.path.abspath(__file__)),'test_data','test_conf.json')

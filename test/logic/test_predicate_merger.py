@@ -1,8 +1,8 @@
 import pytest
-import os
+
 from rafcontpp.logic.predicate_merger import PredicateMerger
-from rafcontpp.model.type_tree import TypeTree
 from rafcontpp.model.datastore import datastore_from_file
+from rafcontpp.model.type_tree import TypeTree
 
 
 @pytest.fixture

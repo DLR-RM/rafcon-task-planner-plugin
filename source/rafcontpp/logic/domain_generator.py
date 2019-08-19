@@ -3,11 +3,12 @@
 # Version 31.05.2019
 
 import os
-import json
-from rafcontpp.model.type_tree import TypeTree
+
+from rafcon.utils import log
+
 from rafcontpp.logic.predicate_merger import PredicateMerger
 from rafcontpp.logic.type_merger import TypeMerger
-from rafcon.utils import log
+
 logger = log.get_logger(__name__)
 
 class DomainGenerator:

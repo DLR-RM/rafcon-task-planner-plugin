@@ -1,5 +1,6 @@
-import pytest
 import gi
+import pytest
+
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 from rafcontpp.logic.pddl_action_parser import PddlActionParser

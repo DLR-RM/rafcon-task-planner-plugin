@@ -2,8 +2,10 @@
 # Christoph Suerig <christoph.suerig@dlr.de>
 # Version: 17.05.2019
 import re
-from rafcontpp.model.pddl_action_representation import PddlActionRepresentation
+
 from rafcon.utils import log
+
+from rafcontpp.model.pddl_action_representation import PddlActionRepresentation
 
 logger = log.get_logger(__name__)
 

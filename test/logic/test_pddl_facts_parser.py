@@ -1,7 +1,6 @@
 import pytest
-import os
-from rafcontpp.logic.pddl_facts_parser import PddlFactsParser
 
+from rafcontpp.logic.pddl_facts_parser import PddlFactsParser
 
 
 @pytest.mark.parametrize("obj_section",[

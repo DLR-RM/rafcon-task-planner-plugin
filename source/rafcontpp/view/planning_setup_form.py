@@ -6,11 +6,8 @@
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
-from gi.repository import Gdk
 import os
-from threading import Thread
-from rafcontpp.control.execution_controller import ExecutionController
-from rafcontpp.model.datastore import Datastore, DATASTORE_STORAGE_PATH
+from rafcontpp.model.datastore import Datastore
 from rafcontpp.control.planning_setup_form_controller import PlanningSetupFormController
 from rafcontpp.control.planning_setup_form_controller import NOT_AVAILABLE, OTHER, SEL_PLANNER
 from rafcon.utils import log

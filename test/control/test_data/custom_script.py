@@ -1,10 +1,10 @@
 import os
 import shutil
 import subprocess
+
+from rafcontpp.model.plan_step import PlanStep
 from rafcontpp.model.planner_interface import PlannerInterface
 from rafcontpp.model.planning_report import PlanningReport
-from rafcontpp.model.plan_step import PlanStep
-
 
 
 class FdIntegration(PlannerInterface):

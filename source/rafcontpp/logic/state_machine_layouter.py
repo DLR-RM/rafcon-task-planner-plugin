@@ -4,11 +4,13 @@
 
 import math
 import time
+
 from gaphas.solver import Variable
-from rafcon.utils import log
-from rafcon.gui.utils import constants
 from rafcon.gui.models.state_machine import StateMachineModel
 from rafcon.gui.singleton import state_machine_manager_model
+from rafcon.gui.utils import constants
+from rafcon.utils import log
+
 logger = log.get_logger(__name__)
 
 class StateMachineLayouter:

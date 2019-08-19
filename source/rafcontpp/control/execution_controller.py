@@ -3,17 +3,19 @@
 # Version 24.05.2019
 
 import os
+import threading
 import time
 import traceback
-import threading
-from rafcontpp.logic.mapper import Mapper
-from rafcontpp.logic.pddl_facts_parser import PddlFactsParser
-from rafcontpp.model.pddl_facts_representation import PddlFactsRepresentation
-from rafcontpp.logic.domain_generator import DomainGenerator
-from rafcontpp.logic.state_machine_generator import StateMachineGenerator
-from rafcontpp.logic.pddl_action_loader import PddlActionLoader
-from rafcontpp.control.planning_controller import PlanningController
+
 from rafcon.utils import log
+
+from rafcontpp.control.planning_controller import PlanningController
+from rafcontpp.logic.domain_generator import DomainGenerator
+from rafcontpp.logic.mapper import Mapper
+from rafcontpp.logic.pddl_action_loader import PddlActionLoader
+from rafcontpp.logic.pddl_facts_parser import PddlFactsParser
+from rafcontpp.logic.state_machine_generator import StateMachineGenerator
+from rafcontpp.model.pddl_facts_representation import PddlFactsRepresentation
 
 logger = log.get_logger(__name__)
 

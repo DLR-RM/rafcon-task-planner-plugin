@@ -12,24 +12,25 @@
 
 
 
+import json
 import os
 import time
-import json
-from rafcontpp.logic.state_machine_layouter import StateMachineLayouter
-from rafcontpp.model.datastore import ALLOW_OVERRIDE_NAME, SEMANTIC_DATA_DICT_NAME
-from rafcontpp.model import interruptable_thread
-from rafcon.gui.models.signals import ActionSignalMsg
-from rafcon.gui.singleton import state_machine_manager_model
-from rafcon.gui.utils import wait_for_gui
-from rafcon.gui.config import global_gui_config
-from rafcon.core.storage import storage
+
 from rafcon.core.singleton import library_manager
 from rafcon.core.singleton import state_machine_manager
 from rafcon.core.state_machine import StateMachine
-from rafcon.core.states.hierarchy_state import HierarchyState
 from rafcon.core.states.execution_state import ExecutionState
-from rafcon.utils.gui_functions import call_gui_callback
+from rafcon.core.states.hierarchy_state import HierarchyState
+from rafcon.core.storage import storage
+from rafcon.gui.models.signals import ActionSignalMsg
+from rafcon.gui.singleton import state_machine_manager_model
 from rafcon.utils import log
+from rafcon.utils.gui_functions import call_gui_callback
+
+from rafcontpp.logic.state_machine_layouter import StateMachineLayouter
+from rafcontpp.model import interruptable_thread
+from rafcontpp.model.datastore import ALLOW_OVERRIDE_NAME, SEMANTIC_DATA_DICT_NAME
+
 logger = log.get_logger(__name__)
 
 

@@ -1,9 +1,9 @@
 # Contributors:
 # Christoph Suerig <christoph.suerig@dlr.de>
 # Version 08.03.2019
-import pytest
 import testing_utils
 from testing_utils import call_gui_callback
+
 from rafcontpp.view import planning_button
 
 

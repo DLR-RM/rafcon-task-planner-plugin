@@ -3,14 +3,16 @@
 # Contributors:
 # Christoph Suerig <christoph.suerig@dlr.de>
 # Version 12.07.2019
-import os
 import json
+import os
 import threading
 import time
-from rafcontpp.model.plan_step import PlanStep
-from rafcontpp.model.pddl_action_representation import PddlActionRepresentation
-from rafcontpp.model.type_tree import TypeTree
+
 from rafcon.utils import log
+
+from rafcontpp.model.pddl_action_representation import PddlActionRepresentation
+from rafcontpp.model.plan_step import PlanStep
+from rafcontpp.model.type_tree import TypeTree
 
 logger = log.get_logger(__name__)
 # a map containing all built in planners e.g. planners with integration script.

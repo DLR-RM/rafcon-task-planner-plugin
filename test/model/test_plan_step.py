@@ -1,4 +1,3 @@
-import pytest
 from rafcontpp.model.plan_step import PlanStep
 
 

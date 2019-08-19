@@ -6,24 +6,23 @@
 
 
 import os
-import threading
 from threading import Thread
-from rafcon.core.states.hierarchy_state import HierarchyState
-from rafcon.utils.gui_functions import call_gui_callback
+
 import rafcon.gui.singleton as gui_singletons
+from rafcon.core.states.hierarchy_state import HierarchyState
 from rafcon.gui.singleton import state_machine_manager_model
+from rafcon.utils import log
+from rafcon.utils.gui_functions import call_gui_callback
+
 from rafcontpp.control.execution_controller import ExecutionController
-from rafcontpp.model.datastore import Datastore, DATASTORE_STORAGE_PATH
-from rafcontpp.model.datastore import SEMANTIC_DATA_DICT_NAME, ALLOW_OVERRIDE_NAME
-from rafcontpp.view.confirm_dialog import ConfirmDialog
-from rafcontpp.view.state_pool_info_window import StatePoolInfoWindow
-from rafcontpp.view.confirm_dialog import ConfirmDialog
 from rafcontpp.logic.mapper import Mapper
 from rafcontpp.logic.pddl_action_loader import PddlActionLoader
 from rafcontpp.logic.predicate_merger import PredicateMerger
 from rafcontpp.logic.type_merger import TypeMerger
-
-from rafcon.utils import log
+from rafcontpp.model.datastore import Datastore, DATASTORE_STORAGE_PATH
+from rafcontpp.model.datastore import SEMANTIC_DATA_DICT_NAME, ALLOW_OVERRIDE_NAME
+from rafcontpp.view.confirm_dialog import ConfirmDialog
+from rafcontpp.view.state_pool_info_window import StatePoolInfoWindow
 
 logger = log.get_logger(__name__)
 # other string, if other planner is choosen.

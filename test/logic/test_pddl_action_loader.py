@@ -1,5 +1,7 @@
-import pytest
 import os
+
+import pytest
+
 from rafcontpp.logic.pddl_action_loader import PddlActionLoader
 from rafcontpp.model.datastore import datastore_from_file
 

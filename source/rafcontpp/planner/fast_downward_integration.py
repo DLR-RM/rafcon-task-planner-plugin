@@ -2,13 +2,13 @@
 # Christoph Suerig <christoph.suerig@dlr.de>
 # Version 31.05.2019
 import os
-import time
 import shutil
 import subprocess
+import time
+
+from rafcontpp.model.plan_step import PlanStep
 from rafcontpp.model.planner_interface import PlannerInterface
 from rafcontpp.model.planning_report import PlanningReport
-from rafcontpp.model.plan_step import PlanStep
-
 
 
 class FdIntegration(PlannerInterface):

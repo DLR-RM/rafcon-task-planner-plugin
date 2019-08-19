@@ -1,4 +1,3 @@
-import pytest
 from rafcontpp.logic.pddl_requirement_finder import PddlRequirementFinder
 
 

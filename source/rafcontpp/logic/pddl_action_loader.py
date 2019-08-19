@@ -3,12 +3,14 @@
 # Version 05.07.2019
 import os
 import unicodedata
+
+from rafcon.core.singleton import library_manager
+from rafcon.utils import log
+
+from rafcontpp.logic.pddl_action_parser import PddlActionParser
 from rafcontpp.model.datastore import SEMANTIC_DATA_DICT_NAME, PDDL_ACTION_SUB_DICT_NAME
 from rafcontpp.model.pddl_action_representation import PddlActionRepresentation
 from rafcontpp.model.pddl_action_representation import action_to_upper
-from rafcontpp.logic.pddl_action_parser import PddlActionParser
-from rafcon.core.singleton import library_manager
-from rafcon.utils import log
 
 logger = log.get_logger(__name__)
 

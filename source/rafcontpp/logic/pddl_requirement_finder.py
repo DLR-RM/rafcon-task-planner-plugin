@@ -4,7 +4,9 @@
 # Christoph Suerig <christoph.suerig@dlr.de>
 # Version 31.05.2019
 import re
+
 from rafcon.utils import log
+
 logger = log.get_logger(__name__)
 
 

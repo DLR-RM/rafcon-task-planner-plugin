@@ -1,9 +1,13 @@
-import pytest
 import os
+
+import pytest
 import utils
 from utils import call_gui_callback
+
 from rafcontpp.logic.mapper import Mapper
 from rafcontpp.model.datastore import datastore_from_file
+
+
 @pytest.fixture
 def datastore():
      base_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'test_data')

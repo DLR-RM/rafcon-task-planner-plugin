@@ -2,11 +2,13 @@
 # Christoph Suerig <christoph.suerig@dlr.de>
 # Version 05.07.2019
 import os
-from rafcontpp.model.datastore import SEMANTIC_DATA_DICT_NAME, PDDL_ACTION_SUB_DICT_NAME
-from rafcontpp.logic.pddl_action_parser import PddlActionParser
-from rafcon.core.singleton import library_manager
+
 from rafcon.core.config import global_config
+from rafcon.core.singleton import library_manager
 from rafcon.utils import log
+
+from rafcontpp.logic.pddl_action_parser import PddlActionParser
+from rafcontpp.model.datastore import SEMANTIC_DATA_DICT_NAME, PDDL_ACTION_SUB_DICT_NAME
 
 logger = log.get_logger(__name__)
 

@@ -5,12 +5,8 @@
 
 import gi
 gi.require_version('Gtk', '3.0')
-import time
-from gi.repository import Gtk
 from rafcontpp.model.datastore import SEMANTIC_DATA_DICT_NAME, PDDL_ACTION_SUB_DICT_NAME
-from rafcontpp.logic.pddl_action_parser import PddlActionParser
 from rafcontpp.logic.pddl_requirement_finder import PddlRequirementFinder
-from rafcon.core.states.library_state import LibraryState
 from rafcon.utils import log
 logger = log.get_logger(__name__)
 

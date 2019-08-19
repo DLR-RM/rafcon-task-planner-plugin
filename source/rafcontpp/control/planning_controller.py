@@ -2,14 +2,16 @@
 # Christoph Suerig <christoph.suerig@dlr.de>
 # Version 12.07.2019
 import inspect
-import time
 import os
 import signal
 import sys
-from multiprocessing import Process, Queue, current_process
+import time
+from multiprocessing import Process, Queue
+
+from rafcon.utils import log
+
 from rafcontpp.model import interruptable_thread
 from rafcontpp.model.interruptable_thread import InterruptableThread
-from rafcon.utils import log
 
 logger = log.get_logger(__name__)
 

@@ -1,5 +1,7 @@
 import pytest
+
 from rafcontpp.model.pddl_facts_representation import PddlFactsRepresentation
+
 
 @pytest.fixture
 def obj_map():

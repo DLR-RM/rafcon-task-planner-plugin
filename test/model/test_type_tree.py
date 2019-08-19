@@ -1,6 +1,6 @@
 import pytest
-from rafcontpp.model.type_tree import TypeTree
 
+from rafcontpp.model.type_tree import TypeTree
 
 
 @pytest.fixture

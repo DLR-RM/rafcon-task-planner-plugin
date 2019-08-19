@@ -1,5 +1,7 @@
-import pytest
 import os
+
+import pytest
+
 from rafcontpp.control.planning_controller import PlanningController
 from rafcontpp.model.datastore import datastore_from_file
 

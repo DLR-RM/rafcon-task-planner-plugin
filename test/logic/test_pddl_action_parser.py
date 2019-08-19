@@ -1,7 +1,6 @@
 import pytest
-import os
-from rafcontpp.logic.pddl_action_parser import PddlActionParser
 
+from rafcontpp.logic.pddl_action_parser import PddlActionParser
 
 
 @pytest.fixture

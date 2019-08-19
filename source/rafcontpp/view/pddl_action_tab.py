@@ -4,13 +4,13 @@
 
 
 import os
-import time
+
 import gi
+
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 from rafcontpp.model.datastore import SEMANTIC_DATA_DICT_NAME, PDDL_ACTION_SUB_DICT_NAME, ALLOW_OVERRIDE_NAME
 from rafcontpp.logic.pddl_action_parser import PddlActionParser
-from rafcontpp.logic.pddl_requirement_finder import PddlRequirementFinder
 from rafcontpp.control.pddl_action_tab_controller import PddlActionTabController
 from rafcon.core.states.library_state import LibraryState
 from rafcon.utils import log

@@ -1,4 +1,3 @@
-import pytest
 from rafcontpp.model.pddl_action_representation import PddlActionRepresentation
 from rafcontpp.model.pddl_action_representation import action_to_upper
 
