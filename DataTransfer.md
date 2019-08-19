@@ -37,7 +37,7 @@ As seen above, Parameters can be passed to the states. But most of the time, tha
 }
 ```
 
-When starting to execute the state machine, these specifications are copied into a global variable named **rtpp_data** in the global variable manager (gvm) of RAFCON. So when an identifier was passed to a state, the corresponding object can be read from this dictionary. For example, reading the size of the passed food e.g. the pizza would look like this: 
+When starting to execute the state machine, these specifications are copied into a global variable named **rtpp_data** in the global variable manager (gvm) of RAFCON. So when an identifier was passed to a state, the corresponding object can be read from this dictionary. For example, reading the size of the passed food e.g. the pizza in an execution state would look like this: 
 
 ```python
  def execute(self, inputs, outputs, gvm):
