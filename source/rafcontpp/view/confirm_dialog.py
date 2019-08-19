@@ -1,6 +1,6 @@
-# Contributors:
-# Christoph Suerig <christoph.suerig@dlr.de>
-# Version 12.07.2019
+#Contributors:
+#Christoph Suerig <christoph.suerig@dlr.de>
+#Version 12.07.2019
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
@@ -10,9 +10,9 @@ from rafcon.utils import log
 logger = log.get_logger(__name__)
 
 class ConfirmDialog:
-    '''
+    """
     Just a little confirm dialog, indicating that planning is in progress, and the user can wait.
-    '''
+    """
 
     def __init__(self, parent, content):
 
@@ -30,20 +30,20 @@ class ConfirmDialog:
 
 
     def show(self):
-        '''
+        """
         shows the planning wait window.
-        '''
+        """
         self.__confirm_dialog.show_all()
 
     def hide(self):
-        '''
+        """
         hides the planning_wait_window
-        '''
+        """
         self.__confirm_dialog.hide()
 
 
     def destroy(self):
-        '''
+        """
         destroys the planning_wait_window
-        '''
+        """
         self.__confirm_dialog.destroy()

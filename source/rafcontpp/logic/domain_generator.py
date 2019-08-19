@@ -1,6 +1,6 @@
-# Contributors:
-# Christoph Suerig <christoph.suerig@dlr.de>
-# Version 31.05.2019
+#Contributors:
+#Christoph Suerig <christoph.suerig@dlr.de>
+#Version 31.05.2019
 
 import os
 import json
@@ -11,9 +11,9 @@ from rafcon.utils import log
 logger = log.get_logger(__name__)
 
 class DomainGenerator:
-    '''DomainGenerator
+    """DomainGenerator
     The DomainGenerator uses the data provided by the datastore to generate a domain.pddl file for the planner.
-    '''
+    """
 
     def __init__(self, datastore):
         if datastore is None:
@@ -56,11 +56,11 @@ class DomainGenerator:
 
 
     def __get_head(self, domain_name):
-        ''' get_head
+        """ get_head
         takes a domain name, and returns the head of a pddl domain, e.g. "(define (domain test_domain)"
         :param domain_name: the name of the domain
         :return: the head of a pddl domain
-        '''
+        """
         return "(DEFINE (DOMAIN {})".format(domain_name)
 
     def __merge_requirements(self, pddl_actions):

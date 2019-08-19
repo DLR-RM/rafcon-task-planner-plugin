@@ -1,30 +1,30 @@
 
-# Contributors:
-# Christoph Suerig <christoph.suerig@dlr.de>
-# Version: 07.06.2019
+#Contributors:
+#Christoph Suerig <christoph.suerig@dlr.de>
+#Version: 07.06.2019
 from rafcon.utils import log
 
 logger = log.get_logger(__name__)
 
 class PredicateMerger:
-    '''PredicateMerger
-    '''
+    """PredicateMerger
+    """
 
     __name_index = 0
 
     def __init__(self, datastore):
-        '''
+        """
         :param datastore: a datastore containing all necassary data
-        '''
+        """
         self.__datastore = datastore
 
 
     def merge_predicates(self,predicates):
-        '''merge predicates merges all predicates, sets all available predicates in datastore
+        """merge predicates merges all predicates, sets all available predicates in datastore
         and returns all merged predicates as strings.
         :param predicates: a list [string] with predicates
         :return: a tuple (list [string] with merged predicates, and a list [of format ('LOCATED',[(VEHICLE,1),(PHYSOBJ,3)])] all available predicates)
-        '''
+        """
         if predicates is None:
             raise ValueError('predicates can not be None!')
         preds_map = {}
@@ -46,11 +46,11 @@ class PredicateMerger:
 
 
     def __parse_predicate(self,predicate_string):
-        '''parse_predicate
+        """parse_predicate
         parse_predicate gets a predicate string and parses it into a useful tuple of (predicate_Name,[(type_name,occurance)])
         :param predicate_string: a predicate as string e.g (LOCATED ?VEH - VEHICLE ?OBJ ?sObj ?thirdObj - PHYSOBJ)
         :return: a parsed predicate as tuple e.g. ('LOCATED',[(VEHICLE,1),(PHYSOBJ,3)])
-        '''
+        """
         pred_name = None
         pred_types = []
         pred = predicate_string
@@ -90,12 +90,12 @@ class PredicateMerger:
 
 
     def __reduce_predicate_list(self,predicate_list):
-        '''reduce_predicate_list
+        """reduce_predicate_list
         reduce_predicate_list gets a list of predicates, with the same name but different types,
         and reduces them to one predicate, with the most open types.
         :param predicate_list: a list with predicates, all having the same name, of format ('LOCATED',[(VEHICLE,1),(PHYSOBJ,3)])
         :return: one predicate tuple, containing the most general types. of format ('LOCATED',[(VEHICLE,1),(PHYSOBJ,3)])
-        '''
+        """
         type_tree = self.__datastore.get_available_types()
         #the resulting predicate
         result_predicate = predicate_list[0]
@@ -118,9 +118,9 @@ class PredicateMerger:
                 if result_predicate[1][index][0] != type_tuple[0]:
                     smallest_parent = type_tree.get_smallest_parent(type_tuple[0], result_predicate[1][index][0])
                     if smallest_parent:
-                        # set smallest_parent type as predicate type
+                        #set smallest_parent type as predicate type
                         result_predicate[1][index] = (smallest_parent, result_predicate[1][index][1])
-                        # just to warn the user, that a predicate is a root-type-predicate.
+                        #just to warn the user, that a predicate is a root-type-predicate.
                         if (type_tree.get_parent_of(smallest_parent) is None):
                             logger.warn('Predicate merged to root Type predicate: ' + self.__tuple_to_predicate_string(
                                 result_predicate))
@@ -137,18 +137,18 @@ class PredicateMerger:
 
 
     def __tuple_to_predicate_string(self,predicate_tuple):
-        '''
+        """
         receives a predicate tuple and returns it as predicate string.
         :param predicate_tuple: a tuple in format (PREDICATE_NAME,[(TYPE,NUM_VARIABLES)])
         :return: a predicate string (PREDICATENAME ?0 ?1 - Type)
-        '''
+        """
 
         pred_string = '('+predicate_tuple[0]
         tuple_counter = 0 #need this counter do guarantee distinct variable names.
         for type_tup in predicate_tuple[1]:
             variable_counter = 0
             tuple_counter += 1
-            while variable_counter < type_tup[1]:# NUM_VARIABLES: type_tup[1] contains the number of variables of one type.
+            while variable_counter < type_tup[1]:#NUM_VARIABLES: type_tup[1] contains the number of variables of one type.
                 pred_string += ' ?' + type_tup[0][:1] + str(tuple_counter) + str(variable_counter)
                 variable_counter += 1
             pred_string += ' - '+type_tup[0]

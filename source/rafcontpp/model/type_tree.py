@@ -1,8 +1,8 @@
 #
 #
-# Contributors:
-# Christoph Suerig <christoph.suerig@dlr.de>
-# Version 14.06.2019
+#Contributors:
+#Christoph Suerig <christoph.suerig@dlr.de>
+#Version 14.06.2019
 
 
 class TypeTree:
@@ -118,10 +118,10 @@ class TypeTree:
         return as_string
 
     def get_as_list(self):
-        '''
+        """
         takes the Tree, and writes all its elements into a list
         :return: a list, contining all types of the tree
-        '''
+        """
 
         type_list = [self.type_name]
 
@@ -141,11 +141,11 @@ class TypeTree:
         return self.get_sub_tree(type_to_search) is not None
 
     def get_sub_tree(self,type_to_search):
-        ''' get_sub_tree
+        """ get_sub_tree
         get_sub_tree gets a type, and returns the subtree, with the type as root.
         :param type_to_search: the root of the subtree to get
         :return: a sub tree, or none if the type is not in the tree.
-        '''
+        """
         sub_tree = None
         if self.type_name == type_to_search:
             sub_tree = self
@@ -160,13 +160,13 @@ class TypeTree:
 
 
     def is_parent_of(self,parent,child):
-        ''' is_parent_of
+        """ is_parent_of
         is_parent_of receives two types, and returns true,
         if the first type it the parent of the second type.
         :param parent: the maybe parent type
         :param child: the maybe child type
         :return: true, if the parent is really the parent of the child, false otherwhise
-        '''
+        """
 
         is_parent = False
         if parent != child:
@@ -180,12 +180,12 @@ class TypeTree:
 
 
     def get_parent_of(self, type_name):
-        '''
+        """
         get_parent_of gets a type name, and returns its parent.
         IMPORTANT: it searches in the tree for the parent, just childs.
         :param type_name: a type name
         :return: the parent or None if the type has no parent or is not in tree.
-        '''
+        """
         parent  = None
         #look, if this node the parent
         for child in self.children:
@@ -203,7 +203,7 @@ class TypeTree:
         return parent
 
     def get_smallest_parent(self, type_a, type_b):
-        '''
+        """
         gets two types and finds their smallest parent. E.g. given a type t1 and a type t2:
         if: t2 is parent of t1, it will return t2
         if t1 is the parent of t2, it will return t1
@@ -212,7 +212,7 @@ class TypeTree:
         :param type_a: a type a
         :param type_b: a type b
         :return: the smallest parent, or None
-        '''
+        """
         smallest_parent = None
         #fast fail if not in tree, or one is none
         if type_a is None or type_b is None:

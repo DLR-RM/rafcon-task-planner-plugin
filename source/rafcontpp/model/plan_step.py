@@ -1,8 +1,8 @@
 #
 #
-# Contributors:
-# Christoph Suerig <christoph.suerig@dlr.de>
-# Version 12.11.2018
+#Contributors:
+#Christoph Suerig <christoph.suerig@dlr.de>
+#Version 12.11.2018
 
 class PlanStep:
     """Intern format, to represent a pddl-plan step.
@@ -10,12 +10,12 @@ class PlanStep:
        """
 
     def __init__(self, name, parameter):
-        '''
+        """
         Represents a step of the plan, in other words
         one parameterized action of the plan.
         :param name: The name of the action as String
         :param args: The parameters of the action as [String]
-        '''
+        """
         self.name = name.upper()
         self.parameter = parameter
 

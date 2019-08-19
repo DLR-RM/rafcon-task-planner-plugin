@@ -1,6 +1,6 @@
-# Contributors:
-# Christoph Suerig <christoph.suerig@dlr.de>
-# Version 24.05.2019
+#Contributors:
+#Christoph Suerig <christoph.suerig@dlr.de>
+#Version 24.05.2019
 import json
 from rafcontpp.model.type_tree import TypeTree
 from rafcon.utils import log
@@ -38,11 +38,11 @@ class TypeMerger:
 
 
     def __dict_to_upper(self, dict):
-        '''
+        """
          receives a dict of string:string and returns it in upper case
         :param dict: a string:string dict
         :return: a new dict in upper case.
-        '''
+        """
         upper_dict = dict
 
         if dict:

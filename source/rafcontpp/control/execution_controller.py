@@ -1,6 +1,6 @@
-# Contributors:
-# Christoph Suerig <christoph.suerig@dlr.de>
-# Version 24.05.2019
+#Contributors:
+#Christoph Suerig <christoph.suerig@dlr.de>
+#Version 24.05.2019
 
 import os
 import time
@@ -34,12 +34,12 @@ class ExecutionController:
 
 
     def on_execute_pre_planning(self):
-        '''
+        """
         on_execute_pre_planning prepares the Datastore and gets everything ready for the planning process. Therefore
         it triggeres different modules to map actions with states, loads all available actions and generate a domain file.
         In the end initiates the Planning Process, and returns its thread.
         :return: InterruptableThread: The planning Thread.
-        '''
+        """
         try:
             #pipeline, after input reading...
             #prepare dicts
@@ -77,20 +77,20 @@ class ExecutionController:
 
 
     def on_execute_post_planning(self,planning_successful):
-        '''
+        """
         on_execute_post_planning takes care of the post planning steps in the pipeline, e.g. it triggeres the state
         machine generation procedure. typically its executed from another thread.
         :param planning_successful: True if planning was successful, False otherwhise.
-        '''
+        """
 
         try:
             logger.verbose('post planning executed from thread: {}'.format(threading.current_thread().getName()))
-            # check if a plan was found.
+            #check if a plan was found.
             if planning_successful and len(self.__datastore.get_plan()) > 0:
                 logger.info('A Plan was found!')
                 sm_generator = StateMachineGenerator(self.__datastore)
                 logger.debug('Handover to state machine generator.')
-                sm_generator.generate_state_machine()  # --> generates state machine and opens it.
+                sm_generator.generate_state_machine()  #--> generates state machine and opens it.
 
 
             else:
@@ -122,12 +122,12 @@ class ExecutionController:
 
 
     def __parse_facts_file(self):
-        '''
+        """
         parses the facts file, and creates a facts representation.
         i do it here, because i have no better place, later on i will do it in a dedicated facts module
         TODO delete, and do somewhere else.
         :return:
-        '''
+        """
         facts_file = open(self.__datastore.get_facts_path(), 'r')
         facts_string = facts_file.read()
         facts_parser = PddlFactsParser(facts_string)

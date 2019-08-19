@@ -1,8 +1,8 @@
 #
 #
-# Contributors:
-# Christoph Suerig <christoph.suerig@dlr.de>
-# Version 12.07.2019
+#Contributors:
+#Christoph Suerig <christoph.suerig@dlr.de>
+#Version 12.07.2019
 import os
 import json
 import threading
@@ -13,7 +13,7 @@ from rafcontpp.model.type_tree import TypeTree
 from rafcon.utils import log
 
 logger = log.get_logger(__name__)
-# a map containing all built in planners e.g. planners with integration script.
+#a map containing all built in planners e.g. planners with integration script.
 built_in_planners = {
     'Fast Downward Planning System': ('rafcontpp.planner.fast_downward_integration', 'FdIntegration'),
     'Fast-Forward Planning System v2.3': ('rafcontpp.planner.fast_forward_integration','FfIntegration')
@@ -34,20 +34,20 @@ planning_threads_lock = threading.Lock()
 planning_threads = {}
 
 def get_planning_threads():
-    '''
+    """
     :return: a copy of the planning_threads dict.
-    '''
+    """
     with planning_threads_lock:
         copy = planning_threads.copy()
     return copy
 
 def datastore_from_file(file_path):
-    ''' datastore_from_file
+    """ datastore_from_file
     datastore_from_file tries to create a partial datastore (just input values, no clculated ones)
     from a .json file e.g. config file. if there is no config file present, it returns a datastore with default values
     :param file_path: the path to the config file
     :return: a partial initialized datastore, or a datastore with default values.
-    '''
+    """
     ds = None
     if not os.path.isfile(file_path):
         logger.warning("Can't restore configuration from: {}".format(file_path))
@@ -82,13 +82,13 @@ def datastore_from_file(file_path):
 
 
 class Datastore:
-    ''' Datastore
+    """ Datastore
     Datastore is a datastore, which holds all data of the plugin. Every module can get, and store its data here.
-    '''
+    """
 
     def __init__(self, state_pools,sm_name,sm_save_dir, planner,planner_script_path, planner_argv,
                facts_path,type_db_path,keep_related_files, file_save_dir='/tmp'):
-        '''
+        """
          Constructor of Datastore
         :param state_pools: a list of file paths.
         :param sm_name: the name of the state machine which will be generated.
@@ -99,7 +99,7 @@ class Datastore:
         :param type_db_path: path of the type_db.
         :param keep_related_files: true, if generated files e.g. the domain file or the plan should be saved.
         :param file_save_dir: a path, where to save all related files.
-        '''
+        """
 
         #a list of directories, containing states with pddl notation.
         self.__state_pools = state_pools
@@ -111,40 +111,40 @@ class Datastore:
         self.__facts_path = facts_path
         #the complete path of the type db file
         self.__type_db_path = type_db_path
-        # True if files should be keeped, false otherwhise
+        #True if files should be keeped, false otherwhise
         self.__keep_related_files = keep_related_files
-        # the directory, where to save all produced files in
+        #the directory, where to save all produced files in
         self.__file_save_dir = file_save_dir
-        # the shortcut, or the name of the planner script
+        #the shortcut, or the name of the planner script
         self.__planner = planner
         #additional arguments for the planner as string array.
         self.__planner_argv = planner_argv
-        # the path of a custom planner script. this variable is not really useful for the plugin, and its not used, BUT:
-        # its useful for usability, to be able to save the script path persistent.
+        #the path of a custom planner script. this variable is not really useful for the plugin, and its not used, BUT:
+        #its useful for usability, to be able to save the script path persistent.
         self.__planner_script_path = planner_script_path
-        # the complete path of the domain file (e.g. /home/domain.pddl).
+        #the complete path of the domain file (e.g. /home/domain.pddl).
         self.__domain_path = None
-        # a map containing pddl action names as keys, and rafcon states as values.
+        #a map containing pddl action names as keys, and rafcon states as values.
         self.__action_state_map = None
-        # a map containing rafcon states as keys and pddl action names as values.
+        #a map containing rafcon states as keys and pddl action names as values.
         self.__state_action_map = None
-        # a map containing action names as keys and pddl action representations as values
+        #a map containing action names as keys and pddl action representations as values
         self.__pddl_action_map = None
-        # a list, contining the names of all available actions.
+        #a list, contining the names of all available actions.
         self.__available_actions = None
-        # a PddlFactsRepresentation Object, containing the parsed facts file.
+        #a PddlFactsRepresentation Object, containing the parsed facts file.
         self.__pddl_facts_representation = None
-        # a typeTree containing all available types
+        #a typeTree containing all available types
         self.__available_types = None
-        # a list of (String,[(String,integer)]) prediactes
+        #a list of (String,[(String,integer)]) prediactes
         self.__available_predicates = None
-        # the plan, as a list of plan steps.
+        #the plan, as a list of plan steps.
         self.__plan = None
-        # a list with the name of all files, generated during the pipeline execution.
+        #a list with the name of all files, generated during the pipeline execution.
         self.__generated_files = []
-        # the complete path of the runtime data dict, which holds data required during the run of the generated sm.
+        #the complete path of the runtime data dict, which holds data required during the run of the generated sm.
         self.__runtime_data_path = None
-        # if true the runtime_data is red during runtime, otherwhise its red when generating the sm.
+        #if true the runtime_data is red during runtime, otherwhise its red when generating the sm.
         self.__use_runtime_data_path_as_reference = False
         #target state, the state to plan into.
         self.__target_state = None
@@ -156,24 +156,24 @@ class Datastore:
 
     def validate_ds(self): #TODO validate everything!
 
-        # validate state_pools
+        #validate state_pools
         for dir in self.__state_pools:
             if not os.path.isdir(dir):
                 logger.error("state pool directory not found: " + str(dir))
                 raise ValueError('Is not a directory: ' + str(dir))
-        # validate sm_save_dir
+        #validate sm_save_dir
         if not os.path.isdir(self.__sm_save_dir):
             logger.error("state machine save dir: directory not found! " + str(self.__sm_save_dir))
             raise ValueError('Is not a directory: ' + str(self.__sm_save_dir))
-        # validate facts_file
+        #validate facts_file
         if not os.path.isfile(self.__facts_path):
             logger.error("No facts file : " + str(self.__facts_path))
             raise ValueError('Is not a file: ' + str(self.__facts_path))
-        # validate type_db_path
+        #validate type_db_path
         if not os.path.isfile(self.__type_db_path):
             logger.error("No type database : " + str(self.__type_db_path))
             raise ValueError('Is not a file: ' + str(self.__type_db_path))
-        # validate file_save_dir
+        #validate file_save_dir
         if self.__keep_related_files and (not os.path.isdir(self.__file_save_dir)):
             logger.error("file save dir is not a directory: " + str(self.__file_save_dir))
             raise ValueError('Is not a directory: ' + str(self.__file_save_dir))
@@ -181,11 +181,11 @@ class Datastore:
 
 
     def register_thread(self,interruptable_thread):
-        '''
+        """
         gets a thread, addes it synchronized to a global map, and returns the map key (which is the register time.).
         :param interruptable_thread: a thread, the Datastore should store
         :return: the key used to register the thread. (That's the register time as unixtimestamp.)
-        '''
+        """
 
         with planning_threads_lock:
             register_time = time.time()#unix timestamp
@@ -198,11 +198,11 @@ class Datastore:
         return register_time
 
     def remove_thread(self, key):
-        '''
+        """
         gets a timestamp as key, and removes the thread synchronized from the global map.
         :param key: the time, the thread was registered
         :return: true, if removing was successful, false otherwise
-        '''
+        """
 
         successful = False
         with planning_threads_lock:
@@ -218,11 +218,11 @@ class Datastore:
         return self.__state_pools
 
     def add_state_pools(self,state_pools,set_pool):
-        '''
+        """
 
         :param state_pools: the state pools to add
         :param set_pool: if true, state pools are not added, but set, and old list gets lost.
-        '''
+        """
         if not state_pools:
             logger.error("state_pools can't be None")
             raise ValueError("state_pools can't be None")
@@ -430,12 +430,12 @@ class Datastore:
 
 
     def save_datastore_parts_in_file(self, file_path):
-        ''' save_datastore_parts_in_file
+        """ save_datastore_parts_in_file
         save_datastore_parts_in_file saves all plugin inputs, which are present in the datastore in a file.
         :param self:
         :param file_path: the path of the configuration file
         :return: nothing
-        '''
+        """
         data_to_save = {
             'state_pools': self.__state_pools,
             'type_db_path': self.__type_db_path,

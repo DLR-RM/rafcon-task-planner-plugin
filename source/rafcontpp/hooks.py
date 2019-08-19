@@ -1,9 +1,9 @@
 #hooks.py
 #hooks.py is the plugins main file. These methods will be called from rafcon.
 #
-# Contributors:
-# Christoph Suerig <christoph.suerig@dlr.de>
-# Version 12.11.2018
+#Contributors:
+#Christoph Suerig <christoph.suerig@dlr.de>
+#Version 12.11.2018
 import os
 from rafcontpp.view import planning_button
 from rafcontpp.view.pddl_action_tab import PddlActionTab
@@ -21,11 +21,11 @@ def pre_init():
 
 
 def main_window_setup(main_window_controller):
-    '''
+    """
     called on window setup.
     :param main_window_controller:
     :return:
-    '''
+    """
     logger.info("Run main window setup of {0} plugin.".format(__file__.split(os.path.sep)[-2]))
     #add the plan task button to rafcons menu bar.
     planning_button.initialize()
@@ -43,12 +43,12 @@ def post_init(*args, **kwargs):
 
 
 def post_state_editor_register_view(state_editor):
-    '''
+    """
     called every time, a State Editor is created.
     adds the action tab.
     :param state_editor:
     :return:
-    '''
+    """
 
     state_editor_view = state_editor.view
     state = state_editor.model.state

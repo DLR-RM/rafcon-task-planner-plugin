@@ -1,6 +1,6 @@
-# Contributors:
-# Christoph Suerig <christoph.suerig@dlr.de>
-# Version 31.05.2019
+#Contributors:
+#Christoph Suerig <christoph.suerig@dlr.de>
+#Version 31.05.2019
 import os
 import time
 import shutil
@@ -12,9 +12,9 @@ from rafcontpp.model.plan_step import PlanStep
 
 
 class FdIntegration(PlannerInterface):
-    '''
+    """
     This is the integration Script for the Fast downward Planning System by Malte Helmert Et al. (fast-downward.org)
-    '''
+    """
 
 
     def plan_scenario(self, domain_path, facts_path, planner_argv, storage_path):
@@ -35,12 +35,12 @@ class FdIntegration(PlannerInterface):
                 command +=arg+' '
             command = command.rstrip()
 
-        # run Fast-downward
+        #run Fast-downward
         fd_process = subprocess.Popen([command], stdout=subprocess.PIPE, shell=True)
         (out, err) = fd_process.communicate()
         fd_exit = fd_process.returncode
 
-        # read plan, if possible
+        #read plan, if possible
         if fd_exit == 0:
             plan = self.__parse_raw_plan(plan_path)
 
@@ -56,9 +56,9 @@ class FdIntegration(PlannerInterface):
                               + ': ' + self.__translate_fd_exit_code(fd_exit) +" used command was: "+command)
 
     def is_available(self):
-        '''
+        """
         :return: True, if the planner is available in the system, false otherwhise.
-        '''
+        """
         devnull = open(os.devnull, "wb")
         process = subprocess.Popen('fast-downward',stdout=devnull, stderr=devnull,shell=True)
         process.wait()
@@ -67,19 +67,19 @@ class FdIntegration(PlannerInterface):
         return status != 127 #127 is the code for command not found.
 
     def __parse_raw_plan(self,plan_path):
-        '''
+        """
 
         :param plan_path: the path of the plan file
         :return: a parsed plan
-        '''
+        """
         parsed_plan = []
         if os.path.isfile(plan_path):
             plan_file = open(plan_path, "r")
             raw_plan = plan_file.readlines()
             raw_plan.pop()
-            # parsing the action out of the raw file.
+            #parsing the action out of the raw file.
             for action in raw_plan:
-                # remove useless chars
+                #remove useless chars
                 action = action[:-2]
                 action = action[1:]
                 parts = action.split(" ")
@@ -99,11 +99,11 @@ class FdIntegration(PlannerInterface):
 
 
     def __translate_fd_exit_code(self,fd_exit):
-        '''
+        """
         receives an error code and returns the corresponding error message.
         :param fd_exit: an exit code
         :return: the corresponding error message.
-        '''
+        """
 
         translated_exit_code = str(fd_exit)
         codes = {

@@ -1,7 +1,7 @@
-# Contributors:
-# Christoph Suerig <christoph.suerig@dlr.de>
+#Contributors:
+#Christoph Suerig <christoph.suerig@dlr.de>
 
-# Version 19.07.2019
+#Version 19.07.2019
 
 
 
@@ -42,19 +42,19 @@ WAIT_WINDOW_CONTENT = 'Planning State machine, please wait...\r\n\r\n ' \
 
 
 class PlanningSetupFormController:
-    '''
+    """
     PlanningSetupFormController
     This is the controller of the Planning Setup Form.
-    '''
+    """
 
 
 
 
     def __init__(self, datastore):
-        '''
+        """
 
         :param datastore: a Datastore
-        '''
+        """
         assert isinstance(datastore, Datastore)
         self.__datastore = datastore
 
@@ -63,7 +63,7 @@ class PlanningSetupFormController:
                             type_db_path,planner_text,planner_script_path,planner_argv_text,
                             facts_path,generate_into_state,sm_name,sm_save_dir,keep_related_files, file_save_dir,
                                                                     rt_data_path, as_reference):
-        '''
+        """
         on_apply filles the datastore with new data entered into the setup form, saves it in the configuration,
         destroys the setup form, triggeres the pipeline e.g. the execution controller, and increments the plan task
         button, to indicate a running task.
@@ -81,7 +81,7 @@ class PlanningSetupFormController:
         :param file_save_dir: The path where to save related files, or an empty string if files shouldn't be keept.
         :param rt_data_path: The path where to find the runtime data file. Or an empty string if there is no runtime data.
         :param as_reference: True if the runtime data path should be used as reference, False if it should directly be copied into the State. if rt_data_path is empty, this field is irrelevant.
-        '''
+        """
 
         #prepare datastore with new data from dialog.
         #save datastore to configuration file.
@@ -123,7 +123,7 @@ class PlanningSetupFormController:
                             type_db_path,planner_text,planner_script_path,planner_argv_text,
                             facts_path,generate_into_state,sm_name,sm_save_dir,keep_related_files, file_save_dir,
                                                                     rt_data_path, as_reference):
-        '''
+        """
         on_destroy destroys the setup form, but saves the current configuration into a file.
         :param button: Not used.
         :param setup_form: The setup form, to be able to destroy it.
@@ -139,7 +139,7 @@ class PlanningSetupFormController:
         :param file_save_dir: The path where to save related files, or an empty string if files shouldn't be keept.
         :param rt_data_path: The path where to find the runtime data file. Or an empty string if there is no runtime data.
         :param as_reference: True if the runtime data path should be used as reference, False if it should directly be copied into the State. if rt_data_path is empty, this field is irrelevant.
-        '''
+        """
         #destroy dialog
         #save data to datastore
         #save datastore to file.
@@ -157,7 +157,7 @@ class PlanningSetupFormController:
                                 type_db_path, planner_text, planner_script_path, planner_argv_text,
                                 facts_path,generate_into_state, sm_name, sm_save_dir, keep_related_files, file_save_dir,
                                 rt_data_path, as_reference):
-        '''
+        """
          Show state pool info, uses the provided state pools and the type file to collect details, and show
          them in a state pool info window.
         :param button: Not used.
@@ -174,7 +174,7 @@ class PlanningSetupFormController:
         :param file_save_dir: The path where to save related files, or an empty string if files shouldn't be keept.
         :param rt_data_path: The path where to find the runtime data file. Or an empty string if there is no runtime data.
         :param as_reference: True if the runtime data path should be used as reference, False if it should directly be copied into the State. if rt_data_path is empty, this field is irrelevant.
-        '''
+        """
 
         available_predicates = []
         type_tree = None
@@ -183,7 +183,7 @@ class PlanningSetupFormController:
         tmp_datastore.set_type_db_path(type_db_path)
         merge_preds = True
 
-        try:# generate maps
+        try:#generate maps
             mapper = Mapper(tmp_datastore)
             mapper.generate_action_state_map()
             mapper.generate_state_action_map()
@@ -193,7 +193,7 @@ class PlanningSetupFormController:
             merge_preds = False
 
 
-        try:# load actions
+        try:#load actions
             loader = PddlActionLoader(tmp_datastore)
             loader.load_pddl_actions()
 
@@ -233,12 +233,12 @@ class PlanningSetupFormController:
 
 
     def on_choose_state_pool(self,chooser, chooser_entry):
-        '''
+        """
         Receives a directory chooser and a text entry, reads the path, set in the chooser and appends it to the text of
         the text entry.
         :param chooser: a GtkFileChooserButton
         :param chooser_entry:  a GtkEntry
-        '''
+        """
         #append choosen state pool to state pool text entry.
         to_append = chooser.get_filename()
         pools = chooser_entry.get_text()
@@ -248,11 +248,11 @@ class PlanningSetupFormController:
 
 
     def on_choose_runtime_data(self,chooser,runtime_data_entry):
-        '''
+        """
         Receivs a file chooser and a text entry, reads the filepath of the chooser and sets it as text into the entry.
         :param chooser: a GtkFileChooserButton
         :param runtime_data_entry: a GtkEntry
-        '''
+        """
         runtime_data_entry.set_text(chooser.get_filename())
 
 
@@ -262,7 +262,7 @@ class PlanningSetupFormController:
                             type_db_path,planner_text,planner_script_path,planner_argv_text,
                             facts_path,generate_into_state,sm_name,sm_save_dir,keep_related_files, file_save_dir,
                                                                     rt_data_path, as_reference):
-        '''
+        """
         __prepare_datastore saves the given data into the datastore, and checks if data is missing.
         :param setup_form: The setup form, to be able to destroy it.
         :param state_pool_string: The statepool paths as colon seperated string.
@@ -278,7 +278,7 @@ class PlanningSetupFormController:
         :param rt_data_path: The path where to find the runtime data file. Or an empty string if there is no runtime data.
         :param as_reference: True if the runtime data path should be used as reference, False if it should directly be copied into the State. if rt_data_path is empty, this field is irrelevant.
 
-        '''
+        """
         #saves all data from the dialog into the datastore.
         #looks if everything necessary was filled.
         dtp = datastore_to_prepare
@@ -333,26 +333,26 @@ class PlanningSetupFormController:
         return (everything_filled,not_filled)
 
     def __wait_and_hide(self, thread, planning_wait_window):
-        '''
+        """
         wait and hide should be executed in another thread, it joins the planning thread, closes the wait window
         and decrements the planning button.
         :param thread: the thread to wait for
-        '''
-        # logger.debug('wait_and_hide executed from thread: {}'.format(threading.current_thread().getName()))#todo remove
+        """
+        #logger.debug('wait_and_hide executed from thread: {}'.format(threading.current_thread().getName()))#todo remove
         if thread and thread.is_alive():
             thread.join()
-        call_gui_callback(planning_wait_window.hide)  # its more smoothly to first hide and then destroy
+        call_gui_callback(planning_wait_window.hide)  #its more smoothly to first hide and then destroy
         call_gui_callback(planning_wait_window.destroy)
         from rafcontpp.view.planning_button import decrement_button
-        call_gui_callback(decrement_button)  # decrement button, to indicate, that the planning process is finish.
+        call_gui_callback(decrement_button)  #decrement button, to indicate, that the planning process is finish.
 
 
     def __string_to_string_array(self,string):
-        '''
+        """
         a little method, that splits a colon seperated string into a string array.
         :param string: a string, containing colon seperated substrings.
         :return: a list of substrings e.g. a:b:c --> [a,b,c]
-        '''
+        """
         result = []
         if string and len(string) >0:
             result = list(filter(None,string.split(':')))
@@ -360,10 +360,10 @@ class PlanningSetupFormController:
 
 
     def __get_current_selected_state_if_valid(self):
-        '''
+        """
         takes and validated the current selected state. Returns None if no, multiple or no valid state is selected.
         :return: a valid root state or None
-        '''
+        """
         selected_sm = state_machine_manager_model.get_selected_state_machine_model()
 
         if not (selected_sm and selected_sm.selection.states):

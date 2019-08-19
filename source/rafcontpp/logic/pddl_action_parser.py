@@ -1,12 +1,6 @@
-#
-#
-#
-#
-#
-#
-# Contributors:
-# Christoph Suerig <christoph.suerig@dlr.de>
-# Version: 17.05.2019
+#Contributors:
+#Christoph Suerig <christoph.suerig@dlr.de>
+#Version: 17.05.2019
 import re
 from rafcontpp.model.pddl_action_representation import PddlActionRepresentation
 from rafcon.utils import log
@@ -15,17 +9,17 @@ logger = log.get_logger(__name__)
 
 
 class PddlActionParser:
-    ''' PddlActionParser
+    """ PddlActionParser
     PddlActionParser is able to parse an pddl action string e.g. a usual pddl action into a PddlActionRepresentation
     by extracting predicates, types, variables and the action name.
 
-    '''
+    """
 
     def __init__(self, action_string):
-        '''
+        """
 
         :param action_string: a pddl action string
-        '''
+        """
 
         if action_string is None or len(action_string) == 0:
             logger.error('Can not parse action from None or Empty String!')
@@ -48,11 +42,11 @@ class PddlActionParser:
         self.__action_string = self.__clean_comments(action_string)
 
     def parse_action(self):
-        '''parse_action
+        """parse_action
         parse_action takes the given action string, and parses it into a PddlActionRepresenation,
         raises ValueError, if the action string is none or empty.
         :return: a PddlActionRepresentation of the pddl action.
-        '''
+        """
 
         self.__create_var_type_dict()
         name = self.parse_action_name()
@@ -64,11 +58,11 @@ class PddlActionParser:
 
 
     def parse_action_name(self):
-        '''parse_action_name
+        """parse_action_name
         parse_action_name reads the action form the given action and returns it.
 
         :return: The name of the action as string
-        '''
+        """
         parsed = re.findall(self.__action_name_pattern,self.__action_string)
         if len(parsed) == 0:
             logger.error("Couldn't parse action name from \"{}\"".format(self.__action_string))
@@ -76,10 +70,10 @@ class PddlActionParser:
         return parsed[0]
 
     def parse_parameters(self):
-        '''parse_parameters
+        """parse_parameters
             parse_parameters parses the parameters out of an pddl action string.
         :return: a list with parameter names, without ?
-        '''
+        """
         params = []
         action_string_upper = self.__action_string.upper()
         if ':PARAMETERS' in action_string_upper:
@@ -96,20 +90,20 @@ class PddlActionParser:
         return params
 
     def __clean_comments(self, action_string):
-        '''
+        """
         takes the action string and removes all comments from it
         :return: the action string without comments
-        '''
+        """
         comment_pattern = re.compile('(;[^\n]*)')
         return comment_pattern.sub('',action_string)
 
 
     def __create_var_type_dict(self):
-        '''create_var_type_dict
+        """create_var_type_dict
         create_var_type_dict creates a dictionary, which contains all variables with their type,
         defined in the action.
         :return: a dictionary containing variable : type pairs.
-        '''
+        """
         type_vars = self.__type_var_pattern.findall(self.__action_string)
         for type_var in type_vars:
             types = self.__type_pattern.findall(type_var[0])
@@ -120,14 +114,14 @@ class PddlActionParser:
 
 
     def __parse_and_generalize_predicates(self):
-        '''parse and generalize predicates
+        """parse and generalize predicates
         this method extracts all applied pradicates from the action, then it generalizes them.
         e.g. add types to the variables and remove dublicats.
         applied predicate example:       (at ?a ?b)
         generalized predicate example: (at ?a - Location ?b - Robot)
 
         :return: a list with all parsed predicates.
-        '''
+        """
         #matches applied predicates
         a_pred_name_pattern = re.compile('\(([^\s]+)\s')
         applied_predicates = [i[0] for i in re.findall(self.__predicate_pattern,self.__action_string)]
@@ -168,17 +162,17 @@ class PddlActionParser:
                 #add predicate to a dictionary, to eliminate duplicats.
                 #two predicates with the same name, but different types are handled as two
                 #predicates at this time. Because of unknowen type hierarchies, its not decidable
-                # at this time how to merge the predicates.
+                #at this time how to merge the predicates.
                 parsed_predicates[c_pred_name+type_concat] = generalized_predicate
         return parsed_predicates.values()
 
 
     def __is_built_in_pred(self,name):
-        '''
+        """
         Checks if the Predicate is a PDDL built-in predicate.
         :param name: the name of a predicate
         :return: True if the predicate is a PDDL built-in predicate. false otherwhise.
-        '''
+        """
         is_built_in = False
         if name:
             is_built_in = True if name == '=' else is_built_in

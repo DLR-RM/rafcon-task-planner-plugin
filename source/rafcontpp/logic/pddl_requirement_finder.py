@@ -1,8 +1,8 @@
 #
 #
-# Contributors:
-# Christoph Suerig <christoph.suerig@dlr.de>
-# Version 31.05.2019
+#Contributors:
+#Christoph Suerig <christoph.suerig@dlr.de>
+#Version 31.05.2019
 import re
 from rafcon.utils import log
 logger = log.get_logger(__name__)
@@ -10,10 +10,10 @@ logger = log.get_logger(__name__)
 
 
 class PddlRequirementFinder():
-    '''
+    """
     The PddlRequirementFiner, tries to figure out requirments from a given action definition.
     Its doing this according to PDDL 2.1. It's not completed yet.
-    '''
+    """
 
     def __init__(self, action_string):
         self.action = action_string

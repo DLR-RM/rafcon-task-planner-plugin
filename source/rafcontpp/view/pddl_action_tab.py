@@ -1,6 +1,6 @@
-# Contributors:
-# Christoph Suerig <christoph.suerig@dlr.de>
-# Version 05.07.2019
+#Contributors:
+#Christoph Suerig <christoph.suerig@dlr.de>
+#Version 05.07.2019
 
 
 import os
@@ -27,34 +27,34 @@ requ_list = [':strips', ':adl', ':typing', ':equality',
                 ':durative-actions', ':duration-inequalities', ':continous-effects']
 
 class PddlActionTab:
-    '''PddlActionTabController
+    """PddlActionTabController
     PddlActionTabController, controlles the gui elements of the pddl action tab for each state.
     it handles the dataflow between this tab, and the semantic section of the state, where the data
     of this tab is stored in. It also provides some auto fill wizzard for its elements.
 
-    '''
+    """
     #true if auto save enabled
     auto_save_enabled = True
     #a list containing all auto apply buttons
     auto_save_check_buttons = []
-    # a semaphore for the auto save handler function
-    # this semaphore works as follows:
-    # all auto apply check buttons of all action tabs are connected to the change signal, and stored in the auto_save_check_buttons array
-    # if one tab is changed, all tabs are. the initiator checkbutton will propagate the changes to the others and
-    # change their truth value.
-    # (all buttons add 1 to the semaphore)
-    # if the semaphores value is more then one, thats the indicator, that a button has to do nothing.
-    # if the semaphore equals the length of the list, its the indicator, that this button is the last one,
-    # it has to do nothing, despite resetting the semaphore.
+    #a semaphore for the auto save handler function
+    #this semaphore works as follows:
+    #all auto apply check buttons of all action tabs are connected to the change signal, and stored in the auto_save_check_buttons array
+    #if one tab is changed, all tabs are. the initiator checkbutton will propagate the changes to the others and
+    #change their truth value.
+    #(all buttons add 1 to the semaphore)
+    #if the semaphores value is more then one, thats the indicator, that a button has to do nothing.
+    #if the semaphore equals the length of the list, its the indicator, that this button is the last one,
+    #it has to do nothing, despite resetting the semaphore.
     auto_save_semaphore = 0
 
 
     def __init__(self, state):
-        '''
+        """
 
         :param action_tab_gtk_builder: gtk builder, contining its gui elements.
         :param state: the state, it belongs to.
-        '''
+        """
         self.__state = state
         self.__controller = PddlActionTabController(state)
         glade_path = os.path.abspath(
@@ -62,7 +62,7 @@ class PddlActionTab:
         builder = Gtk.Builder()
         builder.add_from_file(glade_path)
         self.__gtk_builder = builder
-        # load action tab
+        #load action tab
 
         self.__description_text_view = self.__gtk_builder.get_object('description_textview')
         self.__pddl_action_source_view = self.__gtk_builder.get_object('pddl_action_sourceview')
@@ -82,12 +82,12 @@ class PddlActionTab:
 
 
     def init_tab(self):
-        '''
+        """
         loads the data into the action tab and subscribes on signals of some gui elements.
         :return: the action tab.
-        '''
+        """
 
-        #  set elements uneditable if state is library state
+        #set elements uneditable if state is library state
         if isinstance(self.__state, LibraryState):
             self.__load_from_semantic_section(True)
             self.__description_text_view.set_editable(False)
@@ -140,11 +140,11 @@ class PddlActionTab:
 
 
     def __add_requirements_boxes(self, gtk_viewport):
-        '''
+        """
         adds dynamically boxes for all requirements, specified in requ_list (above) to the gui.
         :param gtk_viewport: the base element, where to store the boxes in.
         :return: a dictionary, contining the information, which button box belongs to which requirement
-        '''
+        """
         button_dict = {} #key: id value: checkButtonObject
         grid = Gtk.Grid()
         grid.insert_row(0)
@@ -172,13 +172,13 @@ class PddlActionTab:
 
 
     def __load_from_semantic_section(self, is_library_state):
-        '''
+        """
         loads the pddl data from the semantic section of the state and writes it into
         the action tab gui elements.
         :param is_library_state: true, if state is a library state
         :return: Nothing
-        '''
-        # to add the key to the dictionary, find a Better place
+        """
+        #to add the key to the dictionary, find a Better place
         if self.__state.semantic_data[SEMANTIC_DATA_DICT_NAME][ALLOW_OVERRIDE_NAME] != "True":
             self.__state.add_semantic_data([SEMANTIC_DATA_DICT_NAME],"False",ALLOW_OVERRIDE_NAME)
 
@@ -204,21 +204,21 @@ class PddlActionTab:
 
 
     def __filter_input(self,input):
-        '''
+        """
         filters an input string
         :param input:
         :return:
-        '''
+        """
         if input == '{}':
             input = ''
         return input
 
     def __get_pddl_action(self):
-        '''
+        """
         takes the string of the pddl action tab action source view, and returns it as pddl
         action representation.
         :return: a PddlActionRepresentation.
-        '''
+        """
         start, end = self.__pddl_action_source_view.get_buffer().get_bounds()
         action_text = self.__pddl_action_source_view.get_buffer().get_text(start, end, True).strip()
         action = PddlActionParser(action_text).parse_action()
@@ -236,11 +236,11 @@ class PddlActionTab:
 
 
     def __copy_and_clear_old_dict(self, state):
-        '''
+        """
             this method removes the old dict, and copies it into a new one.
         :param state:
         :return:
-        '''
+        """
 
         if 'RAFCONTPP_PDDL_ACTION' in state.semantic_data:
             if not SEMANTIC_DATA_DICT_NAME in state.semantic_data:

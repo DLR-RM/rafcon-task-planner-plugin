@@ -1,6 +1,6 @@
-# Contributors:
-# Christoph Suerig <christoph.suerig@dlr.de>
-# Version 12.07.2019
+#Contributors:
+#Christoph Suerig <christoph.suerig@dlr.de>
+#Version 12.07.2019
 
 
 import gi
@@ -33,11 +33,11 @@ class PlanningSetupForm:
 
 
     def initialize(self):
-        '''
+        """
         initialize initiates the components with data present in the datastore, also it adds listeners for
         each part e.g. a file chooser.
         :return: nothing
-        '''
+        """
         glade_path = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), "glade", "planning_setup_form.glade"))
         self.__builder.add_from_file(glade_path)
         #get items
@@ -95,28 +95,28 @@ class PlanningSetupForm:
         script_path_chooser.connect('file-set', lambda x: (planner_dropdown.set_active(len(planner_dropdown.get_model()) - 1)))
 
     def __call_controller_on_apply(self, button):
-        '''
+        """
         this function is needed, to get the data when method is called, and not old data from declaration time.
         :param button:
         :return:
-        '''
+        """
 
         self.__controller.on_apply(button, self.__dialog, *self.__get_entered_data())
 
     def __call_controller_on_destroy(self, button):
-        '''
+        """
         this function is needed, to get the data when method is called, and not old data from declaration time.
         :param button:
         :return:
-        '''
+        """
         self.__controller.on_destroy(button, self.__dialog, *self.__get_entered_data())
 
     def __call_controller_on_show_state_pool_info(self, button):
-        '''
+        """
         this function is needed, to get the data when method is called, and not old data from declaration time.
         :param button:
         :return:
-        '''
+        """
         self.__controller.on_show_state_pool_info(button, self.__dialog, *self.__get_entered_data())
 
 
@@ -134,7 +134,7 @@ class PlanningSetupForm:
             if getattr(script_import, to_import[1])().is_available():
                 drop_down.append_text(planner) #add planner to dropdown if available
             else:
-                drop_down.append_text(planner+ NOT_AVAILABLE) # also add if not availavle, but with a hint.
+                drop_down.append_text(planner+ NOT_AVAILABLE) #also add if not availavle, but with a hint.
             #set active planner to last used planner
             if planner == self.__datastore.get_planner():
                 active_index = index +1

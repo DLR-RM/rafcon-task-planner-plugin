@@ -1,6 +1,6 @@
-# Contributors:
-# Christoph Suerig <christoph.suerig@dlr.de>
-# Version 12.07.1019
+#Contributors:
+#Christoph Suerig <christoph.suerig@dlr.de>
+#Version 12.07.1019
 
 import math
 import time
@@ -12,20 +12,20 @@ from rafcon.gui.singleton import state_machine_manager_model
 logger = log.get_logger(__name__)
 
 class StateMachineLayouter:
-    '''
+    """
     StateMachineLayouter gets a state machine, and layouts it in a particular way.
-    '''
+    """
 
 
 
     def layout_state_machine(self, state_machine, target_state, fixed_size, state_order):
-        '''
+        """
                  This function will format the state machine in a merlon like format.
         :param state_machine: a state machine to layout
         :param target_state: the "root state" all content in the state will be formated, it needs to be tube like
         :param fixed_size: True if the size of the root state is fixed.
         :param state_order: the order of the states in the machine
-        '''
+        """
         start_time = time.time()
         logger.info("Layouting state machine...")
         #the state machine model.
@@ -40,9 +40,9 @@ class StateMachineLayouter:
         row_count = 0
         column_count = 0
 
-        x_gap = 25 # a gap between the state columns
-        y_gap = 25 # a gap between the state rows                             _   _
-        # the sm will be layouted column by column, in merlon shape. Like: |_| |_| |_|
+        x_gap = 25 #a gap between the state columns
+        y_gap = 25 #a gap between the state rows                             _   _
+        #the sm will be layouted column by column, in merlon shape. Like: |_| |_| |_|
         #the width of a state in the sm
         state_width = 100.
         #the height of a state in the sm
@@ -85,7 +85,7 @@ class StateMachineLayouter:
 
         current_row = 0
         current_column = 0
-        # increment_row is true if formatting digs down a row, and false if it climbs the next row up again.
+        #increment_row is true if formatting digs down a row, and false if it climbs the next row up again.
         increment_row = True
         #format states
         for c_state_id in state_order:#state_machine_m.root_state.states.values():
@@ -96,19 +96,19 @@ class StateMachineLayouter:
             income_pos = up_pos if increment_row else down_pos
             outcome_pos = down_pos if increment_row else up_pos
             #special cases e.g. the corners of the merlon structure.
-            if current_row == 0 and current_row +1 >= row_count: # special case, if row_count = 1
+            if current_row == 0 and current_row +1 >= row_count: #special case, if row_count = 1
                 income_pos = left_pos
                 outcome_pos = right_pos
-            elif current_row == 0 and increment_row: # upper left corner
+            elif current_row == 0 and increment_row: #upper left corner
                 income_pos = left_pos
                 outcome_pos = down_pos
-            elif current_row == 0 and not increment_row: # upper right corner
+            elif current_row == 0 and not increment_row: #upper right corner
                 income_pos = down_pos
                 outcome_pos = right_pos
-            elif current_row +1 >= row_count and increment_row: # lower left corner
+            elif current_row +1 >= row_count and increment_row: #lower left corner
                 income_pos = up_pos
                 outcome_pos = right_pos
-            elif current_row +1 >= row_count and not increment_row: # lower right corner
+            elif current_row +1 >= row_count and not increment_row: #lower right corner
                 income_pos = left_pos
                 outcome_pos = up_pos
 
@@ -150,14 +150,14 @@ class StateMachineLayouter:
 
 
     def __get_num_rows(self, num_states, width=16., height=9.):
-        '''
+        """
         Get num rows, receives the number of states, a width and a height. it uses the width and the height to calculate
         a ratio, to be able to calculate the number of rows to use the given space optimal.
         :param num_states: the number of the states used
         :param width: The width of the available space. if this or height <= 0 automatically set to 16.
         :param height: The height of the available space if this or heigt <= 0 automatically set to 9.
         :return: the number of rows optimal in the sm
-        '''
+        """
         if width <= 0 or height <= 0:
             width = 16.
             height = 9.
@@ -169,13 +169,13 @@ class StateMachineLayouter:
         return row_count
 
     def __get_target_state_dimensions(self, canvas_width, canvas_height):
-        '''
+        """
         get_root_state_dimensions receives a desired canvas width and height, and returns the overall rootstate size,
         and the border width.
         :param canvas_width:
         :param canvas_height:
         :return: (width, height, border_width)
-        '''
+        """
 
 
         border_width = Variable(min(canvas_width, canvas_height) / constants.BORDER_WIDTH_STATE_SIZE_FACTOR)
@@ -192,13 +192,13 @@ class StateMachineLayouter:
 
 
     def __get_state_dimensions(self, canvas_width, canvas_height, col_count, row_count):
-        '''
+        """
         get_state_dimensions reveives a fixed canvas width and height, a col and a row count and calcualtes a possible
         state size. adds an additional x_gap.
         :param canvas_width:
         :param canvas_height:
         :return: (state_width, state_height, x_gap, y_gap)
-        '''
+        """
         num_xgap = 1+col_count
         num_ygap = 1+row_count
 

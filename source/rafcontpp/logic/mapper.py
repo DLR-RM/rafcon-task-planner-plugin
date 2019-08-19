@@ -1,6 +1,6 @@
-# Contributors:
-# Christoph Suerig <christoph.suerig@dlr.de>
-# Version 05.07.2019
+#Contributors:
+#Christoph Suerig <christoph.suerig@dlr.de>
+#Version 05.07.2019
 import os
 from rafcontpp.model.datastore import SEMANTIC_DATA_DICT_NAME, PDDL_ACTION_SUB_DICT_NAME
 from rafcontpp.logic.pddl_action_parser import PddlActionParser
@@ -13,15 +13,15 @@ logger = log.get_logger(__name__)
 
 
 class Mapper:
-    '''Mapper
+    """Mapper
     The Mapper maps actions and states together.
-    '''
+    """
 
     def __init__(self,datastore):
-        '''
+        """
 
         :param datastore: a datastore containing all necessary data.
-        '''
+        """
 
         if datastore is None:
             logger.error("Datastore in Mapper can not be None!")
@@ -31,9 +31,9 @@ class Mapper:
 
 
     def generate_action_state_map(self):
-        '''
+        """
         generates a map, with pddl action names as key, and RAFCON States as Values. Writes the map into the datastore.
-        '''
+        """
         state_libs = self.__datastore.get_state_pools()
         libraries = global_config.get_config_value("LIBRARY_PATHS")
         lib_names=[]
@@ -70,10 +70,10 @@ class Mapper:
 
 
     def generate_state_action_map(self):
-        '''
+        """
         generates a map with RAFCON States as Keys and PDDL Action names as values.
         if no action_state_map exists, it calls generate action_state_map. Its writing the map into the datastore
-        '''
+        """
         if self.__datastore.get_action_state_map() is None:
             self.generate_action_state_map()
         action_state_map = self.__datastore.get_action_state_map()
@@ -99,10 +99,10 @@ class Mapper:
 
 
     def generate_available_actions(self):
-        '''
+        """
         takes the action_state_map, and extracts the keys, in order to get a list of all available PDDL Actions.
         if no action_state_map exists, it calls generate_action_state_map() first. It writes the list with available actions into the datastore.
-        '''
+        """
         if self.__datastore.get_action_state_map() is None:
             self.generate_action_state_map()
         action_state_map = self.__datastore.get_action_state_map()

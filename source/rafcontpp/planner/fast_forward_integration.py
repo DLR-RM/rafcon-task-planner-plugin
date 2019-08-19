@@ -1,6 +1,6 @@
-# Contributors:
-# Christoph Suerig <christoph.suerig@dlr.de>
-# Version 31.05.2019
+#Contributors:
+#Christoph Suerig <christoph.suerig@dlr.de>
+#Version 31.05.2019
 import os
 import time
 import subprocess
@@ -10,14 +10,14 @@ from rafcontpp.model.plan_step import PlanStep
 
 
 class FfIntegration(PlannerInterface):
-    '''
+    """
     This is the integration script for the Fast Forward Planning System version 2.3 by Hoffmann
     (https://fai.cs.uni-saarland.de/hoffmann/ff.html)
 
-    '''
+    """
 
     def plan_scenario(self, domain_path, facts_path, planner_argv, storage_path):
-        # get own directory for creating files in and so on...
+        #get own directory for creating files in and so on...
         old_cwd = os.getcwd()
         new_cwd = os.path.join(old_cwd, 'ff_planning_tmp {0:.8f}'.format(time.time()))
         os.mkdir(new_cwd)
@@ -32,12 +32,12 @@ class FfIntegration(PlannerInterface):
 
         plan = []
 
-        # run Fast Forward
+        #run Fast Forward
 
         ff_process = subprocess.Popen([command], stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
         (stdout, stderr) = ff_process.communicate()
         ff_exit = ff_process.returncode
-        # read plan, if possible
+        #read plan, if possible
         files_to_delete = []
         if ff_exit == 0:
             parsed_console = self.__parse_console_output(stdout)
@@ -52,27 +52,27 @@ class FfIntegration(PlannerInterface):
         else:
             stderr = stdout
 
-        # reset to old cwd
+        #reset to old cwd
         os.chdir(old_cwd)
         os.rmdir(new_cwd)
         return PlanningReport(ff_exit == 0, plan, files_to_delete, str(ff_exit) + ': ' + str(stderr))
 
     def is_available(self):
-        '''
+        """
         :return: True, if the planner is available in the system, false otherwhise.
-        '''
+        """
         devnull = open(os.devnull, "wb")
         process = subprocess.Popen('ff',stdout=devnull, stderr=devnull,shell=True)
         process.wait()
         status = process.returncode
         devnull.close()
-        return status != 127  # 127 is the code for command not found.
+        return status != 127  #127 is the code for command not found.
 
     def __parse_console_output(self, to_parse):
-        '''
+        """
         :param to_parse: the console output
         :return: a parsed plan
-        '''
+        """
         console_output = to_parse.splitlines()
         raw_plan = []
         parsed_plan = []

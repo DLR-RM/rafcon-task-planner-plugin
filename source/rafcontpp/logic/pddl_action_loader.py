@@ -1,6 +1,6 @@
-# Contributors:
-# Christoph Suerig <christoph.suerig@dlr.de>
-# Version 05.07.2019
+#Contributors:
+#Christoph Suerig <christoph.suerig@dlr.de>
+#Version 05.07.2019
 import os
 import unicodedata
 from rafcontpp.model.datastore import SEMANTIC_DATA_DICT_NAME, PDDL_ACTION_SUB_DICT_NAME
@@ -18,10 +18,10 @@ class PddlActionLoader:
 
 
     def __init__(self, datastore):
-        '''
+        """
 
         :param datastore: a datastore containing all necessary data.
-        '''
+        """
 
         self.__datastore = datastore
 
@@ -47,7 +47,7 @@ class PddlActionLoader:
                 if SEMANTIC_DATA_DICT_NAME in sem_data \
                         and str(state) in self.__datastore.get_state_action_map().keys():
                     action_dict = sem_data[SEMANTIC_DATA_DICT_NAME][PDDL_ACTION_SUB_DICT_NAME]
-                    # parse from unicode to string r means raw
+                    #parse from unicode to string r means raw
                     r_pred_str = unicodedata.normalize('NFKD', action_dict["pddl_predicates"]).encode('utf-8', 'ignore')
                     r_action = unicodedata.normalize('NFKD', action_dict["pddl_action"]).encode('utf-8', 'ignore')
                     r_types = ''
@@ -75,22 +75,22 @@ class PddlActionLoader:
                     else:
                         pddl_actions[c_action.name] = c_action
 
-        # just check, if all needed actions could be parsed.
+        #just check, if all needed actions could be parsed.
         for action_name in self.__datastore.get_available_actions():
             if action_name not in pddl_actions.keys():
                 logger.error("No action found for action called: \"" + action_name + "\"")
 
         self.__datastore.set_pddl_action_map(pddl_actions)
 
-        # parse typestring, make a list out of one string...
+        #parse typestring, make a list out of one string...
 
     def parse_type_string(self, type_string):
-        '''parse_type_string
+        """parse_type_string
         parse_type_string gets a type string of fromat type1,type2 or type1 type2 and parses it into an
         array containing the types.
         :param type_string: a typestring of format type1,type2 or type1 type2.
         :return: an array containing the types of the string, or an empty array if string is None or empty.
-        '''
+        """
         ts = []
         if type_string:
             ts = type_string.replace(',', ' ')
@@ -99,11 +99,11 @@ class PddlActionLoader:
         return ts
 
     def parse_requirement_string(self, requ_string):
-        '''parse_requirement_string
+        """parse_requirement_string
         gets an requirements string and parses it into a requirement array.
         :param requ_string: a string contining requriements.
         :return: an array contining requirements.
-        '''
+        """
         req_list = []
         if requ_string:
             rs = requ_string.strip('[').strip(']')
@@ -113,11 +113,11 @@ class PddlActionLoader:
         return req_list
 
     def parse_predicate_string(self,pred_string):
-        '''
+        """
         construct predicate array from predicate string.
         :param pred_string: A string containing all predicates of the action.
         :return: a array containing all predicates of the action.
-        '''
+        """
         predicates = []
         predicate_string = pred_string if pred_string is not None else ''
         start_index = predicate_string.find('(')

@@ -1,8 +1,8 @@
 #
 #
-# Contributors:
-# Christoph Suerig <christoph.suerig@dlr.de>
-# Version 12.11.2018
+#Contributors:
+#Christoph Suerig <christoph.suerig@dlr.de>
+#Version 12.11.2018
 from rafcon.utils import log
 
 logger = log.get_logger(__name__)
@@ -11,7 +11,7 @@ class PddlActionRepresentation:
     """Represents a PDDL-Action.
     """
     def __init__(self, name, action, predicates, types, requirements, parameters):
-        '''
+        """
 
         :param name: the name of the action
         :param action: the pddl action as string
@@ -19,7 +19,7 @@ class PddlActionRepresentation:
         :param types: a list of types used in the action
         :param requirements: a list of requirements
         :param parameters: the parameter names of the action without the ? symbol.
-        '''
+        """
         self.name = name
         self.action = action
         self.predicates = predicates
@@ -33,11 +33,11 @@ class PddlActionRepresentation:
 
 
 def action_to_upper(action):
-    '''
+    """
      action to upper receives a action in pddl_action_representation, and retuns it in upper case
     :param action: a action in PddlActionRepresentation
     :return: the action as upper case
-    '''
+    """
 
     if action:
         action.name = action.name.upper()
