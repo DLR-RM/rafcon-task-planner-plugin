@@ -6,7 +6,7 @@ A built-in planner is not really built-in, there is just a built-in integration 
 
 All which has to be done is to run: 
 
-`pip2.7 install --user --no-compile downward-dlr`
+`pip install --user --no-compile downward-dlr`
 
 Now it should work.
 
@@ -14,7 +14,7 @@ Now it should work.
 
 To prepare the Fast-Forward Planning System, the following steps have to be executed:
 
-1. Download the system [FF-Page](https://fai.cs.uni-saarland.de/hoffmann/ff.html) [Direct download Link](https://fai.cs.uni-saarland.de/hoffmann/ff/FF-v2.3.tgz) 
+1. Download the system [FF-Page](https://fai.cs.uni-saarland.de/hoffmann/ff.html), [direct download Link](https://fai.cs.uni-saarland.de/hoffmann/ff/FF-v2.3.tgz) 
 2. Extract the system and make it.
 3. Add the path of the system to the PATH variable, to make the ff command available in the console.
 
