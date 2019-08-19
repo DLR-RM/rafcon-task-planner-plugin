@@ -22,6 +22,7 @@ from rafcon.gui.models.signals import ActionSignalMsg
 from rafcon.gui.singleton import state_machine_manager_model
 from rafcon.gui.utils import wait_for_gui
 from rafcon.gui.config import global_gui_config
+from rafcon.gui.helpers.state import substitute_state
 from rafcon.core.storage import storage
 from rafcon.core.singleton import library_manager
 from rafcon.core.singleton import state_machine_manager
@@ -30,6 +31,7 @@ from rafcon.core.states.hierarchy_state import HierarchyState
 from rafcon.core.states.execution_state import ExecutionState
 from rafcon.utils.gui_functions import call_gui_callback
 from rafcon.utils import log
+from rafcon.gui.models.state_machine import StateMachineModel
 logger = log.get_logger(__name__)
 
 
@@ -73,28 +75,24 @@ class StateMachineGenerator:
         else:
             sm_name = target_state.name
             logger.info('Creating State machine \"' + sm_name + '\"...')
-            root_state, state_order_list = self.__generate_core_machine(sm_name)
+            state_machine_m = state_machine_manager_model.state_machines[state_machine.state_machine_id]
+            target_state_m = state_machine_m.get_state_model_by_path(target_state.get_path())
+            n_target_state_m = target_state_m.__deepcopy__()
+            root_state, state_order_list = self.__generate_core_machine(sm_name, n_target_state_m.state)
 
             if root_state:
                 #suppress gui
-                state_machine_m = state_machine_manager_model.state_machines[state_machine.state_machine_id]
-                target_state_m = state_machine_m.get_state_model_by_path(target_state.get_path())
+
                 target_state_m.action_signal.emit(ActionSignalMsg(action='substitute_state', origin='model',
                                                                 action_parent_m=target_state_m,
                                                                 affected_models=[target_state_m], after=False))
-                call_gui_callback(target_state.add_state, root_state)
-                call_gui_callback(target_state.set_start_state, root_state.state_id)
-                call_gui_callback(target_state.add_transition, root_state.state_id, 0, target_state.state_id, 0)
+
+                substitute_state(n_target_state_m,target_state_m)
                 if state_machine.file_system_path:
                     storage.save_state_machine_to_path(state_machine, state_machine.file_system_path)
                 logger.info("State machine \"" + sm_name + "\" created.")
                 logger.info(sm_name + " contains " + str(len(root_state.states)) + " states.")
                 logger.info("State machine generation took {0:.4f} seconds.".format(time.time() - start_time))
-                #have to set the size and pos of the root state, to make it fit the target state. (bit dirty)
-                t_width, t_height = target_state_m.meta['gui']['editor_gaphas']['size']
-                root_state_m = state_machine_m.get_state_model_by_path(root_state.get_path())
-                root_state_m.meta['gui']['editor_gaphas']['size'] = (0.8*t_width, 0.8*t_height)
-                root_state_m.meta['gui']['editor_gaphas']['rel_pos'] = (0.1*t_width, 0.1*t_height)
                 call_gui_callback(layouter.layout_state_machine, state_machine,root_state,True,state_order_list)
                 logger.info("Generated and integrated State machine: {}.".format(sm_name))
                 #enable gui
