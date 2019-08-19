@@ -1,6 +1,6 @@
 # Planner Integration
 
-The Task Planner Plugin comes not only with some built-in planners, but also provides the ability to integrate other ones with small effort. To do so, a planner integration Script has to be written, and used like described in the [Setup Form Section](/PlanningSetupForm.md). This page shows how to write an integration script for a planner.    
+The Task Planner Plugin comes not only with some built-in planners, but also provides the ability to integrate other ones with small effort. To do so, a planner integration Script has to be written, and used like described in the [Setup Form Section](/PlanningSetupForm.md). This page explains how to write an integration script for a planner.    
 
 ## Overview
 
