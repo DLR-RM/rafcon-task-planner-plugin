@@ -1,6 +1,6 @@
 # Planner Integration
 
-The Task Planner Plugin comes not only with some built-in planners, but also provides the ability to integrate other ones with small effort. To do so, a planner integration Script has to be written, and used like described in the [Setup Form Section](/PlanningSetupForm.md). This page explains how to write an integration script for a planner.    
+The Task Planner Plugin comes not only with some built-in planners, but also provides the ability to integrate other ones with small effort. To do so, a planner integration script has to be written, and used like described in the [Setup Form Section](/PlanningSetupForm.md). This page explains how to write an integration script for a planner.    
 
 ## Overview
 
@@ -8,7 +8,7 @@ The integration of a planner has to fulfill four tasks:
 At first it has to **trigger** the planner, to plan the specific task. After this process, the script has to **parse** the resulting plan into an internal plugin format. The third task is to **clean up** the system, in case the planner wrote any persistent files, and the last step of the script is to create a **report** and return it to the Plugin. 
 
 ## Integration
-To integrate a Planner a class derived from the Plugins "PlannerInterface" needs to be created, and the method "plan_scenario" has to be implemented. The purpose of this method is to fulfill the four tasks mentioned above, and described below. This is a sceleton for an integration script: 
+To integrate a Planner, a class derived from the Plugins "PlannerInterface" needs to be created, and the method "plan_scenario" has to be implemented. The purpose of this method is to fulfill the four tasks mentioned above, and described below. This is a sceleton for an integration script: 
 
 ```Python
 from rafcontpp.model.planner_interface import PlannerInterface
