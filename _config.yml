@@ -1,0 +1,13 @@
+plugins:
+  - jekyll-relative-links
+relative_links:
+  enabled: true
+  collections: true
+include:
+  - MainPage.md
+  - PDDLActionTab.md
+  - PlanTaskButton.md
+  - PlanningSetupForm.md
+  - Planner.md
+  - PlannerIntegration.md
+  - DataTransfer.md
