@@ -69,10 +69,10 @@ Another, imaginary Example would be:
 
 The types text field should contain all types, which are used in the Action in the 'PDDL' field. The types must be separated by spaces or commas. This field is used to decide which types the types section in the auto generated domain file will contain. 
 
-**Example**
-```
+**Example**  
 According to the example above (the PDDL Action) the Types field would look like this:
 
+```
 Location, Vehicle
 ```
 
