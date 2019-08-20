@@ -43,7 +43,6 @@ class StateMachineGenerator:
 
     def __init__(self, datastore):
             self.__datastore = datastore
-            self.__gui_involved = False
 
     def generate_state_machine(self):
         ''' generate_state_machine
@@ -52,14 +51,17 @@ class StateMachineGenerator:
         '''
         target_state = self.__datastore.get_target_state()
         generate_independent = target_state == None
+        if target_state:
+            successful, target_state = self.__generate_state_machine_into_state(target_state)
+            generate_independent = not successful
 
         if generate_independent:
-          indi_state_machine = self.__generate_independent_state_machine()
-          self.__open_state_machine(indi_state_machine, indi_state_machine.file_system_path)
-        else:
-            self.__generate_state_machine_into_state(target_state)
+            indi_state_machine = self.__generate_independent_state_machine(target_state)
+            self.__open_state_machine(indi_state_machine, indi_state_machine.file_system_path)
+
 
     def __generate_independent_state_machine(self, target_state=None):
+        logger.info("Creating independent State machine...")
         sm_name = self.__get_actual_sm_name()
         sm_path = os.path.abspath(os.path.join(self.__datastore.get_sm_save_dir(), sm_name))
         # set root-state id to old root-state id, in case the state machine is replanned.
@@ -80,7 +82,8 @@ class StateMachineGenerator:
 
     def __generate_state_machine_into_state(self, target_state):
         valid, error = self.__is_valid_target_state(target_state)
-        state_machine = None
+        state_to_generate_into = None
+        successful = False
         if  self.__is_valid_target_state(target_state):
             state_machine = target_state.get_state_machine()
             state_machine_m = state_machine_manager_model.state_machines[state_machine.state_machine_id]
@@ -88,7 +91,7 @@ class StateMachineGenerator:
             target_state_m_copy = target_state_m.__deepcopy__()
             state_machine.remove_state()
             if self.__clear_state(target_state_m_copy.state):
-                if not target_state.is_root_state() or True: # TODO remove or True
+                if not target_state.is_root_state():
                     target_state_copy, state_order_list =  self.__generate_core_machine(target_state_m_copy.state)
                     substitute_state(target_state_m, target_state_m_copy)
                     if state_machine.file_system_path:
@@ -96,17 +99,16 @@ class StateMachineGenerator:
                     sm_layouter = StateMachineLayouter()
                     call_gui_callback(sm_layouter.layout_state_machine, state_machine,
                                       target_state_copy, True, state_order_list)
+                    successful = True
                 else:
-                    pass
-                # TODO implement case where state is root state
+                    logger.error("Target state was root state!")
+                    state_to_generate_into = target_state_m_copy.state
             else:
-                error = 'Could\'nt clear target state.'
-                valid = False
-
-        if not valid:
+                logger.error('Could\'nt clear target state.')
+        else:
             logger.error(error)
-            logger.info("Creating independent State machine...")
-            indi_sm = self.__generate_independent_state_machine()
+
+        return successful, state_to_generate_into
 
     def __clear_state(self,state):
         for child_state in state.states.values():
@@ -137,7 +139,7 @@ class StateMachineGenerator:
     def __generate_core_machine(self, target_state):
         '''
         takes a root state, and generates the state machine into it.
-        :param target_state: the root state, if None a new root state will be given.
+        :param target_state: the root state
         :return:(root_state, state_order list) the root state containing the state machine, and the state order list is a list
         of all states in the sm in right order. Can return (None,[]) if process was interrupted.
         '''
@@ -233,7 +235,6 @@ class StateMachineGenerator:
         :param state_machine_path: the path of the state machine.
         :return:
         '''
-
         logger.info('Opening state machine...')
         if state_machine_manager.is_state_machine_open(state_machine.file_system_path):
             old_sm = state_machine_manager.get_open_state_machine_of_file_system_path(state_machine.file_system_path)
