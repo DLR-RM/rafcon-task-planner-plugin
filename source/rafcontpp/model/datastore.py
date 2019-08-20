@@ -22,6 +22,8 @@ built_in_planners = {
 }
 # The storage path of the config file.
 DATASTORE_STORAGE_PATH = os.path.join(os.path.expanduser('~'), os.path.normpath('.config/rafcon/rafcontpp_conf.json'))
+#the temp file save dir, to save files in if files should not be kept.
+TMP_FILE_SAVE_DIR = os.path.join('/tmp','rtpp-{}'.format(getpass.getuser()))
 # The name of the semantic data dict in rafcon state
 SEMANTIC_DATA_DICT_NAME = 'RAFCONTPP'
 # The name of the sub dictionary, where the pddl action is stored in.

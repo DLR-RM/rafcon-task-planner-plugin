@@ -1,6 +1,6 @@
 # Contributors:
 # Christoph Suerig <christoph.suerig@dlr.de>
-# Version 12.07.2019
+# Version 20.08.2019
 
 import os
 import gi
@@ -72,7 +72,10 @@ class PlanningSetupForm:
         sm_name_entry.set_text(self.__datastore.get_sm_name())
         sm_save_dir.set_filename(self.__datastore.get_sm_save_dir())
         keep_related_files.set_active(self.__datastore.keep_related_files())
+        keep_related_files_active = self.__datastore.keep_related_files()
+        self.__datastore.set_keep_related_files(True)
         file_save_dir.set_filename(self.__datastore.get_file_save_dir())
+        self.__datastore.set_keep_related_files(keep_related_files_active)
         # initialize runtime data section
         if self.__datastore.get_runtime_data_path():
             runtime_data_path = self.__datastore.get_runtime_data_path()

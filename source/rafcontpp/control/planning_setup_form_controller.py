@@ -292,8 +292,7 @@ class PlanningSetupFormController:
         dtp.set_sm_name(sm_name)
         dtp.set_sm_save_dir(sm_save_dir)
         dtp.set_keep_related_files(keep_related_files)
-        if dtp.keep_related_files():
-            dtp.set_file_save_dir(file_save_dir)
+        dtp.set_file_save_dir(file_save_dir)
         # runtime section
         runtime_data_path = rt_data_path.strip()
         dtp.set_use_runtime_path_as_ref(as_reference)
