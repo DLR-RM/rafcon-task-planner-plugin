@@ -2,7 +2,6 @@
 # Christoph Suerig <christoph.suerig@dlr.de>
 # Version 12.07.2019
 import gi
-
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 import os

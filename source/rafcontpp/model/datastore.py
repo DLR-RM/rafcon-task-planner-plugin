@@ -3,6 +3,7 @@
 # Contributors:
 # Christoph Suerig <christoph.suerig@dlr.de>
 # Version 12.07.2019
+import getpass
 import json
 import os
 import threading
