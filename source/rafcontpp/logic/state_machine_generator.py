@@ -22,7 +22,7 @@ from rafcon.gui.models.signals import ActionSignalMsg
 from rafcon.gui.singleton import state_machine_manager_model
 from rafcon.gui.utils import wait_for_gui
 from rafcon.gui.config import global_gui_config
-from rafcon.gui.helpers.state import substitute_state
+from rafcon.gui.helpers.state import substitute_state, substitute_state_as
 from rafcon.core.storage import storage
 from rafcon.core.singleton import library_manager
 from rafcon.core.singleton import state_machine_manager
@@ -82,17 +82,16 @@ class StateMachineGenerator:
 
             if root_state:
                 #suppress gui
-
-                target_state_m.action_signal.emit(ActionSignalMsg(action='substitute_state', origin='model',
-                                                                action_parent_m=target_state_m,
-                                                                affected_models=[target_state_m], after=False))
-
-                substitute_state(n_target_state_m,target_state_m)
+                #substitute_state(target_state_m, n_target_state_m)
+                substitute_state_as(target_state_m, target_state_m.state, False, True)
                 if state_machine.file_system_path:
                     storage.save_state_machine_to_path(state_machine, state_machine.file_system_path)
                 logger.info("State machine \"" + sm_name + "\" created.")
                 logger.info(sm_name + " contains " + str(len(root_state.states)) + " states.")
                 logger.info("State machine generation took {0:.4f} seconds.".format(time.time() - start_time))
+                target_state_m.action_signal.emit(ActionSignalMsg(action='substitute_state', origin='model',
+                                                                  action_parent_m=target_state_m,
+                                                                  affected_models=[target_state_m], after=False))
                 call_gui_callback(layouter.layout_state_machine, state_machine,root_state,True,state_order_list)
                 logger.info("Generated and integrated State machine: {}.".format(sm_name))
                 #enable gui
