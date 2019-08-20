@@ -1,4 +1,7 @@
-
+---
+layout: default
+title: PDDL Action Tab
+---
 # Pddl Action Tab
 
 The Plugin introduces a new Tab in the State Editor, it's called the Pddl Action Tab, and its Symbol is a little Calculator.  

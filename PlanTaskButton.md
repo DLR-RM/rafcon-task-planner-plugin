@@ -1,3 +1,7 @@
+---
+layout: default
+title: Plan Task Button
+---
 # Plan Task Button
 ![The Plan Task Button](media/img/PlanTaskButton.png "The Location of The Plan Task Button")
 

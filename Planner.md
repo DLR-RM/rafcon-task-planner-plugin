@@ -1,3 +1,7 @@
+---
+layout: default
+title: Built-in Planner
+---
 # Built-in Planner
 
 A built-in planner is not really built-in, there is just a built-in integration script for it. So the planner has to be downloaded, and the environment must be prepared manually. 

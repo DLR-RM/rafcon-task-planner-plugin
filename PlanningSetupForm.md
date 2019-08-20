@@ -1,4 +1,7 @@
-
+---
+layout: default
+title: Planning Setup Form
+---
 # The Planning Setup Form
 
 The Planning setup form can be opened by clicking the "Plan Task" Button in the Menu bar of [RAFCON](https://dlr-rm.github.io/RAFCON/).  
