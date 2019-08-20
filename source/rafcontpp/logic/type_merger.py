@@ -46,10 +46,8 @@ class TypeMerger:
         :return: a new dict in upper case.
         """
         upper_dict = dict
-
         if dict:
             upper_dict = {}
-
             for key, value in dict.iteritems():
                 upper_dict[key.upper()] = value.upper()
         return upper_dict

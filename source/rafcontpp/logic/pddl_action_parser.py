@@ -14,19 +14,15 @@ class PddlActionParser:
     """ PddlActionParser
     PddlActionParser is able to parse an pddl action string e.g. a usual pddl action into a PddlActionRepresentation
     by extracting predicates, types, variables and the action name.
-
     """
 
     def __init__(self, action_string):
         """
-
         :param action_string: a pddl action string
         """
-
         if action_string is None or len(action_string) == 0:
             logger.error('Can not parse action from None or Empty String!')
             raise ValueError('Can not parse action from None or Empty String!')
-
         # matches variables with types e.g ?obj - Physobj
         self.__type_var_pattern = re.compile('((\?[^\s|^\)|^\(]+\s+)+-\s+[^\s|^\)|^\(]+)')
         # matches only type strings result  f.e. Location
@@ -48,19 +44,16 @@ class PddlActionParser:
         raises ValueError, if the action string is none or empty.
         :return: a PddlActionRepresentation of the pddl action.
         """
-
         self.__create_var_type_dict()
         name = self.parse_action_name()
         predicates = self.__parse_and_generalize_predicates()
         types = list(set(self.__var_type_dict.values()))
         parameters = self.parse_parameters()
-
         return PddlActionRepresentation(name, self.__action_string, predicates, types, [], parameters)
 
     def parse_action_name(self):
         """parse_action_name
         parse_action_name reads the action form the given action and returns it.
-
         :return: The name of the action as string
         """
         parsed = re.findall(self.__action_name_pattern, self.__action_string)
@@ -117,18 +110,14 @@ class PddlActionParser:
         e.g. add types to the variables and remove dublicats.
         applied predicate example:       (at ?a ?b)
         generalized predicate example: (at ?a - Location ?b - Robot)
-
         :return: a list with all parsed predicates.
         """
         # matches applied predicates
         a_pred_name_pattern = re.compile('\(([^\s]+)\s')
         applied_predicates = [i[0] for i in re.findall(self.__predicate_pattern, self.__action_string)]
-
         if not self.__var_type_dict:
             self.__create_var_type_dict()
-
         # change applied predicates to normal ones
-
         parsed_predicates = {}
         # iterate through all used predicates
         for applied_predicate in applied_predicates:
@@ -173,5 +162,4 @@ class PddlActionParser:
         is_built_in = False
         if name:
             is_built_in = True if name == '=' else is_built_in
-
         return is_built_in

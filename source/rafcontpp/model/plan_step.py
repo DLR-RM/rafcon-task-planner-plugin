@@ -4,6 +4,7 @@
 # Christoph Suerig <christoph.suerig@dlr.de>
 # Version 12.11.2018
 
+
 class PlanStep:
     """Intern format, to represent a pddl-plan step.
        In this format, a plan step is splitted into the action name, and the action parameters.

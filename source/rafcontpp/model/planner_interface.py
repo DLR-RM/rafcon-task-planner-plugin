@@ -16,5 +16,4 @@ class PlannerInterface:
         :param storage_path: The location, where to save all produced artefacts (like a plan file) in. as string.
         :return: a PlanningReport (rafcontpp.model.planning_report)
         """
-
         raise NotImplementedError('This Method has to be overwritten!')

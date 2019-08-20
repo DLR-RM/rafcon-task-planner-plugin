@@ -21,7 +21,6 @@ class DomainGenerator:
         if datastore is None:
             logger.error("Datastore in DomainGenerator can not be None!")
             raise ValueError("Datastore in DomainGenerator can not be None!")
-
         self.__datastore = datastore
 
     def generate_domain(self):
@@ -32,7 +31,6 @@ class DomainGenerator:
         facts = self.__datastore.get_pddl_facts_representation()
         domain_name = facts.domain_name
         problem_name = facts.problem_name
-
         pddl_actions = self.__datastore.get_pddl_action_map().values()
         domain_path = os.path.abspath(os.path.join(self.__datastore.get_file_save_dir(), domain_name + "_domain.pddl"))
         type_merger = TypeMerger(self.__datastore)
@@ -71,7 +69,6 @@ class DomainGenerator:
         :return: all pddl-requirements without dublicates.
         """
         requirements = []
-
         for action in pddl_actions:
             for requirement in action.requirements:
                 if requirement not in requirements:

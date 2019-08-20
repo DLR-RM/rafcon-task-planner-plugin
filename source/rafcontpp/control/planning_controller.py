@@ -21,12 +21,10 @@ class PlanningController:
        PlanningController handles everything about the topic planning. it loads built-in scripts as well, als
        importing custom planner integrations. It also starts the planning process, and feeds the datastore with
        the plan, given by the planner.
-
     """
 
     def __init__(self, datastore):
         """
-
         :param datastore:  a datastore, containing all necessary data.
         """
         self.__datastore = datastore
@@ -38,7 +36,6 @@ class PlanningController:
         :param callback_func is callback_func(Boolean):void planning will be executed async, and call this function when finish.
         :return: the planning thread
         """
-
         planning_successful = False
         planner_choice = self.__datastore.get_planner()
         if not planner_choice or len(planner_choice) == 0:
@@ -53,23 +50,19 @@ class PlanningController:
                 to_import = self.__discover_class(planner_choice)
             except ImportError:
                 to_import = None
-
         if to_import is None:
             logger.error("Couldn't discover planner " + planner_choice)
             raise ImportError("Couldn't discover planner " + planner_choice)
-
         logger.debug('Try to Import planner')
         script_import = __import__(to_import[0], fromlist=(to_import[1]))
         PlannerModule = getattr(script_import, to_import[1])
         logger.info('Using Planner script: ' + str(to_import[0]))
         planner = PlannerModule()
-
         planning_thread = InterruptableThread(target=self.__plan_and_report,
                                               args=(callback_func, planner),
                                               name='PlanningThread')
         planning_thread.setDaemon(True)
         planning_thread.start()
-
         return planning_thread
 
     def __plan_and_report(self, callback_function, planner):
@@ -82,23 +75,21 @@ class PlanningController:
         :param planner: the planner to plan with
         :return: nothing
         """
-
-        # ---------------------------------------------------------------------------------------------------------------
+        # --------------------------------------------------------------------------------------------------------------
         def execute_in_sub_process(queue):
             """
             This mehod executes the actual planning.
             should be executed in a sub process.(this decision was made, to be able to kill the planning process)
             :param queue: a message queue, which will contain the planning report
             """
-            os.setsid()  # give a new process group id, to be able to kill the whole group resulting from this sub process and the planner.
+            os.setsid()  # give a new process group id, to be able to kill the whole group resulting from this
+                         # sub process and the planner.
             planning_report = planner.plan_scenario(self.__datastore.get_domain_path(),
                                                     self.__datastore.get_facts_path(),
                                                     self.__datastore.get_planner_argv(),
                                                     self.__datastore.get_file_save_dir())
-
             queue.put(planning_report)
-
-        # ---------------------------------------------------------------------------------------------------------------
+        # --------------------------------------------------------------------------------------------------------------
         current_thread = interruptable_thread.current_thread()
         logger.debug("planner argv: " + str(self.__datastore.get_planner_argv()))
         start_time = time.time()
@@ -111,7 +102,6 @@ class PlanningController:
         # wait for the planning thread to terminate, check if thread was interrupted
         while not current_thread.is_interrupted() and planning_process.is_alive():
             planning_process.join(2)
-
         # NOT interrupted path
         if not current_thread.is_interrupted():
             logger.info("Finished planning after {0:.4f} seconds.".format(time.time() - start_time))
@@ -151,9 +141,8 @@ class PlanningController:
 
     def __split_and_add_to_path(self, script_path):
         """
-            splits the script path into the directory path, and the script name, adds the directory Path to
-            PYTHONPATH and returns the scripname
-
+        splits the script path into the directory path, and the script name, adds the directory Path to
+        PYTHONPATH and returns the scripname
         :param script_path: the path of a custom planner script like /home/planner_script.py
         :return: the Name of the script e.g. planner_script
         """
@@ -175,7 +164,6 @@ class PlanningController:
         :param script: the name of a custom planner integration module
         :return: a (script_name, class_name) tuple
         """
-
         class_name = None
         script_import = __import__(script)
         for cname, some_obj in inspect.getmembers(script_import):
@@ -193,7 +181,6 @@ class PlanningController:
         :return: (script_name,script_path) tuple, or None if the shortcut was not found in the list.
         """
         built_in_planner = self.__datastore.get_built_in_planners()
-
         planner = None
         if shortcut in built_in_planner.keys():
             planner = built_in_planner[shortcut]

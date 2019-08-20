@@ -35,12 +35,10 @@ class PredicateMerger:
                 preds_map[parsed_pred[0]].append(parsed_pred)
             else:
                 preds_map[parsed_pred[0]] = [parsed_pred]
-
         for key in preds_map.keys():
             c_pred = self.__reduce_predicate_list(preds_map[key])
             available_predicates.append(c_pred)
             merged_preds_as_string.append(self.__tuple_to_predicate_string(c_pred))
-
         return (merged_preds_as_string, available_predicates)
 
     def __parse_predicate(self, predicate_string):
@@ -58,7 +56,6 @@ class PredicateMerger:
             if start + 1 >= end - 1:
                 logger.error("Can't parse predicate: " + predicate_string)
                 raise ValueError("Can't parse predicate: " + predicate_string)
-
             pred_name = predicate_string[start + 1:end - 1].replace(' ', '')
             pred = predicate_string[end:]
         else:
@@ -68,13 +65,11 @@ class PredicateMerger:
         if not '-' in pred:
             logger.error("Can't parse predicate: " + predicate_string)
             raise ValueError("Can't parse predicate: " + predicate_string)
-
         while '-' in pred:
             c_type_s = pred.index('-') + 1
             c_type_e = 0
             if '?' in pred[c_type_s:]:
                 c_type_e += pred[c_type_s:].index('?') + c_type_s
-
             elif ')' in pred:
                 c_type_e += pred.index(')')
             else:
@@ -82,14 +77,13 @@ class PredicateMerger:
                 raise ValueError("Can't parse predicate: " + predicate_string)
             pred_types.append((pred[c_type_s:c_type_e].replace(' ', ''), pred[:c_type_e].count('?')))
             pred = pred[c_type_e:]
-
         return (pred_name, pred_types)
 
     def __reduce_predicate_list(self, predicate_list):
         """reduce_predicate_list
         reduce_predicate_list gets a list of predicates, with the same name but different types,
         and reduces them to one predicate, with the most open types.
-        :param predicate_list: a list with predicates, all having the same name, of format ('LOCATED',[(VEHICLE,1),(PHYSOBJ,3)])
+        :param predicate_list: a list of predicates with the same name, format: ('LOCATED',[(VEHICLE,1),(PHYSOBJ,3)])
         :return: one predicate tuple, containing the most general types. of format ('LOCATED',[(VEHICLE,1),(PHYSOBJ,3)])
         """
         type_tree = self.__datastore.get_available_types()
@@ -109,7 +103,6 @@ class PredicateMerger:
                 if type_tuple[1] != result_predicate[1][index][1]:
                     logger.error(err_str)
                     raise ValueError(err_str)
-
                 # try to merge the types used in predicates e.g. Robot or Vehicle
                 if result_predicate[1][index][0] != type_tuple[0]:
                     smallest_parent = type_tree.get_smallest_parent(type_tuple[0], result_predicate[1][index][0])
@@ -123,7 +116,6 @@ class PredicateMerger:
                     else:
                         logger.error(err_str)
                         raise ValueError(err_str)
-
         return result_predicate
 
     def __tuple_to_predicate_string(self, predicate_tuple):
@@ -132,7 +124,6 @@ class PredicateMerger:
         :param predicate_tuple: a tuple in format (PREDICATE_NAME,[(TYPE,NUM_VARIABLES)])
         :return: a predicate string (PREDICATENAME ?0 ?1 - Type)
         """
-
         pred_string = '(' + predicate_tuple[0]
         tuple_counter = 0  # need this counter do guarantee distinct variable names.
         for type_tup in predicate_tuple[1]:
@@ -144,5 +135,4 @@ class PredicateMerger:
                 variable_counter += 1
             pred_string += ' - ' + type_tup[0]
         pred_string += ')'
-
         return str(pred_string)

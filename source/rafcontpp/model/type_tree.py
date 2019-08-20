@@ -16,7 +16,6 @@ class TypeTree:
     def __init__(self, type_name):
         """
         needs the name of a type, and returns a type-tree-node. the node it self is a TypeTree.
-
         :param type_name: the name of a Type, can't be None!
         :return a TypeTree object
         """
@@ -40,7 +39,6 @@ class TypeTree:
             for key in type_dict.keys():
                 if type_dict[key] == type_name:
                     for_inserted = for_inserted & self.add_type_branch(key, type_dict)
-
         return inserted and for_inserted
 
     def recursive_insert(self, type_name, type_dict):
@@ -91,7 +89,6 @@ class TypeTree:
                 inserted = child.__insert(type_name, parent_name)
                 if inserted:
                     break
-
         return inserted
 
     def get_as_pddl_string(self):
@@ -103,16 +100,13 @@ class TypeTree:
         if self.children:
             for child in self.children:
                 as_string = as_string + child.type_name + " "
-
             as_string = as_string + "- " + self.type_name + "\r\n"
-
             for child in self.children:
                 child_string = child.get_as_pddl_string()
                 if child_string != child.type_name:
                     as_string = as_string + child_string
         else:
             as_string = self.type_name
-
         return as_string
 
     def get_as_list(self):
@@ -120,9 +114,7 @@ class TypeTree:
         takes the Tree, and writes all its elements into a list
         :return: a list, contining all types of the tree
         """
-
         type_list = [self.type_name]
-
         for child in self.children:
             type_list.extend(child.get_as_list())
         return type_list
@@ -152,7 +144,6 @@ class TypeTree:
 
                 if sub_tree is not None:
                     break
-
         return sub_tree
 
     def is_parent_of(self, parent, child):
@@ -163,14 +154,11 @@ class TypeTree:
         :param child: the maybe child type
         :return: true, if the parent is really the parent of the child, false otherwhise
         """
-
         is_parent = False
         if parent != child:
             sub_tree = self.get_sub_tree(parent)
-
             if sub_tree is not None:
                 is_parent = sub_tree.is_in_tree(child)
-
         return is_parent
 
     def get_parent_of(self, type_name):
@@ -193,7 +181,6 @@ class TypeTree:
                 parent = child.get_parent_of(type_name)
                 if parent:
                     break
-
         return parent
 
     def get_smallest_parent(self, type_a, type_b):
@@ -220,7 +207,6 @@ class TypeTree:
         if smallest_parent is None:
             parent_a = self.get_parent_of(type_a)
             parent_b = self.get_parent_of(type_b)
-
             if parent_a and parent_b:
                 while parent_a and smallest_parent is None:
                     c_parent_b = parent_b
@@ -230,5 +216,4 @@ class TypeTree:
                         else:
                             c_parent_b = self.get_parent_of(c_parent_b)
                     parent_a = self.get_parent_of(parent_a)
-
         return smallest_parent

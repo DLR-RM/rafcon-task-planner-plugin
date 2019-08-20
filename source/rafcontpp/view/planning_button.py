@@ -1,20 +1,20 @@
 # Contributors:
 # Christoph Suerig <christoph.suerig@dlr.de>
 # Version 12.07.2019
-import gi
 
-gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk
-from rafcontpp.view.planning_setup_form import PlanningSetupForm
-from rafcontpp.model.datastore import datastore_from_file, DATASTORE_STORAGE_PATH, get_planning_threads
-from rafcon.gui.helpers.label import create_label_widget_with_icon
-from rafcon.gui.views.tool_bar import ToolBarView
 import threading
 import time
+import gi
+gi.require_version('Gtk', '3.0')
+from gi.repository import Gtk
 import rafcon.gui.utils
 import rafcon.gui.helpers.state_machine
 import rafcon.gui.singleton as gui_singletons
+from rafcon.gui.views.tool_bar import ToolBarView
+from rafcon.gui.helpers.label import create_label_widget_with_icon
 from rafcon.utils import log
+from rafcontpp.view.planning_setup_form import PlanningSetupForm
+from rafcontpp.model.datastore import datastore_from_file, DATASTORE_STORAGE_PATH, get_planning_threads
 
 logger = log.get_logger(__name__)
 plan_task_label = "Plan Task"
@@ -28,7 +28,6 @@ def initialize():
     tool_bar_ctrl = gui_singletons.main_window_controller.get_controller('tool_bar_controller')
     rafcon.gui.utils.wait_for_gui()
     assert isinstance(tool_bar_ctrl.view, ToolBarView)
-
     global lock
     lock = threading.Lock()
     global button_counter
@@ -83,10 +82,16 @@ def decrement_button():
 
 
 def __on_button_clicked(button):
+    """
+    opens the planning setup form.
+    """
     PlanningSetupForm(datastore_from_file(DATASTORE_STORAGE_PATH)).initialize()
 
 
 def __on_show_menu(button):
+    """
+    opens the drop-down menu, whith all currently running tasks.
+    """
     cancel_task_menu = button.get_menu()
     # first remove all entries (they could be outdated)
     for child in cancel_task_menu.get_children():
@@ -96,10 +101,12 @@ def __on_show_menu(button):
     current_time = time.time()
     # a map containg all threads, with the created label as key
     label_thread = {}  # label:thread
-
-    # -------------------------------------------------------------------------------------------------------------------
+    # ------------------------------------------------------------------------------------------------------------------
     # a call back function for an activated menu item.
     def __on_menu_item_activate(menu_item):
+        """
+        handles the abortion of a task.
+        """
         # get label
         label = menu_item.get_label()
         # load glade file
@@ -112,7 +119,6 @@ def __on_show_menu(button):
         cancel_dialog.show_all()
         user_response = cancel_dialog.run()
         cancel_dialog.destroy()
-
         if user_response == Gtk.ResponseType.YES:
             if label_thread[label].is_alive():
                 logger.info('Canceling Task: {}'.format(label))
@@ -120,9 +126,7 @@ def __on_show_menu(button):
                 logger.info('Interrupted Task: {}'.format(label))
             else:
                 logger.info('Task {} already terminated.'.format(label))
-
-    # -------------------------------------------------------------------------------------------------------------------
-
+    # ------------------------------------------------------------------------------------------------------------------
     # fill menu:
     for index, key in enumerate(planning_threads.keys()):
         label = planning_threads[key][1] + ' ({0:.4f}s)'.format(current_time - key)

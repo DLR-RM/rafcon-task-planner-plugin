@@ -2,17 +2,17 @@
 # Christoph Suerig <christoph.suerig@dlr.de>
 # Version 12.07.2019
 
-
+import os
 import gi
-
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
-import os
+import rafcon.gui.singleton as gui_singletons
+from rafcon.utils import log
 from rafcontpp.model.datastore import Datastore
 from rafcontpp.control.planning_setup_form_controller import PlanningSetupFormController
 from rafcontpp.control.planning_setup_form_controller import NOT_AVAILABLE, OTHER, SEL_PLANNER
-from rafcon.utils import log
-import rafcon.gui.singleton as gui_singletons
+
+
 
 logger = log.get_logger(__name__)
 
@@ -81,7 +81,6 @@ class PlanningSetupForm:
                 runtime_data_chooser.set_filename(runtime_data_path)
             self.__runtime_data_reference.set_active(self.__datastore.use_runtime_path_as_ref())
             runtime_data_direct.set_active(not self.__datastore.use_runtime_path_as_ref())
-
         self.__dialog.show_all()
         # connect
         self.__builder.get_object('planning_form_start_button').connect('clicked', self.__call_controller_on_apply)
@@ -100,7 +99,6 @@ class PlanningSetupForm:
         :param button:
         :return:
         """
-
         self.__controller.on_apply(button, self.__dialog, *self.__get_entered_data())
 
     def __call_controller_on_destroy(self, button):
@@ -120,12 +118,13 @@ class PlanningSetupForm:
         self.__controller.on_show_state_pool_info(button, self.__dialog, *self.__get_entered_data())
 
     def __init_drop_down(self, drop_down, script_path_chooser):
+        """
+        Initializes the planner drop down menu.
+        """
         # initiates the planner drop down with all built in planners and the script path chooser for the planenr script
         # look if planner is available
         active_index = 0
-
         drop_down.append_text(SEL_PLANNER)
-
         for index, planner in enumerate(self.__datastore.get_built_in_planners().keys()):
             # dynamically import and check if planner is available.
             to_import = self.__datastore.get_built_in_planners()[planner]
@@ -137,7 +136,6 @@ class PlanningSetupForm:
             # set active planner to last used planner
             if planner == self.__datastore.get_planner():
                 active_index = index + 1
-
         drop_down.append_text(OTHER)
         # set active planner to Other if script was used last.
         if active_index == 0 and self.__datastore.get_planner() is not None and len(self.__datastore.get_planner()) > 0:
@@ -147,6 +145,10 @@ class PlanningSetupForm:
         drop_down.set_active(active_index)
 
     def __get_entered_data(self):
+        """
+        reads entered data from the planning setup form, and returns the raw values.
+        return: the raw values.
+        """
         state_pool_text = self.__state_pool_chooser_entry.get_text()
         type_db_path = self.__builder.get_object('type_db_chooser').get_filename()
         planner_text = self.__builder.get_object('planner_dropdown').get_active_text()
@@ -167,8 +169,6 @@ class PlanningSetupForm:
     def __string_array_to_string(self, list):
         # helper method for state pool text entry
         toReturn = ''
-
         for element in list:
             toReturn += element + ':'
-
         return toReturn

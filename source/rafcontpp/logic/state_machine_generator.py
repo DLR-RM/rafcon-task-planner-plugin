@@ -35,7 +35,6 @@ logger = log.get_logger(__name__)
 class StateMachineGenerator:
     """StateMachineGenerator
     The StateMachineGenerator takes the plan from the datastore and molds a state machine out of it.
-
     """
 
     def __init__(self, datastore):

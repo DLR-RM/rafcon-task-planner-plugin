@@ -47,7 +47,6 @@ class PlanningSetupFormController:
 
     def __init__(self, datastore):
         """
-
         :param datastore: a Datastore
         """
         assert isinstance(datastore, Datastore)
@@ -74,9 +73,9 @@ class PlanningSetupFormController:
         :param keep_related_files: True if related files should be keept, Fals if they should be deleted.
         :param file_save_dir: The path where to save related files, or an empty string if files shouldn't be keept.
         :param rt_data_path: The path where to find the runtime data file. Or an empty string if there is no runtime data.
-        :param as_reference: True if the runtime data path should be used as reference, False if it should directly be copied into the State. if rt_data_path is empty, this field is irrelevant.
+        :param as_reference: True if the runtime data path should be used as reference, False if it should directly
+                             be copied into the State. if rt_data_path is empty, this field is irrelevant.
         """
-
         # prepare datastore with new data from dialog.
         # save datastore to configuration file.
         # destroy dialog.
@@ -97,7 +96,7 @@ class PlanningSetupFormController:
             planning_wait_window.show()
             setup_form.destroy()
             from rafcontpp.view.planning_button import increment_button
-            increment_button()  # increment the button, to indecate that a new planning process has started.
+            increment_button()  # increment the button, to indicate that a new planning process has started.
             # start pipeline
             logger.info("Start pipeline...")
             planning_thread = None
@@ -107,7 +106,6 @@ class PlanningSetupFormController:
                 Thread(target=self.__wait_and_hide,
                        args=[planning_thread, planning_wait_window],
                        name='PlanningObserverThread').start()
-
         else:
             logger.error(" Field missing! {}".format(not_filled))
             ConfirmDialog(setup_form, " ERROR Field missing!\r\n\r\n {}".format(not_filled)).show()
@@ -131,7 +129,8 @@ class PlanningSetupFormController:
         :param keep_related_files: True if related files should be keept, Fals if they should be deleted.
         :param file_save_dir: The path where to save related files, or an empty string if files shouldn't be keept.
         :param rt_data_path: The path where to find the runtime data file. Or an empty string if there is no runtime data.
-        :param as_reference: True if the runtime data path should be used as reference, False if it should directly be copied into the State. if rt_data_path is empty, this field is irrelevant.
+        :param as_reference: True if the runtime data path should be used as reference, False if it should directly be
+                             copied into the State. if rt_data_path is empty, this field is irrelevant.
         """
         # destroy dialog
         # save data to datastore
@@ -167,7 +166,8 @@ class PlanningSetupFormController:
         :param keep_related_files: True if related files should be keept, Fals if they should be deleted.
         :param file_save_dir: The path where to save related files, or an empty string if files shouldn't be keept.
         :param rt_data_path: The path where to find the runtime data file. Or an empty string if there is no runtime data.
-        :param as_reference: True if the runtime data path should be used as reference, False if it should directly be copied into the State. if rt_data_path is empty, this field is irrelevant.
+        :param as_reference: True if the runtime data path should be used as reference, False if it should directly be
+                             copied into the State. if rt_data_path is empty, this field is irrelevant.
         """
 
         available_predicates = []
@@ -182,38 +182,29 @@ class PlanningSetupFormController:
             mapper.generate_action_state_map()
             mapper.generate_state_action_map()
             mapper.generate_available_actions()
-
         except Exception as e:
             merge_preds = False
-
         try:  # load actions
             loader = PddlActionLoader(tmp_datastore)
             loader.load_pddl_actions()
-
         except Exception as e:
             merge_preds = False
-
         try:  # generate type tree
             type_merger = TypeMerger(tmp_datastore)
             type_tree = type_merger.merge_types()
-
         except Exception as e:
             merge_preds = False
-
         try:  # generate available predicates.
             for state in tmp_datastore.get_pddl_action_map():
                 action = tmp_datastore.get_pddl_action_map()[state]
                 for predicate in action.predicates:
                     if predicate not in available_predicates:
                         available_predicates.append(predicate)
-
             if merge_preds:
                 pred_merger = PredicateMerger(tmp_datastore)
                 available_predicates = pred_merger.merge_predicates(available_predicates)[0]
-
         except Exception as e:
             available_predicates = [e.message]
-
         state_pool_info = StatePoolInfoWindow(setup_form)
         state_pool_info.set_state_pools(tmp_datastore.get_state_pools())
         state_pool_info.set_types(type_tree)
@@ -261,8 +252,8 @@ class PlanningSetupFormController:
         :param keep_related_files: True if related files should be keept, Fals if they should be deleted.
         :param file_save_dir: The path where to save related files, or an empty string if files shouldn't be keept.
         :param rt_data_path: The path where to find the runtime data file. Or an empty string if there is no runtime data.
-        :param as_reference: True if the runtime data path should be used as reference, False if it should directly be copied into the State. if rt_data_path is empty, this field is irrelevant.
-
+        :param as_reference: True if the runtime data path should be used as reference, False if it should directly be
+                             copied into the State. if rt_data_path is empty, this field is irrelevant.
         """
         # saves all data from the dialog into the datastore.
         # looks if everything necessary was filled.
@@ -288,7 +279,6 @@ class PlanningSetupFormController:
             dtp.set_planner_argv(planner_argv_text.split(' '))
         else:
             dtp.set_planner_argv([])
-
         dtp.set_facts_path(facts_path)
         dtp.set_generate_into_state(generate_into_state)
         if generate_into_state:
@@ -304,7 +294,6 @@ class PlanningSetupFormController:
         dtp.set_keep_related_files(keep_related_files)
         if dtp.keep_related_files():
             dtp.set_file_save_dir(file_save_dir)
-
         # runtime section
         runtime_data_path = rt_data_path.strip()
         dtp.set_use_runtime_path_as_ref(as_reference)
@@ -313,7 +302,6 @@ class PlanningSetupFormController:
             if not os.path.isfile(dtp.get_runtime_data_path()):
                 everything_filled = False
                 not_filled = 'Runtime Data contains no valid Filepath!'
-
         return (everything_filled, not_filled)
 
     def __wait_and_hide(self, thread, planning_wait_window):
@@ -347,17 +335,14 @@ class PlanningSetupFormController:
         :return: a valid root state or None
         """
         selected_sm = state_machine_manager_model.get_selected_state_machine_model()
-
         if not (selected_sm and selected_sm.selection.states):
             logger.error("No State selected!")
             return None
         if not len(selected_sm.selection.states) == 1:
             logger.error("Multiple States selected!")
             return None
-
         selected_state_model = selected_sm.selection.get_selected_state()
         selected_state = selected_state_model.state
-
         if not isinstance(selected_state, HierarchyState):
             logger.error("Can only plan into Hierarchy States!")
             return None

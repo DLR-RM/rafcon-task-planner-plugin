@@ -18,7 +18,6 @@ class PddlActionTabController:
     PddlActionTabController, controlls the gui elements of the pddl action tab for each state.
     it handles the dataflow between this tab, and the semantic section of the state, where the data
     of this tab is stored in. It also provides some auto fill wizzard for its elements.
-
     """
     # true if auto save enabled
     auto_apply_enabled = True
@@ -123,7 +122,6 @@ class PddlActionTabController:
         :param pddl_action: a PddlActionRepresentation, of the current Action in the Tab.
         :return: Nothing
         """
-
         self.__predicates_auto_complete(pddl_action, pred_buf)
         self.__types_auto_complete(pddl_action, types_buf)
         self.__requirements_auto_complete(pddl_action.action, requ_dict)
@@ -180,7 +178,6 @@ class PddlActionTabController:
         :param types_buffer: the buffer of the types text view.
         :param pddl_action: a PddlActionRepresentation.
         """
-
         types = pddl_action.types
         # merge add unknown
         start, end = types_buffer.get_bounds()
@@ -191,7 +188,6 @@ class PddlActionTabController:
         for type in types:
             if upper_type_field.find(' ' + type.upper() + ' ') == -1:
                 type_field = type_field + ", " + type
-
         # set type field.
         types_buffer.set_text(type_field.strip(',').strip())
 
@@ -203,18 +199,14 @@ class PddlActionTabController:
         :param pddl_action: a PddlActionRepresentation, to filter predicates from.
         :param pred_field_buf: the Predicates gui text view buffer.
         """
-
         found_predicates = pddl_action.predicates
-
         # merge add unknown
         start, end = pred_field_buf.get_bounds()
         pred_field = pred_field_buf.get_text(start, end, True)
         upper_pred = pred_field.upper()
-
         for fpred in found_predicates:
             if upper_pred.find(fpred.upper()) == -1:
                 pred_field = pred_field + '\r\n' + fpred
                 upper_pred = pred_field.upper()
-
         pred_field = pred_field.strip('\r\n')
         pred_field_buf.set_text(pred_field)

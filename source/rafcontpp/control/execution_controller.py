@@ -68,8 +68,6 @@ class ExecutionController:
             planning_thread = planning_controller.execute_planning(self.on_execute_post_planning)
             self.__planning_thread_register_time = self.__datastore.register_thread(planning_thread)
             return planning_thread
-
-
         except Exception:
             traceback.print_exc()
             self.on_execute_post_planning(False)
@@ -80,7 +78,6 @@ class ExecutionController:
         machine generation procedure. typically its executed from another thread.
         :param planning_successful: True if planning was successful, False otherwhise.
         """
-
         try:
             logger.verbose('post planning executed from thread: {}'.format(threading.current_thread().getName()))
             # check if a plan was found.
@@ -89,15 +86,12 @@ class ExecutionController:
                 sm_generator = StateMachineGenerator(self.__datastore)
                 logger.debug('Handover to state machine generator.')
                 sm_generator.generate_state_machine()  # --> generates state machine and opens it.
-
-
             else:
                 logger.info("No Plan was found, therefore no state machine was generated!")
         except Exception as e:
             traceback.print_exc()
             logger.error("Error during State machine generation Process! :: {}".format(e.message))
         finally:
-
             if not self.__datastore.keep_related_files():
                 logger.info('Cleaning files...')
                 for file_name in self.__datastore.get_generated_files():
@@ -109,7 +103,6 @@ class ExecutionController:
                         logger.warning("Couldn't remove: " + str(file))
             else:
                 logger.debug('Keeping files.')
-
             # remove the planning_thread at the end of the Task.
             if self.__planning_thread_register_time is not -1:
                 if not self.__datastore.remove_thread(self.__planning_thread_register_time):

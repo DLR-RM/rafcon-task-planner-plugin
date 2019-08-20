@@ -22,14 +22,12 @@ built_in_planners = {
 }
 # The storage path of the config file.
 DATASTORE_STORAGE_PATH = os.path.join(os.path.expanduser('~'), os.path.normpath('.config/rafcon/rafcontpp_conf.json'))
-
 # The name of the semantic data dict in rafcon state
 SEMANTIC_DATA_DICT_NAME = 'RAFCONTPP'
 # The name of the sub dictionary, where the pddl action is stored in.
 PDDL_ACTION_SUB_DICT_NAME = 'PDDL_ACTION'
 # The key to allow the Override of the State Content
 ALLOW_OVERRIDE_NAME = 'Allow_Override'
-
 # A lock to synchronize planning thread map accesses.
 planning_threads_lock = threading.Lock()
 # tuples of all registered (currently running) planning threads format: (thread,problem name)
@@ -59,7 +57,6 @@ def datastore_from_file(file_path):
         default_dir = str(os.path.expanduser('~'))
         ds = Datastore([default_dir], '',
                        default_dir, built_in_planners.keys()[0], default_dir, [], default_dir, default_dir, False)
-
     else:
         data = json.load(open(file_path, "r"))
         logger.debug('Loading Configuration form: ' + file_path)
@@ -83,7 +80,6 @@ def datastore_from_file(file_path):
         ds.set_runtime_data_path(runtime_data_path)
         ds.set_use_runtime_path_as_ref(runtime_as_ref)
         ds.set_generate_into_state(plan_into_state)
-
         logger.info("Read configuration successfully!")
     return ds
 
@@ -107,7 +103,6 @@ class Datastore:
         :param keep_related_files: true, if generated files e.g. the domain file or the plan should be saved.
         :param file_save_dir: a path, where to save all related files.
         """
-
         # a list of directories, containing states with pddl notation.
         self.__state_pools = state_pools
         # the name of the state machine, which will be generated.
@@ -159,7 +154,10 @@ class Datastore:
         self.__generate_into_state = False
 
     def validate_ds(self):  # TODO validate everything!
-
+        """
+        validate_ds runs some checks on the state_pools, the sm-save_dir, the facts_path, the type_db_path,
+        and the file_save_dir. if a check fails, it raises a ValueError.
+        """
         # validate state_pools
         for dir in self.__state_pools:
             if not os.path.isdir(dir):
@@ -188,7 +186,6 @@ class Datastore:
         :param interruptable_thread: a thread, the Datastore should store
         :return: the key used to register the thread. (That's the register time as unixtimestamp.)
         """
-
         with planning_threads_lock:
             register_time = time.time()  # unix timestamp
             # set task name to sm name, or problem name, if no sm name is available, and to state name if the sm is planned
@@ -206,13 +203,11 @@ class Datastore:
         :param key: the time, the thread was registered
         :return: true, if removing was successful, false otherwise
         """
-
         successful = False
         with planning_threads_lock:
             if key in planning_threads.keys():
                 del planning_threads[key]
                 successful = not (key in planning_threads.keys())
-
         return successful
 
     def get_state_pools(self):
@@ -220,7 +215,6 @@ class Datastore:
 
     def add_state_pools(self, state_pools, set_pool):
         """
-
         :param state_pools: the state pools to add
         :param set_pool: if true, state pools are not added, but set, and old list gets lost.
         """

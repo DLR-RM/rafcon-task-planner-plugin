@@ -14,7 +14,6 @@ class FfIntegration(PlannerInterface):
     """
     This is the integration script for the Fast Forward Planning System version 2.3 by Hoffmann
     (https://fai.cs.uni-saarland.de/hoffmann/ff.html)
-
     """
 
     def plan_scenario(self, domain_path, facts_path, planner_argv, storage_path):
@@ -23,18 +22,13 @@ class FfIntegration(PlannerInterface):
         new_cwd = os.path.join(old_cwd, 'ff_planning_tmp {0:.8f}'.format(time.time()))
         os.mkdir(new_cwd)
         os.chdir(new_cwd)
-
         plan_path = os.path.abspath(os.path.join(storage_path, "ff_plan"))
         command = 'ff -o ' + domain_path + ' -f ' + facts_path + ' '
-
         for arg in planner_argv:
             command += arg + ' '
         command = command.rstrip()
-
         plan = []
-
         # run Fast Forward
-
         ff_process = subprocess.Popen([command], stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
         (stdout, stderr) = ff_process.communicate()
         ff_exit = ff_process.returncode
@@ -43,7 +37,6 @@ class FfIntegration(PlannerInterface):
         if ff_exit == 0:
             parsed_console = self.__parse_console_output(stdout)
             plan = parsed_console[1]
-
             plan_file = open(plan_path, "w")
             for line in parsed_console[0]:
                 plan_file.write(line + '\r\n')
@@ -52,7 +45,6 @@ class FfIntegration(PlannerInterface):
             files_to_delete = ['ff_plan']
         else:
             stderr = stdout
-
         # reset to old cwd
         os.chdir(old_cwd)
         os.rmdir(new_cwd)

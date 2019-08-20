@@ -13,7 +13,6 @@ def current_thread():
     """
     :return: the current interruptable thread, or None if current thread is not interruptable.
     """
-
     current_thread_id = threading.current_thread().ident
     current_thread = None
     with interruptable_threads_lock:
@@ -25,7 +24,6 @@ def current_thread():
 class InterruptableThread(threading.Thread):
     """
     Its a usual Thread, but its interruptable.
-    In order to achieve this, it adds itself to the args of a given function.
     """
 
     def __init__(self, group=None, target=None, name=None, args=(), kwargs={}):

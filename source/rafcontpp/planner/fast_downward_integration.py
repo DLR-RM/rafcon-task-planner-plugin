@@ -22,7 +22,6 @@ class FdIntegration(PlannerInterface):
         new_cwd = os.path.join(old_cwd, 'fd_planning_tmp {0:.8f}'.format(time.time()))
         os.mkdir(new_cwd)
         os.chdir(new_cwd)
-
         command = 'fast-downward ' + domain_path + ' ' + facts_path + ' '
         plan_path = os.path.abspath(os.path.join(os.curdir, "sas_plan"))
         outsas = os.path.abspath(os.path.join(os.curdir, "output.sas"))
@@ -33,18 +32,14 @@ class FdIntegration(PlannerInterface):
             for arg in planner_argv:
                 command += arg + ' '
             command = command.rstrip()
-
         # run Fast-downward
         fd_process = subprocess.Popen([command], stdout=subprocess.PIPE, shell=True)
         (out, err) = fd_process.communicate()
         fd_exit = fd_process.returncode
-
         # read plan, if possible
         if fd_exit == 0:
             plan = self.__parse_raw_plan(plan_path)
-
         copied_files = self.__copy_and_clean(plan_path, outsas, storage_path)
-
         # reset to old cwd
         os.chdir(old_cwd)
         os.rmdir(new_cwd)
@@ -67,7 +62,6 @@ class FdIntegration(PlannerInterface):
 
     def __parse_raw_plan(self, plan_path):
         """
-
         :param plan_path: the path of the plan file
         :return: a parsed plan
         """
@@ -83,7 +77,6 @@ class FdIntegration(PlannerInterface):
                 action = action[1:]
                 parts = action.split(" ")
                 parsed_plan.append(PlanStep(parts[0], parts[1:]))
-
         return parsed_plan
 
     def __copy_and_clean(self, plan_path, outsas_path, storage_path):
@@ -130,5 +123,4 @@ class FdIntegration(PlannerInterface):
 
         if fd_exit in codes:
             translated_exit_code = str(fd_exit) + " => " + codes.get(fd_exit, "Unknown")
-
         return translated_exit_code

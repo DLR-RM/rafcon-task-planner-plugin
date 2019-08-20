@@ -21,7 +21,7 @@ class StateMachineLayouter:
 
     def layout_state_machine(self, state_machine, target_state, fixed_size, state_order):
         """
-                 This function will format the state machine in a merlon like format.
+        This function will format the state machine in a merlon like format.
         :param state_machine: a state machine to layout
         :param target_state: the "root state" all content in the state will be formated, it needs to be tube like
         :param fixed_size: True if the size of the root state is fixed.
@@ -40,7 +40,6 @@ class StateMachineLayouter:
         num_states = len(target_state_m.states)
         row_count = 0
         column_count = 0
-
         x_gap = 25  # a gap between the state columns
         y_gap = 25  # a gap between the state rows                             _   _
         # the sm will be layouted column by column, in merlon shape. Like: |_| |_| |_|
@@ -70,7 +69,6 @@ class StateMachineLayouter:
             canvas_height = row_count * (y_gap + state_height)
             # root state width, height, and root state border size.
             r_width, r_height, border_size = self.__get_target_state_dimensions(canvas_width, canvas_height)
-
             logger.debug("Root state size: height: {} width: {}".format(r_height, r_width))
             # set root state size
             target_state_m.meta['gui']['editor_gaphas']['size'] = (r_width, r_height)
@@ -78,13 +76,11 @@ class StateMachineLayouter:
         target_state_m.income.set_meta_data_editor('rel_pos', (0., border_size + y_gap + state_height / 4.))
         out_come = [oc for oc in target_state_m.outcomes if oc.outcome.outcome_id == 0].pop()
         out_come.meta['gui']['editor_gaphas']['rel_pos'] = (r_width, border_size + y_gap + state_height / 4.)
-
         # positions where an income or an outcome can occure
         up_pos = (state_width / 2., 0.)
         down_pos = (state_width / 2., state_height)
         left_pos = (0., state_height / 4.)
         right_pos = (state_width, state_height / 4.)
-
         current_row = 0
         current_column = 0
         # increment_row is true if formatting digs down a row, and false if it climbs the next row up again.
@@ -93,7 +89,6 @@ class StateMachineLayouter:
         for c_state_id in state_order:  # state_machine_m.root_state.states.values():
             # gui model of state
             state_m = target_state_m.states[c_state_id]
-
             # decide position of income and outcome
             income_pos = up_pos if increment_row else down_pos
             outcome_pos = down_pos if increment_row else up_pos
@@ -113,21 +108,17 @@ class StateMachineLayouter:
             elif current_row + 1 >= row_count and not increment_row:  # lower right corner
                 income_pos = left_pos
                 outcome_pos = up_pos
-
             # set state size
             state_m.meta['gui']['editor_gaphas']['size'] = (state_width, state_height)
-
             # set position of income and outcome
             state_m.income.set_meta_data_editor('rel_pos', income_pos)
             out_come = [oc for oc in state_m.outcomes if oc.outcome.outcome_id >= 0].pop()
             out_come.meta['gui']['editor_gaphas']['rel_pos'] = outcome_pos
-
             # set position of state
             current_x = current_column * (x_gap + state_width) + x_gap + border_size
             current_y = current_row * (y_gap + state_height) + y_gap + border_size
             state_m.meta['gui']['editor_gaphas']['rel_pos'] = (current_x, current_y)
             # logger.debug("x: {} y: {}".format(current_x, current_y))
-
             # loop trailer, in / decrement rhow and column counter, decide if to increment row next.
             if current_row <= 0 and not increment_row:
                 increment_row = True
@@ -137,11 +128,9 @@ class StateMachineLayouter:
                 current_column += 1
             else:
                 current_row = current_row + 1 if increment_row else current_row - 1
-
         # last state is a special case, its outcome should always be right.
         out_come = [oc for oc in target_state_m.states[state_order[-1]].outcomes if oc.outcome.outcome_id == 0].pop()
         out_come.meta['gui']['editor_gaphas']['rel_pos'] = right_pos
-
         # store the meta data.
         if state_machine.file_system_path:
             state_machine_m.store_meta_data()  # TODO find solution, if state machine was never saved bevore.
@@ -159,7 +148,6 @@ class StateMachineLayouter:
         if width <= 0 or height <= 0:
             width = 16.
             height = 9.
-
         ratio = round(width / height, 2)
         logger.debug('Width / Height Ratio: {}:1'.format(ratio))
         row_count = math.sqrt(
@@ -175,17 +163,14 @@ class StateMachineLayouter:
         :param canvas_height:
         :return: (width, height, border_width)
         """
-
         border_width = Variable(min(canvas_width, canvas_height) / constants.BORDER_WIDTH_STATE_SIZE_FACTOR)
         r_width = canvas_width + 2 * border_width
         r_height = canvas_height + 2 * border_width
         border_width = Variable(min(r_width, r_height) / constants.BORDER_WIDTH_STATE_SIZE_FACTOR)
-
         while (r_width - 2 * border_width) < canvas_width and (r_height - 2 * border_width) < canvas_height:
             r_width = r_width + 2 * border_width
             r_height = r_height + 2 * border_width
             border_width = Variable(min(r_width, r_height) / constants.BORDER_WIDTH_STATE_SIZE_FACTOR)
-
         return (r_width, r_height, border_width)
 
     def __get_state_dimensions(self, canvas_width, canvas_height, col_count, row_count):
@@ -198,7 +183,6 @@ class StateMachineLayouter:
         """
         num_xgap = 1 + col_count
         num_ygap = 1 + row_count
-
         state_width = max(canvas_width / (0.25 * num_xgap + col_count), 1)
         state_height = max(canvas_height / (0.25 * num_ygap + row_count), 1)
         state_width = min(state_width, state_height)

@@ -57,12 +57,9 @@ class PddlFactsParser:
                             'Object {0:} assigned as type {1:} and type {2:}.'.format(obj, c_type, obj_type_map[obj]))
                     else:
                         obj_type_map[obj] = c_type
-
-
         else:
             logger.error('No Objects found in facts file!')
             raise ValueError()
-
         return obj_type_map
 
     def parse_domain_name(self):

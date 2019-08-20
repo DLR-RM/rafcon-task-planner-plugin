@@ -50,12 +50,10 @@ def post_state_editor_register_view(state_editor):
     :param state_editor:
     :return:
     """
-
     state_editor_view = state_editor.view
     state = state_editor.model.state
     action_tab = PddlActionTab(state).init_tab()
-
-    # add tab, with lable to State Editor
+    # add tab, with label to State Editor
     # f1ec is from font awesome
     icon = {_('PDDL Action'): 'f1ec'}  # its done like this, because the helper function needs a map as input
     main_notebook_2 = state_editor_view["main_notebook_2"]

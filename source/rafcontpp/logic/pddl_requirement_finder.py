@@ -88,7 +88,6 @@ class PddlRequirementFinder():
                                     re.IGNORECASE | re.MULTILINE | re.DOTALL)
         if re.search(in_dec_pattern, self.action):
             requires = True
-
         return requires
 
     def expression_evaluation(self):
@@ -114,5 +113,4 @@ class PddlRequirementFinder():
             return False
         if not self.conditional_effects():
             return False
-
         return True
