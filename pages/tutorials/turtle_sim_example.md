@@ -1,4 +1,7 @@
-
+---
+layout: default
+title: Turtle Sim Example
+---
 # 2. Turtle Sim Example
 
 This example demonstrates how the **data flow** can work in a planned state machine and how **flexible** they are even when using them with **ROS**.
@@ -28,16 +31,12 @@ The example is base on RAFCON's [turtle demo](https://rafcon.readthedocs.io/en/l
 
 <small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
 
-
+![Map](../../assets/images/tutorials/turtle/turtle_example_scenario.png "Map")
 
 ## 2.1 Scenario description
 The scenario consists of:
 - a map with five points (down_left, down_right, top_left, top_right and middle) 
 - and three turtles (alice, bob and eve).
-
-![Map](doc/turtle_example_scenario.png "Map")
-
-
 
 With the following rules:
 - turtles can only move between connected points

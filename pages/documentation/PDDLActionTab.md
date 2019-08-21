@@ -7,7 +7,7 @@ title: PDDL Action Tab
 The Plugin introduces a new Tab in the State Editor, it's called the Pddl Action Tab, and its Symbol is a little Calculator.  
 The Tabs gives the possibility to annotate a state with a [PDDL](https://en.wikipedia.org/wiki/Planning_Domain_Definition_Language) Action, and so to make it usable for the plugin and so for planning.
 
-![Rafcon With the PDDL Action Tab](../../assets/images/PDDLActionTab.png "A open RAFCON window with the PDDL Action Tab in the right.")
+![Rafcon With the PDDL Action Tab](../../assets/images/documentation/PDDLActionTab.png "A open RAFCON window with the PDDL Action Tab in the right.")
 
 
 - [Tab Fields](#tab-fields)

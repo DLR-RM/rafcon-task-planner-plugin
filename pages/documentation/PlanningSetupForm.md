@@ -7,7 +7,7 @@ title: Planning Setup Form
 The Planning setup form can be opened by clicking the "Plan Task" Button in the Menu bar of [RAFCON](https://dlr-rm.github.io/RAFCON/).  
 It's the main Window of the Plugin, and the part where to configure a new Task, or get information about the current configuration.
 
-![Task Planner Plugin Setup Form](../../assets/images/TaskPlannerPluginConfiguration.png "The Task Planner Plugin Setup Form")
+![Task Planner Plugin Setup Form](../../assets/images/documentation/TaskPlannerPluginConfiguration.png "The Task Planner Plugin Setup Form")
 
 
 - [Planning Section](#planning-section)

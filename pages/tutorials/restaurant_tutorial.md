@@ -1,7 +1,11 @@
+---
+layout: default
+title: Restaurant Tutorial
+---
+
 # 1. Restaurant Tutorial
 
 This tutorial introduces the **basic functionality** of the Task Planner Plugin (Tpp), by leading through a little example.
-
 
 - [1.1 Scenario description](#11-scenario-description)
 - [1.2 Requirements / Pre-Setup](#12-requirements--pre-setup)
@@ -19,13 +23,12 @@ This tutorial introduces the **basic functionality** of the Task Planner Plugin 
 
 <small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
 
+![Restaurant_example_overview](../../assets/images/tutorials/restaurant/restaurant_tutorial_overview.jpg "Scenario Overview")
 
 ## 1.1 Scenario description
 
 Our scenario takes place in a little pizzeria. There is Bob, the chef baking pizza, the waiter James serving the guests,
 and one guest alice.   
-
-![Restaurant_example_overview](doc/restaurant_tutorial_overview.jpg "Scenario Overview")
 
 Lets assume Alice is really hungry, and wants to eat some pizza. In this tutorial, we want to create a state machine, to feed Alice, e.g. a state machine, that models the process of Alice ordering a pizza in the restaurant, Bob cooking, and James serving it, so that Alice is able to eat it.
  
@@ -45,7 +48,7 @@ At first, the plugin has to be registered in RAFCON. To do so, `[RAFCON̙-TASK-P
 
 If you did this successfully, RAFCON should now have an extra menu button called "Plan Task", and a new tab called "PDDL Action" at the right, below the Semantic Data tab. The image shows RAFCON with the Task Planner Plugin loaded.
 
-![Restaurant_example_rtpp_loaded](doc/Rafcon_rtpp_loaded.png "Plugin loaded")
+![Restaurant_example_rtpp_loaded](../../assets/images/tutorials/restaurant/Rafcon_rtpp_loaded.png "Plugin loaded")
 
 ## 1.4 Preparing some States
 All in all five States are involved in the process. You have to create and store them in a directory of your choice, from now on referenced as [your_folder]. 
@@ -107,7 +110,7 @@ To give Alice the ability to eat her pizza, we have to create the state eat. To 
 
 Once you are finish your state should look like in the figure below.
 
-![restaurant_example_state_eat](doc/Rafcon_rtpp_eat.png "State Eat")
+![restaurant_example_state_eat](../../assets/images/tutorials/restaurant/Rafcon_rtpp_eat.png "State Eat")
 
 
 Repeat this process with the following statesː 
@@ -299,10 +302,10 @@ Let's hit the "Plan Task" Button:
 **Runtime Dataː** Leave it empty.  
 **Includeː** As long as Runtime Data is empty, this buttons are not considered, so we don't need to change something here.   
 
-![Restaurant_example_plugin_conf](doc/Rafcon_rtpp_configuration.png "Plugin Configuration")
+![Restaurant_example_plugin_conf](../../assets/images/tutorials/restaurant/Rafcon_rtpp_configuration.png "Plugin Configuration")
 
 If we hit the "Generate State machine" button now, the planner will try to solve the scenario. Afterwards the found plan will be used to create a state machine.
-![Restaurant_example_state_machine](doc/Rtpp_restaurant_statemachine.png "Restaurant State machine")
+![Restaurant_example_state_machine](../../assets/images/tutorials/restaurant/Rtpp_restaurant_statemachine.png "Restaurant State machine")
 
 If we execute the state machine now, the console output should look like below, as you can see Alice is getting her pizzaǃ 
 ```consoleOutput
