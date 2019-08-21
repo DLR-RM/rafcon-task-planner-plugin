@@ -16,7 +16,7 @@
 title: RAFCON Task Planner Plugin
 email: rafcon@dlr.de
 description: "The RAFCON Task Planner Plugin (RTPP) is a RAFCON Plugin to interface arbitrary PDDL Planner."
-baseurl: "/pages/moro/rafcon_task_planner_plugin/" # the subpath of your site, e.g. /blog
+baseurl: /pages/moro/rafcon_task_planner_plugin/" # the subpath of your site, e.g. /blog
 url: "" # the base hostname & protocol for your site, e.g. http://example.com
 #twitter_username: jekyllrb
 github_username:  DLR-RM
@@ -25,17 +25,28 @@ repository: DLR-RM/rafcon-task-planner-plugin
 # Build settings
 markdown: kramdown
 theme: minima
+#theme: jekyll-theme-slate
 plugins:
   - jekyll-feed
+  - jekyll-relative-links
+
+header_pages:
+  - index.md
+  - pages/documentation.md
+  - pages/tutorials.md
+  - pages/imprint.md
 
 # Exclude from processing.
 # The following items will not be processed, by default. Create a custom list
 # to override the default setting.
-# exclude:
-#   - Gemfile
-#   - Gemfile.lock
-#   - node_modules
-#   - vendor/bundle/
-#   - vendor/cache/
-#   - vendor/gems/
-#   - vendor/ruby/
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor/bundle/
+  - vendor/cache/
+  - vendor/gems/
+  - vendor/ruby/
+  - source/
+  - docs/
+
