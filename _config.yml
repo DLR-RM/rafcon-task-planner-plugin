@@ -32,8 +32,8 @@ plugins:
 
 header_pages:
   - index.md
-  - pages/documentation_front_page.md
-  - pages/tutorials_front_page.md
+  - pages/documentation.md
+  - pages/tutorials.md
   - pages/about.md
   - pages/imprint.md
 

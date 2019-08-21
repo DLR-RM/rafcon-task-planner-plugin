@@ -36,14 +36,17 @@ Lets assume Alice is really hungry, and wants to eat some pizza. In this tutoria
 
 To be able to run this tutorial, you need: 
 
- - **RAFCON**: `pip install --user rafcon` orː `git clone git@rmc-github.robotic.dlr.de:common/rafcon.git` (for information about how to install rafcon see: [install rafcon](https://github.com/DLR-RM/RAFCON))
- - **The Rafcon Task Planner Plugin**ː `git clone git@rmc-github.robotic.dlr.de:moro/rafcon_task_planner_plugin.git`
- - **The Fast Downward Planning System**ː `pip install --user downward-dlr --no-compile` (evt. you have to install the wheel package first)
+ - **RAFCON**: <br>
+ `pip install --user rafcon` <br>
+ or: `git clone git@rmc-github.robotic.dlr.de:common/rafcon.git` (for information about how to install rafcon see: [install rafcon](https://github.com/DLR-RM/RAFCON))<br>
+ - **The Rafcon Task Planner Plugin**:<br>
+  `git clone https://github.com/DLR-RM/rafcon-task-planner-plugin.git`<br>
+ - **The Fast Downward Planning System**:<br>
+  `pip install --user downward-dlr --no-compile` (evtl. you have to install the wheel package first)<br>
  
 ## 1.3 First Step 
-At first, the plugin has to be registered in RAFCON. To do so, `[RAFCON̙-TASK-PLANNER-PLUGIN̠-REPOSITORY̠-PATH]/source/rafcontpp` has to be added to the `RAFCON_PLUGIN_PATH` environmental variable. If you want to use the auto Layout Plugin, also add its path. (See [RAFCON Docs](https://rafcon.readthedocs.io/en/latest/plugins.html))  
- 
-`RAFCON_PLUGIN_PATH=$RAFCON_PLUGIN_PATH:[RAFCON̙-TASK-PLANNER-PLUGIN̠-REPOSITORY̠-PATH]/source/rafcontpp`
+At first, the plugin has to be registered in RAFCON. To do so, the plugin path has to be added to the "RAFCON_PLUGIN_PATH" environmental variable:<br>
+`RAFCON_PLUGIN_PATH=$RAFCON_PLUGIN_PATH:[RTPP-REPOSITORY̠-PATH]/source/rafcontpp`
 
 
 If you did this successfully, RAFCON should now have an extra menu button called "Plan Task", and a new tab called "PDDL Action" at the right, below the Semantic Data tab. The image shows RAFCON with the Task Planner Plugin loaded.
@@ -62,7 +65,7 @@ To give Alice the ability to eat her pizza, we have to create the state eat. To 
 
 3. Add the two Input Ports "food" and "person", both of type str (all input ports have to be of type str).
 
-4. Insert the following code into the source editorː  
+4. Insert the following code into the state's source editorː  
       ```python
       import time   
       def execute(self, inputs, outputs, gvm):
@@ -75,7 +78,7 @@ To give Alice the ability to eat her pizza, we have to create the state eat. To 
 
 6. If you want, you can write a description text into the **description field**, its for your documentation.
 
-7. Every State has a corresponding **PDDL Action**, which represents its semantic meaning. Insert the following action into the PDDL section of the tab. 
+7. Every State has a corresponding **PDDL Action**, which represents its semantic meaning. Insert the following action into the PDDL section of the tab: 
     ```Pddl
     (:action eat
        :parameters (?person - Person ?food - Food)
@@ -86,7 +89,7 @@ To give Alice the ability to eat her pizza, we have to create the state eat. To 
     )
     ```     
     The action is called eat, and has also two parametersː ?person of type Person and ?food of type Food  
-    **IMPORTANT**ː the names of the variables ?person and ?food have to match with the names of the state's input ports person and food. But not every parameter of the action has to have an corresponding input port in the state and vice versa. 
+    **IMPORTANT**: The names of the variables ?person and ?food have to match with the names of the state's input ports person and food (neglecting the questionmark). But not every parameter of the action has to have an corresponding input port in the state and vice versa. 
 
 8. In further states you can click auto complete, (bewareː auto complete is just a best effort approach, it works fine in most cases (I don't know a case yet, where it doesn't work), nevertheless you should check the results.) but in this first state I will explain all fields.
 
@@ -349,4 +352,4 @@ You can't just plan this one state machine, but arbitrary manyǃ For example, le
 ## 1.8 Solution
 
 A solution for this tutorial is provided in `[repository_path]/examples/restaurant_tutorial/src`.
-There you find all described files, and states as well as an executable restaurant_state_machine and all related files, generated during the planning process. To load the restaurant_state_machine, which is located inside of the restaurant_state_pool, you must add the library path `[repository_path]/examples/restaurant_tutorial/src/restaurant_state_pool` with the key `restaurant_state_pool` to RAFCON.
+There you find all described files, and states as well as an executable restaurant_state_machine and all related files, generated during the planning process. To load the restaurant_state_machine, which is located inside of the restaurant_state_pool, you must add the library path `[repository_path]/examples/restaurant_tutorial/src/restaurant_state_pool` using the key `restaurant_state_pool` to RAFCON.

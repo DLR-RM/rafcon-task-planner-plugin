@@ -48,19 +48,26 @@ In this example, Alice, Bob and Eve will wander arround in the map, but Bob is a
 
 
 ## 2.2 Requirements 
- - RAFCONː `pip install --user rafcon` orː `git clone git@rmc-github.robotic.dlr.de:common/rafcon.git` (for information about how to install rafcon see: https://github.com/DLR-RM/RAFCON)
- - The Rafcon Task Planner Pluginː `git clone git@rmc-github.robotic.dlr.de:moro/rafcon_task_planner_plugin.git`
- - The Fast Downward Planning Systemː `pip install --user downward-dlr --no-compile` (evt. you have to install the wheel package first) 
+ - RAFCON:<br>
+`pip install --user rafcon`<br>
+ orː `git clone git@rmc-github.robotic.dlr.de:common/rafcon.git` (for information about how to install rafcon see: https://github.com/DLR-RM/RAFCON)<br>
+ - The Rafcon Task Planner Plugin:<br>
+  `git clone git@rmc-github.robotic.dlr.de:moro/rafcon_task_planner_plugin.git`
+ - The Fast Downward Planning System:<br>
+ `pip install --user downward-dlr --no-compile` (evt. you have to install the wheel package first)<br>
  - ROS (as described in rafcons [turtle demo](https://rafcon.readthedocs.io/en/latest/tutorials.html#starting-the-basic-turtle-demo-state-machine-using-ros))
  - The ROS turtlesim simulation (also as described in rafcons [turtle demo](https://rafcon.readthedocs.io/en/latest/tutorials.html#starting-the-basic-turtle-demo-state-machine-using-ros))
 
 ## 2.3 Setup
 1. Start the ROS core: `roscore`
 2. Start the turtlesim node: `rosrun turtlesim turtlesim_node`
-3. Start RAFCON with the Plugin in your ros environment: `export RAFCON_PLUGIN_PATH=/path/to/tpp/plugin`
-4. Add the following two paths as RAFCON Library Paths:   
-   Library: `turtle_lib` Path: `[Repository_PATH]/rafcon_task_planner_plugin/examples/turtle_sim_example/src/turtle_lib`  
-   Library: `turtle_sim_example` Path: `[Repository_PATH]/rafcon_task_planner_plugin/examples/turtle_sim_example/src`  
+3. Start RAFCON with the Plugin in your ros environment:<br>
+`export RAFCON_PLUGIN_PATH=/path/to/tpp/plugin`
+4. Add the following two paths as RAFCON Library Paths: <br> 
+   Library key: `turtle_lib` <br> 
+   Path: `[Repository_PATH]/rafcon_task_planner_plugin/examples/turtle_sim_example/src/turtle_lib`<br>  
+   Library key: `turtle_sim_example`<br> 
+   Path: `[Repository_PATH]/rafcon_task_planner_plugin/examples/turtle_sim_example/src`  
 
 If we have a look into the **turtle_sim_example** Library, we can see **turtle_lib** as well as the two state machines **turtle_sim_core_machine** and **turtle_sim_state_machine**.
 
