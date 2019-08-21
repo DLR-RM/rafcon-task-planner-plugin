@@ -16,7 +16,7 @@
 title: RAFCON Task Planner Plugin
 email: rafcon@dlr.de
 description: "The RAFCON Task Planner Plugin (RTPP) is a RAFCON Plugin to interface arbitrary PDDL Planner."
-baseurl: /pages/moro/rafcon_task_planner_plugin/" # the subpath of your site, e.g. /blog
+baseurl: "/pages/moro/rafcon_task_planner_plugin" # the subpath of your site, e.g. /blog
 url: "" # the base hostname & protocol for your site, e.g. http://example.com
 #twitter_username: jekyllrb
 github_username:  DLR-RM
@@ -32,8 +32,9 @@ plugins:
 
 header_pages:
   - index.md
-  - pages/documentation.md
-  - pages/tutorials.md
+  - pages/documentation_front_page.md
+  - pages/tutorials_front_page.md
+  - pages/about.md
   - pages/imprint.md
 
 # Exclude from processing.
