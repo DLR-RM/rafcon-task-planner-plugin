@@ -7,7 +7,7 @@
 #
 # Contributors:
 # Christoph Suerig <christoph.suerig@dlr.de>
-# Version 12.07.1019
+# Version 21.08.1019
 
 
 
@@ -22,7 +22,7 @@ from rafcon.gui.models.signals import ActionSignalMsg
 from rafcon.gui.singleton import state_machine_manager_model
 from rafcon.gui.utils import wait_for_gui
 from rafcon.gui.config import global_gui_config
-from rafcon.gui.helpers.state import substitute_state
+from rafcon.gui.helpers.state import substitute_state, substitute_state_as
 from rafcon.core.storage import storage
 from rafcon.core.singleton import library_manager
 from rafcon.core.singleton import state_machine_manager
@@ -84,7 +84,7 @@ class StateMachineGenerator:
         target_state, state_order_list = self.__generate_core_machine(target_state)
         state_machine = StateMachine(root_state=target_state)
         storage.save_state_machine_to_path(state_machine,sm_path)
-        logger.info('State machine "{}" created.'.format(state_machine.name))
+        logger.info('State machine "{}" created.'.format(state_machine.root_state.name))
         logger.info(sm_name + " contains " + str(len(target_state.states)) + " states.")
         logger.info("State machine generation took {0:.4f} seconds.".format(time.time() - start_time))
         sm_layouter = StateMachineLayouter()
@@ -108,11 +108,11 @@ class StateMachineGenerator:
             state_machine = target_state.get_state_machine()
             state_machine_m = state_machine_manager_model.state_machines[state_machine.state_machine_id]
             target_state_m = state_machine_m.get_state_model_by_path(target_state.get_path())
-            target_state_m_copy = copy.deepcopy(target_state_m)
-            if self.__clear_state(target_state_m_copy.state):
+            target_state_copy = copy.deepcopy(target_state)
+            if self.__clear_state(target_state_copy):
                 if not target_state.is_root_state:
-                    target_state_copy, state_order_list =  self.__generate_core_machine(target_state_m_copy.state)
-                    call_gui_callback(substitute_state, target_state_m, target_state_m_copy)
+                    target_state_copy, state_order_list =  self.__generate_core_machine(target_state_copy)
+                    call_gui_callback(substitute_state_as, target_state_m, target_state_copy, False)
                     wait_for_gui()
                     if state_machine.file_system_path:
                         storage.save_state_machine_to_path(state_machine, state_machine.file_system_path)
@@ -121,6 +121,7 @@ class StateMachineGenerator:
                     logger.info('"{}" contains {} states.'.format(target_state_copy.name, len(target_state_copy.states)))
                     logger.info("State machine generation took {0:.4f} seconds.".format(time.time() - start_time))
                     sm_layouter = StateMachineLayouter()
+                    target_state_m_copy = state_machine_m.get_state_model_by_path(target_state_copy.get_path())
                     target_state_m_copy.action_signal.emit(ActionSignalMsg(action='substitute_state', origin='model',
                                                                         action_parent_m=target_state_m_copy,
                                                                         affected_models=[target_state_m_copy],
@@ -134,11 +135,10 @@ class StateMachineGenerator:
                                                                            after=True))
                     successful = True
                     logger.info("Generated and integrated State machine: {}.".format(target_state_copy.name))
-
                 else:
                     logger.error("Target state was root state!")
-                    state_to_generate_into = target_state_m_copy.state
-                    self.__datastore.set_sm_name(str(state_to_generate_into))
+                    state_to_generate_into = target_state_copy
+                    self.__datastore.set_sm_name(str(state_to_generate_into.name))
             else:
                 logger.error('Could\'nt clear target state.')
         else:
