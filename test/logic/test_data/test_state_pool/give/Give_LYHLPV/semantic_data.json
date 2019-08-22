@@ -1,0 +1,12 @@
+{
+    "RAFCONTPP": {
+        "Allow_Override": "False", 
+        "PDDL_ACTION": {
+            "description": {}, 
+            "pddl_action": "(:action give\n    :parameters (?interlocutor1 ?interlocutor2 - Person ?food - Food ?loc - Location)\n    :precondition (and (at ?loc ?interlocutor1)\n                       (at ?loc ?interlocutor2)\n                       (wants ?interlocutor2 ?food)\n                       (has ?interlocutor1 ?food)\n                  )\n    :effect (and \n            (not (wants ?interlocutor2 ?food))\n            (not (has ?interlocutor1 ?food))\n            (has ?interlocutor2 ?food)\n            )\n)", 
+            "pddl_predicates": "(at ?loc - Location ?interlocutor2 - Person)\r\n(has ?interlocutor2 - Person ?food - Food)\r\n(wants ?interlocutor2 - Person ?food - Food)", 
+            "pddl_types": "Food, Person, Location", 
+            "requirements": "[':typing', ':strips']"
+        }
+    }
+}

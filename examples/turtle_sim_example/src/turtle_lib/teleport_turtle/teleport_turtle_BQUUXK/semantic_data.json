@@ -1,0 +1,11 @@
+{
+    "RAFCONTPP": {
+        "PDDL_ACTION": {
+            "description": "", 
+            "pddl_action": "(:action teleport\n    :parameters (?turtle - Turtle ?location - Location)\n    :precondition (and (alive ?turtle)(not(exists(?pos - Location)(and (at ?pos ?turtle)))))\n    :effect (and (at ?location ?turtle))\n)", 
+            "pddl_predicates": "(alive ?turtle - Turtle)\r\n(at ?location - Location ?turtle - Turtle)", 
+            "pddl_types": "Turtle, Location", 
+            "requirements": "[':typing', ':disjunctive-preconditions', ':existential-preconditions', ':strips']"
+        }
+    }
+}

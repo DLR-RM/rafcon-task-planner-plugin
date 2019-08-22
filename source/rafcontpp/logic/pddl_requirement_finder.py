@@ -1,10 +1,27 @@
+# Copyright (C) 2019 DLR
+#
+# All rights reserved. This program and the accompanying materials are made
+# available under the terms of the 3-Clause BSD License which accompanies this
+# distribution, and is available at
+# https://opensource.org/licenses/BSD-3-Clause
+#
+# Contributors:
+# Christoph Suerig <christoph.suerig@dlr.de>
+
+# Don't connect with the Copyright comment above!
+# Version 31.05.2019
 import re
+
 from rafcon.utils import log
+
 logger = log.get_logger(__name__)
 
 
-
 class PddlRequirementFinder():
+    """
+    The PddlRequirementFiner, tries to figure out requirments from a given action definition.
+    Its doing this according to PDDL 2.1. It's not completed yet.
+    """
 
     def __init__(self, action_string):
         self.action = action_string
@@ -19,16 +36,18 @@ class PddlRequirementFinder():
         return self.action.find(' - ') > -1
 
     def disjunctive_preconditions(self):
-        not_pattern = re.compile(':precondition.*not.*:effect',re.IGNORECASE | re.MULTILINE | re.DOTALL)
-        imply_pattern = re.compile(':precondition.*imply.*:effect',re.IGNORECASE | re.MULTILINE | re.DOTALL)
-        return not_pattern.search(self.action) is not None or imply_pattern.search(self.action) is not None
+        not_pattern = re.compile(':precondition.*\(\s*not.*:effect', re.IGNORECASE | re.MULTILINE | re.DOTALL)
+        or_pattern = re.compile(':precondition.*\(\s*or.*:effect', re.IGNORECASE | re.MULTILINE | re.DOTALL)
+        imply_pattern = re.compile(':precondition.*\(\s*imply.*:effect', re.IGNORECASE | re.MULTILINE | re.DOTALL)
+        return not_pattern.search(self.action) is not None \
+               or imply_pattern.search(self.action) is not None or or_pattern.search(self.action) is not None
 
     def existential_preconditions(self):
-        pattern = re.compile(':precondition.*exists.*:effect', re.IGNORECASE | re.MULTILINE | re.DOTALL)
+        pattern = re.compile(':precondition.*\(\s*exists.*:effect', re.IGNORECASE | re.MULTILINE | re.DOTALL)
         return bool(pattern.search(self.action))
 
     def universal_preconditions(self):
-        pattern = re.compile(':precondition.*forall.*:effect', re.IGNORECASE | re.MULTILINE | re.DOTALL)
+        pattern = re.compile(':precondition.*\(\s*forall.*:effect', re.IGNORECASE | re.MULTILINE | re.DOTALL)
         return bool(pattern.search(self.action))
 
     def quantified_preconditions(self):
@@ -48,7 +67,7 @@ class PddlRequirementFinder():
         if self.foreach_expansions():
             return True
         expansions_pattern = re.compile(':expansion', re.IGNORECASE)
-        if re.search(expansions_pattern,self.action):
+        if re.search(expansions_pattern, self.action):
             return True
         return False
 
@@ -56,9 +75,9 @@ class PddlRequirementFinder():
         requires = False
         expansions_pattern = re.compile(':expansion', re.IGNORECASE)
         if expansions_pattern.search(self.action):
-            expansion = self.action[re.search(expansions_pattern,self.action).start():]
-            foreach_pattern = re.compile('foreach',re.IGNORECASE)
-            requires = re.search(foreach_pattern,expansion) is not None
+            expansion = self.action[re.search(expansions_pattern, self.action).start():]
+            foreach_pattern = re.compile('foreach', re.IGNORECASE)
+            requires = re.search(foreach_pattern, expansion) is not None
         return requires
 
     def dag_expansions(self):
@@ -72,10 +91,10 @@ class PddlRequirementFinder():
 
     def fluents(self):
         requires = False
-        in_dec_pattern = re.compile('effect.*\(\s*(increase|decrease)[\s+|\(]', re.IGNORECASE | re.MULTILINE | re.DOTALL)
-        if re.search(in_dec_pattern,self.action):
+        in_dec_pattern = re.compile('effect.*\(\s*(increase|decrease)[\s+|\(]',
+                                    re.IGNORECASE | re.MULTILINE | re.DOTALL)
+        if re.search(in_dec_pattern, self.action):
             requires = True
-
         return requires
 
     def expression_evaluation(self):
@@ -101,8 +120,4 @@ class PddlRequirementFinder():
             return False
         if not self.conditional_effects():
             return False
-
         return True
-
-
-

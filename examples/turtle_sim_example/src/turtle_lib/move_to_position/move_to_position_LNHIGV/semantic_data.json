@@ -1,0 +1,11 @@
+{
+    "RAFCONTPP": {
+        "PDDL_ACTION": {
+            "description": "", 
+            "pddl_action": "(:action move\n    :parameters (?from ?destination - Location ?turtle - Turtle)\n    :precondition (and \n                      (at ?from ?turtle) (alive ?turtle)(not(= ?from ?destination))\n                      (or(track ?from ?destination)(track ?destination ?from))\n                  )\n    :effect (and (not (at ?from ?turtle)) (at ?destination ?turtle) (was-at ?from ?turtle)\n    (hungry ?turtle)\n    )\n)", 
+            "pddl_predicates": "(was-at ?from - Location ?turtle - Turtle)\r\n(alive ?turtle - Turtle)\r\n(hungry ?turtle - Turtle)\r\n(at ?destination - Location ?turtle - Turtle)\r\n(track ?destination ?from - Location)", 
+            "pddl_types": "Turtle, Location", 
+            "requirements": "[':typing', ':disjunctive-preconditions', ':strips', ':equality']"
+        }
+    }
+}

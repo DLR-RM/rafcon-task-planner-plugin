@@ -1,0 +1,12 @@
+{
+    "RAFCONTPP": {
+        "Allow_Override": "False", 
+        "PDDL_ACTION": {
+            "description": {}, 
+            "pddl_action": "(:action got-to\n    :parameters (?start ?destination - Location ?name - Waiter)\n    :precondition (and (at ?start ?name))\n    :effect (and (not (at ?start ?name))(at ?destination ?name))\n)", 
+            "pddl_predicates": "(at ?destination - Location ?name - Waiter)", 
+            "pddl_types": "Waiter, Location", 
+            "requirements": "[':typing', ':strips']"
+        }
+    }
+}

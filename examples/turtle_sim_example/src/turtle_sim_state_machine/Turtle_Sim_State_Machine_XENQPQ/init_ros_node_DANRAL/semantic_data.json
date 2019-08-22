@@ -1,0 +1,7 @@
+{
+    "RAFCONTPP": {
+        "Allow_Override": "False", 
+        "PDDL_ACTION": {}
+    }, 
+    "RAFCONTPP_PDDL_ACTION": {}
+}
