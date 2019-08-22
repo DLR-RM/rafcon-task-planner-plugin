@@ -2,12 +2,12 @@
 layout: default
 title: PDDL Action Tab
 ---
-# Pddl Action Tab
+# PDDL Action Tab
 
-The Plugin introduces a new Tab in the State Editor, it's called the Pddl Action Tab, and its Symbol is a little Calculator.  
-The Tabs gives the possibility to annotate a state with a [PDDL](https://en.wikipedia.org/wiki/Planning_Domain_Definition_Language) Action, and so to make it usable for the plugin and so for planning.
+The plugin introduces a new tab in the state editor. It's called the PDDL Action Tab, and its symbol is a small calculator.  
+The tabs gives the possibility to annotate a state with a [PDDL](https://en.wikipedia.org/wiki/Planning_Domain_Definition_Language) action, and so to make it usable for the plugin.
 
-![Rafcon With the PDDL Action Tab](../../assets/images/documentation/PDDLActionTab.png "A open RAFCON window with the PDDL Action Tab in the right.")
+![Rafcon with the PDDL Action Tab](../../assets/images/documentation/PDDLActionTab.png "An open RAFCON window with the PDDL Action Tab in the right.")
 
 
 - [Tab Fields](#tab-fields)
@@ -26,15 +26,15 @@ The Tabs gives the possibility to annotate a state with a [PDDL](https://en.wiki
 
 ## Tab Fields
 
-The Tab consists of several fields, describing the States semantic in PDDL. This section explains the fields in Detail. 
+The tab consists of several fields, describing the state's semantic in PDDL. This section explains these fields in detail. 
 
 ### Description
 
-The Description field is a text field. It has Documentation purposes, and should contain a description and hints of the PDDL Action. So it is not used by the Plugin.
+The Description field is a text field. It has documentation purposes, and should contain a description and hints for the PDDL action. It is not used by the plugin.
 
 ### PDDL
 
-The Action in PDDL Syntax should be pasted or written (not recomended) into this code editor field. Information about what aspects of PDDL are supported by the Plugin can be found in the Section [PDDL Support](HomePage.md#pddl-support). When generating a Domain during a Task, this field is copy pasted one by one. It's also parsed during the "Auto Complete" process. so only valid PDDL Code, as well as valid PDDl Comments are allowed here.
+The action in PDDL syntax should be pasted or written (not recomended) into this code editor field. Information about, what aspects of PDDL are supported by the Plugin can be found in the section [PDDL Support](Limitations.md#pddl-support). When generating a domain while processing a task, this field is copy pasted one by one. It's also parsed during the "Auto Complete" process. So only valid PDDL code, as well as PDDL comments are allowed here.
 
 **Example**
 
@@ -46,31 +46,30 @@ The Action in PDDL Syntax should be pasted or written (not recomended) into this
 :effect (and (not (at ?from ?subject)) (at ?to ?subject))
 )
 ```
+
 ### Predicates
 
-The Predicates text field should be filled with all different Predicates, the Action in the 'PDDL' field uses. Due to the fact, that all predicates in the Action are applied, the parameter types have to be added. This field is the foundation of predicates section in the auto generated domain file. For the Plugins point of view, no type hierarchy is defined  at this point. So the list should not only contain all Predicates with different names, but also with the same name, and different types. (Btw. it's also not a good idea to merge predicates by hand, because the type hierarchy may change in the future.)
+The Predicates text field should be filled with all different predicates, the action in the 'PDDL' field uses. Due to the fact, that all predicates in the Action are applied, the parameter types have to be added. This field is the foundation of the predicates section in the auto generated domain file. For the plugins point of view, no type hierarchy is defined yet. Therefore the list should not only contain all predicates with different names, but also predicates with the same name, and different types (It's also not a good idea to merge predicates by hand, because the type hierarchy may change in the future.).
 
 **Example**
 
+According to the example above [(the PDDL action)](#pddl) the predicates field would 
+contain one predicate: <br>
+`(at ?from - Location ?subject - Vehicle)`<br>
+
+Another, imaginary example is: <br>
 ```
-According to the example above (the PDDL Action) the Predicates field would 
-only contain one predicate: (at ?from - Location ?subject - Vehicle)
-
-
-Another, imaginary Example would be: 
-
 (at ?a - Location ?b - Vehicle)
 (at ?a - Location ?c - Cargo)
 (in ?c - Cargo ?b - Vehicle)
 ```
 
-
 ### Types
 
-The types text field should contain all types, which are used in the Action in the 'PDDL' field. The types must be separated by spaces or commas. This field is used to decide which types the types section in the auto generated domain file will contain. 
+The Types text field should contain all types, which are used in the action in the 'PDDL' field. The types must be separated by spaces or commas. This field is used to decide which types, the types section in the auto generated domain file will contain. 
 
 **Example**  
-According to the example above (the PDDL Action) the Types field would look like this:
+According to the example above [(the PDDL action)](#pddl) the Types field would look like this:
 
 ```
 Location, Vehicle
@@ -78,21 +77,21 @@ Location, Vehicle
 
 ### Requirements
 
-This checkboxes represent requirements on PDDL Planners. For example, if an action uses Types (all actions in the Plugin do that), the Planner requirement would be ':typing'. All requirements the Action in the 'PDDL' field has should be ticked here.
+This checkboxes represent requirements on PDDL planners. For example, if an action uses types (all actions in the plugin do that), the planner requirement would be ':typing'. All requirements, the action in the 'PDDL' field has, should be ticked here.
 
 ## Buttons
 
-The PDDL Action tab comes with a few Buttons. These are described in this Section.
+The PDDL Action tab comes with a few Buttons. These are described in this section.
 
 ### Auto Complete
 
-The Auto complete Button is located between the 'PDDL' and the 'Predicates' field. As it's title indicates, it tries to auto complete the Predicates, Types and Requirements fields, and applies all changes. First to mention: It tries. Currently no bugs are known, and usually it finds all Predicates, types and requirements needed, but there is NO guarantee. Second to mention: It's Auto Complete. Therefore it will just add, input to the fields, but not override them.  
+The Auto Complete Button is located between the 'PDDL' and the 'Predicates' field. As it's title indicates, it tries to auto complete the predicates, types and requirements fields, and applies all changes. First to mention: It tries. Currently no bugs are known, and usually it finds all predicates, types and requirements needed, but there is NO warranty. Secondly: It's auto complete. Therefore it will just add input to the fields, but not override them.  
 
 ### Apply
 
-The Apply Button is located in the footer of the Action Tab. The Plugin stores all information of the PDDL Action in the "Semantic Data" Tab of vanilla Rafcon. so the Apply Buttons purpose is, transmit the entered data from the PDDL Action Tab into the Semantic Data Tab.    
-**Important:** Hitting the Apply Button will not store the PDDL Data persistent. It is just persistent after saving the State. If the state was saved but the Apply button wasn't clicked, the PDDL Action Tab is also not saved.
+The Apply Button is located in the footer of the action tab. The plugin stores all information of the PDDL action in the "Semantic Data" Tab of vanilla Rafcon. so the apply Buttons purpose is, transmit the entered data from the PDDL Action Tab into the semantic data tab.<br>   
+**Important:** Hitting the Apply Button will not store the PDDL data persistent. It is just persistent after saving the state machine. If the state was saved but the Apply button wasn't clicked, the PDDL action tab is also not saved.
 
 ### Enable Auto Apply
 
-If Auto Apply is enabled, all changes are automatically applied. usually enabeling is recomended, but due to some performance issues, it should be disabled when writing a (long) description or coding in inside of the PDDL field.  
+If Auto Apply is enabled, all changes are automatically applied. Usually enabeling is recomended, but due to some performance issues,it should be disabled when writing a (long) description or coding in the PDDL field.  
