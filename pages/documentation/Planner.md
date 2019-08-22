@@ -8,7 +8,7 @@ A built-in planner is not really built-in, there is just a built-in integration 
 
 ## The Fast Downward Planning System
 
-All which has to be done is to run: 
+All which has to be done is to run the following command in the terminal: 
 
 `pip install --user --no-compile downward-dlr`
 
@@ -20,6 +20,6 @@ To prepare the Fast-Forward Planning System, the following steps have to be exec
 
 1. Download the system [FF-Page](https://fai.cs.uni-saarland.de/hoffmann/ff.html), [direct download Link](https://fai.cs.uni-saarland.de/hoffmann/ff/FF-v2.3.tgz) 
 2. Extract the system and make it.
-3. Add the path of the system to the PATH variable, to make the ff command available in the console.
+3. Add the path of the system to the PATH variable, to make the "ff" command available in the terminal.
 
 Now it should work.
