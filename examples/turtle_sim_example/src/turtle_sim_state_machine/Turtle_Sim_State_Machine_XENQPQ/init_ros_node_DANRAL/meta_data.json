@@ -5,8 +5,8 @@
                 "rel_pos": {
                     "__jsonqualname__": "__builtin__.tuple", 
                     "items": [
-                        0.8, 
-                        0.8
+                        0.8000000000000007, 
+                        0.8000000000000007
                     ]
                 }, 
                 "size": {
@@ -20,8 +20,8 @@
             "rel_pos": {
                 "__jsonqualname__": "__builtin__.tuple", 
                 "items": [
-                    55.17124193222353, 
-                    30.0
+                    19.230688109810867, 
+                    22.575373863167172
                 ]
             }, 
             "size": {
@@ -40,8 +40,21 @@
                 "rel_pos": {
                     "__jsonqualname__": "__builtin__.tuple", 
                     "items": [
-                        0.34544102686377587, 
-                        2.718539928664163
+                        0.4, 
+                        2.5
+                    ]
+                }
+            }
+        }
+    }, 
+    "input_data_port1": {
+        "gui": {
+            "editor_gaphas": {
+                "rel_pos": {
+                    "__jsonqualname__": "__builtin__.tuple", 
+                    "items": [
+                        0.4, 
+                        17.5
                     ]
                 }
             }
@@ -53,8 +66,8 @@
                 "rel_pos": {
                     "__jsonqualname__": "__builtin__.tuple", 
                     "items": [
-                        19.277766720599757, 
-                        0.4000000000000001
+                        17.5, 
+                        0.4
                     ]
                 }
             }
@@ -66,8 +79,8 @@
                 "rel_pos": {
                     "__jsonqualname__": "__builtin__.tuple", 
                     "items": [
-                        19.25145210282245, 
-                        0.4000000000000001
+                        15.5, 
+                        0.4
                     ]
                 }
             }
@@ -79,8 +92,8 @@
                 "rel_pos": {
                     "__jsonqualname__": "__builtin__.tuple", 
                     "items": [
-                        19.654558973136226, 
-                        3.900622127014475
+                        19.6, 
+                        2.5
                     ]
                 }
             }
