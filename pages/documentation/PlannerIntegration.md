@@ -49,3 +49,10 @@ These informations are summed up in a "PlanningReport" Object, which has to be r
 ```Python
 PlanningReport(planning_successful:Boolean, plan:[PlanStep], generated_files:[String], error_message:String)
 ```
+
+That should be it, and the planner should be ready to use now. 
+
+
+## Using the integrated Planner
+The script written to integrate the planner, referred to as planner script, is ready now.
+So when the planner should be used to plan a task, this script should be selected as "planner script" and "Other..." as planner in the [Planning Setup Form](PlanningSetupForm.md).

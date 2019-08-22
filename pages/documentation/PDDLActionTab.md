@@ -86,7 +86,7 @@ The PDDL Action tab comes with a few Buttons. These are described in this Sectio
 
 ### Auto Complete
 
-The Auto complete Button is located between the 'PDDL' and the 'Predicates' field. As its title indicates, it tries to auto complete the Predicates, Types and Requirements fields, and applies all changes. First to mention: It tries. Currently no bugs are known, and usually it finds all Predicates, types and requirements needed, but there is NO guarantee. Second to mention: It's Auto Complete. Therefore it will just add, input to the fields, but not override them.  
+The Auto complete Button is located between the 'PDDL' and the 'Predicates' field. As it's title indicates, it tries to auto complete the Predicates, Types and Requirements fields, and applies all changes. First to mention: It tries. Currently no bugs are known, and usually it finds all Predicates, types and requirements needed, but there is NO guarantee. Second to mention: It's Auto Complete. Therefore it will just add, input to the fields, but not override them.  
 
 ### Apply
 

@@ -38,7 +38,7 @@ To be able to run this tutorial, you need:
 
  - **RAFCON**: <br>
  `pip install --user rafcon` <br>
- or: `git clone git@rmc-github.robotic.dlr.de:common/rafcon.git` (for information about how to install rafcon see: [install rafcon](https://github.com/DLR-RM/RAFCON))<br>
+ or: `git clone https://github.com/DLR-RM/RAFCON.git` (for information about how to install rafcon see: [install rafcon](https://github.com/DLR-RM/RAFCON))<br>
  - **The Rafcon Task Planner Plugin**:<br>
   `git clone https://github.com/DLR-RM/rafcon-task-planner-plugin.git`<br>
  - **The Fast Downward Planning System**:<br>
