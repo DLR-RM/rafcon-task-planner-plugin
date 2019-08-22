@@ -34,7 +34,7 @@ header_pages:
   - index.md
   - pages/documentation.md
   - pages/tutorials.md
-  - pages/about.md
+  # - pages/about.md
   - pages/imprint.md
 
 # Exclude from processing.
