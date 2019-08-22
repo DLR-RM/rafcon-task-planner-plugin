@@ -16,25 +16,5 @@ To install the Plugin two steps are required:
 1. `git clone <repository>`
 2. Add the Plugin Path to Rafcons PLUGIN_PATH Variable. (see [RAFCON Doc](https://rafcon.readthedocs.io/en/latest/plugins.html)) `RAFCON_PLUGIN_PATH=$RAFCON_PLUGIN_PATH:[repository_path]/source/rafcontpp` 
 
-## Usage
-An introduction on how to use the plugin can be found in the first [Tutorial](/examples/restaurant_tutorial).
-An intorduction on how the dataflow works can be found in the second [Tutorial](/examples/turtle_sim_example).
-
-The plugin's documentation can be found [here](https://wiki.robotic.dlr.de/RAFCON/Task_Planner_Plugin)
-
-## Support
-### Planner Support
-Currently the Task Planner Plugin supports two planners as "built-in", namely The [Fast-Downward planning System](http://www.fast-downward.org/) and The [Fast-Forward Planning System V2.1](https://fai.cs.uni-saarland.de/hoffmann/ff.html). Even they are called "built-in", it doesn't mean that they are shipped with the plugin. You have to install them separately according to the guide in the [Wiki]().  
-
-If you want to use any other planner, you have to [integrate it yourself](). But thats usually no Problem and should be done in 10 to 15 minutes. If you have an awesome planner, and think it should be a must-have in the Plugin, please contact us!
-
-### Python Support
-
-At the moment this plugin only supports Python2.7, but we are planning to also support Python3 soon.
-
-### PDDL Support
-
-Since PDDL is extensive, we decided to provide a minimal PDDL set in the beginning, and extend our support on demand. So please feel free to contact us in order to increase our PDDL support. Currently the Plugin supports: 
-
-- Only Actions in classical :parameter - [:precondition] - :effect pattern, without functions / fluents.
-- Due to the fact that the resulting state machines are executed in the real world, untyped variables are not supported.
+## Plugin Webpage
+Documentation as well as some tutorials are available at the [Plugin's Website](https://rmc-github.robotic.dlr.de/pages/moro/rafcon_task_planner_plugin/) **TODO: CHANGE LINK TO EXTERNAL REPO WEBSITE**
