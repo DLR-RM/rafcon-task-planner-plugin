@@ -12,7 +12,7 @@ The example is base on RAFCON's [turtle demo](https://rafcon.readthedocs.io/en/l
 - [2.2 Requirements](#22-requirements)
 - [2.3 Setup](#23-setup)
   * [2.3.1 trutle_sim_state_machine](#231-trutle%5Fsim%5Fstate%5Fmachine)
-  * [2.3.2 turtle_sim_core](#232-turtle%5Fsim%5Fcore)
+  * [2.3.2 Turtle Sim Core](#232-turtle%5Fsim%5Fcore)
   * [2.3.3 turtle_lib](#233-turtle%5Flib)
 - [2.4 Planning](#24-planning)
   * [2.4.1 Planning](#241-planning)
@@ -72,10 +72,10 @@ In this example, Alice, Bob and Eve will wander arround in the map, but Bob is a
 If we have a look into the **turtle_sim_example** Library, we can see **turtle_lib** as well as the state machine **turtle_sim_state_machine**.
 
 ### 2.3.1 turtle_sim_state_machine   
-turtle_sime_state_machine is the one we will execute late. If you open it now, you see, that it contains a ros node initialization state, as well as hierarchy state named **turtle_sim_core**. If you want you can execute it now, but since we didn't plan the core yet, nothing spectacular will happen.
+turtle_sime_state_machine is the one we will execute late. If you open it now, you see, that it contains a ros node initialization state, as well as hierarchy state named **Turtle Sim Core**. If you want you can execute it now, but since we didn't plan the core yet, nothing spectacular will happen.
 
 
-### 2.3.2 turtle_sim_core   
+### 2.3.2 Turtle Sim Core   
 This is the state we will plan into, and also the one where everything happens. Inside of this state turtles are spawned, moved and eaten.
 
 ### 2.3.3 turtle_lib  
@@ -83,7 +83,7 @@ This folder contains a bunch of states. These are the bricks used to plan our sc
 
 ## 2.4 Planning
 
-Now we are ready to plan into the turtle sim core. Because this is not a basic tutorial everything was prepared for you, so you only have to select the **turtle_sim_core**, and configure the Task Planner Plugin by hiting **Plan Task**.
+Now we are ready to plan into the turtle sim core. Because this is not a basic tutorial everything was prepared for you, so you only have to select the **Turtle Sim Core**, and configure the Task Planner Plugin by hiting **Plan Task**.
 
 ### 2.4.1 Planning
 The data we enter in this section is important during the Planning and generation process.
@@ -106,10 +106,10 @@ The facts files location is: <br>
 Feel free to play around with it later!
 
 #### 2.4.1.5 Generate State machine Into
-At this radio button group, we can decide if we want to generate an independent state machine, or plan into a given one e.g. the current selected state. Because we want to plan into the **turtle_sim_core** state, you should select "selected State".(Please make sure that the turtle_sim_core is still selected.) 
+At this radio button group, we can decide if we want to generate an independent state machine, or plan into a given one e.g. the current selected state. Because we want to plan into the **Turtle Sim Core** state, you should select "selected State".(Please make sure that the Turtle Sim Core is still selected.) 
 
 #### 2.4.1.6 State machine name
-Because we plan into the turtle_sim_core, this field won't be used. So it can keep the current value.
+Because we plan into the Turtle Sim Core, this field won't be used. So it can keep the current value.
 
 #### 2.4.1.7 Save state machine in
 Since we don't generate a new state machine, this field won't be used. Therefore it can keep the current value.
@@ -125,10 +125,16 @@ Feel free to have a look into the file, and see all object definitions.
 #### 2.4.2.2 Include
 At this radio button group, we can decide if we want to add the data directly into the state, or if we only want to reference the data file. This can be useful in a lot of situations, but in our scenario it is unimportant. So you can try both options if you want.<br><br>
 
-Now we can generate the core state, by hitting "Generate State machine".
+Now we can generate the core state, by hitting "Generate State machine":
+<br>
+<br>
+![The turtle sim state machine](../../assets/images/tutorials/turtle/turtle_sim_state_machine.png "The turtle sim state machine")
 <br>
 ## 2.5 Execution
-Finally, we have planned the core, and are ready to watch turtles moving around. Execute the turtle_sim_state_machine, and have fun!
+Finally, we have planned the core, and are ready to watch turtles moving around. One thing to point out before is, that there is a fourth turtle in the middle of the map. This is just a turtle, which the turtle simulation spawns per default.<br>
+Now execute the turtle_sim_state_machine, and have fun!
+<br><br>
+![The turtle simulation](../../assets/images/tutorials/turtle/turtle_sim_execution.png "The turtle simulation")
 
 
 ## 2.6 Last Words on Data Flow
