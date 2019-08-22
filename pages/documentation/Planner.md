@@ -10,7 +10,7 @@ A built-in planner is not really built-in, there is just a built-in integration 
 
 All which has to be done is to run the following command in the terminal: 
 
-`pip install --user --no-compile downward-dlr`
+`pip install --no-compile downward-dlr`
 
 Now it should work.
 
