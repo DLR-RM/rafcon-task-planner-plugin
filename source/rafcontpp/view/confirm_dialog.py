@@ -1,8 +1,9 @@
-# Copyright (C) 2018-2019 DLR
+# Copyright (C) 2019 DLR
 #
 # All rights reserved. This program and the accompanying materials are made
-# available under the terms of the Eclipse Public License v1.0 which
-# accompanies this distribution, and is available at
+# available under the terms of the 3-Clause BSD License which accompanies this
+# distribution, and is available at
+# https://opensource.org/licenses/BSD-3-Clause
 #
 # Contributors:
 # Christoph Suerig <christoph.suerig@dlr.de>
