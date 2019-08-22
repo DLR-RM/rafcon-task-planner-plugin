@@ -1,12 +1,13 @@
-# Copyright (C) 2014-2018 DLR
+# Copyright (C) 2018-2019 DLR
 #
 # All rights reserved. This program and the accompanying materials are made
 # available under the terms of the Eclipse Public License v1.0 which
 # accompanies this distribution, and is available at
-# http://www.eclipse.org/legal/epl-v10.html
 #
 # Contributors:
 # Christoph Suerig <christoph.suerig@dlr.de>
+
+# Don't connect with the Copyright comment above!
 # Version 21.08.1019
 
 

@@ -1,5 +1,13 @@
+# Copyright (C) 2018-2019 DLR
+#
+# All rights reserved. This program and the accompanying materials are made
+# available under the terms of the Eclipse Public License v1.0 which
+# accompanies this distribution, and is available at
+#
 # Contributors:
 # Christoph Suerig <christoph.suerig@dlr.de>
+
+# Don't connect with the Copyright comment above!
 # Version: 17.05.2019
 import re
 
