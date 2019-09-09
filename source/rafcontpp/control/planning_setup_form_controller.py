@@ -316,6 +316,7 @@ class PlanningSetupFormController:
         wait and hide should be executed in another thread, it joins the planning thread, closes the wait window
         and decrements the planning button.
         :param thread: the thread to wait for
+        :param planning_wait_window a window to hide and destroy, when the thread to wait for terminated.
         """
         # logger.debug('wait_and_hide executed from thread: {}'.format(threading.current_thread().getName()))# todo remove
         if thread and thread.is_alive():
@@ -353,7 +354,8 @@ class PlanningSetupFormController:
         if not isinstance(selected_state, HierarchyState):
             logger.error("Can only plan into Hierarchy States!")
             return None
-        permission_granted = selected_state.semantic_data[SEMANTIC_DATA_DICT_NAME][ALLOW_OVERRIDE_NAME] == 'True'
+        permission_granted = \
+            str(selected_state.semantic_data[SEMANTIC_DATA_DICT_NAME][ALLOW_OVERRIDE_NAME]).lower() == 'true'
         if not (permission_granted or len(selected_state.states) == 0):
             logger.error("Can't plan into None empty Hierarchy State without permission!")
             return None

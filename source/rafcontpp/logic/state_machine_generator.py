@@ -172,8 +172,9 @@ class StateMachineGenerator:
             is_valid = False
             error_message = 'Can\'t Plan into State {}, can only plan into HierarchyStates!'.format(target_state)
         elif len(target_state.states) > 0:
-            permission = target_state.semantic_data[SEMANTIC_DATA_DICT_NAME][ALLOW_OVERRIDE_NAME]
-            if not permission or permission.lower() == 'true':
+            permission_granted = \
+                str(target_state.semantic_data[SEMANTIC_DATA_DICT_NAME][ALLOW_OVERRIDE_NAME]).lower() == 'true'
+            if not permission_granted:
                 is_valid = False
                 error_message = "Can't plan into None empty HierarchyState without permission!"
         return is_valid, error_message
