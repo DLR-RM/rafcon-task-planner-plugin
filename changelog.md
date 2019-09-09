@@ -1,4 +1,4 @@
-### version 1.5
+### Version 1.5
 - Plan Into state: Now its possible to plan a state machine into a selected hierarchy state of an existing one!
 - Layouter: added a layouter, which formats the state machine after its generation!
 - Restructured the semantic data section (the tab is saved in)
