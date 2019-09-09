@@ -1,5 +1,5 @@
 import os
-
+import re
 import pytest
 
 from rafcontpp.logic.domain_generator import DomainGenerator
@@ -116,5 +116,8 @@ def test_generate_domain():
     #assert
     static_domain_file = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'test_data','restaurant_domain_static.pddl'))
     static_domain = static_domain_file.read()
+    comment_pattern = re.compile('(;[^\n]*)')
+    static_domain =  comment_pattern.sub('', static_domain)
+    generated_domain = comment_pattern.sub('', generated_domain)
     assert static_domain == generated_domain
     assert domain_path == ds.get_domain_path()
