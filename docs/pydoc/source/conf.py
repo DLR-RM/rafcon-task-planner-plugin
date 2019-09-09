@@ -65,7 +65,7 @@ master_doc = 'index'
 project = u'Rafcon Task Planner Plugin'
 now = datetime.datetime.now()
 copyright = u' {year}, German Aerospace Center (DLR)'.format(year=now.year)
-author = u'Christoph Sürig'
+author = u'Christoph Sürig, DLR'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
