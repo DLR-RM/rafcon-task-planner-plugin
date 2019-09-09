@@ -19,11 +19,19 @@
 import os
 import sys
 import datetime
+import sphinx_ops_theme
 sys.path.insert(0, os.path.abspath('../../../source/'))
 
 
 # -- General configuration ------------------------------------------------
-
+autoclass_content = "both"  # include both class docstring and __init__
+autodoc_default_flags = [
+        # Make sure that any autodoc declarations show the right members
+        "members",
+        "inherited-members",
+        "private-members",
+        "show-inheritance",
+]
 # If your documentation needs a minimal Sphinx version, state it here.
 #
 # needs_sphinx = '1.0'
@@ -92,7 +100,9 @@ todo_include_todos = True
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'alabaster'
+html_theme = "sphinx_ops_theme"
+# Theme installed via pip
+html_theme_path = [sphinx_ops_theme.get_html_theme_path()]
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the

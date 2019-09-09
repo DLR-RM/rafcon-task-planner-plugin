@@ -3,14 +3,20 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to Rafcon Task Planner Plugin's documentation!
-======================================================
+Welcome to Rafcon Task Planner Plugin's code documentation!
+===========================================================
 
 .. toctree::
-   :maxdepth: 4
-   :caption: Contents:
+   :maxdepth: 2
+   :numbered: 2
+   :caption: Table of Contents
 
-   modules
+   rafcontpp.rst
+   rafcontpp.control.rst
+   rafcontpp.logic.rst
+   rafcontpp.model.rst
+   rafcontpp.planner.rst
+   rafcontpp.view.rst
 
 
 
