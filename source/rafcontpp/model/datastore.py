@@ -31,6 +31,8 @@ built_in_planners = {
     'Fast Downward Planning System': ('rafcontpp.planner.fast_downward_integration', 'FdIntegration'),
     'Fast-Forward Planning System v2.3': ('rafcontpp.planner.fast_forward_integration', 'FfIntegration')
 }
+# The version string of the Plug-in.
+PLUGIN_VERSION = "v1.5"
 # The storage path of the config file.
 DATASTORE_STORAGE_PATH = os.path.join(os.path.expanduser('~'), os.path.normpath('.config/rafcon/rafcontpp_conf.json'))
 #the temp file save dir, to save files in if files should not be kept.
