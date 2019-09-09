@@ -168,8 +168,8 @@ class StateMachineLayouter:
         """
         get_root_state_dimensions receives a desired canvas width and height, and returns the overall rootstate size,
         and the border width.
-        :param canvas_width:
-        :param canvas_height:
+        :param canvas_width: The width of the canvas.
+        :param canvas_height: The height of the canvas.
         :return: (width, height, border_width)
         """
         border_width = Variable(min(canvas_width, canvas_height) / constants.BORDER_WIDTH_STATE_SIZE_FACTOR)
