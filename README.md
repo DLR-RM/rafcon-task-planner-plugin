@@ -17,5 +17,5 @@ To install the Plugin two steps are required:
 2. Add the Plugin Path to Rafcons PLUGIN_PATH Variable. (see [RAFCON Doc](https://rafcon.readthedocs.io/en/latest/plugins.html)) `RAFCON_PLUGIN_PATH=$RAFCON_PLUGIN_PATH:[repository_path]/source/rafcontpp` 
 
 ## Plugin Webpage
-Documentation as well as some tutorials are available at the [Plugin's Website](https://rmc-github.robotic.dlr.de/pages/moro/rafcon_task_planner_plugin/) **TODO: CHANGE LINK TO EXTERNAL REPO WEBSITE**
+Documentation as well as some tutorials are available at the [Plugin's Website]() **TODO: CHANGE LINK TO EXTERNAL REPO WEBSITE**
 
