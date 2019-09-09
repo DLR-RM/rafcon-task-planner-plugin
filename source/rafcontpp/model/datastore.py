@@ -9,9 +9,10 @@
 # Christoph Suerig <christoph.suerig@dlr.de>
 
 # Don't connect with the Copyright comment above!
-# Version 12.07.2019
+# Version 09.09.2019
 
 
+import copy
 import getpass
 import json
 import os
@@ -51,8 +52,8 @@ def get_planning_threads():
     :return: a copy of the planning_threads dict.
     """
     with planning_threads_lock:
-        copy = planning_threads.copy()
-    return copy
+        threads_copy = copy.copy(planning_threads)
+    return threads_copy
 
 
 def datastore_from_file(file_path):
