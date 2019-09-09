@@ -10,6 +10,7 @@
 
 # Don't connect with the Copyright comment above!
 # Version 12.11.2018
+
 from rafcon.utils import log
 
 logger = log.get_logger(__name__)
@@ -41,7 +42,7 @@ def action_to_upper(action):
     """
      action to upper receives a action in pddl_action_representation, and returns it in upper case
     :param action: a action in PddlActionRepresentation
-    :return: the action as upper case
+    :return: the action in upper case
     """
     if action:
         action.name = action.name.upper()

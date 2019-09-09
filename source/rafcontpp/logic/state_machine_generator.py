@@ -183,8 +183,9 @@ class StateMachineGenerator:
         """
         takes a root state, and generates the state machine into it.
         :param target_state: the root state
-        :return:(root_state, state_order list) the root state containing the state machine, and the state order list is a list
-        of all states in the sm in right order. Can return (None,[]) if process was interrupted.
+        :return:(root_state, state_order list) the root state containing the state machine,
+        and the state order list is a list of all states in the sm in right order.
+        Can return (None,[]) if process was interrupted.
         """
         a_s_map = self.__datastore.get_action_state_map()
         pddl_action_dict = self.__datastore.get_pddl_action_map()
@@ -284,7 +285,8 @@ class StateMachineGenerator:
         creates an execution state, containing the, or a reference to the runtime data, as well as the code needed
         to write it into a dictionary in the global variables.
         :param data_init_file_path: The path of a file containing a json dict
-        :param use_as_ref: True if the path should be included as reference, False if the dictionary itself should be included.
+        :param use_as_ref: True if the path should be included as reference,
+        False if the dictionary itself should be included.
         :return: an Execution state, that will update the rtpp_data dict in the global variables.
         """
         data_init_state = ExecutionState(name='Runtime Data Initialization (rtpp_data)')
