@@ -9,7 +9,7 @@ title: Home
 ![The Rafcon Task Planner Plugin](assets/images/RafconTPPMain.png "An Overview of the Rafcon Task Planner Plugin")
 
 
-The Task Planner is a plugin for [RAFCON](https://dlr-rm.github.io/RAFCON/), which allows to automatically create, or extend state machines for given tasks.  
+The Task Planner is a plugin for [RAFCON](https://github.com/DLR-RM/RAFCON/), which allows to automatically create, or extend state machines for given tasks.  
 To achieve this, states in RAFCON are annotated with semantic information, using the language [PDDL](https://en.wikipedia.org/wiki/Planning_Domain_Definition_Language). Then a semantic planner such as [The Fast-Downward Planning System](http://www.fast-downward.org/) can use this information, to find a solution for a given task. Afterwards the Plugin processes this solution, in order to create a state machine, or extend an existing one. 
 
 
