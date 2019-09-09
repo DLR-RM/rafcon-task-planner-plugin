@@ -116,7 +116,7 @@ class PlanningSetupFormController:
                        name='PlanningObserverThread').start()
         else:
             logger.error(" Field missing! {}".format(not_filled))
-            ConfirmDialog(setup_form, " ERROR Field missing!\r\n\r\n {}".format(not_filled)).show()
+            ConfirmDialog(setup_form, " ERROR: Field missing!\r\n\r\n {}".format(not_filled)).show()
 
     def on_destroy(self, button, setup_form, state_pool_string,
                    type_db_path, planner_text, planner_script_path, planner_argv_text,
