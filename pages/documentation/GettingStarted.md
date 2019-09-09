@@ -20,5 +20,5 @@ If all steps were executed correctly, RAFCON should load the plugin on it's next
 Next steps could be to play around with the plugin, read more [documentation](../documentation.md), or start with the [tutorials](../tutorials.md). 
 
 ## Dowloading a Planner
-The plugin dosen't work without a semantic planner. How to download one, and prepare it for RTPP is described in the [Built-in Planner Secion](Planner.md). It's recomended, to start with The Fast Downward Planning System.
+The plugin dosen't work without a semantic planner. How to download one, and prepare it for RTPP is described in the [Built-in Planner Section](Planner.md). It's recomended, to start with The Fast Downward Planning System.
 
