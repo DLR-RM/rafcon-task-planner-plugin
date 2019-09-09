@@ -17,7 +17,7 @@ To register the plugin in RAFCON, it's plugin path has to be added to RAFCON's p
 More information about, how to add plugins to RAFCON can be found in the [RAFCON Documentation](https://rafcon.readthedocs.io/en/latest/plugins.html).<br>
 
 If all steps were executed correctly, RAFCON should load the plugin on it's next start. The best indicator that everything worked well is, that the GUI should have a new Button ["Plan Task"](PlanTaskButton.md) in the Menu Bar.<br>
-Next steps could be to play around with the plugin, read more [documentation](../documentation.md), or start with the [tutorials](../tutorials.md). 
+After downloading a planner, next steps could be to play around with the plugin, read more [documentation](../documentation.md), or start with the [tutorials](../tutorials.md). 
 
 ## Dowloading a Planner
 The plugin dosen't work without a semantic planner. How to download one, and prepare it for RTPP is described in the [Built-in Planner Section](Planner.md). It's recomended, to start with The Fast Downward Planning System.
