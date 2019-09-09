@@ -175,7 +175,7 @@ class PddlActionTab:
         # to add the key to the dictionary, TODO find a Better place
         if isinstance(self.__state, HierarchyState):
             allow_override = self.__state.semantic_data[SEMANTIC_DATA_DICT_NAME][ALLOW_OVERRIDE_NAME]
-            if allow_override and str(allow_override).lower() != "true":
+            if not allow_override or len(self.__filter_input(str(allow_override))) == 0:
                 self.__state.add_semantic_data([SEMANTIC_DATA_DICT_NAME], "False", ALLOW_OVERRIDE_NAME)
 
         rtpp_dict = self.__state.semantic_data[SEMANTIC_DATA_DICT_NAME][PDDL_ACTION_SUB_DICT_NAME]

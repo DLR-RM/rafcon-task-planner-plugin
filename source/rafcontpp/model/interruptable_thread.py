@@ -22,6 +22,7 @@ interruptable_threads = {}
 
 def current_thread():
     """
+    current thread returns the current interruptable thread, it was called from.
     :return: the current interruptable thread, or None if current thread is not interruptable.
     """
     current_thread_id = threading.current_thread().ident
@@ -46,12 +47,12 @@ class InterruptableThread(threading.Thread):
 
     def run(self):
         # add new thread to list of all interruptable threads
-        # can't be done in init, because during init phase no ident is present.
         with interruptable_threads_lock:
             interruptable_threads[self.ident] = self
-
+        #execute threads run method
         super(InterruptableThread, self).run()
 
+        #remove thread from list of all interruptable threads
         with interruptable_threads_lock:
             elem = interruptable_threads.pop(self.ident, None)
 

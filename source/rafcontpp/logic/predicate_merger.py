@@ -31,7 +31,8 @@ class PredicateMerger:
         """merge predicates merges all predicates, sets all available predicates in datastore
         and returns all merged predicates as strings.
         :param predicates: a list [string] with predicates
-        :return: a tuple (list [string] with merged predicates, and a list [of format ('LOCATED',[(VEHICLE,1),(PHYSOBJ,3)])] all available predicates)
+        :return: a tuple (list [string] with merged predicates, and
+        a list [of format ('LOCATED',[(VEHICLE,1),(PHYSOBJ,3)])] all available predicates)
         """
         if predicates is None:
             raise ValueError('predicates can not be None!')
@@ -52,7 +53,8 @@ class PredicateMerger:
 
     def __parse_predicate(self, predicate_string):
         """parse_predicate
-        parse_predicate gets a predicate string and parses it into a useful tuple of (predicate_Name,[(type_name,occurance)])
+        parse_predicate gets a predicate string and parses it into a useful
+        tuple of (predicate_Name,[(type_name,occurance)])
         :param predicate_string: a predicate as string e.g (LOCATED ?VEH - VEHICLE ?OBJ ?sObj ?thirdObj - PHYSOBJ)
         :return: a parsed predicate as tuple e.g. ('LOCATED',[(VEHICLE,1),(PHYSOBJ,3)])
         """

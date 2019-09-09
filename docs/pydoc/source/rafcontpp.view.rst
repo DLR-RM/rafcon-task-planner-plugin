@@ -4,6 +4,14 @@ rafcontpp\.view package
 Submodules
 ----------
 
+rafcontpp\.view\.confirm\_dialog module
+---------------------------------------
+
+.. automodule:: rafcontpp.view.confirm_dialog
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 rafcontpp\.view\.pddl\_action\_tab module
 -----------------------------------------
 
@@ -24,14 +32,6 @@ rafcontpp\.view\.planning\_setup\_form module
 ---------------------------------------------
 
 .. automodule:: rafcontpp.view.planning_setup_form
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-rafcontpp\.view\.planning\_wait\_window module
-----------------------------------------------
-
-.. automodule:: rafcontpp.view.planning_wait_window
     :members:
     :undoc-members:
     :show-inheritance:

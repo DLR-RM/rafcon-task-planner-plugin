@@ -21,10 +21,15 @@ logger = log.get_logger(__name__)
 
 class ConfirmDialog:
     """
-    Just a little confirm dialog, indicating that planning is in progress, and the user can wait.
+    Just a little confirm dialog.
     """
 
     def __init__(self, parent, content):
+        """
+
+        :param parent: the parent window of the dialog
+        :param content: the text to display in the dialog
+        """
         confirm_dialog_path = os.path.abspath(
             os.path.join(os.path.dirname(os.path.realpath(__file__)), "glade", "confirm_dialog.glade"))
         builder = Gtk.Builder()

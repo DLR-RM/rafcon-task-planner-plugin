@@ -15,7 +15,7 @@ class PlannerInterface:
     def plan_scenario(self, domain_path, facts_path, planner_argv, storage_path):
         """
         plan_scenario
-        plan_scenario, uses the given arguments, do plan a task, parse the plan into a list of PlanSteps, and returns
+        plan_scenario, uses the given arguments to plan a task, parse the plan into a list of PlanSteps, and returns
         them in a PlanningReport.
         :param domain_path: The absolute path of the domain file as string
         :param facts_path: The absolute path of the facts file as string

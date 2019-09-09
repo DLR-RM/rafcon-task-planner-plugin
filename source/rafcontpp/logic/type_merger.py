@@ -50,7 +50,7 @@ class TypeMerger:
 
     def __dict_to_upper(self, dict):
         """
-         receives a dict of string:string and returns it in upper case
+         receives a dict of string:string and returns it in upper case.
         :param dict: a string:string dict
         :return: a new dict in upper case.
         """
