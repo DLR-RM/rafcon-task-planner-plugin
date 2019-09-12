@@ -1,1 +1,1 @@
-rafcon --no-binary
+rafcon
