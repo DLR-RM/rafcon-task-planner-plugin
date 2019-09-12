@@ -1,0 +1,2 @@
+recursive-include examples *
+recursive-include source/rafcontpp/view/glade *.glade
