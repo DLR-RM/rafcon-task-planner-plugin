@@ -53,7 +53,7 @@ napoleon_google_docstring = True
 napoleon_use_param = True
 napoleon_use_ivar = True
 #mock imports
-autodoc_mock_imports = ["rafcon","gi"]
+autodoc_mock_imports = ["rafcon","gi", "gaphas"]
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['.templates']
 
