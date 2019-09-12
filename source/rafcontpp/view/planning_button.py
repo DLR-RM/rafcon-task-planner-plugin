@@ -58,7 +58,8 @@ def increment_button():
     """
     the Plan Task button can be incremented, and then looks like: Plan Task (n)
     this method increments the 'n', synchronized and also redraws the button thread save.
-    :return:
+
+    :return: void
     """
     with lock:
         # logger.debug('increment button executed from: {}'.format(threading.current_thread().getName()))# todo remove
@@ -75,7 +76,8 @@ def decrement_button():
     """
     the Plan Task button can be decremented, and then looks like: Plan Task (n) or just Plan Task, if n == 0
     this method decrements the 'n', synchronized and also redraws the button thread save.
-    :return:
+
+    :return: void
     """
     with lock:
         # logger.debug('decrement button executed from: {}'.format(threading.current_thread().getName()))# todo remove

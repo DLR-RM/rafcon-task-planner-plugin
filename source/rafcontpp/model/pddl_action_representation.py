@@ -41,6 +41,7 @@ class PddlActionRepresentation:
 def action_to_upper(action):
     """
      action to upper receives a action in pddl_action_representation, and returns it in upper case
+
     :param action: a action in PddlActionRepresentation
     :return: the action in upper case
     """

@@ -45,9 +45,11 @@ class StateMachineGenerator:
         self.__datastore = datastore
 
     def generate_state_machine(self):
-        """ generate_state_machine
+        """
         generate_state_machine generates a state machine, fills the data ports and opens the state machine in rafcon,
         if it's a new one.
+
+        :return: void
         """
         target_state = self.__datastore.get_target_state()
         generate_independent = target_state == None
@@ -64,8 +66,9 @@ class StateMachineGenerator:
         generate_independent_state_machine generates a new state machine. It optinally receives a target_state,
         which is then treated as root state for the new state machine. If the target state is not valid, a new root
         state is used.
-        :param target_state: a potential target state.
-        :return: the generated state machine.
+
+        :param target_state: A potential target state, optional.
+        :return: StateMachine: The generated state machine.
         """
         logger.info('Generating independent State machine "{}"...'.format(self.__get_actual_sm_name()))
         start_time = time.time()
@@ -94,9 +97,10 @@ class StateMachineGenerator:
         """
         generate_state_machine_into_state receives a target state, copies that state, generates a state machine into
         the copy, and then substitutes the original state with the copy.
-        :param target_state: the target state to generate the state machine into a copy of it.
-        :return: (boolean, hierarchystate)true if successful, false otherwhise. May return a state which should
-        be used as root state for a new independent state machine.
+
+        :param target_state: The target state to generate the state machine into a copy of it.
+        :return: (Boolean, HierarchyState): True if successful, False otherwise. May return a state which should
+        be used as root state for a new independent state machine, or None.
         """
         logger.info('Generating State machine into "{}"...'.format(target_state.name))
         start_time = time.time()
@@ -147,9 +151,10 @@ class StateMachineGenerator:
 
     def __clear_state(self, state):
         """
-        clear_state receives a hierarchy state, and removes all child states.
-        :param state: a hierarchy state
-        :return: true if clearing was successful, false otherwhise.
+        Clear_state receives a hierarchy state, and removes all child states.
+
+        :param state: A hierarchy state
+        :return: Boolean: True if clearing was successful, False otherwhise.
         """
         for child_state in state.states.values():
             call_gui_callback(state.remove_state, child_state.state_id, True, True, True)
@@ -160,8 +165,9 @@ class StateMachineGenerator:
         """
         is_valid_target_state receives a potential target state, and checks if it is valid.
         e.g. if its a hierarchy state, if its None, if permission is granted.
-        :param target_state: a state to validate
-        :return: (boolean, string): true if state is valid, and an error message, in case it's not.
+
+        :param target_state: A state to validate
+        :return: (Boolean, String): True if state is valid, and an error message, in case it's not.
         """
         is_valid = True
         error_message = 'OK'
@@ -181,9 +187,10 @@ class StateMachineGenerator:
 
     def __generate_core_machine(self, target_state):
         """
-        takes a root state, and generates the state machine into it.
-        :param target_state: the root state
-        :return:(root_state, state_order list) the root state containing the state machine,
+        Takes a root state, and generates the state machine into it.
+
+        :param target_state: The root state
+        :return:(HierarchyState,[State]): The root state containing the state machine,
         and the state order list is a list of all states in the sm in right order.
         Can return (None,[]) if process was interrupted.
         """
@@ -245,11 +252,11 @@ class StateMachineGenerator:
         return target_state, state_order_list
 
     def __load_state(self, wanted_state):
-        """load_state
+        """
         load_state gets a state and loads it from the libraries.
-        :param self:
-        :param wanted_state: a state that should be loaded
-        :return: the loaded state
+
+        :param wanted_state: A state that should be loaded.
+        :return: LibraryState: The loaded state
         """
         state_libs = self.__datastore.get_state_pools()
         libraries = {}
@@ -268,10 +275,11 @@ class StateMachineGenerator:
 
     def __open_state_machine(self, state_machine, state_machine_path):
         """
-        gets a state machine and opens it in rafcon. If an old version is still open, it closes it first.
-        :param state_machine: the name of the state machine
-        :param state_machine_path: the path of the state machine.
-        :return:
+        Reveives a state machine and opens it in rafcon. If an old version is still open, it closes it first.
+
+        :param state_machine: The name of the state machine
+        :param state_machine_path: The path of the state machine.
+        :return: void
         """
         logger.info('Opening state machine...')
         if state_machine_manager.is_state_machine_open(state_machine.file_system_path):
@@ -282,12 +290,13 @@ class StateMachineGenerator:
 
     def __get_runtime_data_init_state(self, data_init_file_path, use_as_ref):
         """
-        creates an execution state, containing the, or a reference to the runtime data, as well as the code needed
+        Creates an execution state, containing the, or a reference to the runtime data, as well as the code needed
         to write it into a dictionary in the global variables.
-        :param data_init_file_path: The path of a file containing a json dict
+
+        :param data_init_file_path: The path of a file containing a json dict.
         :param use_as_ref: True if the path should be included as reference,
         False if the dictionary itself should be included.
-        :return: an Execution state, that will update the rtpp_data dict in the global variables.
+        :return: ExecutionState: An Execution state, that will update the rtpp_data dict in the global variables.
         """
         data_init_state = ExecutionState(name='Runtime Data Initialization (rtpp_data)')
         data_to_load = None

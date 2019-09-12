@@ -23,8 +23,9 @@ class PddlFactsParser:
 
     def __init__(self, facts_string):
         """
-        the facts file parser will later be used to parse a raw facts file into a pddl facts file representation.
-        :param facts_string: the facts file content as string.
+        The facts file parser will later be used to parse a raw facts file into a pddl facts file representation.
+
+        :param facts_string: The facts file content as string.
         """
         if not facts_string:
             logger.error('facts_string can\'t be None!')
@@ -40,9 +41,10 @@ class PddlFactsParser:
 
     def parse_objects(self):
         """
-        parse object parses the Objects present in the facts file, and returns a map of all objects with their type,
+        Parse object parses the Objects present in the facts file, and returns a map of all objects with their type,
         in format: object: type
-        :return: a map in format: object: type
+
+        :return: {String:String}: A map in format: object: type.
         """
         obj_type_map = {}
         obj_sec_tup = self.__objects_section_pattern.findall(self.__facts_string)
@@ -70,9 +72,10 @@ class PddlFactsParser:
         return obj_type_map
 
     def parse_domain_name(self):
-        """parse_domain_name
+        """
         parse_domain_name parses the domain name out of the given facts file.
-        :return: the domain name
+
+        :return: String: The domain name.
         """
         parsed = self.__domain_name_pattern.findall(self.__facts_string)
         if len(parsed) == 0:
@@ -81,9 +84,10 @@ class PddlFactsParser:
         return parsed[0]
 
     def parse_problem_name(self):
-        """parse_problem_name
+        """
         parse_problem_name parses the problem name out of the given facts file.
-        :return: the problem name
+
+        :return: String: The problem name.
         """
         parsed = self.__problem_name_pattern.findall(self.__facts_string)
         if len(parsed) == 0:
@@ -93,8 +97,9 @@ class PddlFactsParser:
 
     def __clean_comments(self, facts_string):
         """
-        takes the facts string and removes all comments from it
-        :return: the facts string without comments
+        Takes the facts string and removes all comments.
+
+        :return: String: The facts string without comments.
         """
         comment_pattern = re.compile('(;[^\n]*)')
         return comment_pattern.sub('', facts_string)

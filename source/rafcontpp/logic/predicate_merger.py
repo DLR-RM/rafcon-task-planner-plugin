@@ -16,23 +16,25 @@ logger = log.get_logger(__name__)
 
 
 class PredicateMerger:
-    """PredicateMerger
+    """
+    This class merges predicates with the same identifier, but different types of the same branch together.
     """
 
     __name_index = 0
 
     def __init__(self, datastore):
         """
-        :param datastore: a datastore containing all necassary data
+        :param datastore: A datastore containing all necassary data.
         """
         self.__datastore = datastore
 
     def merge_predicates(self, predicates):
-        """merge predicates merges all predicates, sets all available predicates in datastore
+        """
+        Merge predicates merges all predicates, sets all available predicates in datastore
         and returns all merged predicates as strings.
-        :param predicates: a list [string] with predicates
-        :return: a tuple (list [string] with merged predicates, and
-        a list [of format ('LOCATED',[(VEHICLE,1),(PHYSOBJ,3)])] all available predicates)
+
+        :param predicates: A list [string] with predicates.
+        :return: ([String],[(String,[(String,int)])]): A tuple (list [string] with merged predicates, and a list [of format ('LOCATED',[(VEHICLE,1),(PHYSOBJ,3)])] all available predicates)
         """
         if predicates is None:
             raise ValueError('predicates can not be None!')
@@ -52,11 +54,11 @@ class PredicateMerger:
         return (merged_preds_as_string, available_predicates)
 
     def __parse_predicate(self, predicate_string):
-        """parse_predicate
-        parse_predicate gets a predicate string and parses it into a useful
-        tuple of (predicate_Name,[(type_name,occurance)])
-        :param predicate_string: a predicate as string e.g (LOCATED ?VEH - VEHICLE ?OBJ ?sObj ?thirdObj - PHYSOBJ)
-        :return: a parsed predicate as tuple e.g. ('LOCATED',[(VEHICLE,1),(PHYSOBJ,3)])
+        """
+        parse_predicate gets a predicate string and parses it into a useful tuple of (predicate_Name,[(type_name,occurance)]).
+
+        :param predicate_string: A predicate as string e.g (LOCATED ?VEH - VEHICLE ?OBJ ?sObj ?thirdObj - PHYSOBJ).
+        :return: (String,[(String,int)]): A parsed predicate as tuple e.g. ('LOCATED',[(VEHICLE,1),(PHYSOBJ,3)]).
         """
         pred_name = None
         pred_types = []
@@ -91,11 +93,12 @@ class PredicateMerger:
         return (pred_name, pred_types)
 
     def __reduce_predicate_list(self, predicate_list):
-        """reduce_predicate_list
+        """
         reduce_predicate_list gets a list of predicates, with the same name but different types,
         and reduces them to one predicate, with the most open types.
-        :param predicate_list: a list of predicates with the same name, format: ('LOCATED',[(VEHICLE,1),(PHYSOBJ,3)])
-        :return: one predicate tuple, containing the most general types. of format ('LOCATED',[(VEHICLE,1),(PHYSOBJ,3)])
+
+        :param predicate_list: A list of predicates with the same name, format: ('LOCATED',[(VEHICLE,1),(PHYSOBJ,3)])
+        :return: (String,[(String,int)]): One predicate tuple, containing the most general types. of format ('LOCATED',[(VEHICLE,1),(PHYSOBJ,3)])
         """
         type_tree = self.__datastore.get_available_types()
         # the resulting predicate
@@ -131,9 +134,10 @@ class PredicateMerger:
 
     def __tuple_to_predicate_string(self, predicate_tuple):
         """
-        receives a predicate tuple and returns it as predicate string.
+        Receives a predicate tuple and returns it as predicate string.
+
         :param predicate_tuple: a tuple in format (PREDICATE_NAME,[(TYPE,NUM_VARIABLES)])
-        :return: a predicate string (PREDICATENAME ?0 ?1 - Type)
+        :return: String: A predicate string e.g (PREDICATENAME ?0 ?1 - Type).
         """
         pred_string = '(' + predicate_tuple[0]
         tuple_counter = 0  # need this counter do guarantee distinct variable names.

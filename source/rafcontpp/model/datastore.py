@@ -62,6 +62,7 @@ def datastore_from_file(file_path):
     """ datastore_from_file
     datastore_from_file tries to create a partial datastore (just input values, no clculated ones)
     from a .json file e.g. config file. if there is no config file present, it returns a datastore with default values
+
     :param file_path: the path to the config file
     :return: a partial initialized datastore, or a datastore with default values.
     """
@@ -108,6 +109,7 @@ class Datastore:
                  facts_path, type_db_path, keep_related_files, file_save_dir='/tmp'):
         """
          Constructor of Datastore
+
         :param state_pools: a list of file paths.
         :param sm_name: the name of the state machine which will be generated.
         :param sm_save_dir: the directory, where to save the generated state machine.
@@ -198,6 +200,7 @@ class Datastore:
     def register_thread(self, interruptable_thread):
         """
         gets a thread, addes it synchronized to a global map, and returns the map key (which is the register time.).
+
         :param interruptable_thread: a thread, the Datastore should store
         :return: the key used to register the thread. (That's the register time as unixtimestamp.)
         """
@@ -215,6 +218,7 @@ class Datastore:
     def remove_thread(self, key):
         """
         gets a timestamp as key, and removes the thread synchronized from the global map.
+
         :param key: the time, the thread was registered
         :return: true, if removing was successful, false otherwise
         """
@@ -435,9 +439,9 @@ class Datastore:
     def save_datastore_parts_in_file(self, file_path):
         """ save_datastore_parts_in_file
         save_datastore_parts_in_file saves all plugin inputs, which are present in the datastore in a file.
-        :param self:
+
         :param file_path: the path of the configuration file
-        :return: nothing
+        :return: void
         """
         data_to_save = {
             'state_pools': self.__state_pools,

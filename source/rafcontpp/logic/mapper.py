@@ -24,12 +24,12 @@ logger = log.get_logger(__name__)
 
 class Mapper:
     """Mapper
-    The Mapper maps actions and states together.
+    The Mapper maps pddl actions and rafcon states together.
     """
 
     def __init__(self, datastore):
         """
-        :param datastore: a datastore containing all necessary data.
+        :param datastore: A datastore containing all necessary data.
         """
         if datastore is None:
             logger.error("Datastore in Mapper can not be None!")
@@ -38,7 +38,10 @@ class Mapper:
 
     def generate_action_state_map(self):
         """
-        generates a map, with pddl action names as key, and RAFCON States as Values. Writes the map into the datastore.
+        generates a map, with pddl action names as key, and RAFCON States as Values.
+        Writes the map into the datastore.
+
+        :return: void
         """
         state_libs = self.__datastore.get_state_pools()
         libraries = global_config.get_config_value("LIBRARY_PATHS")
@@ -75,8 +78,10 @@ class Mapper:
 
     def generate_state_action_map(self):
         """
-        generates a map with RAFCON States as Keys and PDDL Action names as values.
-        if no action_state_map exists, it calls generate action_state_map. Its writing the map into the datastore
+        Generates a map with RAFCON States as Keys and PDDL Action names as values.
+        If no action_state_map exists, it calls generate action_state_map. It's writing the map into the datastore.
+
+        :return: void
         """
         if self.__datastore.get_action_state_map() is None:
             self.generate_action_state_map()
@@ -97,9 +102,11 @@ class Mapper:
 
     def generate_available_actions(self):
         """
-        takes the action_state_map, and extracts the keys, in order to get a list of all available PDDL Actions.
-        if no action_state_map exists, it calls generate_action_state_map() first. It writes the list with available
+        Takes the action_state_map, and extracts the keys, in order to get a list of all available PDDL Actions.
+        If no action_state_map exists, it calls generate_action_state_map() first. It writes the list with available
         actions into the datastore.
+
+        :return: void
         """
         if self.__datastore.get_action_state_map() is None:
             self.generate_action_state_map()

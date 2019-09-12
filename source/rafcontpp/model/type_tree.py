@@ -23,6 +23,7 @@ class TypeTree:
     def __init__(self, type_name):
         """
         needs the name of a type, and returns a type-tree-node. the node it self is a TypeTree.
+
         :param type_name: the name of a Type, can't be None!
         :return a TypeTree object
         """
@@ -36,6 +37,7 @@ class TypeTree:
         addTypeBranch does not only add the type, but also the whole branch.
         this means it also adds all parents and all children and their children
         to the type tree.
+
         :param type_name: the name of a type.
         :param type_dict: a type dictionary, containing the type.
         :return: true if insert was successfull, false otherwhise.
@@ -52,6 +54,7 @@ class TypeTree:
         """
         recursiveInsert needs a typeName and a typeDict and inserts
         the type with its parents into the tree.
+
         :param type_name: the name of a type.
         :param type_dict: a type dicitonary, containing the type.
         :return: true if insert was successfull, false otherwhise.
@@ -71,6 +74,7 @@ class TypeTree:
         """
         insert takes a typeName and a parentName, and inserts it into the tree.
         insert does not work, if the parent is not in the tree yet.
+
         :param type_name: the name of the type to insert
         :param parent_name: the direct parent of the type to insert
         :return: true if insert was successfull, false otherwhise. (for example if the parent is not in the tree yet.)
@@ -83,6 +87,7 @@ class TypeTree:
     def __insert(self, type_name, parent_name):
         """
          insert takes a typeName and a parentName, and inserts the typeName as child of the parentName into the tree.
+
          :param type_name: the name of the type to insert
          :param parent_name: the direct parent of the type to insert
          :return: true if insert was successfull, false otherwhise. (for example if the parent is not in the tree yet.)
@@ -101,6 +106,7 @@ class TypeTree:
     def get_as_pddl_string(self):
         """
         returns a string in pddl notation representing the type-tree.
+
         :return: returns the typetree as string.
         """
         as_string = ""
@@ -119,6 +125,7 @@ class TypeTree:
     def get_as_list(self):
         """
         takes the Tree, and writes all its elements into a list
+
         :return: a list, contining all types of the tree
         """
         type_list = [self.type_name]
@@ -131,6 +138,7 @@ class TypeTree:
         isInTree searchs the typeTree for a specific type, and returns true,
         if the tree contains the type.
         unfortunately the tree is not sorted, and has a complexity of O(n)
+
         :param type_name: the name of the type to search
         :return: true if the tree contains the type, else false.
         """
@@ -139,6 +147,7 @@ class TypeTree:
     def get_sub_tree(self, type_to_search):
         """ get_sub_tree
         get_sub_tree gets a type, and returns the subtree, with the type as root.
+
         :param type_to_search: the root of the subtree to get
         :return: a sub tree, or none if the type is not in the tree.
         """
@@ -157,6 +166,7 @@ class TypeTree:
         """ is_parent_of
         is_parent_of receives two types, and returns true,
         if the first type it the parent of the second type.
+
         :param parent: the maybe parent type
         :param child: the maybe child type
         :return: true, if the parent is really the parent of the child, false otherwhise
@@ -172,6 +182,7 @@ class TypeTree:
         """
         get_parent_of gets a type name, and returns its parent.
         IMPORTANT: it searches in the tree for the parent, just childs.
+
         :param type_name: a type name
         :return: the parent or None if the type has no parent or is not in tree.
         """
@@ -197,6 +208,7 @@ class TypeTree:
         if t1 is the parent of t2, it will return t1
         if t3 is the parent of t1 and t2, it will return t3
         if t1 or t2 is not in the tree, it will return None.
+
         :param type_a: a type a
         :param type_b: a type b
         :return: the smallest parent, or None

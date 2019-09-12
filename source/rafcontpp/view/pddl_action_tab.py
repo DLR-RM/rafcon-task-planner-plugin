@@ -90,6 +90,7 @@ class PddlActionTab:
     def init_tab(self):
         """
         loads the data into the action tab and subscribes on signals of some gui elements.
+
         :return: the action tab.
         """
         # set elements uneditable if state is library state
@@ -144,6 +145,7 @@ class PddlActionTab:
     def __add_requirements_boxes(self, gtk_viewport):
         """
         adds dynamically boxes for all requirements, specified in requ_list (above) to the gui.
+
         :param gtk_viewport: the base element, where to store the boxes in.
         :return: a dictionary, contining the information, which button box belongs to which requirement
         """
@@ -170,6 +172,7 @@ class PddlActionTab:
         """
         loads the pddl data from the semantic section of the state and writes it into
         the action tab gui elements.
+
         :param is_library_state: true, if state is a library state
         """
         # to add the key to the dictionary, TODO find a Better place
@@ -199,6 +202,7 @@ class PddlActionTab:
         """
         filters an input string, exactly: if it rceives the string {} it makes it an empty string. Else it returns the
         original input.
+
         :param input: a string
         :return: the filtered string
         """
@@ -210,6 +214,7 @@ class PddlActionTab:
         """
         takes the string of the pddl action tab action source view, and returns it as pddl
         action representation.
+
         :return: a PddlActionRepresentation.
         """
         start, end = self.__pddl_action_source_view.get_buffer().get_bounds()

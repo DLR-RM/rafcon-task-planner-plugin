@@ -28,7 +28,7 @@ logger = log.get_logger(__name__)
 
 
 class PlanningController:
-    """PlanningController
+    """
        PlanningController handles everything about the topic planning. it loads built-in scripts as well, als
        importing custom planner integrations. It also starts the planning process, and feeds the datastore with
        the plan, given by the planner.
@@ -36,16 +36,17 @@ class PlanningController:
 
     def __init__(self, datastore):
         """
-        :param datastore:  a datastore, containing all necessary data.
+        :param datastore:  A datastore, containing all necessary data.
         """
         self.__datastore = datastore
 
     def execute_planning(self, callback_func):
-        """execute_planning
-        execute_planning loads built-in scripts, imports custom scripts, and executes them.
+        """
+        Execute_planning loads built-in scripts, imports custom scripts, and executes them.
         it starts the planner in a new thread, and calls the callback_function when finish.
-        :param callback_func is callback_func(Boolean):void planning will be executed async, and call this function when finish.
-        :return: the planning thread
+
+        :param callback_func: Is callback_func(Boolean):void planning will be executed async, and call this function when finish.
+        :return: InterruptableThread: The planning thread
         """
         planning_successful = False
         planner_choice = self.__datastore.get_planner()
@@ -78,20 +79,23 @@ class PlanningController:
 
     def __plan_and_report(self, callback_function, planner):
         """
-        plan and report triggers the planner, and evaluates the planning report
+        Plan and report triggers the planner, and evaluates the planning report
         e.g. storing the plan in the datastore. Due planning could take a long time
         this method should be called async.
-        :param current_thread: the Interruptable Thread, this function runs in. (automatically added by the thread.)
-        :param callback_function: a call back function called after planning
-        :param planner: the planner to plan with
-        :return: nothing
+
+        :param current_thread: The Interruptable Thread, this function runs in (automatically added by the thread.).
+        :param callback_function: A call back function called after planning.
+        :param planner: The planner to plan with.
+        :return: void
         """
         # --------------------------------------------------------------------------------------------------------------
         def execute_in_sub_process(queue):
             """
             This mehod executes the actual planning.
-            should be executed in a sub process.(this decision was made, to be able to kill the planning process)
-            :param queue: a message queue, which will contain the planning report
+            should be executed in a sub process (this decision was made, to be able to kill the planning process).
+
+            :param queue: A message queue, which will contain the planning report
+            :return: void
             """
             os.setsid()  # give a new process group id, to be able to kill the whole group resulting from this
                          # sub process and the planner.
@@ -152,10 +156,11 @@ class PlanningController:
 
     def __split_and_add_to_path(self, script_path):
         """
-        splits the script path into the directory path, and the script name, adds the directory Path to
-        PYTHONPATH and returns the scripname
-        :param script_path: the path of a custom planner script like /home/planner_script.py
-        :return: the Name of the script e.g. planner_script
+        Splits the script path into the directory path, and the script name, adds the directory Path to
+        PYTHONPATH and returns the scripname.
+
+        :param script_path: The path of a custom planner script like /home/planner_script.py.
+        :return: String: The Name of the script e.g. planner_script
         """
         path = os.path.dirname(script_path)
         script_name = os.path.basename(script_path)
@@ -169,11 +174,12 @@ class PlanningController:
         return script_name
 
     def __discover_class(self, script):
-        """ discover_class
-        discover_class receives a script like "planner_script", it imports it and discovers the class, which
+        """
+        Discover_class receives a script like "planner_script", it imports it and discovers the class, which
         implements the plan_scenario method.
-        :param script: the name of a custom planner integration module
-        :return: a (script_name, class_name) tuple
+
+        :param script: The name of a custom planner integration module.
+        :return: A (script_name, class_name) tuple.
         """
         class_name = None
         script_import = __import__(script)
@@ -186,9 +192,10 @@ class PlanningController:
         return (script, class_name)
 
     def __get_built_in_script(self, shortcut):
-        """ get_built_in_script
-        get_built_in_script trys to resolve a given shortcut e.g. the name of a built in planner in the list
-        :param shortcut: some string, hopefully a shortcut
+        """
+        This function tries to resolve a given shortcut e.g. the name of a built in planner in the list.
+
+        :param shortcut: Some string, hopefully a shortcut.
         :return: (script_name,script_path) tuple, or None if the shortcut was not found in the list.
         """
         built_in_planner = self.__datastore.get_built_in_planners()

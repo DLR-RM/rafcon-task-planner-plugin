@@ -24,6 +24,10 @@ class PddlRequirementFinder():
     """
 
     def __init__(self, action_string):
+        """
+
+        :param action_string: An string, containing a pddl action.
+        """
         self.action = action_string
         if not self.action or len(self.action) == 0:
             logger.error("Can't find requirements in None or empty action string.")

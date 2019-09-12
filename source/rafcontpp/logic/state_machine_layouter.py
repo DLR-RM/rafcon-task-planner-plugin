@@ -31,10 +31,12 @@ class StateMachineLayouter:
     def layout_state_machine(self, state_machine, target_state, fixed_size, state_order):
         """
         This function will format the state machine in a merlon like format.
-        :param state_machine: a state machine to layout
-        :param target_state: the "root state" all content in the state will be formated, it needs to be tube like
+
+        :param state_machine: A state machine to layout.
+        :param target_state: The "root state" all content in the state will be formated, it needs to be tube like.
         :param fixed_size: True if the size of the root state is fixed.
-        :param state_order: the order of the states in the machine
+        :param state_order: the order of the states in the machine.
+        :return: void
         """
         start_time = time.time()
         logger.info("Layouting state machine...")
@@ -149,10 +151,11 @@ class StateMachineLayouter:
         """
         Get num rows, receives the number of states, a width and a height. it uses the width and the height to calculate
         a ratio, to be able to calculate the number of rows to use the given space optimal.
-        :param num_states: the number of the states used
+
+        :param num_states: The number of the states used
         :param width: The width of the available space. if this or height <= 0 automatically set to 16.
         :param height: The height of the available space if this or heigt <= 0 automatically set to 9.
-        :return: the number of rows optimal in the sm
+        :return: double: The number of rows optimal in the sm
         """
         if width <= 0 or height <= 0:
             width = 16.
@@ -168,9 +171,10 @@ class StateMachineLayouter:
         """
         get_root_state_dimensions receives a desired canvas width and height, and returns the overall rootstate size,
         and the border width.
+
         :param canvas_width: The width of the canvas.
         :param canvas_height: The height of the canvas.
-        :return: (width, height, border_width)
+        :return: (double, double, double): (width, height, border_width).
         """
         border_width = Variable(min(canvas_width, canvas_height) / constants.BORDER_WIDTH_STATE_SIZE_FACTOR)
         r_width = canvas_width + 2 * border_width
@@ -186,9 +190,10 @@ class StateMachineLayouter:
         """
         get_state_dimensions reveives a fixed canvas width and height, a col and a row count and calcualtes a possible
         state size. adds an additional x_gap.
+
         :param canvas_width:
         :param canvas_height:
-        :return: (state_width, state_height, x_gap, y_gap)
+        :return: (double,double,double,double). (state_width, state_height, x_gap, y_gap)
         """
         num_xgap = 1 + col_count
         num_ygap = 1 + row_count

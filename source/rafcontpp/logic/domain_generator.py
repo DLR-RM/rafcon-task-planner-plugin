@@ -23,11 +23,15 @@ logger = log.get_logger(__name__)
 
 
 class DomainGenerator:
-    """DomainGenerator
+    """
     The DomainGenerator uses the data provided by the datastore to generate a domain.pddl file for the planner.
     """
 
     def __init__(self, datastore):
+        """
+
+        :param datastore: A Datastore containing all data necessary.
+        """
         if datastore is None:
             logger.error("Datastore in DomainGenerator can not be None!")
             raise ValueError("Datastore in DomainGenerator can not be None!")
@@ -36,7 +40,8 @@ class DomainGenerator:
     def generate_domain(self):
         """
         generateDomain generates a domain and returns its path.
-        :return: the path of the generated domain file
+
+        :return: String: The path of the generated domain file.
         """
         facts = self.__datastore.get_pddl_facts_representation()
         domain_name = facts.domain_name
@@ -66,18 +71,20 @@ class DomainGenerator:
         return domain_path
 
     def __get_head(self, domain_name):
-        """ get_head
-        takes a domain name, and returns the head of a pddl domain, e.g. "(define (domain test_domain)"
-        :param domain_name: the name of the domain
-        :return: the head of a pddl domain
+        """
+        Takes a domain name, and returns the head of a pddl domain, e.g. "(define (domain test_domain)".
+
+        :param domain_name: The name of the domain.
+        :return: String: The head of a pddl domain.
         """
         return "(DEFINE (DOMAIN {})".format(domain_name)
 
     def __merge_requirements(self, pddl_actions):
         """
         mergeRequirements takes the requirements of the used pddl-actions, and removes dublicates.
-        :param pddl_actions: a list with PddlActionRepresentations
-        :return: all pddl-requirements without dublicates.
+
+        :param pddl_actions: A list with PddlActionRepresentations
+        :return: [String]: All pddl-requirements without dublicates.
         """
         requirements = []
         for action in pddl_actions:
@@ -88,9 +95,10 @@ class DomainGenerator:
 
     def __get_requirements(self, requirements):
         """
-        takes the requirements list and returns it as string in a pddl-format.
-        :param requirements: a list with all requirments
-        :return: a string with requirments in a pddl-conform format.
+        Takes the requirements list and returns it as string in a pddl-format.
+
+        :param requirements: A list with all requirments
+        :return: String: Requirments in a pddl-conform format.
         """
         requirements_section = "(:REQUIREMENTS "
         for requirement in requirements:
@@ -99,9 +107,10 @@ class DomainGenerator:
 
     def __get_types(self, merged_types):
         """
-        takes a type tree and returns a string representation usable in a pddl-domain
-        :param merged_types: a type tree containing all (relevant) types.
-        :return: a type string usable in pddl.
+        Takes a type tree and returns a string representation usable in a pddl-domain.
+
+        :param merged_types: A type tree containing all (relevant) types.
+        :return: String: A type section usable in pddl.
         """
         types_in_pddl = ""
         if merged_types:
@@ -112,8 +121,10 @@ class DomainGenerator:
     def __merge_predicates(self, pddl_actions):
         """
         mergePredicates takes all predicates mentioned in the PddlActionRepresentations, and removes dublicates.
-        :param pddl_actions: a list of PddlActionRepresentations.
-        :return: a list of predicates, without dublicates.
+
+        :param pddl_actions: A list of PddlActionRepresentations.
+        :return: ([String],[(String,[(String,int)])]): A tuple with a list of predicates
+        and a list of predicates as tuple without dublicates.
         """
         # pre merge predicates
         predicates = []
@@ -128,9 +139,10 @@ class DomainGenerator:
 
     def __get_predicates(self, predicates):
         """
-        takes a list of predicates as string, and returns a pddl confrom predicates section.
-        :param predicate_section: a list of predicates as strings.
-        :return: a pddl conform predicates section as string.
+        Takes a list of predicates as string, and returns a pddl confrom predicates section.
+
+        :param predicate_section: A list of predicates as strings.
+        :return: String: A pddl conform predicates section.
         """
         predicate_section = "(:PREDICATES\r\n"
         for predicate in predicates:
@@ -139,9 +151,10 @@ class DomainGenerator:
 
     def __get_actions(self, pddl_actions):
         """
-        takes a list of PddlActionRepresentations, and returns a pddl conform action section.
-        :param pddl_actions: a list of PddlActionRepresentations.
-        :return: a pddl conform action section as string.
+        Takes a list of PddlActionRepresentations, and returns a pddl conform action section.
+
+        :param pddl_actions: A list of PddlActionRepresentations.
+        :return: String: A pddl conform action section.
         """
         actions = ""
         for action in pddl_actions:
@@ -150,9 +163,10 @@ class DomainGenerator:
 
     def __get_comment_section(self):
         """
-        this method generated a header comment for the domain, containing the version, the time, date and
+        This method generated a header comment for the domain, containing the version, the time, date and
         the 'author'.
-        :return: a comment string, already containing the pddl comment indicator character ';'
+
+        :return: String: A domain header comment, already containing the pddl comment indicator character ';'.
         """
         comment_section = ";; This Domain was automatically generated by RAFCON Task Planner Plugin (RTPP)\r\n"
         comment_section = "{};; Version: RTPP {}\r\n".format(comment_section, PLUGIN_VERSION)

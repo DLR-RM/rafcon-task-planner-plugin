@@ -27,8 +27,9 @@ class TypeMerger:
 
     def merge_types(self):
         """
-        merge types uses the typetree data structure, to create a type tree, with types needed in the actions.
-        :return: a type tree containing all (relevant) types.
+        Merge types uses the typetree data structure, to create a type tree, with types needed in the actions.
+
+        :return: TypeTree: A type tree containing all (relevant) types.
         """
         pddl_actions = self.__datastore.get_pddl_action_map().values()
         type_dict = self.__dict_to_upper(json.load(open(self.__datastore.get_type_db_path(), "r")))
@@ -50,9 +51,10 @@ class TypeMerger:
 
     def __dict_to_upper(self, dict):
         """
-         receives a dict of string:string and returns it in upper case.
-        :param dict: a string:string dict
-        :return: a new dict in upper case.
+         Receives a dict of string:string and returns it in upper case.
+
+        :param dict: A string:string dict
+        :return: {String:String}: A new dict in upper case.
         """
         upper_dict = dict
         if dict:

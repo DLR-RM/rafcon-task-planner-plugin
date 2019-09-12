@@ -27,7 +27,7 @@ class PddlActionParser:
 
     def __init__(self, action_string):
         """
-        :param action_string: a pddl action string
+        :param action_string: A pddl action string
         """
         if action_string is None or len(action_string) == 0:
             logger.error('Can not parse action from None or Empty String!')
@@ -48,10 +48,11 @@ class PddlActionParser:
         self.__action_string = self.__clean_comments(action_string)
 
     def parse_action(self):
-        """parse_action
+        """
         parse_action takes the given action string, and parses it into a PddlActionRepresenation,
         raises ValueError, if the action string is none or empty.
-        :return: a PddlActionRepresentation of the pddl action.
+
+        :return: PddlActionRepresentation: A PddlActionRepresentation of the pddl action.
         """
         self.__create_var_type_dict()
         name = self.parse_action_name()
@@ -61,9 +62,10 @@ class PddlActionParser:
         return PddlActionRepresentation(name, self.__action_string, predicates, types, [], parameters)
 
     def parse_action_name(self):
-        """parse_action_name
+        """
         parse_action_name reads the action form the given action and returns it.
-        :return: The name of the action as string
+
+        :return: String: The name of the action.
         """
         parsed = re.findall(self.__action_name_pattern, self.__action_string)
         if len(parsed) == 0:
@@ -72,9 +74,10 @@ class PddlActionParser:
         return parsed[0]
 
     def parse_parameters(self):
-        """parse_parameters
-            parse_parameters parses the parameters out of an pddl action string.
-        :return: a list with parameter names, without ?
+        """
+        parse_parameters parses the parameters out of an pddl action string.
+
+        :return: [String]: A list with parameter names, without '?'
         """
         params = []
         action_string_upper = self.__action_string.upper()
@@ -93,17 +96,19 @@ class PddlActionParser:
 
     def __clean_comments(self, action_string):
         """
-        takes the action string and removes all comments from it
-        :return: the action string without comments
+        Takes the action string and removes all comments.
+
+        :return: String: The action string without comments.
         """
         comment_pattern = re.compile('(;[^\n]*)')
         return comment_pattern.sub('', action_string)
 
     def __create_var_type_dict(self):
-        """create_var_type_dict
+        """
         create_var_type_dict creates a dictionary, which contains all variables with their type,
         defined in the action.
-        :return: a dictionary containing variable : type pairs.
+
+        :return: {String:String}: A dictionary containing variable : type pairs.
         """
         type_vars = self.__type_var_pattern.findall(self.__action_string)
         for type_var in type_vars:
@@ -114,12 +119,13 @@ class PddlActionParser:
         return self.__var_type_dict
 
     def __parse_and_generalize_predicates(self):
-        """parse and generalize predicates
-        this method extracts all applied pradicates from the action, then it generalizes them.
+        """
+        This method extracts all applied pradicates from the action, then it generalizes them.
         e.g. add types to the variables and remove dublicats.
         applied predicate example:       (at ?a ?b)
         generalized predicate example: (at ?a - Location ?b - Robot)
-        :return: a list with all parsed predicates.
+
+        :return: [String]: A list with all parsed predicates.
         """
         # matches applied predicates
         a_pred_name_pattern = re.compile('\(([^\s]+)\s')
@@ -165,8 +171,9 @@ class PddlActionParser:
     def __is_built_in_pred(self, name):
         """
         Checks if the Predicate is a PDDL built-in predicate.
-        :param name: the name of a predicate
-        :return: True if the predicate is a PDDL built-in predicate. false otherwhise.
+
+        :param name: The name of a predicate.
+        :return: Boolean: True if the predicate is a PDDL built-in predicate. False otherwise.
         """
         is_built_in = False
         if name:

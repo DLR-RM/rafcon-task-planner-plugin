@@ -31,13 +31,13 @@ logger = log.get_logger(__name__)
 
 class ExecutionController:
     """ExecutionController
-       ExecutionController controls the execution of the planning pipeline, from mapping up to generating the state
+       The ExecutionController controls the execution of the planning pipeline, from mapping up to generating the state
        machine. It's structured in two parts: a pre-planning, and a post-planning part.
     """
 
     def __init__(self, datastore):
         """
-        :param datastore: a datastore, containing all relevant data.
+        :param datastore: A datastore, containing all relevant data.
         """
         self.__datastore = datastore
         self.__planning_thread_register_time = -1
@@ -47,6 +47,7 @@ class ExecutionController:
         on_execute_pre_planning prepares the Datastore and gets everything ready for the planning process. Therefore
         it triggeres different modules to map actions with states, loads all available actions and generate a domain file.
         In the end initiates the Planning Process, and returns its thread.
+
         :return: InterruptableThread: The planning Thread.
         """
         try:
@@ -83,9 +84,11 @@ class ExecutionController:
 
     def on_execute_post_planning(self, planning_successful):
         """
-        on_execute_post_planning takes care of the post planning steps in the pipeline, e.g. it triggeres the state
+        This function takes care of the post planning steps in the pipeline, e.g. it triggeres the state
         machine generation procedure. typically its executed from another thread.
-        :param planning_successful: True if planning was successful, False otherwhise.
+
+        :param planning_successful: True if planning was successful, False otherwise.
+        :return: void
         """
         try:
             logger.verbose('post planning executed from thread: {}'.format(threading.current_thread().getName()))
@@ -121,10 +124,11 @@ class ExecutionController:
 
     def __parse_facts_file(self):
         """
-        parses the facts file, and creates a facts representation.
-        i do it here, because i have no better place, later on i will do it in a dedicated facts module
+        Parses the facts file, and creates a facts representation.
+        This is done here, because there no better place yet. Later on it will be done in a dedicated facts module.
         TODO delete, and do somewhere else.
-        :return:
+
+        :return: PddlFactsRepresentation: A representation of the parsed facts file.
         """
         facts_file = open(self.__datastore.get_facts_path(), 'r')
         facts_string = facts_file.read()

@@ -23,6 +23,7 @@ interruptable_threads = {}
 def current_thread():
     """
     current thread returns the current interruptable thread, it was called from.
+
     :return: the current interruptable thread, or None if current thread is not interruptable.
     """
     current_thread_id = threading.current_thread().ident

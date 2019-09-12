@@ -25,6 +25,7 @@ class StatePoolInfoWindow:
     def __init__(self, parent):
         """
         initializes the State Pool Info window.
+
         :param parent: the parent window. e.g. a Gtk.Dialog
         """
         glade_path = os.path.abspath(
@@ -43,6 +44,7 @@ class StatePoolInfoWindow:
     def set_state_pools(self, state_pools):
         """
         Sets the statepools in the info window.
+
         :param statepools: a list containing all selected state pools.
         """
         state_pool_string = ''
@@ -56,6 +58,7 @@ class StatePoolInfoWindow:
     def set_predicates(self, predicates):
         """
         Sets the predicates list as string into the info window.
+
         :param predicates: A list of predicate Strings
         """
         predicate_string = ''
@@ -69,6 +72,7 @@ class StatePoolInfoWindow:
     def set_types(self, type_tree):
         """
         Sets the type tree into the info window.
+
         :param types: A type_tree.
         """
         types_string = ''
@@ -82,6 +86,7 @@ class StatePoolInfoWindow:
     def set_action_state_mapping(self, action_state_map):
         """
         Sets the action state mapping into the info window.
+
         :param action_state_map: a map, containing action names as key and state names as values.
         """
         asm_string = ''

@@ -24,7 +24,8 @@ logger = log.get_logger(__name__)
 def pre_init():
     """ The pre_init function of the auto layout plugin. Currently method refresh selected state machine is used to
     trigger a auto layout.
-    :return:
+
+    :return: void
     """
     logger.info("Run pre-initiation hook of {0} plugin.".format(__file__.split(os.path.sep)[-2]))
 
@@ -32,8 +33,9 @@ def pre_init():
 def main_window_setup(main_window_controller):
     """
     called on window setup.
+
     :param main_window_controller:
-    :return:
+    :return: void
     """
     logger.info("Run main window setup of {0} plugin.".format(__file__.split(os.path.sep)[-2]))
     # add the plan task button to rafcons menu bar.
@@ -44,7 +46,8 @@ def post_init(*args, **kwargs):
     """
     The post_init function of the execution hooks plugin. The observer of the execution hooks manager are initialized
     and hooks execution is enabled.
-    :return:
+
+    :return: void
     """
     logger.info("Run post-initiation hook of {0} plugin".format(__file__.split(os.path.sep)[-2]))
 
@@ -53,8 +56,9 @@ def post_state_editor_register_view(state_editor):
     """
     called every time, a State Editor is created.
     adds the action tab.
+
     :param state_editor:
-    :return:
+    :return: void
     """
     state_editor_view = state_editor.view
     state = state_editor.model.state

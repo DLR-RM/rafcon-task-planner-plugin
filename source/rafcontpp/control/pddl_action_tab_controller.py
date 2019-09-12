@@ -45,31 +45,37 @@ class PddlActionTabController:
 
     def __init__(self, state):
         """
-        :param state: the state, it belongs to.
+        :param state: The state, it belongs to.
         """
         self.__state = state
 
     def add_auto_apply_button(self, button):
         """
-        registeres an auto apply button as subscriber to auto apply toggles.
-        :param button: the button to add, a Checkbox.
+        Registeres an auto apply button as subscriber to auto apply toggles.
+
+        :param button: The Checkbox to add.
+        :return: void
         """
         PddlActionTabController.auto_apply_check_buttons.append(button)
 
     def remove_auto_apply_button(self, button):
         """
-        removes an auto apply button from the subscriber list.
-        :param button: the button to remove, a Checkbox.
+        Removes an auto apply button from the subscriber list.
+
+        :param button: The Checkbox to remove.
+        :return: void
         """
         PddlActionTabController.auto_apply_check_buttons.remove(button)
 
     def save_data(self, buffer, key, saved_manually):
         """
-        reads the values of the tab elements and saves them under the specified key in the semantic section,
+        Reads the values of the tab elements and saves them under the specified key in the semantic section,
         saves only if saved_manually or auto_save_enabled is true.
-        :param buffer: a buffer contining the values to store
-        :param key: a key of the semantic dict in the requirements section
-        :param saved_manually: True if saved manually, false otherwhise
+
+        :param buffer: A buffer contining the values to store.
+        :param key: A key of the semantic dict in the requirements section.
+        :param saved_manually: True if saved manually, false otherwhise.
+        :return: void
         """
         if saved_manually or PddlActionTabController.auto_apply_enabled:
             start, end = buffer.get_bounds()
@@ -78,11 +84,13 @@ class PddlActionTabController:
 
     def save_requirements(self, checkbox, req_dict, saved_manually):
         """
-        saves all requirements specified in the gui,
+        Saves all requirements specified in the gui,
         saves only if saved_manually or auto_save_enabled is true.
-        :param checkbox: unused
-        :param req_dict: a dictionary, containing the requirements checkboxes and names as keys.
-        :param saved_manually: True if saved manually, false otherwhise
+
+        :param checkbox: Unused
+        :param req_dict: A dictionary, containing the requirements checkboxes and names as keys.
+        :param saved_manually: True if saved manually, false otherwhise.
+        :return: void
         """
         if saved_manually or PddlActionTabController.auto_apply_enabled:
             self.__state.add_semantic_data([SEMANTIC_DATA_DICT_NAME, PDDL_ACTION_SUB_DICT_NAME],
@@ -90,13 +98,15 @@ class PddlActionTabController:
 
     def on_apply_changes(self, button, desc_buf, action_buf, pred_buf, types_buf, req_dict):
         """
-        saves all changes to the rafcon semantic tab.
-        :param button: not used.
-        :param desc_buf: the buffer of the description text view.
-        :param action_buf: the buffer of the pddl action text view.
-        :param pred_buf: the buffer of the predicates text view.
-        :param types_buf: the buffer of the types text view.
-        :param req_dict: a dictionary, containing the requirements checkboxes and their names as keys.
+        Saves all changes to the rafcon semantic tab.
+
+        :param button: Unused.
+        :param desc_buf: The buffer of the description text view.
+        :param action_buf: The buffer of the pddl action text view.
+        :param pred_buf: The buffer of the predicates text view.
+        :param types_buf: The buffer of the types text view.
+        :param req_dict: A dictionary, containing the requirements checkboxes and their names as keys.
+        :return: void
         """
         self.save_data(desc_buf, 'description', True)
         self.save_data(action_buf, 'pddl_action', True)
@@ -106,8 +116,10 @@ class PddlActionTabController:
 
     def auto_apply_toogled(self, checkbox):
         """
-        enables and disables the auto apply checkboxes in all action tabs of all states.
+        Enables and disables the auto apply checkboxes in all action tabs of all states.
+
         :param checkbox: the caller checkbox, containing the up to date state of auto apply.
+        :return: void
         """
         # count semaphore up
         # this semaphore does not help for multi threading, but for recursive calls.
@@ -124,12 +136,13 @@ class PddlActionTabController:
     def auto_complete(self, button, pred_buf, types_buf, requ_dict, pddl_action):
         """
         tries to auto complete the predicates, types and Requirements fields, sets and saves them.
-        :param button: unused
-        :param pred_buf: the text buffer of the predicates field.
-        :param types_buf: the text buffer of the types field.
-        :param requ_dict: a dictionary, containing the requirements checkboxes and names as keys.
-        :param pddl_action: a PddlActionRepresentation, of the current Action in the Tab.
-        :return: Nothing
+
+        :param button: Unused.
+        :param pred_buf: The text buffer of the predicates field.
+        :param types_buf: The text buffer of the types field.
+        :param requ_dict: A dictionary, containing the requirements checkboxes and names as keys.
+        :param pddl_action: A PddlActionRepresentation, of the current Action in the Tab.
+        :return: void
         """
         self.__predicates_auto_complete(pddl_action, pred_buf)
         self.__types_auto_complete(pddl_action, types_buf)
@@ -137,9 +150,10 @@ class PddlActionTabController:
 
     def __get_requirements(self, req_dict):
         """
-        creates a list with all requirements checked in the gui.
-        :param req_dict: a dictionary, containing the requirements checkboxes and names as keys.
-        :return: a list with all requirements checked in the gui
+        Creates a list with all requirements checked in the gui.
+
+        :param req_dict: A dictionary, containing the requirements checkboxes and names as keys.
+        :return: A list with all requirements checked in the gui.
         """
         requirements = []
 
@@ -151,9 +165,11 @@ class PddlActionTabController:
 
     def __requirements_auto_complete(self, raw_action, requ_dict):
         """
-        requirements auto complete, will set requirements as specified in pddl 2.1 paper.
-        :param raw_action: the pddl action string.
-        :param req_dict: a dictionary, containing the requirements checkboxes and names as keys.
+        Requirements auto complete, will set requirements as specified in pddl 2.1 paper.
+
+        :param raw_action: The pddl action string.
+        :param req_dict: A dictionary, containing the requirements checkboxes and names as keys.
+        :return: void
         """
         need = PddlRequirementFinder(raw_action)
         # represents the hierarchy specified in pddl 1.2
@@ -182,10 +198,12 @@ class PddlActionTabController:
 
     def __types_auto_complete(self, pddl_action, types_buffer):
         """
-        takes the types from a pddl action, compares it with the types, already filled in to the type section
+        Takes the types from a pddl action, compares it with the types, already filled in to the type section
         and adds missing types.
-        :param types_buffer: the buffer of the types text view.
-        :param pddl_action: a PddlActionRepresentation.
+
+        :param types_buffer: The buffer of the types text view.
+        :param pddl_action: A PddlActionRepresentation.
+        :return: void
         """
         types = pddl_action.types
         # merge add unknown
@@ -202,11 +220,13 @@ class PddlActionTabController:
 
     def __predicates_auto_complete(self, pddl_action, pred_field_buf):
         """
-        takes the predicates used in the pddl action, compares them with the predicates, the section is already filled
+        Takes the predicates used in the pddl action, compares them with the predicates, the section is already filled
         with, and completes the missing. some predicates with the same name can be found more than on time, if
         these two predicates use values of different types.
-        :param pddl_action: a PddlActionRepresentation, to filter predicates from.
-        :param pred_field_buf: the Predicates gui text view buffer.
+
+        :param pddl_action: A PddlActionRepresentation, to filter predicates from.
+        :param pred_field_buf: The Predicates gui text view buffer.
+        :return: void
         """
         found_predicates = pddl_action.predicates
         # merge add unknown

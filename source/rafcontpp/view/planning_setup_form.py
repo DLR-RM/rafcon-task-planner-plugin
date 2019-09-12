@@ -41,7 +41,8 @@ class PlanningSetupForm:
         """
         initialize initiates the components with data present in the datastore, also it adds listeners for
         each part e.g. a file chooser.
-        :return: nothing
+
+        :return: void
         """
         glade_path = os.path.abspath(
             os.path.join(os.path.dirname(os.path.realpath(__file__)), "glade", "planning_setup_form.glade"))
@@ -108,24 +109,27 @@ class PlanningSetupForm:
     def __call_controller_on_apply(self, button):
         """
         this function is needed, to get the data when method is called, and not old data from declaration time.
+
         :param button:
-        :return:
+        :return: void
         """
         self.__controller.on_apply(button, self.__dialog, *self.__get_entered_data())
 
     def __call_controller_on_destroy(self, button):
         """
         this function is needed, to get the data when method is called, and not old data from declaration time.
+
         :param button:
-        :return:
+        :return: void
         """
         self.__controller.on_destroy(button, self.__dialog, *self.__get_entered_data())
 
     def __call_controller_on_show_state_pool_info(self, button):
         """
         this function is needed, to get the data when method is called, and not old data from declaration time.
+
         :param button:
-        :return:
+        :return: void
         """
         self.__controller.on_show_state_pool_info(button, self.__dialog, *self.__get_entered_data())
 
@@ -159,6 +163,7 @@ class PlanningSetupForm:
     def __get_entered_data(self):
         """
         reads entered data from the planning setup form, and returns the raw values.
+
         return: the raw values.
         """
         state_pool_text = self.__state_pool_chooser_entry.get_text()

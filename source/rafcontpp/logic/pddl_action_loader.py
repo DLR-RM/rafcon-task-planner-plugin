@@ -25,10 +25,13 @@ logger = log.get_logger(__name__)
 
 
 class PddlActionLoader:
+    """
+    This class reads and parses PDDL actions from RAFCON states, into the PDDLActionRepresentation.
+    """
 
     def __init__(self, datastore):
         """
-        :param datastore: a datastore containing all necessary data.
+        :param datastore: A datastore containing all necessary data.
         """
         self.__datastore = datastore
 
@@ -37,6 +40,8 @@ class PddlActionLoader:
         load_pddl_actions reads the actions from the states and
         parses them into PddlActionRepresentations.
         Then it sets the pddl action map in datastore.
+
+        :return: void
         """
         state_libs = self.__datastore.get_state_pools()
         lib_names = []
@@ -81,11 +86,12 @@ class PddlActionLoader:
         self.__datastore.set_pddl_action_map(pddl_actions)
 
     def parse_type_string(self, type_string):
-        """parse_type_string
-        parse_type_string gets a type string of fromat type1,type2 or type1 type2 and parses it into an
+        """
+        parse_type_string reveives a type string of fromat type1,type2 or type1 type2 and parses it into an
         array containing the types.
-        :param type_string: a typestring of format type1,type2 or type1 type2.
-        :return: an array containing the types of the string, or an empty array if string is None or empty.
+
+        :param type_string: A type string of format type1,type2 or type1 type2.
+        :return: [String]: An array containing the types contained in the string, or an empty array if string is None or empty.
         """
         ts = []
         if type_string:
@@ -95,10 +101,11 @@ class PddlActionLoader:
         return ts
 
     def parse_requirement_string(self, requ_string):
-        """parse_requirement_string
-        gets an requirements string and parses it into a requirement array.
-        :param requ_string: a string contining requriements.
-        :return: an array contining requirements.
+        """
+        Reveives an requirements string and parses it into a requirement array.
+
+        :param requ_string: A string containing requirements.
+        :return: [String]: An array containing requirements. An empty array if requ_string is None or empty.
         """
         req_list = []
         if requ_string:
@@ -110,9 +117,10 @@ class PddlActionLoader:
 
     def parse_predicate_string(self, pred_string):
         """
-        construct predicate array from predicate string.
+        Construct predicate array from predicate string.
+
         :param pred_string: A string containing all predicates of the action.
-        :return: a array containing all predicates of the action.
+        :return: [String]: An array containing all predicates of the action.
         """
         predicates = []
         predicate_string = pred_string if pred_string is not None else ''

@@ -17,6 +17,7 @@ class PddlFactsRepresentation:
     def __init__(self, facts_string, obj_type_map, domain_name, problem_name):
         """
         This is the representation of the pddl facts file (not completed yet.)
+
         :param facts_string: the facts file content as string.
         :param obj_type_map: a map, containing all objects with their types.
         :param domain_name: the name of the domain the facts file is for.
@@ -31,6 +32,7 @@ class PddlFactsRepresentation:
     def get_original_object_name(self, object_name):
         """
         takes the name of an object, which is now maybe uppercase, or lowercase, and returns the original format.
+
         :param object_name: the maybe changed representation of an object (maybe upper-case now)
         :return: the object name in original format, or the given object_name, if no original was found.
         """
