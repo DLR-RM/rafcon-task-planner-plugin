@@ -39,7 +39,7 @@ setup(
   keywords = ['RAFCON', 'PDDL', 'Planner', 'state machine', 'robotic', 'FSM', 'development', 'GUI'],
   classifiers=[
     'Development Status :: 4 - Beta',
-    'License :: OSI Approved :: BSD-3-Clause',
+    'License :: OSI Approved :: BSD License',
     'Natural Language :: English',
     'Operating System :: Unix',
     'Programming Language :: Python :: 2.7',
