@@ -25,6 +25,7 @@ setup(
   description = 'The RAFCON Task Planner Plugin (RTPP) is a plugin to interface arbitrary pddl planner'
                 ' and automate the state machine generation process.',
   long_description=get_readme(),
+  long_description_content_type='text/markdown',
   author = 'Christoph Suerig, Sebastian Brunner',
   author_email = 'christoph.suerig@dlr.de, sebastian.brunner@dlr.de',
   url = 'https://dlr-rm.github.io/rafcon-task-planner-plugin/',
@@ -35,7 +36,7 @@ setup(
         # Include all glade files
         'rafcontpp.view.glade': ['*.glade']
   },
-  install_requires=['rafcon'],
+  #install_requires=['rafcon'],
   keywords = ['RAFCON', 'PDDL', 'Planner', 'state machine', 'robotic', 'FSM', 'development', 'GUI'],
   classifiers=[
     'Development Status :: 4 - Beta',
