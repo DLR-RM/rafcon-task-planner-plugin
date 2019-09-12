@@ -24,4 +24,7 @@ To achieve this, states in RAFCON are annotated with semantic information, using
 ## GitHub
 Here is the GitHub repository of the [RAFCON task planner plugin](https://github.com/DLR-RM/rafcon-task-planner-plugin).
 
-
+## PyPi
+The Plugin is also available on PyPi: <br>
+`pip install rafcon-task-planner-plugin`<br>
+**Important:** The PyPi version doesn't contain any examples!

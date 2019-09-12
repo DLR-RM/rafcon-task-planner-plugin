@@ -352,10 +352,10 @@ You can't just plan this one state machine, but arbitrary manyǃ For example, le
 ## 1.8 Solution
 
 A solution for this tutorial is provided in:<br> 
-`[repository_path]/examples/restaurant_tutorial/src`<br>
+`[repository_path]/examples/restaurant_tutorial`<br>
 There you find all described files, and states as well as an executable restaurant_state_machine and all related files, generated during the planning process. To load the restaurant_state_machine, which is located inside of the restaurant_state_pool, you must add the library path to RAFCON:
  ```
- Library Path:[repository_path]/examples/restaurant_tutorial/src/restaurant_state_pool
+ Library Path:[repository_path]/examples/restaurant_tutorial/restaurant_state_pool
  Library Key: restaurant_state_pool
  ```
 

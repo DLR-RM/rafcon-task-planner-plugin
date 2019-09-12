@@ -65,9 +65,9 @@ In this example, Alice, Bob and Eve will wander arround in the map, but Bob is a
 `export RAFCON_PLUGIN_PATH=/path/to/tpp/plugin`
 4. Add the following two paths as RAFCON Library Paths: <br> 
    Library key: `turtle_lib` <br> 
-   Path: `[Repository_PATH]/rafcon_task_planner_plugin/examples/turtle_sim_example/src/turtle_lib`<br>  
+   Path: `[Repository_PATH]/rafcon_task_planner_plugin/examples/turtle_sim_example/turtle_lib`<br>  
    Library key: `turtle_sim_example`<br> 
-   Path: `[Repository_PATH]/rafcon_task_planner_plugin/examples/turtle_sim_example/src`  
+   Path: `[Repository_PATH]/rafcon_task_planner_plugin/examples/turtle_sim_example`  
 
 If we have a look into the **turtle_sim_example** Library, we can see **turtle_lib** as well as the state machine **turtle_sim_state_machine**.
 
@@ -90,11 +90,11 @@ The data we enter in this section is important during the Planning and generatio
 
 #### 2.4.1.1 State pools
 We use our turtle_lib as state pool, it should be:<br>
-`[Repository_PATH]/rafcon_task_planner_plugin/examples/turtle_sim_example/src/turtle_lib`
+`[Repository_PATH]/rafcon_task_planner_plugin/examples/turtle_sim_example/turtle_lib`
 
 #### 2.4.1.2 Type file
 The type files location is:<br>
-`[Repository_PATH]/rafcon_task_planner_plugin/examples/turtle_sim_example/src/rtpp-turtle_sim_db.json`<br>  
+`[Repository_PATH]/rafcon_task_planner_plugin/examples/turtle_sim_example/rtpp-turtle_sim_db.json`<br>  
 Since we have only Turtles and Locations, it is really small and uninteresting.
 
 #### 2.4.1.3 Planner
@@ -102,7 +102,7 @@ Use as Planner the **Fast Downward Planning System**.
 
 #### 2.4.1.4 Facts file 
 The facts files location is: <br>
-`[repository_PATH]/rafcon_task_planner_plugin/examples/turtle_sim_example/src/turtle_sim_facts.pddl`<br>
+`[repository_PATH]/rafcon_task_planner_plugin/examples/turtle_sim_example/turtle_sim_facts.pddl`<br>
 Feel free to play around with it later!
 
 #### 2.4.1.5 Generate State machine Into
@@ -119,7 +119,7 @@ This section is not important during the planning process, but during runtime of
 #### 2.4.2.1 Runtime Data
 If we enter a path to a json file here, the plugin will add a data initialization state as first state of the planned state machine.
 As we know a planner would return something like **move bob middle** and not **move bob x=5, y=5**. However, ROS needs coordinates, and don't know where **middle** is. To solve this issue, we use **middle** as an object identifier, and define the object in a file. It's path is:<br>
-`[repository_PATH]/rafcon_task_planner_plugin/examples/turtle_sim_example/src/turtle_demo_data.json`.<br>
+`[repository_PATH]/rafcon_task_planner_plugin/examples/turtle_sim_example/turtle_demo_data.json`.<br>
 Feel free to have a look into the file, and see all object definitions.
 
 #### 2.4.2.2 Include

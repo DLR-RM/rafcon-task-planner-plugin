@@ -5,6 +5,8 @@ title: Documentation
 
 # Documentation
 
+## User Documentation
+
 This is the Plugin's user documentation. It gives an overview of the plugins functionality, and explains it's different views, concepts, functionalites and limitations. 
 
 1. [Overview](documentation/Overview.md)
@@ -16,3 +18,8 @@ This is the Plugin's user documentation. It gives an overview of the plugins fun
 1. [Planner Integration](documentation/PlannerIntegration.md)  
 1. [Data Flow](documentation/DataTransfer.md)  
 1. [Limitations](documentation/Limitations.md)
+
+
+## Developer Documentation
+
+RTPP's code is documented externally at [https://readthedocs.org](https://rafcon-task-planner-plugin.readthedocs.io/en/latest/index.html) 
