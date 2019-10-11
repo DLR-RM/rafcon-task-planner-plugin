@@ -308,7 +308,7 @@ Let's hit the "Plan Task" Button:
 ![Restaurant example plugin configuration](../../assets/images/tutorials/restaurant/Rafcon_rtpp_configuration.png "Plugin Configuration")
 
 If we hit the "Generate State machine" button now, the planner will try to solve the scenario. Afterwards the found plan will be used to create a state machine.
-![Restaurant example state machine](../../assets/images/tutorials/restaurant/Rtpp_restaurant_statemachine.png "Restaurant State machine")
+![Restaurant example state machine](../../assets/images/tutorials/restaurant/Rtpp_restaurant_statemachine.png "Restaurant state machine")
 
 If we execute the state machine now, the console output should look like below, as you can see Alice is getting her pizzaǃ 
 ```consoleOutput

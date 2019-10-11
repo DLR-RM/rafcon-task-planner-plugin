@@ -89,7 +89,7 @@ The Auto Complete Button is located between the 'PDDL' and the 'Predicates' fiel
 
 ### Apply
 
-The Apply Button is located in the footer of the action tab. The plugin stores all information of the PDDL action in the "Semantic Data" Tab of vanilla Rafcon. so the apply Buttons purpose is, transmit the entered data from the PDDL Action Tab into the semantic data tab.<br>   
+The Apply Button is located in the footer of the action tab. The plugin stores all information of the PDDL action in the "Semantic Data" Tab of vanilla RAFCON. so the apply Buttons purpose is, transmit the entered data from the PDDL Action Tab into the semantic data tab.<br>   
 **Important:** Hitting the Apply Button will not store the PDDL data persistent. It is just persistent after saving the state machine. If the state was saved but the Apply button wasn't clicked, the PDDL action tab is also not saved.
 
 ### Enable Auto Apply

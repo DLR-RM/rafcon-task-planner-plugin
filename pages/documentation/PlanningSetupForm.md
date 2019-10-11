@@ -139,7 +139,7 @@ this file will be used as facts file during the planning process.
 ### Generate State Machine Into
 
 The plugin has two generation modi, one where a completely new state machine is created during a task, and another where the planning result is generated into an existing Hierarchy State.  
-To select the mode, this field provides a radio button group. If 'independent State machine' was selected, RTPP will create a new state machine. If 'selected state' was choosen the plugin will use an existing state to generate the planning result into.  
+To select the mode, this field provides a radio button group. If 'independent state machine' was selected, RTPP will create a new state machine. If 'selected state' was choosen the plugin will use an existing state to generate the planning result into.  
 As the radio button name indicates, the plugin will try used the current selected state. Therefore it's mandatory, that exactly one state is selected, and that the selected state is a Hierarchy State. If the selected Hierarchy State is a root state, RTPP will copy it, and use it to generate a new, independent state machine for performance reasons.<br>
 **Important**: To avoid accidents RTPP rejects non empty states by default. To allow a particular state, to be used despite it's not empty, the value of 'Allow_Override' in 'RAFCONTPP' in the semantic data section of the state hast to bet set to 'True'. Then all child states of the Hierarchy State are automatically deleted before adding new ones. If 'selected State' is choosen, the fields 'State machine name' and 'Save state machine in' are ignored.<br>
 
@@ -148,11 +148,11 @@ As the radio button name indicates, the plugin will try used the current selecte
 Value | Explanation
 ----|----
 selected State | Generate into existing Hierarchy State.
-independent State machine | Create new State machine.
+independent state machine | Create new state machine.
 <br>
 ### State Machine Name
 
-The purpose of this text field is to enter the name, the resulting State machine will later have. If no name is provided, the name of the problem, defined in the facts file, is used instead. If 'selected State' in 'Generate State Machine Into' is choosen, this field is ignored.<br>
+The purpose of this text field is to enter the name, the resulting state machine will later have. If no name is provided, the name of the problem, defined in the facts file, is used instead. If 'selected State' in 'Generate State Machine Into' is choosen, this field is ignored.<br>
 
 **Example**<br>
 
@@ -186,7 +186,7 @@ This directory chooser specifies the path in which generated files should be sto
 
 ## Runtime Section
 
-In this context runtime dosen't refere to the runtime of the task generation process, but rather to the runtime of the State machine itself, e.g. when its executed. This section was added to introduce object resolution to the plugin. since PDDL works with identifiers e.g. robot1, munich or turtle_bob instead of complex objects, a system to resolve these names during runtime is needed. How this works in detail is explained on [Data transfer page](DataTransfer.md). The runtime section part of the configuration file specifies, if and how object definitions should be added to the state machine.   
+In this context runtime dosen't refere to the runtime of the task generation process, but rather to the runtime of the state machine itself, e.g. when its executed. This section was added to introduce object resolution to the plugin. since PDDL works with identifiers e.g. robot1, munich or turtle_bob instead of complex objects, a system to resolve these names during runtime is needed. How this works in detail is explained on [Data transfer page](DataTransfer.md). The runtime section part of the configuration file specifies, if and how object definitions should be added to the state machine.   
 
 
 ### Runtime Data
@@ -216,7 +216,7 @@ could look like this:
 
 This field consists of a radio button group, and defines if the data file (set in Runtime Data) should be copied or just a reference should be included.  
 
-**as copy:** Choosing this radio button, the data will be copied during the state machine generation process. Therefore the file has to exist before generating the State machine, but not when executing it. After the state machine was generated, file changes will have no effect on it.<br>
+**as copy:** Choosing this radio button, the data will be copied during the state machine generation process. Therefore the file has to exist before generating the state machine, but not when executing it. After the state machine was generated, file changes will have no effect on it.<br>
 **as reference:** Choosing this radio button, a reference to the data file is included into the state machine, and the data is copied when starting the state machine execution. Therefore the file path does not have to exist during the generation process, but during runtime.
 
 **Example**
@@ -224,7 +224,7 @@ This field consists of a radio button group, and defines if the data file (set i
 Button | description
 ---|---
 as copy | Copies the file during generation process.
-as reference | Copies the file everytime the State machine is started.
+as reference | Copies the file everytime the state machine is started.
 
 <br>
 ## Buttons

@@ -5,8 +5,8 @@
 layout: default
 title: Home
 ---
-# Rafcon Task Planner Plugin
-![The Rafcon Task Planner Plugin](assets/images/RafconTPPMain.png "An Overview of the Rafcon Task Planner Plugin")
+# RAFCON Task Planner Plugin
+![The RAFCON Task Planner Plugin](assets/images/RafconTPPMain.png "An Overview of the RAFCON Task Planner Plugin")
 
 
 The Task Planner is a plugin for [RAFCON](https://github.com/DLR-RM/RAFCON/), which allows to automatically create, or extend state machines for given tasks.  
@@ -15,8 +15,8 @@ To achieve this, states in RAFCON are annotated with semantic information, using
 
 ## Features
 + [Annotate States with PDDL Actions](pages/documentation/PDDLActionTab.md)
-+ [Automatically generate a State machine for a given Task](pages/tutorials/restaurant_tutorial.md)
-+ [Automatically extend a State machine](pages/tutorials/turtle_sim_example.md)
++ [Automatically generate a state machine for a given Task](pages/tutorials/restaurant_tutorial.md)
++ [Automatically extend a state machine](pages/tutorials/turtle_sim_example.md)
 + [Configure the Plugin to inject runtime Data initialization into the state machine](pages/tutorials/turtle_sim_example.md)
 + [Easily integrate a Semantic Planner](pages/documentation/PlannerIntegration.md)
 
