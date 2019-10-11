@@ -17,16 +17,17 @@ logger = log.get_logger(__name__)
 
 
 class PddlActionRepresentation:
-    """Represents a PDDL-Action.
+    """
+    This Module represents a PDDL Action. Currently just name, predicates, types, requirements and parameters.
     """
     def __init__(self, name, action, predicates, types, requirements, parameters):
         """
-        :param name: the name of the action
-        :param action: the pddl action as string
-        :param predicates: a list of predicates used in the action
-        :param types: a list of types used in the action
-        :param requirements: a list of requirements
-        :param parameters: the parameter names of the action without the ? symbol.
+        :param name: The name of the action.
+        :param action: The pddl action as string.
+        :param predicates: A list of predicates used in the action.
+        :param types: A list of types used in the action.
+        :param requirements: A list of requirements.
+        :param parameters: The parameter names of the action without the ? symbol.
         """
         self.name = name
         self.action = action
@@ -40,10 +41,10 @@ class PddlActionRepresentation:
 
 def action_to_upper(action):
     """
-     action to upper receives a action in pddl_action_representation, and returns it in upper case
+     action to upper receives an action in pddl_action_representation, and returns it in upper case.
 
-    :param action: a action in PddlActionRepresentation
-    :return: the action in upper case
+    :param action: A action in PddlActionRepresentation
+    :return: PddlActionRepresentation: The action in upper case
     """
     if action:
         action.name = action.name.upper()

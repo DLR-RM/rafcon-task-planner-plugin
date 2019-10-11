@@ -34,7 +34,7 @@ def main_window_setup(main_window_controller):
     """
     called on window setup.
 
-    :param main_window_controller:
+    :param main_window_controller: Unused
     :return: void
     """
     logger.info("Run main window setup of {0} plugin.".format(__file__.split(os.path.sep)[-2]))
@@ -57,7 +57,7 @@ def post_state_editor_register_view(state_editor):
     called every time, a State Editor is created.
     adds the action tab.
 
-    :param state_editor:
+    :param state_editor: The state editor
     :return: void
     """
     state_editor_view = state_editor.view

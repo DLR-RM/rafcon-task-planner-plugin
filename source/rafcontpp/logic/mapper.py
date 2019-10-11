@@ -29,7 +29,7 @@ class Mapper:
 
     def __init__(self, datastore):
         """
-        :param datastore: A datastore containing all necessary data.
+        :param datastore: A datastore containing state pools.
         """
         if datastore is None:
             logger.error("Datastore in Mapper can not be None!")

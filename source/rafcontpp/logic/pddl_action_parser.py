@@ -173,7 +173,7 @@ class PddlActionParser:
         Checks if the Predicate is a PDDL built-in predicate.
 
         :param name: The name of a predicate.
-        :return: Boolean: True if the predicate is a PDDL built-in predicate. False otherwise.
+        :return: Boolean: True if the predicate is a PDDL built-in predicate, false otherwise.
         """
         is_built_in = False
         if name:

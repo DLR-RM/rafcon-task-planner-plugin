@@ -22,8 +22,8 @@ class PlanStep:
         Represents a step of the plan, in other words
         one parameterized action of the plan.
 
-        :param name: The name of the action as String
-        :param args: The parameters of the action as [String]
+        :param name: The name of the action as String.
+        :param args: The parameters of the action as [String].
         """
         self.name = name.upper()
         self.parameter = parameter

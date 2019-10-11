@@ -31,7 +31,7 @@ class PddlActionLoader:
 
     def __init__(self, datastore):
         """
-        :param datastore: A datastore containing all necessary data.
+        :param datastore: A datastore containing state pools, the state action map, and available actions.
         """
         self.__datastore = datastore
 

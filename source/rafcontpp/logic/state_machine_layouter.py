@@ -35,7 +35,7 @@ class StateMachineLayouter:
         :param state_machine: A state machine to layout.
         :param target_state: The "root state" all content in the state will be formated, it needs to be tube like.
         :param fixed_size: True if the size of the root state is fixed.
-        :param state_order: the order of the states in the machine.
+        :param state_order: The order of the states in the machine.
         :return: void
         """
         start_time = time.time()
@@ -152,10 +152,10 @@ class StateMachineLayouter:
         Get num rows, receives the number of states, a width and a height. it uses the width and the height to calculate
         a ratio, to be able to calculate the number of rows to use the given space optimal.
 
-        :param num_states: The number of the states used
+        :param num_states: The number of the states used.
         :param width: The width of the available space. if this or height <= 0 automatically set to 16.
         :param height: The height of the available space if this or heigt <= 0 automatically set to 9.
-        :return: double: The number of rows optimal in the sm
+        :return: double: The number of rows optimal in the state machine.
         """
         if width <= 0 or height <= 0:
             width = 16.
@@ -169,7 +169,7 @@ class StateMachineLayouter:
 
     def __get_target_state_dimensions(self, canvas_width, canvas_height):
         """
-        get_root_state_dimensions receives a desired canvas width and height, and returns the overall rootstate size,
+        get_target_state_dimensions receives a desired canvas width and height, and returns the overall rootstate size,
         and the border width.
 
         :param canvas_width: The width of the canvas.

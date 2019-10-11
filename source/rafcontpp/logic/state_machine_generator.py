@@ -42,6 +42,12 @@ class StateMachineGenerator:
     """
 
     def __init__(self, datastore):
+        """
+
+        :param datastore: A datastore containing: the target state, the state machine save directory, the action state map,
+        the pddl action map, the facts representation, the runtime data path, the plan, the state pools, and the state
+        machine name.
+        """
         self.__datastore = datastore
 
     def generate_state_machine(self):
@@ -190,9 +196,7 @@ class StateMachineGenerator:
         Takes a root state, and generates the state machine into it.
 
         :param target_state: The root state
-        :return:(HierarchyState,[State]): The root state containing the state machine,
-        and the state order list is a list of all states in the sm in right order.
-        Can return (None,[]) if process was interrupted.
+        :return:(HierarchyState,[State]): The root state containing the state machine, and the state order list, is a list of all states in the sm in right order. Can return (None,[]) if process was interrupted.
         """
         a_s_map = self.__datastore.get_action_state_map()
         pddl_action_dict = self.__datastore.get_pddl_action_map()
@@ -294,8 +298,7 @@ class StateMachineGenerator:
         to write it into a dictionary in the global variables.
 
         :param data_init_file_path: The path of a file containing a json dict.
-        :param use_as_ref: True if the path should be included as reference,
-        False if the dictionary itself should be included.
+        :param use_as_ref: True if the path should be included as reference, False if the dictionary itself should be included.
         :return: ExecutionState: An Execution state, that will update the rtpp_data dict in the global variables.
         """
         data_init_state = ExecutionState(name='Runtime Data Initialization (rtpp_data)')
@@ -316,6 +319,11 @@ class StateMachineGenerator:
         return data_init_state
 
     def __get_actual_sm_name(self):
+        """
+        Looks if a state machine name is present in the datastore, if no name is present it uses the problem name followed by _state_machine.
+
+        :return: String: The actual state machine name.
+        """
         sm_name = self.__datastore.get_sm_name()
         sm_name = self.__datastore.get_pddl_facts_representation().problem_name + '_state_machine' if len(
             sm_name) == 0 else sm_name

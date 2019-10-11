@@ -24,7 +24,7 @@ def current_thread():
     """
     current thread returns the current interruptable thread, it was called from.
 
-    :return: the current interruptable thread, or None if current thread is not interruptable.
+    :return: InterruptableThread: The current interruptable thread, or None if current thread is not interruptable.
     """
     current_thread_id = threading.current_thread().ident
     current_thread = None
@@ -36,7 +36,7 @@ def current_thread():
 
 class InterruptableThread(threading.Thread):
     """
-    Its a usual Thread, but its interruptable.
+    It's a usual thread, but its interruptable.
     """
 
     def __init__(self, group=None, target=None, name=None, args=(), kwargs={}):
@@ -65,6 +65,6 @@ class InterruptableThread(threading.Thread):
 
     def is_interrupted(self):
         """
-        :return: True if the Interrupted Flag is set. False Otherwise.
+        :return: Boolean: True if the Interrupted Flag is set. False otherwise.
         """
         return self.__interrupted_flag.is_set()

@@ -27,8 +27,8 @@ class ConfirmDialog:
     def __init__(self, parent, content):
         """
 
-        :param parent: the parent window of the dialog
-        :param content: the text to display in the dialog
+        :param parent: The parent window of the dialog.
+        :param content: The text to display in the dialog.
         """
         confirm_dialog_path = os.path.abspath(
             os.path.join(os.path.dirname(os.path.realpath(__file__)), "glade", "confirm_dialog.glade"))
@@ -44,18 +44,24 @@ class ConfirmDialog:
 
     def show(self):
         """
-        shows the planning wait window.
+        Displays the dialog on screen.
+
+        :return: void
         """
         self.__confirm_dialog.show_all()
 
     def hide(self):
         """
-        hides the planning_wait_window
+        Hides the dialog.
+
+        :return: void
         """
         self.__confirm_dialog.hide()
 
     def destroy(self):
         """
-        destroys the planning_wait_window
+        Destroys the dialog.
+
+        :return: void
         """
         self.__confirm_dialog.destroy()

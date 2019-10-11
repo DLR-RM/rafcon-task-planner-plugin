@@ -60,7 +60,7 @@ class FdIntegration(PlannerInterface):
 
     def is_available(self):
         """
-        :return: True, if the planner is available in the system, false otherwhise.
+        :return: Boolean: True, if the planner is available in the system, false otherwise.
         """
         devnull = open(os.devnull, "wb")
         process = subprocess.Popen('fast-downward', stdout=devnull, stderr=devnull, shell=True)
@@ -71,8 +71,8 @@ class FdIntegration(PlannerInterface):
 
     def __parse_raw_plan(self, plan_path):
         """
-        :param plan_path: the path of the plan file
-        :return: a parsed plan
+        :param plan_path: The path of the plan file.
+        :return: [PlanStep]: A parsed plan.
         """
         parsed_plan = []
         if os.path.isfile(plan_path):
@@ -89,6 +89,15 @@ class FdIntegration(PlannerInterface):
         return parsed_plan
 
     def __copy_and_clean(self, plan_path, outsas_path, storage_path):
+        """
+        Copy and clean moves all generated files to the storage_path, and writes their names into a list.
+
+        :param plan_path: The path of the plan.
+        :param outsas_path: The path of the outsas file.
+        :param storage_path: The storage path.
+        :return: [String]: A list with the names of the moved files.
+        """
+
         copied_files = []
         if os.path.isfile(plan_path):
             shutil.move(plan_path, os.path.join(storage_path, 'sas_plan'))
@@ -102,8 +111,8 @@ class FdIntegration(PlannerInterface):
         """
         receives an error code and returns the corresponding error message.
 
-        :param fd_exit: an exit code
-        :return: the corresponding error message.
+        :param fd_exit: An exit code
+        :return: String: The corresponding error message.
         """
 
         translated_exit_code = str(fd_exit)

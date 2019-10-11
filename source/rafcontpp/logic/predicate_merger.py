@@ -24,7 +24,7 @@ class PredicateMerger:
 
     def __init__(self, datastore):
         """
-        :param datastore: A datastore containing all necassary data.
+        :param datastore: A datastore containing available types.
         """
         self.__datastore = datastore
 
@@ -136,7 +136,7 @@ class PredicateMerger:
         """
         Receives a predicate tuple and returns it as predicate string.
 
-        :param predicate_tuple: a tuple in format (PREDICATE_NAME,[(TYPE,NUM_VARIABLES)])
+        :param predicate_tuple: A tuple in format (PREDICATE_NAME,[(TYPE,NUM_VARIABLES)])
         :return: String: A predicate string e.g (PREDICATENAME ?0 ?1 - Type).
         """
         pred_string = '(' + predicate_tuple[0]
