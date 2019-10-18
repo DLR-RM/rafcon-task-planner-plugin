@@ -5,7 +5,7 @@ title: Turtle Sim Example
 # 2. Turtle Sim Example
 
 This example demonstrates how the **data flow** can work in a planned state machine and how **flexible** they are even when using them with **ROS**.
-The example is base on RAFCON's [turtle demo](https://rafcon.readthedocs.io/en/latest/tutorials.html#starting-the-basic-turtle-demo-state-machine-using-ros), but the states were modified to use the plugin's data flow style and are enriched with PDDL actions.
+The example is base on RAFCON's [turtle demo](https://rafcon.readthedocs.io/en/latest/tutorials.html#starting-the-basic-turtle-demo-state-machine-using-ros), but the states were modified to use the plugin's data flow style and are enriched with pddl actions.
 
 
 - [2.1 Scenario description](#21-scenario-description)
@@ -39,8 +39,8 @@ The scenario consists of:
 - And three turtles (alice, bob and eve).
 
 With the following rules:
-- Turtles can only move between connected points
-- If a turtle moves it gets hungry
+- Turtles can move between connected points only
+- If a turtle moves, it gets hungry
 - If turtles are hungry they can eat each other
 
 In this example, Alice, Bob and Eve will wander arround in the map, but Bob is a cannibal, therefore he will eat Alice and Eve at some point.
@@ -62,28 +62,28 @@ In this example, Alice, Bob and Eve will wander arround in the map, but Bob is a
 1. Start the ROS core: `roscore`
 2. Start the turtlesim node: `rosrun turtlesim turtlesim_node`
 3. Start RAFCON with the plugin in your ros environment:<br>
-`export RAFCON_PLUGIN_PATH=/path/to/tpp/plugin`
+`export RAFCON_PLUGIN_PATH=[/path-to-rtpp-repo]/source/rafcontpp`
 4. Add the following two paths as RAFCON Library Paths: <br> 
    Library key: `turtle_lib` <br> 
    Path: `[Repository_PATH]/rafcon_task_planner_plugin/examples/turtle_sim_example/turtle_lib`<br>  
    Library key: `turtle_sim_example`<br> 
    Path: `[Repository_PATH]/rafcon_task_planner_plugin/examples/turtle_sim_example`  
 
-If we have a look into the **turtle_sim_example** Library, we can see **turtle_lib** as well as the state machine **turtle_sim_state_machine**.
+If we have a look into the **turtle_sim_example** library, we can see **turtle_lib** as well as the state machine **turtle_sim_state_machine**.
 
 ### 2.3.1 turtle_sim_state_machine   
-turtle_sime_state_machine is the one we will execute late. If you open it now, you see, that it contains a ros node initialization state, as well as hierarchy state named **Turtle Sim Core**. If you want you can execute it now, but since we didn't plan the core yet, nothing spectacular will happen.
+turtle_sime_state_machine is the one we will execute later. If you open it now, you see, that it contains a ros node initialization state, as well as hierarchy state named **Turtle Sim Core**. If you want you can execute it now, but since we didn't plan the core yet, nothing spectacular will happen.
 
 
 ### 2.3.2 Turtle Sim Core   
 This is the state we will plan into, and also the one where everything happens. Inside of this state turtles are spawned, moved and eaten.
 
 ### 2.3.3 turtle_lib  
-This folder contains a bunch of states. These are the bricks used to plan our scenario. Most of them are enriched with a PDDL action, but not all of them. So don't be surprised, if the plugin warns you later on during the planning process. 
+This folder contains a bunch of states. These are the bricks used to plan our scenario. Most of them are enriched with a pddl action, but not all of them. So don't be surprised, if the plugin warns you later on during the planning process. 
 
 ## 2.4 Planning
 
-Now we are ready to plan into the turtle sim core. Because this is not a basic tutorial everything was prepared for you, so you only have to select the **Turtle Sim Core**, and configure the Task Planner Plugin by hiting **Plan Task**.
+Now we are ready to plan into the turtle sim core. Because this is not a basic tutorial everything was prepared for you, so you only have to select the **Turtle Sim Core**, and configure the Task Planner Plugin by hitting **Plan Task**.
 
 ### 2.4.1 Planning
 The data we enter in this section is important during the Planning and generation process.
@@ -95,10 +95,10 @@ We use our turtle_lib as state pool, it should be:<br>
 #### 2.4.1.2 Type file
 The type files location is:<br>
 `[Repository_PATH]/rafcon_task_planner_plugin/examples/turtle_sim_example/rtpp-turtle_sim_db.json`<br>  
-Since we have only Turtles and Locations, it is really small and uninteresting.
+Since we have only turtles and locations, it is really small and uninteresting.
 
 #### 2.4.1.3 Planner
-Use as Planner the **Fast Downward Planning System**.
+Use as planner the **Fast Downward Planning System**.
 
 #### 2.4.1.4 Facts file 
 The facts files location is: <br>

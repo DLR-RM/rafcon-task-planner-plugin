@@ -28,7 +28,7 @@ This tutorial introduces the **basic functionality** of the RAFCON Task Planner 
 ## 1.1 Scenario Description
 
 Our scenario takes place in a little pizzeria. There is the chef Bob, who is baking pizza, the waiter James serving the guests,
-and one guest, Alice.   
+and one guest: Alice.   
 
 Let's assume, Alice is really hungry, and wants to eat some pizza. In this tutorial, we want to create a state machine, to feed Alice, e.g. A state machine, that models the process of Alice ordering a pizza in the restaurant, Bob baking, and James serving it, so that Alice is able to eat it.
  
@@ -49,7 +49,7 @@ At first, RTPP has to be registered in RAFCON. To do so, the plugin path has to 
 `RAFCON_PLUGIN_PATH=$RAFCON_PLUGIN_PATH:[RTPP-REPOSITORY̠-PATH]/source/rafcontpp`
 
 
-If you did this successfully, RAFCON should now have an extra menu button called "Plan Task", and a new tab called "PDDL Action" at the right, below the semantic data tab. The image shows RAFCON with the task planner plugin loaded.
+If you did this successfully and restarted RAFCON, it should now have an extra menu button called "Plan Task", and a new tab called "PDDL Action" at the right, below the semantic data tab. The image shows RAFCON with the task planner plugin loaded.
 
 ![Restaurant example rtpp loaded](../../assets/images/tutorials/restaurant/Rafcon_rtpp_loaded.png "Plugin loaded")
 
@@ -74,7 +74,7 @@ To give Alice the ability to eat her pizza, we have to create the state eat by e
           return 0
     
       ```
-5. Now we have to open the PDDL Action Tab below the Semantic Data Section. (NOT the rtpp_data dictionary in the Semantic Data Section)
+5. Now we have to open the PDDL Action Tab below the Semantic Data Section. (NOT the RAFCONTPP dictionary in the Semantic Data Section)
 
 6. If you want, you can write a description text into the **Description field**, it's for your documentation.
 
@@ -89,12 +89,12 @@ To give Alice the ability to eat her pizza, we have to create the state eat by e
     )
     ```     
     The action is called eat, and has also two parameters: ?person of type Person and ?food of type Food<br>
-    **IMPORTANT**: The names of the variables ?person and ?food have to match with the names of the state's input ports person and food (neglecting the questionmark). But not every parameter of the action has to have an corresponding input port in the state and vice versa. 
+    **IMPORTANT**: The names of the variables ?person and ?food have to match with the names of the state's input ports person and food (neglecting the questionmarks). But in general not every parameter of the action has to have an corresponding input port in the state and vice versa. 
 
 8. In further states you can click auto complete, (beware: auto complete is just a best effort approach, it works fine in most cases (I don't know a case yet, where it doesn't work), nevertheless you should check the results.) but in this first state i will explain all fields.
 
 9. In the **Predicates section** you have to insert the predicates, which are used by the action. In this case, the predicates are "be-full" and "has". They are used for example as "(has ?person ?food)". The complete predicate (we have to insert the complete predicate into the field) would be "(has ?person - Person ?food - Food)".  
-   In this section variable names don't matter, just the predicate name and its types. So (has ?person - Person ?food - Food) and (has ?dosent - Person ?matter - Food) are the same predicate, but (has ?person - Object ?food - Food) would be a different one (because it differs in the type "Object").  
+   In this section variable names don't matter, just the predicate name and its types. So (has ?person - Person ?food - Food) and (has ?dosent - Person ?matter - Food) are the same predicate, but (has ?person - Object ?food - Food) would be a different one because it differs in the type "Object".  
    According to this, we have to insert the following into the predicate section:
     ```Pddl
     (be-full ?person - Person)
@@ -105,13 +105,13 @@ To give Alice the ability to eat her pizza, we have to create the state eat by e
     ```Pddl
     Food, Person
     ``` 
-11. The **Requirements Section** is a bit complicated, and not all of them are decidable at this point in time. If you want to know, when to check which box, please follow a PDDL standard. In this case we have to check the ":strips" and the ":typing" box. ":strips" because we use conjunction and negative effects, and ":typing" because we use types e.g. Food and Person.
+11. The **Requirements Section** is a bit complicated, and not all of them are decidable at this point in time. If you want to know, when to check which box, please follow the [pddl 2.1 standard](https://arxiv.org/pdf/1106.4561.pdf). In this case we have to check the ":strips" and the ":typing" box. ":strips" because we use conjunction and negative effects, and ":typing" because we use types e.g. Food and Person.
     ```
     check the fields: :typing and :strips
     ```
 12. Save the state into [your_folder]. 
 
-Once you are finish your state should look like in the figure below.
+Once you are finish, your state should look like in the figure below.
 
 ![restaurant example state eat](../../assets/images/tutorials/restaurant/Rafcon_rtpp_eat.png "State Eat")
 
@@ -258,7 +258,7 @@ The structure of the file is a dictionary with types as keys, and their parents 
 
 ## 1.6 Facts Facts Facts
 
-As final step, we have to describe our problem, or better our goal, our initial state (init), and all "objects", which are present in our world. In this case the **objects** are James the Waiter, Bob the chef, Alice the Guest, a pizza, the kitchen, the table and the entrance of the restaurant. At the beginning of our situation (**init**) Bob is where chefs are: in the kitchen. James is standing at the entrance, waiting for new guests and Alice is sitting at a table. She is really hungry and wants a pizza. The **goal** is to bring Alice her pizza and make her feel full. Written in pddl, this could look like this: 
+As final step, we have to describe our problem, or better our goal, our initial state (init), and all "objects", which are present in our world. In this case the **objects** are James the waiter, Bob the chef, Alice the guest, a pizza, the kitchen, the table and the entrance of the restaurant. At the beginning of our situation (**init**) Bob is where chefs are: in the kitchen. James is standing at the entrance, waiting for new guests and Alice is sitting at a table. She is really hungry and wants a pizza. The **goal** is to bring Alice her pizza and make her feel full. Written in pddl, this could look like this: 
 ```Pddl
 (define (problem alice_is_hungry)(:domain restaurant)
 (:objects 
@@ -282,7 +282,7 @@ As final step, we have to describe our problem, or better our goal, our initial 
 
 Copy it, and save it in a file, **facts.pddl** 
 
-## 1.7 Planning a State machine
+## 1.7 Planning a State Machine
 
 Now we are ready. We have: 
 1. A folder containing five prepared states
@@ -294,13 +294,13 @@ Let's hit the "Plan Task" Button:
 **State pools:** This should contain the folder, where you saved the prepared states in.  
 **Type file:** Enter the location of your rtpp-typehierarchy.json file here.  
 **Planner:** Choose the Fast Downward Planning System (you installed it at the beginning of this tutorial).  
-**Planner script location:** Leave it at it is (its not considered as long as you don't choose "Other..." in the Planner field.). If you want to use your own planner with the Plugin, you can enter the location of your integration script here.  
+**Planner script location:** Leave it at it is (it's not considered as long as you don't choose "Other..." in the Planner field.). If you want to use your own planner with the plugin, you can enter the location of your integration script here.  
 **planner argv:** Leave it empty. If you want to pass arguments directly to the planner, you can enter them here.  
 **Facts file:** Enter the location of your facts.pddl file.  
-**Generate State machine Into:** Select independent State machine. If you select "selected state", the state machine would be generated into the current selected state.
+**Generate State machine Into:** Select independent state machine. If you select "selected state", the state machine would be generated into the current selected state.
 **State machine name:** Let's call it restaurant_state_machine.  
 **Save state machine in:** Enter the location, where the plugin should save the state machine it will generate.  
-**Generated files:** The Plugin will create additional files, like a domain, or the plan to solve the problem. If you want to keep them, check this button.  
+**Generated files:** The plugin will create additional files, like a domain, or the plan to solve the problem. If you want to keep them, check this button.  
 **Save files in:** Specifies the location, where to save generated files.  
 **Runtime Data:** Leave it empty.  
 **Include:** As long as Runtime Data is empty, this buttons are not considered, so we don't need to change something here.   

@@ -108,8 +108,8 @@ The planner script location field is a file chooser. The file choosen here will 
 <br><br>
 **Example**
 
-If Planner Scrip Location contains the value above, and 'Other...' is selected in the Planner field, 
-the script 'my_planner_script.py' will be used for Planning in the Task.
+If Planner Scrip Location contains the value below, and 'Other...' is selected in the Planner field, 
+the script 'my_planner_script.py' will be used for planning in the task.
 ```
 Field value: /my/scripts/my_planner_script.py
 ```
@@ -117,17 +117,17 @@ Field value: /my/scripts/my_planner_script.py
 ### Planner Argv
 
 To configure the planner e.g. The Fast Downward Planning System, an argument vector can be inserted here. 
-This field is an text entry, and it behaves like entering arugment into the console, e.g. Values enterd into this field are given to the planner script as space separated array. So all built-in planners can be configured as specified in the original planner documentation.<br>
+This field is a text entry, and it behaves like entering arugment into the console, e.g. Values enterd into this field are given to the planner script as space separated array. So all built-in planners can be configured as specified in the original planner documentation.<br>
 
 **Example**<br>
-When using the Fast Downward Planning System, a possible planner argv field value:
+When using the Fast Downward Planning System, a possible planner argv field value is:
 ```
  --search "astar(lmcut())"
 ```
 
 ### Facts File
 
-This file chooser expects a facts file written in Pddl. A planning task usually consits of a facts, and a domain file. Since the plugin is using the state pools, as well as the type file to auto generate the domain file, it is only allowed to use elements provided in these two sources (state pools and type file), to write a facts file. To ensure which elements are usable, they can be listed by clicking on to the 'State Pool Info' Button in the left corner of the Task Planner Plugin configuration window. 
+This file chooser expects a facts file written in pddl. A planning task usually consits of a facts, and a domain file. Since the plugin is using the state pools, as well as the type file to auto generate the domain file, it is only allowed to use elements provided in these two sources (state pools and type file), to write a facts file. To ensure which elements are usable, they can be listed by clicking on to the 'State Pool Info' Button in the left corner of the Task Planner Plugin configuration window. 
 <br><br>
 **Example**<br>
 
@@ -138,9 +138,9 @@ this file will be used as facts file during the planning process.
 
 ### Generate State Machine Into
 
-The plugin has two generation modi, one where a completely new state machine is created during a task, and another where the planning result is generated into an existing Hierarchy State.  
+The plugin has two generation modi. One where a completely new state machine is created during a task, and another where the planning result is generated into an existing Hierarchy State.  
 To select the mode, this field provides a radio button group. If 'independent state machine' was selected, RTPP will create a new state machine. If 'selected state' was choosen the plugin will use an existing state to generate the planning result into.  
-As the radio button name indicates, the plugin will try used the current selected state. Therefore it's mandatory, that exactly one state is selected, and that the selected state is a Hierarchy State. If the selected Hierarchy State is a root state, RTPP will copy it, and use it to generate a new, independent state machine for performance reasons.<br>
+As the radio button name indicates, the plugin will try to use the current selected state. Therefore it's mandatory, that exactly one state is selected, and that the selected state is a Hierarchy State. If the selected Hierarchy State is a root state, RTPP will copy it, and use it to generate a new, independent state machine for performance reasons.<br>
 **Important**: To avoid accidents RTPP rejects non empty states by default. To allow a particular state, to be used despite it's not empty, the value of 'Allow_Override' in 'RAFCONTPP' in the semantic data section of the state hast to bet set to 'True'. Then all child states of the Hierarchy State are automatically deleted before adding new ones. If 'selected State' is choosen, the fields 'State machine name' and 'Save state machine in' are ignored.<br>
 
 **Example**<br>
@@ -166,7 +166,7 @@ task 42
 
 ### Save State Machine In
 
-This field is a directory chooser, and its purpose is to set the path, where to save state machine, which is generated during the Task. If 'selected State' in 'Generate state machine into' is choosen, this field is ignored.<br>
+This field is a directory chooser, and its purpose is to set the path, where to save the state machine, which is generated during the Task. If 'selected State' in 'Generate state machine into' is choosen, this field is ignored.<br>
 **Important:** State machines with the same name, stored in the same path are overwritten.<br><br>
 **Example**<br>
 With a configuration like this, the state machine my_state_machine will be stored in /home/state_machines:
@@ -177,7 +177,7 @@ Save state machine In: /home/state_machines
 
 ### Generated Files
 
-During a task some file are generated by the plugin and the planner. For example the plugin will generate a domain file, the planner will (hopefully) generate a plan, and maybe some other files. Usually they are not needed afterwards, but it is useful to keep them for debugging or logging purposes etc. When the'Save' checkbox was ticked, the files won't be deleted. If 'Save' is not ticked, all files are stored in a temporary path, and then deleted at the end of the Task.  
+During a task some files are generated by the plugin as well as the planner. For example the plugin will generate a domain file, the planner will generate a plan, and maybe some other files. Usually they are not needed afterwards, but it is useful to keep them for debugging or logging purposes etc. When the'Save' checkbox was ticked, the files won't be deleted. If 'Save' is not ticked, all files are stored in a temporary path, and then deleted at the end of the Task.  
 
 ### Save Files In
 
@@ -186,7 +186,7 @@ This directory chooser specifies the path in which generated files should be sto
 
 ## Runtime Section
 
-In this context runtime dosen't refere to the runtime of the task generation process, but rather to the runtime of the state machine itself, e.g. when its executed. This section was added to introduce object resolution to the plugin. since PDDL works with identifiers e.g. robot1, munich or turtle_bob instead of complex objects, a system to resolve these names during runtime is needed. How this works in detail is explained on [Data transfer page](DataTransfer.md). The runtime section part of the configuration file specifies, if and how object definitions should be added to the state machine.   
+In this context runtime dosen't refere to the runtime of the task generation process, but rather to the runtime of the state machine itself, e.g. when its executed. This section was added to introduce object resolution to the plugin. since pddl works with identifiers e.g. robot1, munich or turtle_bob instead of complex objects, a system to resolve these names during runtime is needed. How this works in detail is explained on [Data transfer page](DataTransfer.md). The runtime section part of the configuration file specifies, if and how object definitions should be added to the state machine.   
 
 
 ### Runtime Data
@@ -248,9 +248,9 @@ This Button closes the planning setup form without saving it.
 This button provides information about the current configuration. To be fully functional the configuration of 'State pools', and the 'Type file' are required. 
 
 It shows: 
-- All configured State pools
-- A list of all configured Pddl Actions
-- A list of all available Types
-- A list of all available Predicates
+- All configured state pools
+- A list of all configured pddl actions
+- A list of all available types
+- A list of all available predicates
 
 
