@@ -55,7 +55,7 @@ class PlanningSetupFormController:
 
     def __init__(self, datastore):
         """
-        :param datastore: a Datastore
+        :param datastore: A Datastore
         """
         assert isinstance(datastore, Datastore)
         self.__datastore = datastore

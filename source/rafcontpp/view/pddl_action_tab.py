@@ -62,7 +62,6 @@ class PddlActionTab:
 
     def __init__(self, state):
         """
-        :param action_tab_gtk_builder: gtk builder, contining its gui elements.
         :param state: the state, it belongs to.
         """
         self.__state = state
@@ -89,9 +88,9 @@ class PddlActionTab:
 
     def init_tab(self):
         """
-        loads the data into the action tab and subscribes on signals of some gui elements.
+        Loads the data into the action tab and subscribes on signals of some gui elements.
 
-        :return: the action tab.
+        :return: Gtk.Box: The initiated action tab.
         """
         # set elements uneditable if state is library state
         if isinstance(self.__state, LibraryState):
@@ -140,14 +139,15 @@ class PddlActionTab:
                 c_button.connect('toggled', self.__controller.save_requirements, req_dict, False)
         action_tab = self.__gtk_builder.get_object('rtpp_action_box')
         action_tab.show_all()
+
         return action_tab
 
     def __add_requirements_boxes(self, gtk_viewport):
         """
-        adds dynamically boxes for all requirements, specified in requ_list (above) to the gui.
+        Adds dynamically boxes for all requirements, specified in requ_list (above) to the gui.
 
         :param gtk_viewport: the base element, where to store the boxes in.
-        :return: a dictionary, contining the information, which button box belongs to which requirement
+        :return: {String: Gtk.CheckButton}: A dictionary, containing the information, which button box belongs to which requirement
         """
         button_dict = {}  # key: id value: checkButtonObject
         grid = Gtk.Grid()
@@ -170,10 +170,11 @@ class PddlActionTab:
 
     def __load_from_semantic_section(self, is_library_state):
         """
-        loads the pddl data from the semantic section of the state and writes it into
+        Loads the pddl data from the semantic section of the state and writes it into
         the action tab gui elements.
 
-        :param is_library_state: true, if state is a library state
+        :param is_library_state: true, if state is a library state.
+        :return: void
         """
         # to add the key to the dictionary, TODO find a Better place
         if isinstance(self.__state, HierarchyState):
@@ -200,11 +201,11 @@ class PddlActionTab:
 
     def __filter_input(self, input):
         """
-        filters an input string, exactly: if it rceives the string {} it makes it an empty string. Else it returns the
+        filters an input string, exactly: if it receives the string {} it makes it an empty string. Else it returns the
         original input.
 
         :param input: a string
-        :return: the filtered string
+        :return: String: the filtered string
         """
         if input == '{}':
             input = ''
@@ -212,10 +213,10 @@ class PddlActionTab:
 
     def __get_pddl_action(self):
         """
-        takes the string of the pddl action tab action source view, and returns it as pddl
+        Takes the string of the pddl action tab action source view, and returns it as pddl
         action representation.
 
-        :return: a PddlActionRepresentation.
+        :return: PddlActionRepresentation: The action, parsed as PddlActionRepresentation.
         """
         start, end = self.__pddl_action_source_view.get_buffer().get_bounds()
         action_text = self.__pddl_action_source_view.get_buffer().get_text(start, end, True).strip()
@@ -224,8 +225,11 @@ class PddlActionTab:
 
     def __copy_and_clear_old_dict(self, state):
         """
-        this method removes the old dict, and copies it into a new one.
+        This function migrates the old into the new dict format.
+        :param state: The state of the tab.
+        :return: void
         """
+
         if 'RAFCONTPP_PDDL_ACTION' in state.semantic_data:
             if not SEMANTIC_DATA_DICT_NAME in state.semantic_data:
                 dict_to_return = state.semantic_data[SEMANTIC_DATA_DICT_NAME][PDDL_ACTION_SUB_DICT_NAME]

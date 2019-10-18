@@ -56,7 +56,7 @@ def initialize():
 
 def increment_button():
     """
-    the Plan Task button can be incremented, and then looks like: Plan Task (n)
+    The Plan Task button can be incremented, and then looks like: Plan Task (n)
     this method increments the 'n', synchronized and also redraws the button thread save.
 
     :return: void
@@ -74,7 +74,7 @@ def increment_button():
 
 def decrement_button():
     """
-    the Plan Task button can be decremented, and then looks like: Plan Task (n) or just Plan Task, if n == 0
+    The Plan Task button can be decremented, and then looks like: Plan Task (n) or just Plan Task, if n == 0
     this method decrements the 'n', synchronized and also redraws the button thread save.
 
     :return: void
@@ -94,14 +94,18 @@ def decrement_button():
 
 def __on_button_clicked(button):
     """
-    opens the planning setup form.
+    Opens the planning setup form.
+
+    :return: void
     """
     PlanningSetupForm(datastore_from_file(DATASTORE_STORAGE_PATH)).initialize()
 
 
 def __on_show_menu(button):
     """
-    opens the drop-down menu, whith all currently running tasks.
+    Opens the drop-down menu, with all currently running tasks.
+
+    :return: void
     """
     cancel_task_menu = button.get_menu()
     # first remove all entries (they could be outdated)
@@ -116,7 +120,9 @@ def __on_show_menu(button):
     # a call back function for an activated menu item.
     def __on_menu_item_activate(menu_item):
         """
-        handles the abortion of a task.
+        Handles the abortion of a task.
+
+        :return: void
         """
         # get label
         label = menu_item.get_label()
@@ -155,6 +161,11 @@ def __on_show_menu(button):
 
 
 def __get_progress_text():
+    """
+    This method just decides between plural and singular.
+
+    :return: String: The progress test.
+    """
     if button_counter == 1:
         return " Task in progress."
     else:

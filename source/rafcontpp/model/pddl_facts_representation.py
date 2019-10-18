@@ -18,10 +18,10 @@ class PddlFactsRepresentation:
         """
         This is the representation of the pddl facts file (not completed yet.)
 
-        :param facts_string: the facts file content as string.
-        :param obj_type_map: a map, containing all objects with their types.
-        :param domain_name: the name of the domain the facts file is for.
-        :param problem_name: the name of the problem / task.
+        :param facts_string: The facts file content as string.
+        :param obj_type_map: A map, containing all objects with their types.
+        :param domain_name: The name of the domain the facts file is for.
+        :param problem_name: The name of the problem / task.
         """
         self.facts = facts_string
         # contains the objects of the facts file and their types as dict value.
@@ -33,8 +33,8 @@ class PddlFactsRepresentation:
         """
         takes the name of an object, which is now maybe uppercase, or lowercase, and returns the original format.
 
-        :param object_name: the maybe changed representation of an object (maybe upper-case now)
-        :return: the object name in original format, or the given object_name, if no original was found.
+        :param object_name: The maybe changed representation of an object (maybe uppercase now).
+        :return: String: The object name in original format, or the given object_name, if no original was found.
         """
         ori_obj_name = object_name
         if object_name:

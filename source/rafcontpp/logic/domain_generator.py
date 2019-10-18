@@ -30,7 +30,7 @@ class DomainGenerator:
     def __init__(self, datastore):
         """
 
-        :param datastore: A Datastore containing all data necessary.
+        :param datastore: A Datastore containing: pddl facts representation, pddl action map, file save directory.
         """
         if datastore is None:
             logger.error("Datastore in DomainGenerator can not be None!")
@@ -123,8 +123,7 @@ class DomainGenerator:
         mergePredicates takes all predicates mentioned in the PddlActionRepresentations, and removes dublicates.
 
         :param pddl_actions: A list of PddlActionRepresentations.
-        :return: ([String],[(String,[(String,int)])]): A tuple with a list of predicates
-        and a list of predicates as tuple without dublicates.
+        :return: ([String],[(String,[(String,int)])]): A tuple with a list of predicates and a list of predicates as tuple without dublicates.
         """
         # pre merge predicates
         predicates = []

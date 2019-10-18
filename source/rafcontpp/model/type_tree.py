@@ -22,10 +22,10 @@ class TypeTree:
 
     def __init__(self, type_name):
         """
-        needs the name of a type, and returns a type-tree-node. the node it self is a TypeTree.
+        Needs the name of a type, and returns a type-tree-node. the node it self is a TypeTree.
 
-        :param type_name: the name of a Type, can't be None!
-        :return a TypeTree object
+        :param type_name: The name of a Type, can't be None!
+        :return TypeTree: A TypeTree object
         """
         if type_name is None:
             raise ValueError('type_name must not be None!')
@@ -34,13 +34,13 @@ class TypeTree:
 
     def add_type_branch(self, type_name, type_dict):
         """
-        addTypeBranch does not only add the type, but also the whole branch.
-        this means it also adds all parents and all children and their children
+        addTypeBranch does not only add the given type, but also the whole branch.
+        this means it also adds all parents, all children and their children
         to the type tree.
 
-        :param type_name: the name of a type.
-        :param type_dict: a type dictionary, containing the type.
-        :return: true if insert was successfull, false otherwhise.
+        :param type_name: The name of a type.
+        :param type_dict: A type dictionary, containing the type.
+        :return: Boolean: True if insert was successfull, false otherwise.
         """
         inserted = self.recursive_insert(type_name, type_dict)
         for_inserted = True
@@ -53,11 +53,11 @@ class TypeTree:
     def recursive_insert(self, type_name, type_dict):
         """
         recursiveInsert needs a typeName and a typeDict and inserts
-        the type with its parents into the tree.
+        the type with it's parents into the tree.
 
-        :param type_name: the name of a type.
-        :param type_dict: a type dicitonary, containing the type.
-        :return: true if insert was successfull, false otherwhise.
+        :param type_name: The name of a type.
+        :param type_dict: A type dicitonary, containing the type.
+        :return: Boolean: True if insert was successfull, false otherwise.
         """
         inserted = False
         if type_name in type_dict:
@@ -75,9 +75,9 @@ class TypeTree:
         insert takes a typeName and a parentName, and inserts it into the tree.
         insert does not work, if the parent is not in the tree yet.
 
-        :param type_name: the name of the type to insert
-        :param parent_name: the direct parent of the type to insert
-        :return: true if insert was successfull, false otherwhise. (for example if the parent is not in the tree yet.)
+        :param type_name: The name of the type to insert.
+        :param parent_name: The direct parent of the type to insert.
+        :return: Boolean: True if insert was successful, false otherwise. (for example if the parent is not in the tree yet.)
         """
         inserted = self.is_in_tree(type_name)
         if (not type_name is None) & (not inserted):
@@ -86,11 +86,11 @@ class TypeTree:
 
     def __insert(self, type_name, parent_name):
         """
-         insert takes a typeName and a parentName, and inserts the typeName as child of the parentName into the tree.
+         __insert takes a typeName and a parentName, and inserts the typeName as child of the parentName into the tree.
 
-         :param type_name: the name of the type to insert
-         :param parent_name: the direct parent of the type to insert
-         :return: true if insert was successfull, false otherwhise. (for example if the parent is not in the tree yet.)
+         :param type_name: The name of the type to insert
+         :param parent_name: The direct parent of the type to insert
+         :return: Boolean: True if insert was successful, false otherwise. (for example if the parent is not in the tree yet.)
          """
         inserted = False
         if parent_name == self.type_name:
@@ -105,9 +105,9 @@ class TypeTree:
 
     def get_as_pddl_string(self):
         """
-        returns a string in pddl notation representing the type-tree.
+        Returns a string in pddl notation representing the type-tree.
 
-        :return: returns the typetree as string.
+        :return: String: Returns the typetree as pddl conform string.
         """
         as_string = ""
         if self.children:
@@ -124,9 +124,9 @@ class TypeTree:
 
     def get_as_list(self):
         """
-        takes the Tree, and writes all its elements into a list
+        Takes the Tree, and writes all its elements into a list
 
-        :return: a list, contining all types of the tree
+        :return: [String]: A list, contining all types of the tree
         """
         type_list = [self.type_name]
         for child in self.children:
@@ -139,8 +139,8 @@ class TypeTree:
         if the tree contains the type.
         unfortunately the tree is not sorted, and has a complexity of O(n)
 
-        :param type_name: the name of the type to search
-        :return: true if the tree contains the type, else false.
+        :param type_name: The name of the type to search.
+        :return: Boolean: True if the tree contains the type, else false.
         """
         return self.get_sub_tree(type_to_search) is not None
 
@@ -148,8 +148,8 @@ class TypeTree:
         """ get_sub_tree
         get_sub_tree gets a type, and returns the subtree, with the type as root.
 
-        :param type_to_search: the root of the subtree to get
-        :return: a sub tree, or none if the type is not in the tree.
+        :param type_to_search: The root of the subtree to get
+        :return: TypeTree: A sub tree, or None if the type is not in the tree.
         """
         sub_tree = None
         if self.type_name == type_to_search:
@@ -167,9 +167,9 @@ class TypeTree:
         is_parent_of receives two types, and returns true,
         if the first type it the parent of the second type.
 
-        :param parent: the maybe parent type
-        :param child: the maybe child type
-        :return: true, if the parent is really the parent of the child, false otherwhise
+        :param parent: The maybe parent type.
+        :param child: The maybe child type.
+        :return: Boolean: True, if the parent is really the parent of the child, false otherwise.
         """
         is_parent = False
         if parent != child:
@@ -180,11 +180,10 @@ class TypeTree:
 
     def get_parent_of(self, type_name):
         """
-        get_parent_of gets a type name, and returns its parent.
-        IMPORTANT: it searches in the tree for the parent, just childs.
+        get_parent_of receives a type name, and searchs in the tree for it's parent.
 
-        :param type_name: a type name
-        :return: the parent or None if the type has no parent or is not in tree.
+        :param type_name: A type name
+        :return: String: The parent name or None if the type has no parent or is not in tree.
         """
         parent = None
         # look, if this node the parent
@@ -209,9 +208,9 @@ class TypeTree:
         if t3 is the parent of t1 and t2, it will return t3
         if t1 or t2 is not in the tree, it will return None.
 
-        :param type_a: a type a
-        :param type_b: a type b
-        :return: the smallest parent, or None
+        :param type_a: A type a
+        :param type_b: A type b
+        :return: String: The smallest parent, or None
         """
         smallest_parent = None
         # fast fail if not in tree, or one is none

@@ -22,6 +22,10 @@ logger = log.get_logger(__name__)
 class TypeMerger:
 
     def __init__(self, datastore):
+        """
+
+        :param datastore: A datastore containing: A pddl action map and the path of the type database.
+        """
 
         self.__datastore = datastore
 

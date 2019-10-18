@@ -27,6 +27,7 @@ class StatePoolInfoWindow:
         initializes the State Pool Info window.
 
         :param parent: the parent window. e.g. a Gtk.Dialog
+        :return: void
         """
         glade_path = os.path.abspath(
             os.path.join(os.path.dirname(os.path.realpath(__file__)), "glade", "state_pool_info_window.glade"))
@@ -46,6 +47,7 @@ class StatePoolInfoWindow:
         Sets the statepools in the info window.
 
         :param statepools: a list containing all selected state pools.
+        :return: void
         """
         state_pool_string = ''
         if state_pools and len(state_pools) > 0:
@@ -59,7 +61,8 @@ class StatePoolInfoWindow:
         """
         Sets the predicates list as string into the info window.
 
-        :param predicates: A list of predicate Strings
+        :param predicates: A list of predicate Strings.
+        :return: void
         """
         predicate_string = ''
         if predicates and len(predicates) > 0:
@@ -74,6 +77,7 @@ class StatePoolInfoWindow:
         Sets the type tree into the info window.
 
         :param types: A type_tree.
+        :return: void
         """
         types_string = ''
         if type_tree:
@@ -88,6 +92,7 @@ class StatePoolInfoWindow:
         Sets the action state mapping into the info window.
 
         :param action_state_map: a map, containing action names as key and state names as values.
+        :return: void
         """
         asm_string = ''
         if action_state_map:
@@ -103,19 +108,23 @@ class StatePoolInfoWindow:
     def show(self):
         """
         shows the dialog.
+
+        :return: void
         """
         self.__state_pool_info_dialog.show_all()
 
     def destroy(self):
         """
         destroys the dialog.
+
+        :return: void
         """
         self.__state_pool_info_dialog.destroy()
 
     def __list_to_multi_line_string(self, list):
         """
         :param list: a list of elements
-        :return: A string with each element in a new line.
+        :return: String: A string with each element in a new line.
         """
         result_string = ''
         if list and len(list) > 0:

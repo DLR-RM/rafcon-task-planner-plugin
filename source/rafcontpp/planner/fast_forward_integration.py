@@ -21,7 +21,7 @@ from rafcontpp.model.planning_report import PlanningReport
 
 class FfIntegration(PlannerInterface):
     """
-    This is the integration script for the Fast Forward Planning System version 2.3 by Hoffmann
+    This is the integration script for the Fast-Forward Planning System version 2.3 by Hoffmann
     (https://fai.cs.uni-saarland.de/hoffmann/ff.html)
     """
 
@@ -61,7 +61,7 @@ class FfIntegration(PlannerInterface):
 
     def is_available(self):
         """
-        :return: True, if the planner is available in the system, false otherwhise.
+        :return: Boolean: True, if the planner is available in the system, false otherwhise.
         """
         devnull = open(os.devnull, "wb")
         process = subprocess.Popen('ff', stdout=devnull, stderr=devnull, shell=True)
@@ -72,8 +72,10 @@ class FfIntegration(PlannerInterface):
 
     def __parse_console_output(self, to_parse):
         """
-        :param to_parse: the console output
-        :return: a parsed plan
+        Receives the console output, and parses the plan out of it.
+
+        :param to_parse: The console output.
+        :return: [PlanStep]: A parsed plan.
         """
         console_output = to_parse.splitlines()
         raw_plan = []

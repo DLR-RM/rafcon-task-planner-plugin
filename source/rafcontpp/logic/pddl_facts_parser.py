@@ -44,7 +44,7 @@ class PddlFactsParser:
         Parse object parses the Objects present in the facts file, and returns a map of all objects with their type,
         in format: object: type
 
-        :return: {String:String}: A map in format: object: type.
+        :return: {String:String}: A map of format: key: Object, value: type.
         """
         obj_type_map = {}
         obj_sec_tup = self.__objects_section_pattern.findall(self.__facts_string)

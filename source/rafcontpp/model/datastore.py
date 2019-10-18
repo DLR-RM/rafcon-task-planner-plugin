@@ -51,7 +51,7 @@ planning_threads = {}
 
 def get_planning_threads():
     """
-    :return: a copy of the planning_threads dict.
+    :return: {long: InterruptableThread}: A copy of the planning_threads dict.
     """
     with planning_threads_lock:
         threads_copy = copy.copy(planning_threads)
@@ -64,7 +64,7 @@ def datastore_from_file(file_path):
     from a .json file e.g. config file. if there is no config file present, it returns a datastore with default values
 
     :param file_path: the path to the config file
-    :return: a partial initialized datastore, or a datastore with default values.
+    :return: Datastore: A partial initialized datastore, or a datastore with default values.
     """
     ds = None
     if not os.path.isfile(file_path):
@@ -174,6 +174,8 @@ class Datastore:
         """
         validate_ds runs some checks on the state_pools, the sm-save_dir, the facts_path, the type_db_path,
         and the file_save_dir. if a check fails, it raises a ValueError.
+
+        :return: void
         """
         # validate state_pools
         for dir in self.__state_pools:
@@ -201,8 +203,8 @@ class Datastore:
         """
         gets a thread, addes it synchronized to a global map, and returns the map key (which is the register time.).
 
-        :param interruptable_thread: a thread, the Datastore should store
-        :return: the key used to register the thread. (That's the register time as unixtimestamp.)
+        :param interruptable_thread: A InterruptableThread, the datastore should store.
+        :return: long: The key used to register the thread. (That's the register time as unixtimestamp.)
         """
         with planning_threads_lock:
             register_time = time.time()  # unix timestamp
@@ -217,10 +219,10 @@ class Datastore:
 
     def remove_thread(self, key):
         """
-        gets a timestamp as key, and removes the thread synchronized from the global map.
+        Receives a timestamp as key, and removes the thread synchronized from the global map.
 
-        :param key: the time, the thread was registered
-        :return: true, if removing was successful, false otherwise
+        :param key: The time, the thread was registered
+        :return: Boolean: True, if removing was successful, false otherwise
         """
         successful = False
         with planning_threads_lock:
@@ -440,7 +442,7 @@ class Datastore:
         """ save_datastore_parts_in_file
         save_datastore_parts_in_file saves all plugin inputs, which are present in the datastore in a file.
 
-        :param file_path: the path of the configuration file
+        :param file_path: The path of the configuration file
         :return: void
         """
         data_to_save = {

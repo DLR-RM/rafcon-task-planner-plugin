@@ -108,27 +108,27 @@ class PlanningSetupForm:
 
     def __call_controller_on_apply(self, button):
         """
-        this function is needed, to get the data when method is called, and not old data from declaration time.
+        This function is needed, to get the data when method is called, and not old data from declaration time.
 
-        :param button:
+        :param button: Unused.
         :return: void
         """
         self.__controller.on_apply(button, self.__dialog, *self.__get_entered_data())
 
     def __call_controller_on_destroy(self, button):
         """
-        this function is needed, to get the data when method is called, and not old data from declaration time.
+        This function is needed, to get the data when method is called, and not old data from declaration time.
 
-        :param button:
+        :param button: Unused
         :return: void
         """
         self.__controller.on_destroy(button, self.__dialog, *self.__get_entered_data())
 
     def __call_controller_on_show_state_pool_info(self, button):
         """
-        this function is needed, to get the data when method is called, and not old data from declaration time.
+        This function is needed, to get the data when method is called, and not old data from declaration time.
 
-        :param button:
+        :param button: Unused
         :return: void
         """
         self.__controller.on_show_state_pool_info(button, self.__dialog, *self.__get_entered_data())
@@ -162,9 +162,9 @@ class PlanningSetupForm:
 
     def __get_entered_data(self):
         """
-        reads entered data from the planning setup form, and returns the raw values.
+        Reads entered data from the planning setup form, and returns the raw values.
 
-        return: the raw values.
+        :return: (String, String, String, String, String, String, Boolean, String, String, Boolean, String, String, Boolean): The raw values.
         """
         state_pool_text = self.__state_pool_chooser_entry.get_text()
         type_db_path = self.__builder.get_object('type_db_chooser').get_filename()
