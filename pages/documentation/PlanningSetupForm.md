@@ -26,7 +26,7 @@ It's the main window of the plugin. So it is the part where to start a new state
   * [Runtime Data](#runtime-data)
   * [Include](#include)
 - [Buttons](#buttons)
-  * [Generate State machine](#generate-state-machine)
+  * [Generate State Machine](#generate-state-machine)
   * [Cancel](#cancel)
   * [X In Upper Right corner](#x-in-upper-right-corner)
   * [State Pool Info](#state-pool-info)
@@ -116,7 +116,7 @@ Field value: /my/scripts/my_planner_script.py
 
 ### Planner Argv
 
-To configure the planner e.g. The Fast Downward Planning system, an argument vector can be inserted here. 
+To configure the planner e.g. The Fast Downward Planning System, an argument vector can be inserted here. 
 This field is an text entry, and it behaves like entering arugment into the console, e.g. Values enterd into this field are given to the planner script as space separated array. So all built-in planners can be configured as specified in the original planner documentation.<br>
 
 **Example**<br>
@@ -152,7 +152,7 @@ independent state machine | Create new state machine.
 <br>
 ### State Machine Name
 
-The purpose of this text field is to enter the name, the resulting state machine will later have. If no name is provided, the name of the problem, defined in the facts file, is used instead. If 'selected State' in 'Generate State Machine Into' is choosen, this field is ignored.<br>
+The purpose of this text field is to enter the name, the resulting state machine will later have. If no name is provided, the name of the problem, defined in the facts file, is used instead. If 'selected State' in 'Generate state machine into' is choosen, this field is ignored.<br>
 
 **Example**<br>
 
@@ -166,13 +166,13 @@ task 42
 
 ### Save State Machine In
 
-This field is a directory chooser, and its purpose is to set the path, where to save state machine, which is generated during the Task. If 'selected State' in 'Generate State Machine Into' is choosen, this field is ignored.<br>
+This field is a directory chooser, and its purpose is to set the path, where to save state machine, which is generated during the Task. If 'selected State' in 'Generate state machine into' is choosen, this field is ignored.<br>
 **Important:** State machines with the same name, stored in the same path are overwritten.<br><br>
 **Example**<br>
 With a configuration like this, the state machine my_state_machine will be stored in /home/state_machines:
 ```
 name: my_state_machine
-Save State Machine In: /home/state_machines
+Save state machine In: /home/state_machines
 ```
 
 ### Generated Files
@@ -231,7 +231,7 @@ as reference | Copies the file everytime the state machine is started.
 
 This section explains each button of the planning setup form.
 
-### Generate State machine
+### Generate State Machine
 
 This button saves the current configuration, and starts the state machine generation process.
 

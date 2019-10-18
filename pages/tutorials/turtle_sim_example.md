@@ -56,7 +56,7 @@ In this example, Alice, Bob and Eve will wander arround in the map, but Bob is a
  - The Fast Downward Planning System:<br>
  `pip install downward-dlr --no-compile` ((possibly, you have to install the wheel package first)<br>
  - ROS (as described in RAFCONs [turtle demo](https://rafcon.readthedocs.io/en/latest/tutorials.html#starting-the-basic-turtle-demo-state-machine-using-ros))
- - The ROS turtlesim simulation (also as described in rafcons [turtle demo](https://rafcon.readthedocs.io/en/latest/tutorials.html#starting-the-basic-turtle-demo-state-machine-using-ros))
+ - The ROS turtlesim simulation (also as described in RAFCON's [turtle demo](https://rafcon.readthedocs.io/en/latest/tutorials.html#starting-the-basic-turtle-demo-state-machine-using-ros))
 
 ## 2.3 Setup
 1. Start the ROS core: `roscore`
