@@ -20,7 +20,7 @@ Domain independent planning is still costly in terms of time and computational p
 
 ## PDDL Support
 
-Since PDDL is extensive, we decided to provide a minimal PDDL set in the beginning, and extend our support on demand. So please feel free to contact us in order to increase our Pddl support. Currently RTPP supports: 
+Since pddl is extensive, we decided to provide a minimal pddl set in the beginning, and extend our support on demand. So please feel free to contact us in order to increase our pddl support. Currently RTPP supports: 
 
 - Only actions in "classical" :parameter - [:precondition] - :effect pattern, without functions / fluents, or cost consideration.
 - Due to the fact that the resulting state machines are executed in the real world, untyped variables are not supported.

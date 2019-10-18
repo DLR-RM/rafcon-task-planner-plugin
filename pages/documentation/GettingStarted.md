@@ -6,7 +6,7 @@ title: Getting Started
 # Getting Started
 
 ## Installation
-The Plugin is currently available on two platforms. To install it from one of these, two steps are required:<br>
+The plugin is currently available on two platforms. To install it from one of these, two steps are required:<br>
 
 ### **Intall from GitHub**
 1. **Clone the git repository** <br>

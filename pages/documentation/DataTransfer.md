@@ -9,7 +9,7 @@ In most cases it is not enough to concatinate RAFCON states in the right order. 
 
 ## Parameter Passing
 
-To pass a parameter from the plan to a state, the state needs to have an input port of type "str", which has a corresponding parameter in the Pddl action. The only difference is, that input port does not have an questionmark at the beginning, e.g. the Pddl action parameter "?myParam" would match a states input port "myParam". But not any action parameter has to have a corresponding state parameter and vice versa.  
+To pass a parameter from the plan to a state, the state needs to have an input port of type "str", which has a corresponding parameter in the pddl action. The only difference is, that input port does not have an questionmark at the beginning, e.g. the pddl action parameter "?myParam" would match a states input port "myParam". But not any action parameter has to have a corresponding state parameter and vice versa.  
 
 For example if the state "move_state" has the following input ports:
 
@@ -30,7 +30,7 @@ The action paramter "?food" would match with the input port "food", and any valu
 
 ## Runtime Data
 
-As seen above, parameters can be passed to states. But most of the time, that's only half the way, because these parameters are often only object identifiers. In order to give also access to the objects, the "Runtime Data" field of the [Setup Form](/PlanningSetupForm.md) provides the possibility to name a file, in which this objects are defined. This file has to contain a (nested) json dictionary. For example, a "pizza" object is needed. It has a "size", a "dough" and a list of "toppings". The file, in which the pizza was specified could look like thisː 
+As seen above, parameters can be passed to states. But most of the time, that's only half the way, because these parameters are often only object identifiers. In order to give also access to the objects, the "Runtime Data" field of the [setup form](/PlanningSetupForm.md) provides the possibility to name a file, in which this objects are defined. This file has to contain a (nested) json dictionary. For example, a "pizza" object is needed. It has a "size", a "dough" and a list of "toppings". The file, in which the pizza was specified could look like thisː 
 
 ```json
 {
@@ -41,7 +41,7 @@ As seen above, parameters can be passed to states. But most of the time, that's 
 }
 ```
 
-When starting to execute the state machine, these definitions are copied into a global variable named **rtpp_data** in the [global variable manager (gvm)](https://rafcon.readthedocs.io/en/latest/concepts.html#global-variable-manager) of RAFCON. So when an identifier was passed to a state, the corresponding object can be read from this dictionary. For example, reading the size of the passed food, e.g. the pizza, in an execution state would look like this: 
+When starting to execute the state machine, these definitions are copied into a global variable named **rtpp_data** in the [global variable manager (gvm)](https://rafcon.readthedocs.io/en/latest/concepts.html#global-variable-manager) of RAFCON. So when an identifier was passed to a state, the corresponding object can be read from this dictionary. For example, reading the size of the passed food, e.g. the pizza, in an execution state would work like this: 
 
 ```python
  def execute(self, inputs, outputs, gvm):

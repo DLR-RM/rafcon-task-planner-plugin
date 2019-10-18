@@ -4,7 +4,7 @@ title: Planning Setup Form
 ---
 # The Planning Setup Form
 
-The Planning Setup Form can be opened by clicking the "Plan Task" Button in the menu bar of [RAFCON](https://dlr-rm.github.io/RAFCON/).  
+The Planning Setup Form can be opened by clicking the "Plan Task" button in the menu bar of [RAFCON](https://dlr-rm.github.io/RAFCON/).  
 It's the main window of the plugin. So it is the part where to start a new state machine generation process, configure a new task, and get information about the current configuration.
 
 ![Task Planner Plugin Setup Form](../../assets/images/documentation/TaskPlannerPluginConfiguration.png "The Task Planner Plugin Setup Form")
@@ -35,12 +35,12 @@ It's the main window of the plugin. So it is the part where to start a new state
 
 ## Planning Section
 
-The planning section contains all fields relevant for planning, and the state machine generation process. This section explains the fields in detail.
+The planning section contains all fields relevant for planning, and the state machine generation process. This section explains them in detail.
 
 ### State Pools
 
-A state pool is a directory, containing PDDL-annotated states (but not all states in the directory have to be annotated).  
-In the State pools field all stated pools should be choosen, which can be to use to solve a particular Task.
+A state pool is a directory, containing pddl-annotated states (but not all states in the directory have to be annotated).  
+In the state pools field all state pools should be choosen, which can be to use to solve a particular task.
 During the generation process, all state pools are added as RAFCON libraries, in which the directory name is used as Library name.<br>
 The state pools field consists of two fields: A directory chooser and a text field.  
 All directories choosen, are added to the text field as ':'- separated list. To remove a state pool from the task, it just has to be removed from the list in text field. Also paths can be added to the list manually.
@@ -56,7 +56,7 @@ All directories choosen, are added to the text field as ':'- separated list. To 
 │   ├── teleport_turtle
 │   └── turtle_position_subscriber
 ```
-In this case for example, 'move_to_position' is annotated with PDDL and 'init_ros_node' is not 
+In this case for example, 'move_to_position' is annotated with pddl and 'init_ros_node' is not 
 (that's not recognizable in this view). The state pool would be '/home/turtle_lib'.
 Now adding '/home/turtle_lib' to the text field, would enable the plugin to use 'move_to_position', 
 as well as 'teleport_turtle' (which are annotated, that's not recognizable in this view) for planning. 
@@ -71,7 +71,7 @@ Path: /home/trutle_lib
 
 ### Type File
 
-Since PDDL uses types and heredity, the plugin needs information about the type hierarchy. This should be provided here.
+Since pddl uses types and heredity, the plugin needs information about the type hierarchy. This should be provided here.
 The type file field is a file chooser. It expects a file of type json. It should contain a type hierarchy as json dict, structured to contain child types as keys and parent types as values. One child can only have one parent, and the defined hierarchy has to have exactly one root type. In case a hierarchy has multiple root types, one additional level can be added, deriving all root types from 'Object' for example. The root type (obviously) has no parent.<br>
 **Important:** All types used in a state pool, or in the facts file have to be part of this hierarchy.<br>
 
@@ -88,7 +88,7 @@ file: my_types.json:
 ```
 ### Planner
 
-In this field it's defined which built-in planner should be used to plan a particular task, or a separate planner script should be used. If a built-in planner is not correctly installed, a notification is shown.  
+In this field it's defined which built-in planner should be used to plan a particular task, or if a separate planner script is present. If a built-in planner is not correctly installed, a notification is shown.  
 The planner field is a drop-down entry chooser. If "Other..." was choosen, it is indicated that a planner script is provided in the 'Planner script Location' field, which will be used for planning. <br>
 **Important:** If "Other..." was not choosen the planner script will not be taken into consideration, and the choosen Planner will be used instead.
 <br><br>

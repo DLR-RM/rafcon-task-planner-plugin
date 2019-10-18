@@ -7,7 +7,7 @@ title: Documentation
 
 ## User Documentation
 
-This is the Plugin's user documentation. It gives an overview of the plugins functionality, and explains it's different views, concepts, functionalites and limitations. 
+This is the plugin's user documentation. It gives an overview of the plugins functionality, and explains it's different views, concepts and limitations. 
 
 1. [Overview](documentation/Overview.md)
 1. [Getting Started](documentation/GettingStarted.md)
