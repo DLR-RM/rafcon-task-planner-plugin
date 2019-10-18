@@ -10,7 +10,7 @@ title: Home
 
 
 The Task Planner is a plugin for [RAFCON](https://github.com/DLR-RM/RAFCON/), which allows to automatically create, or extend state machines for given tasks.  
-To achieve this, states in RAFCON are annotated with semantic information, using the language [PDDL](https://en.wikipedia.org/wiki/Planning_Domain_Definition_Language). Then a semantic planner such as [The Fast-Downward Planning System](http://www.fast-downward.org/) can use this information, to find a solution for a given task. Afterwards the Plugin processes this solution, in order to create a state machine, or extend an existing one. 
+To achieve this, states in RAFCON are annotated with semantic information, using the language [PDDL](https://en.wikipedia.org/wiki/Planning_Domain_Definition_Language). Then a semantic planner such as [The Fast-Downward Planning System](http://www.fast-downward.org/) can use this information, to find a solution for a given task. Afterwards the plugin processes this solution in order to create a state machine, or extend an existing one. 
 
 
 ## Features
@@ -22,7 +22,7 @@ To achieve this, states in RAFCON are annotated with semantic information, using
 
 
 ## GitHub
-Here is the GitHub repository of the [RAFCON task planner plugin](https://github.com/DLR-RM/rafcon-task-planner-plugin).
+Here is the GitHub repository of the [RAFCON Task Planner Plugin](https://github.com/DLR-RM/rafcon-task-planner-plugin).
 
 ## PyPi
 The Plugin is also available on PyPi: <br>
