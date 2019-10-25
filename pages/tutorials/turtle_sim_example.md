@@ -51,23 +51,34 @@ In this example, Alice, Bob and Eve will wander arround in the map, but Bob is a
  - RAFCON:<br>
 `pip install rafcon`<br>
  or: `git clone https://github.com/DLR-RM/RAFCON.git` (for information about how to install RAFCON see: [install RAFCON](https://github.com/DLR-RM/RAFCON))<br>
- - The RAFCON Task Planner Plugin:<br>
-  `git clone https://github.com/DLR-RM/rafcon-task-planner-plugin.git`
+- The RAFCON Task Planner Plugin:<br>
+ `pip install rafcon-task-planner-plugin`<br>
+ or: `git clone https://github.com/DLR-RM/rafcon-task-planner-plugin.git`<br>
  - The Fast Downward Planning System:<br>
  `pip install downward-dlr --no-compile` ((possibly, you have to install the wheel package first)<br>
  - ROS (as described in RAFCONs [turtle demo](https://rafcon.readthedocs.io/en/latest/tutorials.html#starting-the-basic-turtle-demo-state-machine-using-ros))
  - The ROS turtlesim simulation (also as described in RAFCON's [turtle demo](https://rafcon.readthedocs.io/en/latest/tutorials.html#starting-the-basic-turtle-demo-state-machine-using-ros))
 
-## 2.3 Setup
+**Important:**<br>During the next steps you have to configure some paths. These paths are dependent on whether you cloned the repository from GitHub, or installed RTPP from PyPI. Therefore the difference is referred as [ROOT-PATH] and has to be replaced accordingly:<br>
+**GitHub:** <br>
+When you cloned the repository from GitHub, [ROOT-PATH] is the path of the repository. <br>
+**PyPI:** <br>
+If you installed the plugin via PyPI, [ROOT-PATH] has to be replaced with: <br>
+`~/.local/share/rafcontpp`
+
+
+
+## 2.3 Setup 
 1. Start the ROS core: `roscore`
 2. Start the turtlesim node: `rosrun turtlesim turtlesim_node`
 3. Start RAFCON with the plugin in your ros environment:<br>
-`export RAFCON_PLUGIN_PATH=[/path-to-rtpp-repo]/source/rafcontpp`
+**If installed from GitHub** :<br>`RAFCON_PLUGIN_PATH=$RAFCON_PLUGIN_PATH:[RTPP-REPOSITORY̠-PATH]/source/rafcontpp`<br>
+**If installed from PyPI**:<br>`RAFCON_PLUGIN_PATH=$RAFCON_PLUGIN_PATH:[SITE-PACKAGES-PATH]/rafcontpp`<br>
 4. Add the following two paths as RAFCON Library Paths: <br> 
    Library key: `turtle_lib` <br> 
-   Path: `[Repository_PATH]/rafcon_task_planner_plugin/examples/turtle_sim_example/turtle_lib`<br>  
+   Path: `[ROOT-PATH]/examples/turtle_sim_example/turtle_lib`<br>  
    Library key: `turtle_sim_example`<br> 
-   Path: `[Repository_PATH]/rafcon_task_planner_plugin/examples/turtle_sim_example`  
+   Path: `[ROOT-PATH]/examples/turtle_sim_example`  
 
 If we have a look into the **turtle_sim_example** library, we can see **turtle_lib** as well as the state machine **turtle_sim_state_machine**.
 
@@ -90,11 +101,11 @@ The data we enter in this section is important during the Planning and generatio
 
 #### 2.4.1.1 State pools
 We use our turtle_lib as state pool, it should be:<br>
-`[Repository_PATH]/rafcon_task_planner_plugin/examples/turtle_sim_example/turtle_lib`
+`[ROOT-PATH]/examples/turtle_sim_example/turtle_lib`
 
 #### 2.4.1.2 Type file
 The type files location is:<br>
-`[Repository_PATH]/rafcon_task_planner_plugin/examples/turtle_sim_example/rtpp-turtle_sim_db.json`<br>  
+`[ROOT-PATH]/examples/turtle_sim_example/rtpp-turtle_sim_db.json`<br>  
 Since we have only turtles and locations, it is really small and uninteresting.
 
 #### 2.4.1.3 Planner
@@ -102,7 +113,7 @@ Use as planner the **Fast Downward Planning System**.
 
 #### 2.4.1.4 Facts file 
 The facts files location is: <br>
-`[repository_PATH]/rafcon_task_planner_plugin/examples/turtle_sim_example/turtle_sim_facts.pddl`<br>
+`[ROOT-PATH]/examples/turtle_sim_example/turtle_sim_facts.pddl`<br>
 Feel free to play around with it later!
 
 #### 2.4.1.5 Generate State machine Into
@@ -119,7 +130,7 @@ This section is not important during the planning process, but during runtime of
 #### 2.4.2.1 Runtime Data
 If we enter a path to a json file here, the plugin will add a data initialization state as first state of the planned state machine.
 As we know a planner would return something like **move bob middle** and not **move bob x=5, y=5**. However, ROS needs coordinates, and don't know where **middle** is. To solve this issue, we use **middle** as an object identifier, and define the object in a file. It's path is:<br>
-`[repository_PATH]/rafcon_task_planner_plugin/examples/turtle_sim_example/turtle_demo_data.json`.<br>
+`[ROOT-PATH]/examples/turtle_sim_example/turtle_demo_data.json`.<br>
 Feel free to have a look into the file, and see all object definitions.
 
 #### 2.4.2.2 Include

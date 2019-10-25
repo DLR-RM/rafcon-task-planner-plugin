@@ -40,14 +40,15 @@ To be able to run this tutorial, you need:
  `pip install rafcon` <br>
  or: `git clone https://github.com/DLR-RM/RAFCON.git` (for information about how to install RAFCON see: [install RAFCON](https://github.com/DLR-RM/RAFCON))<br>
  - **The RAFCON Task Planner Plugin**:<br>
-  `git clone https://github.com/DLR-RM/rafcon-task-planner-plugin.git`<br>
+ `pip install rafcon-task-planner-plugin`<br>
+ or: `git clone https://github.com/DLR-RM/rafcon-task-planner-plugin.git`<br>
  - **The Fast Downward Planning System**:<br>
   `pip install downward-dlr --no-compile` (possibly, you have to install the wheel package first)<br>
  
 ## 1.3 First Step 
 At first, RTPP has to be registered in RAFCON. To do so, the plugin path has to be added to the "RAFCON_PLUGIN_PATH" environmental variable:<br>
-`RAFCON_PLUGIN_PATH=$RAFCON_PLUGIN_PATH:[RTPP-REPOSITORY̠-PATH]/source/rafcontpp`
-
+**If installed from GitHub** :<br>`RAFCON_PLUGIN_PATH=$RAFCON_PLUGIN_PATH:[RTPP-REPOSITORY̠-PATH]/source/rafcontpp`<br>
+**If installed from PyPI**:<br>`RAFCON_PLUGIN_PATH=$RAFCON_PLUGIN_PATH:[SITE-PACKAGES-PATH]/rafcontpp`<br>
 
 If you did this successfully and restarted RAFCON, it should now have an extra menu button called "Plan Task", and a new tab called "PDDL Action" at the right, below the semantic data tab. The image shows RAFCON with the task planner plugin loaded.
 
@@ -352,10 +353,11 @@ You can't just plan this one state machine, but arbitrary manyǃ For example, le
 ## 1.8 Solution
 
 A solution for this tutorial is provided in:<br> 
-`[repository_path]/examples/restaurant_tutorial`<br>
-There you find all described files, and states as well as an executable restaurant_state_machine and all related files, generated during the planning process. To load the restaurant_state_machine, which is located inside of the restaurant_state_pool, you must add the library path to RAFCON:
- ```
- Library Path:[repository_path]/examples/restaurant_tutorial/restaurant_state_pool
- Library Key: restaurant_state_pool
- ```
+**Installed via GitHub** : `[repository_path]/examples/restaurant_tutorial`<br>
+**Installed via PyPI**: `~/.local/share/rafcontpp/examples/restaurant_tutorial`<br>
+There you find all described files, and states as well as an executable restaurant_state_machine and all related files, generated during the planning process. To load the restaurant_state_machine, which is located inside of the restaurant_state_pool, you must add the library path to RAFCON: <br>
+
+ Library Path: `[SOLUTION-LOCATION-GITHUB-OR-PYPI]/restaurant_state_pool`<br>
+ Library Key: `restaurant_state_pool`
+
 
