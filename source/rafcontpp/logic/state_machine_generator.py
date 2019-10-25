@@ -80,7 +80,7 @@ class StateMachineGenerator:
         start_time = time.time()
         sm_name = self.__get_actual_sm_name()
         sm_path = os.path.abspath(os.path.join(self.__datastore.get_sm_save_dir(), sm_name))
-        target_state = target_state if self.__is_valid_target_state(target_state) else HierarchyState(sm_name)
+        target_state = target_state if self.__is_valid_target_state(target_state)[0] else HierarchyState(sm_name)
         state_order_list = []
         # set root-state id to old root-state id, in case the state machine is replanned.
         # why is it important? - if you added the planned sm as a library, replan it and refresh it,
