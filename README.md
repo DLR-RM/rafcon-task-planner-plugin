@@ -1,6 +1,6 @@
 # RAFCON Task Planner Plugin
 
-![RAFCON Task Planner Plugin](docs/img/Rafcon_task_planner_plugin.png "The Plugin Configuration")
+![RAFCON Task Planner Plugin](https://dlr-rm.github.io/rafcon-task-planner-plugin/assets/images/RafconTPPMain.png "An Overview on the plugin.")
 
 ## Overview
 The RAFCON Task Planner Plugin is a [RAFCON](https://github.com/DLR-RM/RAFCON) plugin to interface arbitrary pddl planner such as the [Fast Downward Planning System](http://www.fast-downward.org/).  
