@@ -51,6 +51,7 @@ class StateMachineLayouter:
         num_states = len(target_state_m.states)
         row_count = 0
         column_count = 0
+        label_height = 0  # The height of the state label.
         x_gap = 25  # a gap between the state columns
         y_gap = 25  # a gap between the state rows                             _   _
         # the sm will be layouted column by column, in merlon shape. Like: |_| |_| |_|
@@ -67,7 +68,8 @@ class StateMachineLayouter:
         if fixed_size:
             r_width, r_height = target_state_m.meta['gui']['editor_gaphas']['size']
             border_size = Variable(min(r_width, r_height) / constants.BORDER_WIDTH_STATE_SIZE_FACTOR)
-            canvas_height = r_height - 2 * border_size
+            label_height = 11 #Todo change to function.
+            canvas_height = r_height - label_height - 2 * border_size
             canvas_width = r_width - 2 * border_size
             row_count = self.__get_num_rows(num_states, canvas_width, canvas_height)
             column_count = math.ceil(num_states / row_count)
