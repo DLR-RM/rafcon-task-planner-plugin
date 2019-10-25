@@ -76,17 +76,18 @@ class StateMachineLayouter:
         else:
             row_count = self.__get_num_rows(num_states)
             column_count = math.ceil(num_states / row_count)
+            label_height = 100  # the height of the state label, its a assumed default height. 
             canvas_width = (column_count + 1) * (x_gap + state_width) + x_gap
-            canvas_height = row_count * (y_gap + state_height)
+            canvas_height = row_count * (y_gap + state_height) + label_height
             # root state width, height, and root state border size.
             r_width, r_height, border_size = self.__get_target_state_dimensions(canvas_width, canvas_height)
             logger.debug("Root state size: height: {} width: {}".format(r_height, r_width))
             # set root state size
             target_state_m.meta['gui']['editor_gaphas']['size'] = (r_width, r_height)
         # set root state in / out come position
-        target_state_m.income.set_meta_data_editor('rel_pos', (0., border_size + y_gap + state_height / 4.))
+        target_state_m.income.set_meta_data_editor('rel_pos', (0., border_size + y_gap + state_height + label_height / 4.))
         out_come = [oc for oc in target_state_m.outcomes if oc.outcome.outcome_id == 0].pop()
-        out_come.meta['gui']['editor_gaphas']['rel_pos'] = (r_width, border_size + y_gap + state_height / 4.)
+        out_come.meta['gui']['editor_gaphas']['rel_pos'] = (r_width, border_size + y_gap + state_height + label_height / 4.)
         # positions where an income or an outcome can occure
         up_pos = (state_width / 2., 0.)
         down_pos = (state_width / 2., state_height)
@@ -127,7 +128,7 @@ class StateMachineLayouter:
             out_come.meta['gui']['editor_gaphas']['rel_pos'] = outcome_pos
             # set position of state
             current_x = current_column * (x_gap + state_width) + x_gap + border_size
-            current_y = current_row * (y_gap + state_height) + y_gap + border_size
+            current_y = current_row * (y_gap + state_height) + y_gap + border_size + label_height
             state_m.meta['gui']['editor_gaphas']['rel_pos'] = (current_x, current_y)
             # logger.debug("x: {} y: {}".format(current_x, current_y))
             # loop trailer, in / decrement rhow and column counter, decide if to increment row next.
