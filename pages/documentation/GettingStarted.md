@@ -18,8 +18,8 @@ To register the plugin in RAFCON, it's plugin path has to be added to RAFCON's p
 `RAFCON_PLUGIN_PATH=$RAFCON_PLUGIN_PATH:[repository_path]/source/rafcontpp`<br>
 More information about, how to add plugins to RAFCON can be found in the [RAFCON Documentation](https://rafcon.readthedocs.io/en/latest/plugins.html).<br>
 
-### **Install form PyPi**
-**Important:** The PyPi version doesn’t contain any examples!<br>
+### **Install form PyPI**
+**Important:** The PyPI version doesn’t contain any examples!<br>
 1. **Obtain the Plugin**<br>
 The Plugin can be downloaded using pip:<br>
 `pip install rafcon-task-planner-plugin`<br>
