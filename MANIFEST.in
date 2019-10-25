@@ -1,2 +1,3 @@
 recursive-include source/rafcontpp/view/glade *.glade
 recursive-include docs/img/ *
+recursive-include examples/ *

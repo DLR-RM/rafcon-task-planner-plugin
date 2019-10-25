@@ -8,6 +8,7 @@
 # Contributors:
 # Christoph Suerig <christoph.suerig@dlr.de>
 import os
+import sys
 from distutils.core import setup
 from setuptools import find_packages
 
@@ -17,10 +18,21 @@ PACKAGE_NAME = 'rafcon-task-planner-plugin'
 def get_readme():
     return open(os.path.join(os.path.dirname(__file__), 'README.md'), 'r').read()
 
+def get_data_files():
+  data_files_dir = 'examples'
+  data_files = []
+  for (cur_dir, contained_dirs, contained_files) in os.walk(data_files_dir):
+    files_in_cur_dir = []
+    for file in contained_files:
+      files_in_cur_dir.append(os.path.join(cur_dir,file))
+    data_files.append((os.path.join('share','rafcontpp',cur_dir),files_in_cur_dir))
+  return data_files
+
+
 
 setup(
   name = PACKAGE_NAME,
-  version = '1.5.0',
+  version = '1.5.1',
   license='BSD-3-Clause',
   description = 'The RAFCON Task Planner Plugin (RTPP) is a plugin to interface arbitrary pddl planner'
                 ' and automate the state machine generation process.',
@@ -36,6 +48,7 @@ setup(
         # Include all glade files
         'rafcontpp.view.glade': ['*.glade']
   },
+  data_files = get_data_files(),
   #install_requires=['rafcon'],
   keywords = ['RAFCON', 'PDDL', 'Planner', 'state machine', 'robotic', 'FSM', 'development', 'GUI'],
   classifiers=[
