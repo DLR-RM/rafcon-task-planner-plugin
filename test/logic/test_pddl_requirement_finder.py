@@ -43,7 +43,7 @@ def test_disjunctive_preconditions_not():
     #arrange
     action = "(:action test_disjunctive" \
              ":parameters (?a - Object)" \
-             ":precondition (and (not(in ?a)) )" \
+             ":precondition (or (in ?a) (at ?a) )" \
              ":effect(and))"
     finder = PddlRequirementFinder(action)
     # act
