@@ -155,9 +155,12 @@ class DomainGenerator:
         :param pddl_actions: A list of PddlActionRepresentations.
         :return: String: A pddl conform action section.
         """
-        actions = ""
+        as_map = self.__datastore.get_action_state_map()
+        actions = "\r\n\r\n"
+        current_comment = ""
         for action in pddl_actions:
-            actions += action.action + "\r\n\r\n"
+            current_comment = ";; This action is defined in state: \"{}\"".format(as_map[action.name])
+            actions += "{}\r\n{}\r\n\r\n".format(current_comment,action.action)
         return actions
 
     def __get_comment_section(self):
