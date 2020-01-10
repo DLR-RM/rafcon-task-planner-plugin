@@ -137,7 +137,7 @@ class StateMachineLayouter:
             current_y = current_row * (y_gap + state_height) + y_gap + border_size + label_height
             state_m.meta['gui']['editor_gaphas']['rel_pos'] = (current_x, current_y)
             # logger.debug("x: {} y: {}".format(current_x, current_y))
-            # loop trailer, in / decrement rhow and column counter, decide if to increment row next.
+            # loop trailer, in / decrement row and column counter, decide if to increment row next.
             if current_row <= 0 and not increment_row:
                 increment_row = True
                 current_column += 1
