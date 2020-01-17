@@ -51,7 +51,7 @@ class StateMachineLayouter:
         num_states = len(target_state_m.states)
         row_count = 0
         column_count = 0
-        label_height = 0  # The height of the state label.
+        label_height = 100  # the height of the state label, it's an assumed default height.
         x_gap = 25  # a gap between the state columns
         y_gap = 25  # a gap between the state rows                             _   _
         # the sm will be layouted column by column, in merlon shape. Like: |_| |_| |_|
@@ -71,8 +71,9 @@ class StateMachineLayouter:
             #get the height of the state name, so that states won't cover target state name.
             graphical_editor_controller = rafcon.gui.singleton.main_window_controller.state_machines_editor_ctrl.get_controller(1)
             target_state_view = graphical_editor_controller.canvas.get_view_for_model(target_state_m)
-            target_name_view = target_state_view.name_view
-            label_height = target_name_view.height
+            if target_state_view:#If target_state_view is null, let the label_height at default.
+                target_name_view = target_state_view.name_view
+                label_height = target_name_view.height
             canvas_height = r_height - label_height - 2 * border_size
             canvas_width = r_width - 2 * border_size
             row_count = self.__get_num_rows(num_states, canvas_width, canvas_height)
@@ -82,7 +83,6 @@ class StateMachineLayouter:
         else:
             row_count = self.__get_num_rows(num_states)
             column_count = math.ceil(num_states / row_count)
-            label_height = 100  # the height of the state label, its a assumed default height. 
             canvas_width = (column_count + 1) * (x_gap + state_width) + x_gap
             canvas_height = row_count * (y_gap + state_height) + label_height
             # root state width, height, and root state border size.
