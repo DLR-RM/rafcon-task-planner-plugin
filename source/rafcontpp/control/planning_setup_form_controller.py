@@ -203,6 +203,8 @@ class PlanningSetupFormController:
         try:  # generate type tree
             type_merger = TypeMerger(tmp_datastore)
             type_tree = type_merger.merge_types()
+            tmp_datastore.set_available_types(type_tree)
+
         except Exception as e:
             merge_preds = False
         try:  # generate available predicates.
@@ -216,6 +218,7 @@ class PlanningSetupFormController:
                 available_predicates = pred_merger.merge_predicates(available_predicates)[0]
         except Exception as e:
             available_predicates = [e.message]
+
         state_pool_info = StatePoolInfoWindow(setup_form)
         state_pool_info.set_state_pools(tmp_datastore.get_state_pools())
         state_pool_info.set_types(type_tree)

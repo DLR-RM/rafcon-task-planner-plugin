@@ -81,7 +81,10 @@ class StatePoolInfoWindow:
         """
         types_string = ''
         if type_tree:
-            types_string = type_tree.get_as_pddl_string()
+            processing_list = type_tree.get_as_list()
+            current_parent = None
+            for type_name in processing_list:
+                types_string += "{} extends {} \r\n".format(type_name, type_tree.get_parent_of(type_name))
         types_label = self.__window_builder.get_object('rtpp_data_info_view_type_label')
         types_label.set_text(types_string)
         types_label.set_alignment(0, 0)
@@ -96,7 +99,7 @@ class StatePoolInfoWindow:
         """
         asm_string = ''
         if action_state_map:
-            as_list = ["Action <----> State ", ""]
+            as_list = ["Action <----> State ({}) ".format(len(action_state_map.keys())), ""]
             for action in sorted(action_state_map.keys()):
                 as_list.append("{} <----> {}".format(action, action_state_map[action]))
             asm_string = self.__list_to_multi_line_string(as_list)

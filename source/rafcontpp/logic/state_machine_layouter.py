@@ -9,11 +9,11 @@
 # Christoph Suerig <christoph.suerig@dlr.de>
 
 # Don't connect with the Copyright comment above!
-# Version 12.07.1019
+# Version 25.10.1019
 
 import math
 import time
-
+import rafcon
 from gaphas.solver import Variable
 from rafcon.gui.models.state_machine import StateMachineModel
 from rafcon.gui.singleton import state_machine_manager_model
@@ -51,6 +51,7 @@ class StateMachineLayouter:
         num_states = len(target_state_m.states)
         row_count = 0
         column_count = 0
+        label_height = 100  # the height of the state label, it's an assumed default height.
         x_gap = 25  # a gap between the state columns
         y_gap = 25  # a gap between the state rows                             _   _
         # the sm will be layouted column by column, in merlon shape. Like: |_| |_| |_|
@@ -67,7 +68,13 @@ class StateMachineLayouter:
         if fixed_size:
             r_width, r_height = target_state_m.meta['gui']['editor_gaphas']['size']
             border_size = Variable(min(r_width, r_height) / constants.BORDER_WIDTH_STATE_SIZE_FACTOR)
-            canvas_height = r_height - 2 * border_size
+            #get the height of the state name, so that states won't cover target state name.
+            graphical_editor_controller = rafcon.gui.singleton.main_window_controller.state_machines_editor_ctrl.get_controller(1)
+            target_state_view = graphical_editor_controller.canvas.get_view_for_model(target_state_m)
+            if target_state_view:#If target_state_view is null, let the label_height at default.
+                target_name_view = target_state_view.name_view
+                label_height = target_name_view.height
+            canvas_height = r_height - label_height - 2 * border_size
             canvas_width = r_width - 2 * border_size
             row_count = self.__get_num_rows(num_states, canvas_width, canvas_height)
             column_count = math.ceil(num_states / row_count)
@@ -77,16 +84,16 @@ class StateMachineLayouter:
             row_count = self.__get_num_rows(num_states)
             column_count = math.ceil(num_states / row_count)
             canvas_width = (column_count + 1) * (x_gap + state_width) + x_gap
-            canvas_height = row_count * (y_gap + state_height)
+            canvas_height = row_count * (y_gap + state_height) + label_height
             # root state width, height, and root state border size.
             r_width, r_height, border_size = self.__get_target_state_dimensions(canvas_width, canvas_height)
             logger.debug("Root state size: height: {} width: {}".format(r_height, r_width))
             # set root state size
             target_state_m.meta['gui']['editor_gaphas']['size'] = (r_width, r_height)
         # set root state in / out come position
-        target_state_m.income.set_meta_data_editor('rel_pos', (0., border_size + y_gap + state_height / 4.))
+        target_state_m.income.set_meta_data_editor('rel_pos', (0., label_height + border_size + y_gap + state_height / 4. ))
         out_come = [oc for oc in target_state_m.outcomes if oc.outcome.outcome_id == 0].pop()
-        out_come.meta['gui']['editor_gaphas']['rel_pos'] = (r_width, border_size + y_gap + state_height / 4.)
+        out_come.meta['gui']['editor_gaphas']['rel_pos'] = (r_width, label_height + border_size + y_gap + state_height / 4.)
         # positions where an income or an outcome can occure
         up_pos = (state_width / 2., 0.)
         down_pos = (state_width / 2., state_height)
@@ -127,10 +134,10 @@ class StateMachineLayouter:
             out_come.meta['gui']['editor_gaphas']['rel_pos'] = outcome_pos
             # set position of state
             current_x = current_column * (x_gap + state_width) + x_gap + border_size
-            current_y = current_row * (y_gap + state_height) + y_gap + border_size
+            current_y = current_row * (y_gap + state_height) + y_gap + border_size + label_height
             state_m.meta['gui']['editor_gaphas']['rel_pos'] = (current_x, current_y)
             # logger.debug("x: {} y: {}".format(current_x, current_y))
-            # loop trailer, in / decrement rhow and column counter, decide if to increment row next.
+            # loop trailer, in / decrement row and column counter, decide if to increment row next.
             if current_row <= 0 and not increment_row:
                 increment_row = True
                 current_column += 1

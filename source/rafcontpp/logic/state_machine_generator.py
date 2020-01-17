@@ -303,12 +303,14 @@ class StateMachineGenerator:
         """
         data_init_state = ExecutionState(name='Runtime Data Initialization (rtpp_data)')
         data_to_load = None
+        execute_str = ""
         if use_as_ref:
             data_to_load = 'json.load(open("{}", "r"))'.format(data_init_file_path)
-            data_init_state.script_text = 'import json{}'.format(data_init_state.script_text)
+            execute_str = 'import json\r\n'
         else:
             data_to_load = json.dumps(json.load(open(data_init_file_path, "r")), indent=2, separators=(',', ': '))
-        execute_str = "def execute(self, inputs, outputs, gvm):\r\n"
+        #only append stuff to the execute_str here!
+        execute_str = "{}\r\ndef execute(self, inputs, outputs, gvm):\r\n".format(execute_str)
         execute_str = "{}    self.logger.info('Updating rtpp_data.')\r\n".format(execute_str)
         execute_str = "{}    rtpp_data = gvm.get_variable('rtpp_data')\r\n".format(execute_str)
         execute_str = "{}    rtpp_data = rtpp_data if rtpp_data else {}\r\n".format(execute_str, {})
