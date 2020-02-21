@@ -84,7 +84,11 @@ class StatePoolInfoWindow:
             processing_list = type_tree.get_as_list()
             current_parent = None
             for type_name in processing_list:
-                types_string += "{} extends {} \r\n".format(type_name, type_tree.get_parent_of(type_name))
+                parent = type_tree.get_parent_of(type_name)
+                if parent:
+                    types_string += "{} extends {} \r\n".format(type_name, parent)
+                else:
+                    types_string += "{}\r\n".format(type_name)
         types_label = self.__window_builder.get_object('rtpp_data_info_view_type_label')
         types_label.set_text(types_string)
         types_label.set_alignment(0, 0)

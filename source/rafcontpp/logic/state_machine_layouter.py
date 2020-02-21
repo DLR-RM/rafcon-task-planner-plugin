@@ -9,7 +9,7 @@
 # Christoph Suerig <christoph.suerig@dlr.de>
 
 # Don't connect with the Copyright comment above!
-# Version 25.10.1019
+# Version 21.02.2020
 
 import math
 import time
@@ -51,7 +51,7 @@ class StateMachineLayouter:
         num_states = len(target_state_m.states)
         row_count = 0
         column_count = 0
-        label_height = 100  # the height of the state label, it's an assumed default height.
+        label_height = 0  # the height of the state label.
         x_gap = 25  # a gap between the state columns
         y_gap = 25  # a gap between the state rows                             _   _
         # the sm will be layouted column by column, in merlon shape. Like: |_| |_| |_|
@@ -71,9 +71,12 @@ class StateMachineLayouter:
             #get the height of the state name, so that states won't cover target state name.
             graphical_editor_controller = rafcon.gui.singleton.main_window_controller.state_machines_editor_ctrl.get_controller(1)
             target_state_view = graphical_editor_controller.canvas.get_view_for_model(target_state_m)
-            if target_state_view:#If target_state_view is null, let the label_height at default.
+            if target_state_view:
                 target_name_view = target_state_view.name_view
                 label_height = target_name_view.height
+            else:
+                logger.error("Could not get state view of state: {}".format(target_state_m))
+                label_height = 0 #Overriding the lable is the best option when not knowing its height, in order to maintain the right layout.
             canvas_height = r_height - label_height - 2 * border_size
             canvas_width = r_width - 2 * border_size
             row_count = self.__get_num_rows(num_states, canvas_width, canvas_height)
@@ -81,6 +84,7 @@ class StateMachineLayouter:
             state_width, state_height, x_gap, y_gap = self.__get_state_dimensions(canvas_width, canvas_height,
                                                                                   column_count + 1, row_count)
         else:
+            label_height = 100  # the height of the state label, it's an assumed default height.
             row_count = self.__get_num_rows(num_states)
             column_count = math.ceil(num_states / row_count)
             canvas_width = (column_count + 1) * (x_gap + state_width) + x_gap

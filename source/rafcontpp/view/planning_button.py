@@ -9,7 +9,7 @@
 # Christoph Suerig <christoph.suerig@dlr.de>
 
 # Don't connect with the Copyright comment above!
-# Version 12.07.2019
+# Version 21.02.2020
 
 import threading
 import time
@@ -44,7 +44,7 @@ def initialize():
     # add new button
     global plan_sm_button
     plan_sm_button = Gtk.MenuToolButton(label='Plan Task')
-    plan_sm_button.set_label_widget(create_label_widget_with_icon('f1ec', _(plan_task_label), tool_tip_text))
+    plan_sm_button.set_label_widget(create_label_widget_with_icon('&#xf1ec;', _(plan_task_label), tool_tip_text))
     plan_sm_button.set_stock_id(Gtk.STOCK_CLEAR)
     tool_bar_ctrl.view.get_top_widget().add(plan_sm_button)
     plan_sm_button.show_all()

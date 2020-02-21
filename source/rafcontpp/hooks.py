@@ -9,7 +9,7 @@
 # Christoph Suerig <christoph.suerig@dlr.de>
 
 # Don't connect with the Copyright comment above!
-# Version 12.11.2018
+# Version 21.02.2020
 import os
 
 from rafcon.gui.helpers.label import create_tab_header_label
@@ -65,7 +65,7 @@ def post_state_editor_register_view(state_editor):
     action_tab = PddlActionTab(state).init_tab()
     # add tab, with label to State Editor
     # f1ec is from font awesome
-    icon = {_('PDDL Action'): 'f1ec'}  # its done like this, because the helper function needs a map as input
+    icon = {_('PDDL Action'): '&#xf1ec;'}  # its done like this, because the helper function needs a map as input
     main_notebook_2 = state_editor_view["main_notebook_2"]
     main_notebook_2.append_page(action_tab, create_tab_header_label('PDDL Action', icon))
     main_notebook_2.set_tab_reorderable(action_tab, True)
