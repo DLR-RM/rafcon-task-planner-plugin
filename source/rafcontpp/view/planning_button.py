@@ -9,13 +9,12 @@
 # Christoph Suerig <christoph.suerig@dlr.de>
 
 # Don't connect with the Copyright comment above!
-# Version 21.02.2020
+# Version 28.02.2020
 
 import threading
 import time
 
 import gi
-
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 import rafcon.gui.utils
@@ -25,12 +24,13 @@ from rafcon.gui.views.tool_bar import ToolBarView
 from rafcon.gui.helpers.label import create_label_widget_with_icon
 from rafcon.utils import log
 from rafcontpp.view.planning_setup_form import PlanningSetupForm
-from rafcontpp.hooks import RTPP_ICON
 from rafcontpp.model.datastore import datastore_from_file, DATASTORE_STORAGE_PATH, get_planning_threads
 
 logger = log.get_logger(__name__)
+
+RTPP_ICON = '&#xf1ec;'
+
 plan_task_label = "Plan Task"
-plan_task_fa_icon = RTPP_ICON
 tool_tip_text = "Opens the planning Configuration, to plan a new task."
 plan_sm_button = None
 button_counter = 0
@@ -48,7 +48,7 @@ def initialize():
     # add new button
     global plan_sm_button
     plan_sm_button = Gtk.MenuToolButton(label='Plan Task')
-    plan_sm_button.set_label_widget(create_label_widget_with_icon(plan_task_fa_icon, _(plan_task_label), tool_tip_text))
+    plan_sm_button.set_label_widget(create_label_widget_with_icon(RTPP_ICON, _(plan_task_label), tool_tip_text))
     plan_sm_button.set_stock_id(Gtk.STOCK_CLEAR)
     tool_bar_ctrl.view.get_top_widget().add(plan_sm_button)
     plan_sm_button.show_all()
@@ -69,7 +69,7 @@ def increment_button():
         # logger.debug('increment button executed from: {}'.format(threading.current_thread().getName()))# todo remove
         global button_counter
         button_counter += 1
-        plan_sm_button.set_label_widget(create_label_widget_with_icon(plan_task_fa_icon,
+        plan_sm_button.set_label_widget(create_label_widget_with_icon(RTPP_ICON,
                                                                       _(plan_task_label + ' ({})'.format(
                                                                           button_counter)),
                                                                       tool_tip_text + '\n' + str(
@@ -89,7 +89,7 @@ def decrement_button():
         button_counter -= 1
         if button_counter <= 0:
             button_counter = 0
-            plan_sm_button.set_label_widget(create_label_widget_with_icon(plan_task_fa_icon, _(plan_task_label), tool_tip_text))
+            plan_sm_button.set_label_widget(create_label_widget_with_icon(RTPP_ICON, _(plan_task_label), tool_tip_text))
         else:
             plan_sm_button.set_label_widget(
                 create_label_widget_with_icon(plan_task_fa_icon, _(plan_task_label + ' ({})'.format(button_counter)),

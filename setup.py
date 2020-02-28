@@ -32,7 +32,7 @@ def get_data_files():
 
 setup(
   name = PACKAGE_NAME,
-  version = '1.5.1',
+  version = '1.5.2',
   license='BSD-3-Clause',
   description = 'The RAFCON Task Planner Plugin (RTPP) is a plugin to interface arbitrary pddl planner'
                 ' and automate the state machine generation process.',

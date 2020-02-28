@@ -9,17 +9,20 @@
 # Christoph Suerig <christoph.suerig@dlr.de>
 
 # Don't connect with the Copyright comment above!
-# Version 21.02.2020
+# Version 28.02.2020
 import os
 
 from rafcon.gui.helpers.label import create_tab_header_label
 from rafcon.utils import log
 
 from rafcontpp.view import planning_button
+from rafcontpp.view.planning_button import RTPP_ICON
 from rafcontpp.view.pddl_action_tab import PddlActionTab
 
 logger = log.get_logger(__name__)
-RTPP_ICON = "'&#xf1ec;'";
+
+
+
 
 def pre_init():
     """ The pre_init function of the auto layout plugin. Currently method refresh selected state machine is used to
