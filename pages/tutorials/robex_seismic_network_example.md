@@ -12,8 +12,15 @@ To achieve autonomy, RAFCON was used and a state machine was manually prepared i
 <br>
 This example shows, how to go on step further by also generating the state machine, needed to accomplish the task, automatically. To simulate the environment, and the LRM, Gazebo and ROS where used. 
 <!--https://www.hjkc.de/_blog/2017/07/05/8319-raumfahrt-mission-robex-unter-mondbedingungen-auf-dem-vulkan-aetna-durchgefuehrt/-->
+
+
 ## 3.1 Scenario Description
+
+![Robex Seismic Network Scenario Overview](../../assets/images/tutorials/lrm/ROBEX_LRM.png "Scenario Overview")
+
 ## 3.2 LRM Skills
+
+
 <img src="../../assets/images/tutorials/restaurant/restaurant_tutorial_overview.jpg"  alt="Scenario Overview" style="display:block; margin-left: auto; margin-right: auto; width:50%;">
 <table>
 <tr valign="top"><th>Skill</th><th>Description</th></tr>
