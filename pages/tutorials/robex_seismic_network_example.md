@@ -7,20 +7,18 @@ youtubeId: -wXQf0b1bqQ
 # 3. Robex - Seismic Network Example
 
 This example is a **showcase**, and demonstrates how the plugin can be used to automatically generate a state machine, that is executable on a **ROS-Gazebo stack**.<br>
-It is based on a moon analogue mission, conducted at Mt. Etna by the [ROBEX Alliance](http://www.robex-allianz.de/) in the years 2016 and 2017. During the [Autonomous Passive Seismic Experiment](http://www.robex-allianz.de/en/about-robex/demo-missions/), a rover called the [Lightweight Rover Unit (LRU)](https://www.dlr.de/rm/desktopdefault.aspx/tabid-11431/20129_read-47344/) had to take four seismometers (RU) from a Lander, and place them 
-as sensor network on the ground.  
-<!--TODO 
-Lass es am Anfang einfach weg und fuege noch ein paar Worte zum Robex Projekt hinzu. Warum das Sensor Netzwerk ausgebracht wird (um den Ursprung von seismischen Events zu messen; solche gibt es auch auf dem Mond etc.), warum der Roboter so gebaut wurde (siehe dazu auch: https://elib.dlr.de/116749/ und https://elib.dlr.de/125139/ oder auf der Robex Website).
-
--->  
-To achieve autonomy, [RAFCON](https://dlr-rm.github.io/RAFCON/) was used and a state machine was manually prepared in advance. <br>
+It is based on a Moon analogue mission, conducted at Mt. Etna by the [ROBEX Alliance](http://www.robex-allianz.de/) in the years 2016 and 2017. During the [Autonomous Passive Seismic Experiment](http://www.robex-allianz.de/en/about-robex/demo-missions/), a rover, called the [Lightweight Rover Unit (LRU)](https://www.dlr.de/rm/desktopdefault.aspx/tabid-11431/20129_read-47344/) had to take four seismometers (RU) from a Lander, and place them as sensor network on the ground.<br>
+The network's purpose was to measure seismic activities, and detect their origin. As discovered during the Apollo missions, such events do not only occur here on earth's Mt. Etna for example, but also on it's trabant: The Moon. <br>
+The LRU is a mobile robot, built for autonous planetary exploration, and disaster recovery. Therefore, it is equiped with a manipulator, as well as a stereo camera, and other cutting-edge technologies. <br>
+In order to take advantage of this high degree of autonom capabilities, the flow control tool [RAFCON](https://dlr-rm.github.io/RAFCON/) was used, and a state machine, representing the task, was manually prepared in advance.
 <br>
-This example shows, how to go on step further by also generating the state machine, needed to accomplish the task automatically. To simulate the environment and the LRU, [Gazebo](http://gazebosim.org/) and [ROS](https://www.ros.org/) where used. 
+This example shows, how to go on step further by also generating the state machine, needed to accomplish the task, automatically. To simulate the environment and the LRU, [Gazebo](http://gazebosim.org/) and [ROS](https://www.ros.org/) where used. 
 <!--https://www.hjkc.de/_blog/2017/07/05/8319-raumfahrt-mission-robex-unter-mondbedingungen-auf-dem-vulkan-aetna-durchgefuehrt/-->
 
 - [3.1 Scenario Description](#31-scenario-description)
 - [3.2 LRU Skills](#32-lru-skills)
-- [3.3 Showcase Video](#33-showcase-video)
+- [3.3 PDDL Task Plan](#33-pddl-task-plan)
+- [3.4 Showcase Video](#34-showcase-video)
 
 <small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
 
@@ -59,7 +57,7 @@ The LRU has some capabilities, which can be used by the plugin to find a plan, a
 
 ## 3.3 PDDL Task Plan
 
-This is the Plan, [Fast Downward Planning System](http://www.fast-downward.org/Releases)
+The resulting state machine was generated based on this plan. It was created by the [Fast Downward Planning System](http://www.fast-downward.org) during the task planning process (comments where added later on, to increase readability):
 
 
 ```Pddl
