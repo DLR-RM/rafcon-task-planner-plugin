@@ -1,11 +1,11 @@
 ---
 layout: default
-title: Turtle Sim Example
+title: Turtle Sim Tutorial
 ---
-# 2. Turtle Sim Example
+# 2. Turtle Sim Tutorial
 
-This example demonstrates how the **data flow** can work in a planned state machine and how **flexible** they are even when using them with **ROS**.
-The example is base on RAFCON's [turtle demo](https://rafcon.readthedocs.io/en/latest/tutorials.html#starting-the-basic-turtle-demo-state-machine-using-ros), but the states were modified to use the plugin's data flow style and are enriched with pddl actions.
+This tutorial demonstrates how the **data flow** can work in a planned state machine and how **flexible** they are even when using them with **ROS**.
+The tutorial is base on RAFCON's [turtle demo](https://rafcon.readthedocs.io/en/latest/tutorials.html#starting-the-basic-turtle-demo-state-machine-using-ros), but the states were modified to use the plugin's data flow style and are enriched with pddl actions.
 
 
 - [2.1 Scenario description](#21-scenario-description)
@@ -43,7 +43,7 @@ With the following rules:
 - If a turtle moves, it gets hungry
 - If turtles are hungry they can eat each other
 
-In this example, Alice, Bob and Eve will wander arround in the map, but Bob is a cannibal, therefore he will eat Alice and Eve at some point.
+In this tutorial, Alice, Bob and Eve will wander arround in the map, but Bob is a cannibal, therefore he will eat Alice and Eve at some point.
 
 
 

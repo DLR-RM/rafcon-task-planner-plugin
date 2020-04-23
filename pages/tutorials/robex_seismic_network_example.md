@@ -15,10 +15,12 @@ In order to take advantage of this high degree of autonom capabilities, the flow
 This example shows, how to go on step further by also generating the state machine, needed to accomplish the task, automatically. To simulate the environment and the LRU, [Gazebo](http://gazebosim.org/) and [ROS](https://www.ros.org/) where used. 
 <!--https://www.hjkc.de/_blog/2017/07/05/8319-raumfahrt-mission-robex-unter-mondbedingungen-auf-dem-vulkan-aetna-durchgefuehrt/-->
 
-- [3.1 Scenario Description](#31-scenario-description)
-- [3.2 LRU Skills](#32-lru-skills)
-- [3.3 PDDL Task Plan](#33-pddl-task-plan)
-- [3.4 Showcase Video](#34-showcase-video)
+- [1.1 Scenario Description](#11-scenario-description)
+- [1.2 LRU Skills](#12-lru-skills)
+- [1.3 Type Hierarchy](#13-type-hierarchy)
+- [1.4 Facts File](#14-facts-file)
+- [1.5 PDDL Task Plan](#15-pddl-task-plan)
+- [1.6 Showcase Video](#16-showcase-video)
 
 <small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
 
@@ -26,7 +28,7 @@ This example shows, how to go on step further by also generating the state machi
 
 
 ![Robex Seismic Network Scenario Overview](../../assets/images/tutorials/robex_seismic_network/ROBEX_LRU.png "Scenario Overview")
-## 3.1 Scenario Description
+## 1.1 Scenario Description
 
 
 
@@ -35,7 +37,7 @@ LRU's task is, to arrange the RUs, to form a sensor network. Therefore, it has t
 The LRU deploys a RU, by first grasping the seismometer from it's back, and use it afterwards to level the ground, before placing the RU, and optimizing it's ground contact. The last step of deployment is to test the sensors functionyllity. So the LRU uses it's manipulator, to give a ground impulse.
 
 
-## 3.2 LRU Skills
+## 1.2 LRU Skills
 The LRU has some capabilities, which can be used by the plugin to find a plan, and generate the state machine, necessary to fullfill the task. These Skills are listed below:  
 
 <img src="../../assets/images/tutorials/robex_seismic_network/LRU_Closeup_mirror.png"  alt="The LRU" style="display:block; margin-left: auto; margin-right: auto; width:50%;">
@@ -55,9 +57,50 @@ The LRU has some capabilities, which can be used by the plugin to find a plan, a
 <tr><td>Retract From RU</td><td>Separates itself from a remote unit, to gain full navigation capabilities again.</td></tr>
 </table>
 
-## 3.3 PDDL Task Plan
+## 1.3 Type Hierarchy
+This is the type hierarchy used, to plan the mission. 
 
-The resulting state machine was generated based on this plan. It was created by the [Fast Downward Planning System](http://www.fast-downward.org) during the task planning process (comments where added later on, to increase readability):
+
+```Json
+{
+"Location":"Object",
+"PhysObj":"Object",
+"Loadable":"PhysObj",
+"Robot":"Loadable",
+"Lander":"Loadable",
+"RemoteUnit":"PhysObj"
+}
+```
+## 1.4 Facts File
+The following facts file describes the sensor deployment mission. It states, that all seismometers (named ru1 - ru4) are attached to the lander at the beginning of scenario, and that their deployment is the mission goal. The additional goal `(not (obstruced lru))` induces the robot to distance itself from the last deployed sensor. 
+
+
+```Pddl
+(define (problem seismic_network) (:domain robex)
+(:objects 
+ru1 ru2 ru3 ru4 - RemoteUnit
+lru - Robot
+lander - Lander
+)
+(:init
+    (carries lander ru1)
+    (carries lander ru2)
+    (carries lander ru3)
+    (carries lander ru4)
+)
+(:goal (and
+    (deployed ru1)
+    (deployed ru2)
+    (deployed ru3)
+    (deployed ru4)
+    (not(obstructed lru))
+))
+)
+```
+
+## 1.5 PDDL Task Plan
+
+The resulting state machine was generated based on this plan. It was created by the [Fast Downward Planning System](http://www.fast-downward.org) during the task planning process (plan shortened, comments where added later on, to increase readability):
 
 
 ```Pddl
@@ -88,37 +131,11 @@ The resulting state machine was generated based on this plan. It was created by 
 (give_ground_impulse_for_ru ru2 lru)
 (complete_ru_deployment ru2 lru)
 (retract_from_remote_unit lru)
+...
 
-;Deploy Remote Unit 3
-(move_to_ru_on_lander ru3 lru lander)
-(locate_world_objects lru)
-(grasp_ru_from_lander ru3 lru lander)
-(carry_ru_to_deploy_location ru3 lru)
-(locate_world_objects lru)
-(place_ru ru3 lru)
-(level_ground ru3 lru)
-(optimize_ru_contact ru3 lru)
-(release_ru ru3 lru)
-(give_ground_impulse_for_ru ru3 lru)
-(complete_ru_deployment ru3 lru)
-(retract_from_remote_unit lru)
-
-;Deploy Remote Unit 4
-(move_to_ru_on_lander ru4 lru lander)
-(locate_world_objects lru)
-(grasp_ru_from_lander ru4 lru lander)
-(carry_ru_to_deploy_location ru4 lru)
-(locate_world_objects lru)
-(place_ru ru4 lru)
-(level_ground ru4 lru)
-(optimize_ru_contact ru4 lru)
-(release_ru ru4 lru)
-(give_ground_impulse_for_ru ru4 lru)
-(complete_ru_deployment ru4 lru)
-(retract_from_remote_unit lru)
 ```
 
 
 
-## 3.4 Showcase Video
+## 1.6 Showcase Video
 {% include youtubePlayer.html id=page.youtubeId %}
