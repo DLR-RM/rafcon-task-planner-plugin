@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Robex - Seismic Network Example
-youtubeId: -wXQf0b1bqQ
+youtubeId: 0aQ144ZrxXI
 ---
 
 # 3. Robex - Seismic Network Example
