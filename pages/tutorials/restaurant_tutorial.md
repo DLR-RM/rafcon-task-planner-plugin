@@ -47,8 +47,8 @@ To be able to run this tutorial, you need:
  
 ## 1.3 First Step 
 At first, RTPP has to be registered in RAFCON. To do so, the plugin path has to be added to the "RAFCON_PLUGIN_PATH" environmental variable:<br>
-**If installed from GitHub** :<br>`RAFCON_PLUGIN_PATH=$RAFCON_PLUGIN_PATH:[RTPP-REPOSITORY̠-PATH]/source/rafcontpp`<br>
-**If installed from PyPI**:<br>`RAFCON_PLUGIN_PATH=$RAFCON_PLUGIN_PATH:[SITE-PACKAGES-PATH]/rafcontpp`<br>
+**If installed from GitHub** :<br>`export RAFCON_PLUGIN_PATH=$RAFCON_PLUGIN_PATH:[RTPP-REPOSITORY̠-PATH]/source/rafcontpp`<br>
+**If installed from PyPI**:<br>`export RAFCON_PLUGIN_PATH=$RAFCON_PLUGIN_PATH:[SITE-PACKAGES-PATH]/rafcontpp`<br>
 
 If you did this successfully and restarted RAFCON, it should now have an extra menu button called "Plan Task", and a new tab called "PDDL Action" at the right, below the semantic data tab. The image shows RAFCON with the task planner plugin loaded.
 

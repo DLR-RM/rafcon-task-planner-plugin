@@ -15,7 +15,7 @@ At first the plugin hast to be cloned from the [Git Repository](https://github.c
 
 1. **Register the Plugin in RAFCON**<br>
 To register the plugin in RAFCON, it's plugin path has to be added to RAFCON's plugin path variable. The plugin path is `[repository_path]/source/rafcontpp`, so adding it would look like:<br>
-`RAFCON_PLUGIN_PATH=$RAFCON_PLUGIN_PATH:[repository_path]/source/rafcontpp`<br>
+`export RAFCON_PLUGIN_PATH=$RAFCON_PLUGIN_PATH:[repository_path]/source/rafcontpp`<br>
 More information about, how to add plugins to RAFCON can be found in the [RAFCON Documentation](https://rafcon.readthedocs.io/en/latest/plugins.html).<br>
 
 ### **Install form PyPI**
@@ -25,7 +25,7 @@ The Plugin can be downloaded using pip:<br>
 
 1. **Register the Plugin in RAFCON**<br>
 To register the plugin in RAFCON, it's plugin path has to be added to RAFCON's plugin path variable. The plugin path is `[SITE-PACKAGES-PATH]/rafcontpp`, so adding it would look like:<br>
-`RAFCON_PLUGIN_PATH=$RAFCON_PLUGIN_PATH:[SITE-PACKAGES-PATH]/rafcontpp`<br>
+`export RAFCON_PLUGIN_PATH=$RAFCON_PLUGIN_PATH:[SITE-PACKAGES-PATH]/rafcontpp`<br>
 More information about, how to add plugins to RAFCON can be found in the [RAFCON Documentation](https://rafcon.readthedocs.io/en/latest/plugins.html).<br>
 
 

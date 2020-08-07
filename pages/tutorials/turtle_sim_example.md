@@ -72,8 +72,8 @@ If you installed the plugin via PyPI, [ROOT-PATH] has to be replaced with: <br>
 1. Start the ROS core: `roscore`
 2. Start the turtlesim node: `rosrun turtlesim turtlesim_node`
 3. Start RAFCON with the plugin in your ros environment:<br>
-**If installed from GitHub** :<br>`RAFCON_PLUGIN_PATH=$RAFCON_PLUGIN_PATH:[RTPP-REPOSITORY̠-PATH]/source/rafcontpp`<br>
-**If installed from PyPI**:<br>`RAFCON_PLUGIN_PATH=$RAFCON_PLUGIN_PATH:[SITE-PACKAGES-PATH]/rafcontpp`<br>
+**If installed from GitHub** :<br>`export RAFCON_PLUGIN_PATH=$RAFCON_PLUGIN_PATH:[RTPP-REPOSITORY̠-PATH]/source/rafcontpp`<br>
+**If installed from PyPI**:<br>`export RAFCON_PLUGIN_PATH=$RAFCON_PLUGIN_PATH:[SITE-PACKAGES-PATH]/rafcontpp`<br>
 4. Add the following two paths as RAFCON Library Paths: <br> 
    Library key: `turtle_lib` <br> 
    Path: `[ROOT-PATH]/examples/turtle_sim_example/turtle_lib`<br>  
